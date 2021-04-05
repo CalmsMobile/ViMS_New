@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title color="favorite">{{"CREATE_QUICK_PASS.TITLE" | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+<ion-grid padding style="    margin-top: 50px">
+  <ion-row align-items-start>
+    <form novalidate col-12 col-sm-12 col-md-12 (ngSubmit)="addVisitors()"
+    [formGroup]="visitorProfile" class="simple-form">
+      <ion-col no-padding col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+
+          <!---Input field username-->
+          <ion-item no-lines no-padding transparent >
+              <ion-label color="favorite" floating>{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
+              <ion-input no-lines required type="text" [(ngModel)]="visitorInfoModal.visitor_name"
+              formControlName="username" [class.error1]="!visitorProfile.controls.username.valid && visitorProfile.controls.username.dirty"
+              ></ion-input>
+          </ion-item>
+          <!-- <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.NameEnabled && !hostSettings.NameRequired">
+              <ion-label color="favorite" floating>{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
+              <ion-input no-lines type="text" [(ngModel)]="visitorInfoModal.visitor_name"
+              formControlName="username" [class.error1]="!visitorProfile.controls.username.valid && visitorProfile.controls.username.dirty"
+              ></ion-input>
+          </ion-item> -->
+          <ion-item no-lines no-border no-margin transparent *ngIf="( visitorProfile.get('username').hasError('minlength') || visitorProfile.get('username').hasError('maxlength') ||visitorProfile.get('username').hasError('pattern') ||visitorProfile.get('username').hasError('required') ) && visitorProfile.get('username').touched">
+            <div class="error" no-border no-margin *ngIf="visitorProfile.get('username').hasError('required') && visitorProfile.get('username').touched">
+              {{'ADD_VISITORS.ERROR.USERNAME_REQUIRED' | translate}}
+            </div>
+            <div class="error" no-border no-margin *ngIf="visitorProfile.get('username').hasError('minlength') && visitorProfile.get('username').touched">
+              {{'ADD_VISITORS.ERROR.USERNAME_MIN4' | translate}}
+            </div>
+            <div class="error" no-border no-margin *ngIf="visitorProfile.get('username').hasError('maxlength') && visitorProfile.get('username').touched">
+              {{'ADD_VISITORS.ERROR.USERNAME_MAX20' | translate}}
+            </div>
+            <!-- <div class="error" *ngIf="visitorProfile.get('username').hasError('pattern') && visitorProfile.get('username').touched">
+              {{'ADD_VISITORS.ERROR.USERNAME_ALPHA' | translate}}
+            </div> -->
+          </ion-item>
+          <ion-item *ngIf="hostSettings.VisitorExpiryTimeEnabled" class="box_round_corner" no-lines no-padding transparent (click)="openCalendar()">
+            <ion-label *ngIf="expiryTime" style="font-size: 16px;color:black" stacked>{{'CREATE_QUICK_PASS.EXPIRY_TIME' | translate}}</ion-label>
+            <ion-label *ngIf="!expiryTime" style="color:black;min-width: auto;border: 0px;border-left: 0px">{{'CREATE_QUICK_PASS.SELECT_EXPIRY_TIME' | translate}}</ion-label>
+            <ion-label  *ngIf="expiryTime" style="color:black;min-width: auto;border: 0px;border-left: 0px">{{expiryTime| date : 'dd MMM yyyy hh:mm a'}}</ion-label>
+        </ion-item>
+
+          <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.VehicleNoEnabled && hostSettings.VehicleNoRequired">
+            <ion-label color="favorite" floating>{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
+            <ion-input type="text" required formControlName="vechile" [(ngModel)]="visitorInfoModal.vehicle_no"
+            ></ion-input>
+          </ion-item>
+          <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.VehicleNoEnabled && !hostSettings.VehicleNoRequired">
+              <ion-label color="favorite" floating>{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
+              <ion-input type="text" formControlName="vechile" [(ngModel)]="visitorInfoModal.vehicle_no"
+              ></ion-input>
+          </ion-item>
+          <ion-item no-lines transparent no-lines *ngIf="(visitorProfile.get('vechile').hasError('required') && visitorProfile.get('vechile').touched)">
+              <div class="error" *ngIf="visitorProfile.get('vechile').hasError('required') && visitorProfile.get('vechile').touched">
+                {{'ADD_VISITORS.ERROR.VECHILE_REQUIRED' | translate}}
+              </div>
+          </ion-item>
+       <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.RemarksEnabled && hostSettings.RemarksRequired">
+          <ion-label color="favorite" floating>{{'CREATE_QUICK_PASS.NOTES' | translate}}</ion-label>
+          <ion-input type="text" required formControlName="notes" [(ngModel)]="visitorInfoModal.notes"
+          ></ion-input>
+        </ion-item>
+        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.RemarksEnabled && !hostSettings.RemarksRequired">
+            <ion-label color="favorite" floating>{{'CREATE_QUICK_PASS.NOTES' | translate}}</ion-label>
+            <ion-input type="text" formControlName="notes" [(ngModel)]="visitorInfoModal.notes"
+            ></ion-input>
+          </ion-item>
+        <ion-item no-lines transparent no-lines *ngIf="(visitorProfile.get('notes').hasError('required') && visitorProfile.get('notes').touched)">
+            <div class="error" *ngIf="visitorProfile.get('notes').hasError('required') && visitorProfile.get('notes').touched">
+              {{'CREATE_QUICK_PASS.ERROR.NOTES_REQUIRED' | translate}}
+            </div>
+        </ion-item>
+
+       <button bottom right ion-button icon-right align-items-end round outline color="favorite"
+        style="margin-left: auto;margin-top:15px; display: block;"
+        type="submit" [disabled]="visitorProfile.invalid">
+        <i start class="icon siva-icon-plus"> </i>{{'ACC_MAPPING.PROCEED' | translate}}</button>
+      </ion-col>
+
+      <!-- <ion-col align-self-end bottom-form col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6> -->
+
+      <!-- </ion-col> -->
+    </form>
+  </ion-row>
+</ion-grid>
+</ion-content>

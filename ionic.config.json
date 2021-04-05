@@ -1,0 +1,7 @@
+{
+  "name": "ViMSNew",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

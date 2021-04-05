@@ -1,0 +1,3449 @@
+import { Injectable } from  '@angular/core';
+import { HttpClient, HttpHeaders } from  '@angular/common/http';
+import {AppSettings} from './../../services/app-settings'
+import { NetworkProvider } from '../network/network';
+import { File } from '@ionic-native/file/ngx';
+import { TranslateService } from '@ngx-translate/core';
+import { AlertController, LoadingController, Platform } from '@ionic/angular';
+import { Network } from '@ionic-native/network/ngx';
+import { EventsService } from 'src/app/services/EventsService';
+import { Device } from '@ionic-native/device/ngx';
+
+/*
+  Generated class for the RestProvider provider.
+
+  See https://angular.io/guide/dependency-injection for more info on providers
+  and Angular DI.
+*/
+@Injectable()
+export class RestProvider {
+  alertShowing = false;
+  T_SVC : any;
+  constructor(public http: HttpClient,
+    public networkProvider: NetworkProvider,
+    public platform: Platform,
+    private device: Device,
+    private file : File,
+    private eventsService:EventsService,
+    public network: Network,
+    // private http1: Http,
+    private alertCtrl: AlertController,
+    private translate:TranslateService,
+    public loadingCtrl: LoadingController) {
+    console.log('Hello RestProvider Provider');
+
+    this.platform.ready().then(() => {
+
+      this.networkProvider.initializeNetworkEvents();
+
+      this.translate.get([
+        'ALERT_TEXT.NETWORK_ERROR']).subscribe(t => {
+          this.T_SVC = t;
+      });
+
+     // Offline event
+    this.eventsService.observeDataCompany().subscribe((data: any) => {
+      //do something
+      if (data.title === 'network:offline'){
+        this.checkConnection();
+      } else {
+        //alert('network:offline ==> '+this.network.type);
+        this.checkConnection();
+      }
+    });
+
+    });
+  }
+
+  async checkConnection(){
+    var result = false;
+    if (this.isNotConnected()) {
+      if(!this.alertShowing){
+        this.alertShowing = true;
+        let alert = this.alertCtrl.create({
+          header: 'Error',
+          message: this.T_SVC['ALERT_TEXT.NETWORK_ERROR'],
+          cssClass:'alert-danger',
+          buttons: [{
+              text: 'Okay',
+              handler: () => {
+                console.log('Cancel clicked');
+                this.alertShowing = false;
+              }
+            }]
+          });
+          (await alert).present();
+          (await alert).onDidDismiss().then(() => {
+            this.alertShowing = false;
+          });
+      }
+
+        result = true;
+    }
+    return result;
+  }
+
+  async showLoading(){
+    let loading = this.loadingCtrl.create({
+      message: 'Please wait...',
+      backdropDismiss: true,
+      showBackdrop: true
+    });
+    (await loading).present();
+    return loading;
+  }
+
+  validateUser(data){
+    var result = false;
+    if(data && data.Table && data.Table.length > 0 && (data.Table[0].Code == 50 || data.Table[0].code == 50)){
+      this.eventsService.publishDataCompany({
+        action: "user:created",
+        title:  "InValidDeviceUIDOrUnAuthorized",
+        message: data.Table[0].Description
+      });
+      result = true;
+    }
+    return result;
+  }
+
+  GetHostAppSettings(data){
+    if(!data){
+      return;
+    }
+    data  = this.setAuthorizedInfo(data);
+    // var loading = this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetHostAppSettings';
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        // loading.dismiss();
+        return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        //  loading.dismiss();
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(output);
+        }else{
+          reject(output);
+        }
+
+      }, (err) => {
+        reject(err);
+        // loading.dismiss();
+      });
+    });
+  }
+
+  async GetAckAppDeviceInfo(data, ApiUrl){
+    var loading = await this.showLoading();
+    var Api = ApiUrl + '/api/Vims/GetAckAppDeviceInfo';
+    console.log("API: "+ Api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        loading.dismiss();
+        return;
+      }
+
+      this.http.post(Api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        loading.dismiss();
+        var output = JSON.parse(response[0].Data);
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  GetSecurityAppDeviceInfo(data, ApiUrl){
+    var loading = this.showLoading();
+    var Api = ApiUrl + '/api/SecurityApp/GetSecurityAppDeviceInfo';
+    console.log("API: "+ Api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise(async (resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        (await loading).dismiss();
+        return;
+      }
+
+      this.http.post(Api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(async response => {
+        console.log("Result: "+ JSON.stringify(response));
+        (await loading).dismiss();
+        var output = JSON.parse(response[0].Data);
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, async (err) => {
+        (await loading).dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async GetDisplayAppDeviceInfo(data, ApiUrl){
+    var loading = await this.showLoading();
+    var Api = ApiUrl + '/api/Vims/GetDisplayAppDeviceInfo';
+    console.log("API: "+ Api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        loading.dismiss();
+        return;
+      }
+
+      this.http.post(Api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        loading.dismiss();
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async SaveDisplayAppDeviceInfo(data, ApiUrl){
+    var loading = await this.showLoading();
+    var Api = ApiUrl + '/api/Vims/SaveDisplayAppDeviceInfo';
+    console.log("API: "+ Api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        loading.dismiss();
+        return;
+      }
+
+      this.http.post(Api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        loading.dismiss();
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(output.Table);
+        }else{
+          reject(output);
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  GetDisplaySettings(data){
+    // var loading = this.showLoading();
+    data = this.setAuthorizedDisplayInfo(data);
+    var Api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetDisplaySettings';
+    console.log("API: "+ Api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        // loading.dismiss();
+        return;
+      }
+
+      this.http.post(Api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        // loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output.Table1[0]));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        // loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  DisplayApp_FacilityMasterList(data){
+    // var loading = this.showLoading();
+    data = this.setAuthorizedDisplayInfo(data);
+    var Api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/DisplayApp_FacilityMasterList';
+    console.log("API: "+ Api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        // loading.dismiss();
+        return;
+      }
+
+      this.http.post(Api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        // loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output.Table1));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        reject(err);
+        // loading.dismiss();
+      });
+    });
+  }
+
+  SaveSecurityAppDeviceInfo(data, ApiUrl){
+    var loading = this.showLoading();
+    var Api = ApiUrl + '/api/SecurityApp/SaveSecurityAppDeviceInfo';
+    console.log("API: "+ Api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise(async (resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        (await loading).dismiss();
+        return;
+      }
+
+      this.http.post(Api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(async response => {
+        (await loading).dismiss();
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(output.Table);
+        }else{
+          reject(output);
+        }
+
+      }, async (err) => {
+        (await loading).dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async SaveAckAppDeviceInfo(data, ApiUrl){
+    var loading = await this.showLoading();
+    var Api = ApiUrl + '/api/Vims/SaveAckAppDeviceInfo';
+    console.log("API: "+ Api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        loading.dismiss();
+        return;
+      }
+
+      this.http.post(Api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        loading.dismiss();
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output.Table[0]));
+        }else{
+          reject(output);
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async GetAppDetails(data){
+    var loading = await this.showLoading();
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppDetails');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.isNotConnected()) {
+        loading.dismiss();
+        return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      // var headers1 = new HttpHeaders();
+      // headers1.set('Content-Type', 'application/json');
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppDetails', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        loading.dismiss();
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(output.Table1 && output.Table1.length > 0){
+          resolve(output.Table1[0]);
+        }else{
+          reject(output);
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async SavePushNotificationId(data){
+    var loading = await this.showLoading();
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SavePushNotificationId');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SavePushNotificationId', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        loading.dismiss();
+        var output = JSON.parse(response[0].Data);
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(output.Table[0]);
+        }else{
+          reject({
+            "message":output.Table1[0].Description
+          });
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async VimsAdminLogin(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAdminLogin');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+        reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAdminLogin', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        loading.dismiss();
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output.Table1[0]));
+        }else{
+          reject({
+            "message":output.Table1[0].Description
+          });
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async GetValidateHost(data){
+    var loading = await this.showLoading();
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetValidateHost');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetValidateHost', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        //Table 2 -- new regis or already diff device
+        // Table 3 -- same device different account
+        if(output.Table1 && output.Table1.length > 0){
+          if( output.Table2 && output.Table2.length > 0 && output.Table2[0].Active){
+            resolve(JSON.stringify(output));
+          }else{
+            this.eventsService.publishDataCompany(
+              {
+                action: "user:created",
+                title:  "UserInActive",
+                message: 'UserInActive'
+              });
+            // reject(output);
+          }
+        }else{
+          reject(output);
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  setAuthorizedSecurityInfo(data){
+    if(!this.platform.is('cordova')) {
+      data.Authorize = {
+        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
+        "AuMAppDevSeqId": AppSettings.TEST_DATA.SAMPLE_SECURITY_SEQ_ID,
+      }
+    }else{
+      var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+      var MAppDevSeqId = "";
+      if(ackData && JSON.parse(ackData)){
+        MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
+      }
+      data.Authorize = {
+        "AuDeviceUID": this.device.uuid,
+        "AuMAppDevSeqId": MAppDevSeqId
+      }
+    }
+    return data;
+  }
+
+  setAuthorizedDisplayInfo(data){
+    if(!this.platform.is('cordova')) {
+      data.Authorize = {
+        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
+        "AuMAppDevSeqId": AppSettings.TEST_DATA.SAMPLE_DISPLAY_DEV_SEQ_ID
+      }
+    }else{
+      var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.DISPLAY_DETAILS);
+      var MAppDevSeqId = "";
+      if(ackData && JSON.parse(ackData)){
+        MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
+      }
+      data.Authorize = {
+        "AuDeviceUID": this.device.uuid,
+        "AuMAppDevSeqId": MAppDevSeqId
+      }
+    }
+    return data;
+  }
+
+  setAuthorizedAckInfo(data){
+    if(!this.platform.is('cordova')) {
+      data.Authorize = {
+        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
+        "AuMAppDevSeqId": AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID,
+      }
+    }else{
+      var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.ACK_DETAILS);
+      var MAppDevSeqId = "";
+      if(ackData && JSON.parse(ackData)){
+        MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
+      }
+      data.Authorize = {
+        "AuDeviceUID": this.device.uuid,
+        "AuMAppDevSeqId": MAppDevSeqId
+      }
+    }
+    return data;
+  }
+
+  setAuthorizedInfoCommon(data){
+
+      var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+      var AuHostSeqId = "";
+      if(hostData && JSON.parse(hostData)){
+        AuHostSeqId = JSON.parse(hostData).SEQID;
+      }
+      data.Authorize = {
+        "AuDeviceUID": "WEB",
+        "AuHostSeqId": AuHostSeqId
+      }
+
+    return data;
+  }
+
+  setAuthorizedInfo(data){
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+      var AuHostSeqId = "";
+      if(hostData && JSON.parse(hostData)){
+        AuHostSeqId = JSON.parse(hostData).SEQID;
+      }
+    if(!this.platform.is('cordova')) {
+      data.Authorize = {
+        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
+        "AuHostSeqId": AuHostSeqId
+      }
+    }else{
+
+      data.Authorize = {
+        "AuDeviceUID": this.device.uuid,
+        "AuHostSeqId": AuHostSeqId
+      }
+    }
+    return data;
+  }
+
+  DisplayApp_GetBookingSlots(data){
+    data  = this.setAuthorizedDisplayInfo(data);
+    // var loading = this.showLoading();
+    var ApiUrl = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/DisplayApp_GetBookingSlots';
+    console.log("API: "+ ApiUrl);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+      var body =  JSON.stringify(data);
+      this.http.post(ApiUrl, body,{
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0){
+            if(output.Table[0].Code && output.Table[0].Code == 10){
+              if(output.Table1){
+                resolve(JSON.stringify(output.Table1));
+              }else{
+                reject(JSON.stringify(output.Table));
+              }
+
+            }else{
+              reject(JSON.stringify(output));
+            }
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+        // loading.dismiss();
+      }, (err) => {
+        reject(err);
+        // loading.dismiss();
+      });
+    });
+  }
+
+
+
+  SearchHost(data){
+
+    data  = this.setAuthorizedInfo(data);
+
+    //var loading = this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SearchHost';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+         // loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output.Table2 != undefined && output.Table2.length > 0){
+          resolve(JSON.stringify(output.Table2));
+        }else{
+          reject(JSON.stringify(output));
+        }
+        //loading.dismiss();
+      }, (err) => {
+        reject(err);
+        //loading.dismiss();
+      });
+    });
+  }
+
+  SearchExistVisitor(data){
+    data  = this.setAuthorizedInfo(data);
+    //var loading = this.showLoading();
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SearchExistVisitor');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+         // loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SearchExistVisitor', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output.Table2 != undefined && output.Table2.length > 0){
+          resolve(JSON.stringify(output.Table2));
+        }else{
+          reject(JSON.stringify(output));
+        }
+        //loading.dismiss();
+      }, (err) => {
+        reject(err);
+        //loading.dismiss();
+      });
+    });
+  }
+
+  GetVisitorsListByHost(data, showLoading){
+    data  = this.setAuthorizedInfo(data);
+    var loading;
+    if(showLoading){
+      loading = this.showLoading();
+    }
+    var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetVisitorsListByHost';
+    console.log("API: "+ URL);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+         loading.dismiss();
+          return;
+      }
+      this.http.post(URL, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        if(showLoading && loading){
+          loading.dismiss();
+        }
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output.Table != undefined && output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+          resolve(JSON.stringify(output.Table1));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        if(showLoading && loading){
+          loading.dismiss();
+        }
+        reject(err);
+      });
+    });
+  }
+
+  GetMasterDetails(){
+    var data  = this.setAuthorizedInfo({});
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetMasterDetails');
+    console.log("Params: "+ JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetMasterDetails', data, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined){
+          resolve(output);
+        }else{
+          reject(output);
+        }
+        //loading.dismiss();
+      }, (err) => {
+        reject(err);
+        //loading.dismiss();
+      });
+    });
+  }
+
+  GetSecurityMasterDetails(){
+    var data  = this.setAuthorizedSecurityInfo({});
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/GetMasterDetails';
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+      this.http.post(url, data, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined){
+          resolve(output);
+        }else{
+          reject(output);
+        }
+        //loading.dismiss();
+      }, (err) => {
+        reject(err);
+        //loading.dismiss();
+      });
+    });
+  }
+
+  GetAllHostData(){
+    // var data  = this.setAuthorizedInfo({});
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAllHostData';
+    console.log("API: "+ url);
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+      this.http.post(url, {}, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined){
+          resolve(output);
+        }else{
+          reject(output);
+        }
+        //loading.dismiss();
+      }, (err) => {
+        reject(err);
+        //loading.dismiss();
+      });
+    });
+  }
+
+
+
+  GetVisitorCompany(data){
+    //var loading = this.showLoading();
+    data  = this.setAuthorizedInfoCommon(data);
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetVisitorCompany');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+        reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetVisitorCompany', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output.Table2 != undefined &&  output.Table2.length > 0){
+          resolve(JSON.stringify(output.Table2));
+        }else{
+          reject(JSON.stringify(output));
+        }
+        //loading.dismiss();
+      }, (err) => {
+        reject(err);
+        //loading.dismiss();
+      });
+    });
+  }
+
+  async AddVisitor(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddVisitor');
+    console.log("Params: "+ JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+        reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddVisitor', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+
+  async UpdateVisitor(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateVisitor');
+    console.log("Params: "+ JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateVisitor', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        loading.dismiss();
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+
+  async CreateQuickPassVisitor(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/CreateQuickPassVisitor';
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+        reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+     this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async addVisitorCompany(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/addVisitorCompany');
+    console.log("Params: "+ JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+        reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/addVisitorCompany', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        loading.dismiss();
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output));
+        }else{
+          reject(JSON.stringify(output));
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+
+  async AddAppointment(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddAppointment');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddAppointment', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async RemindAppointment(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemindAppointment');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemindAppointment', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+    }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  isNotConnected(): boolean {
+    let conntype = this.network.type;
+    var connected = conntype == null || (conntype !== 'unknown' && conntype !== 'none');
+    return !connected;
+  }
+
+  syncAppointment(data, upcoming, showLoading){
+    data  = this.setAuthorizedInfo(data);
+    data.IsMobile = true;
+    var loading ;
+    if(showLoading){
+      loading = this.showLoading();
+    }
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/syncAppointment');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          if(loading){
+            loading.dismiss();
+          }
+          return;
+      }
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/syncAppointment', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(loading){
+          loading.dismiss();
+        }
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            if(upcoming){
+              resolve(JSON.stringify(output.Table1));
+            }else{
+              resolve(JSON.stringify(output.Table3));
+            }
+
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        if(loading){
+          loading.dismiss();
+        }
+        reject(err);
+
+      });
+    });
+  }
+
+  AppointmentApprovalList(data,showLoading){
+    data  = this.setAuthorizedInfo(data);
+    data.IsMobile = true;
+    var loading ;
+    if(showLoading){
+      loading = this.showLoading();
+    }
+    var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AppointmentApprovalList';
+    console.log("API: "+ URL);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          if(loading){
+            loading.dismiss();
+          }
+          return;
+      }
+      this.http.post(URL, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(loading){
+          loading.dismiss();
+        }
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        if(loading){
+          loading.dismiss();
+        }
+        reject(err);
+
+      });
+    });
+  }
+
+  GetAllQuickPassVisitorsHistory(data, showLoading){
+    data  = this.setAuthorizedInfo(data);
+    var loading = null
+    if(showLoading){
+      loading = this.showLoading();
+    }
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/GetAllQuickPassVisitorsHistory';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+     if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          if(loading){
+            loading.dismiss();
+          }
+
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(loading){
+          loading.dismiss();
+        }
+
+        if(output){
+          if(output.Table != undefined){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        if(loading){
+          loading.dismiss();
+        }
+        reject(err);
+
+      });
+    });
+  }
+
+  GetQuickPassVisitorList(data, showLoading){
+    data  = this.setAuthorizedSecurityInfo(data);
+    data.IsMobile = true;
+    var loading = null
+    if(showLoading){
+      loading = this.showLoading();
+    }
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/GetQuickPassVisitorList';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          if(loading){
+            loading.dismiss();
+          }
+
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(loading){
+          loading.dismiss();
+        }
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table2));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        if(loading){
+          loading.dismiss();
+        }
+        reject(err);
+
+      });
+    });
+  }
+
+
+  VimsAppGetCheckInVisitorList(data, showLoading){
+    data  = this.setAuthorizedSecurityInfo(data);
+    data.IsMobile = true;
+    var loading = null
+    if(showLoading){
+      loading = this.showLoading();
+    }
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetCheckInVisitorList';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          if(loading){
+            loading.dismiss();
+          }
+
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(loading){
+          loading.dismiss();
+        }
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table2));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        if(loading){
+          loading.dismiss();
+        }
+        reject(err);
+
+      });
+    });
+  }
+
+  VimsAppGetSecurityStatsDetail(data, showLoading){
+    data  = this.setAuthorizedSecurityInfo(data);
+    data.IsMobile = true;
+    var loading = null;
+    if(showLoading){
+      loading = this.showLoading();
+    }
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetSecurityStatsDetail';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          if(showLoading){
+            loading.dismiss();
+          }
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(showLoading){
+          loading.dismiss();
+        }
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table2));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        if(showLoading){
+          loading.dismiss();
+        }
+
+        reject(err);
+      });
+    });
+  }
+
+  async VimsAppUpdateVisitorCheckOut(data){
+    data  = this.setAuthorizedSecurityInfo(data);
+    data.IsMobile = true;
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppUpdateVisitorCheckOut';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async DeleteQuickPassVisitor(data){
+    data  = this.setAuthorizedInfo(data);
+    data.IsMobile = true;
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/DeleteQuickPassVisitor';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async GetQuickPassVisitorDetail(data){
+    data  = this.setAuthorizedInfoCommon(data);
+    data.IsMobile = true;
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/GetQuickPassVisitorDetail';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table1[0]));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async UpdateQPVisitorCheckOutTime(data){
+    data  = this.setAuthorizedInfoCommon(data);
+    data.IsMobile = true;
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/UpdateQPVisitorCheckOutTime';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify({"message":output.Table[0].description}));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async VimsAppUpdateVisitorQRCheckOut(data){
+    data  = this.setAuthorizedInfoCommon(data);
+    data.IsMobile = true;
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppUpdateVisitorQRCheckOut';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify({"message":output.Table[0].description}));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async UpdateQPVisitorCheckInTime(data){
+    data  = this.setAuthorizedSecurityInfo(data);
+    data.IsMobile = true;
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/UpdateQPVisitorCheckInTime';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  VimsAppGetSecurityStats(data){
+    data  = this.setAuthorizedSecurityInfo(data);
+    data.IsMobile = true;
+    // var loading = this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetSecurityStats';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        // loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table1[0]));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        reject(err);
+        // loading.dismiss();
+      });
+    });
+  }
+
+  async ChangeAppointmentStatus(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeAppointmentStatus';
+    console.log("API: "+ URL);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(URL, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+              resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify({
+              "message": output.Table1[0].Description
+            }));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async ChangeApppointmentApprovalSettings(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeApppointmentApprovalSettings');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeApppointmentApprovalSettings', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+              resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify({
+              "message": output.Table1[0].Description
+            }));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async getHostNotification(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/getHostNotification');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/getHostNotification', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+              resolve(JSON.stringify(output.Table2));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async UpdateReadNotificationStatus(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateReadNotificationStatus';
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+              resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+  async DeleteNotification(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemovePushNotification';
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+              resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify({
+              "message": output.Table1[0].Description
+            }));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+      });
+    });
+  }
+
+
+  GetPreAppointmentSettings(data){
+   // var loading = this.showLoading();
+    data  = this.setAuthorizedInfo(data);
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetPreAppointmentSettings');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+         // loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetPreAppointmentSettings', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table1));
+          }else{
+            reject(JSON.stringify({"message":output.Table1[0].Description}));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+       // loading.dismiss();
+      }, (err) => {
+        reject(err);
+        // loading.dismiss();
+      });
+    });
+  }
+
+
+  async GetAppointmentByGroupId(data){
+    data  = this.setAuthorizedInfo(data);
+    data.IsMobile = true;
+    var loading = await this.showLoading();
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppointmentByGroupId');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppointmentByGroupId', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table1));
+          }else{
+            reject(JSON.stringify({"message":output.Table1[0].Description}));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async VimsAppGetAppointmentByHexCode(data){
+    data  = this.setAuthorizedSecurityInfo(data);
+    data.IsMobile = true;
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetAppointmentByHexCode';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify({"message":output.Table1[0].Description}));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async EditAppointment(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/EditAppointment');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/EditAppointment', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async UpdateHostInfo(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateHostInfo');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateHostInfo', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async RemoveAppointment(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemoveAppointment');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemoveAppointment', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(output ){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+
+  async FBBookingEndSession(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/FBBookingEndSession';
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0]){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async FBDisplayEndSession(data){
+    data  = this.setAuthorizedDisplayInfo(data);
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/FBDisplayEndSession';
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0]){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async VimsAppFBBookingCancel(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFBBookingCancel';
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0]){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async VimsAppUpdateFacilityBookings(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppUpdateFacilityBookings';
+
+    console.log("API: "+ url);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(url, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){ // 0 - No record  2- Expired
+          if(output.Table != undefined &&  output.Table.length > 0){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async VimsAppDeleteFBFacilityBooking(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppDeleteFBFacilityBooking');
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      // alert("data: "+ JSON.stringify(data));
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppDeleteFBFacilityBooking', JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].code == "S"){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+
+  VimsAppFacilityBookingSetting(data){
+    data  = this.setAuthorizedInfo(data);
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityBookingSetting';
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.isNotConnected()) {
+          // loading.dismiss();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table && output.Table[0] && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+          resolve(output.Table1);
+        }else{
+          reject(output);
+        }
+        //loading.dismiss();
+      }, (err) => {
+        reject(err);
+        //loading.dismiss();
+      });
+    });
+  }
+
+  async VimsAppFacilityMasterList(data, edit){
+    data  = this.setAuthorizedInfo(data);
+    if(edit){
+      var loading = await this.showLoading();
+    }
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityMasterList';
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.isNotConnected()) {
+        if(edit){
+          loading.dismiss();
+        }
+        return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(edit){
+          loading.dismiss();
+        }
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
+          resolve(output.Table1);
+        }else{
+          reject(output);
+        }
+
+      }, (err) => {
+        if(edit){
+          loading.dismiss();
+        }
+        reject(err);
+
+      });
+    });
+  }
+
+  VimsAppFacilityPurposeList(data){
+    data  = this.setAuthorizedInfo(data);
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityPurposeList';
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.isNotConnected()) {
+          // loading.dismiss();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table && output.Table[0] && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+          resolve(output.Table1);
+        }else{
+          reject(output);
+        }
+        //loading.dismiss();
+      }, (err) => {
+        reject(err);
+        //loading.dismiss();
+      });
+    });
+  }
+
+  async VimsAppGetBookingSlot(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetBookingSlot';
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table){
+          resolve(output.Table);
+        }else{
+          reject(output);
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async VimsAppFacilityBookingSave(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityBookingSave';
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table && output.Table[0]){
+          resolve(JSON.stringify(output.Table[0]));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  VimsAppGetHostFacilityBookingList(data, showLoaading){
+    data  = this.setAuthorizedInfo(data);
+    var loading;
+    if(showLoaading){
+      loading = this.showLoading();
+    }
+
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetHostFacilityBookingList';
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.isNotConnected()) {
+        if(showLoaading){
+          loading.dismiss();
+        }
+
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output.Table2));
+        }else{
+          reject(JSON.stringify(output));
+        }
+        if(showLoaading){
+          loading.dismiss();
+        }
+      }, (err) => {
+        if(showLoaading){
+          loading.dismiss();
+        }
+        reject(err);
+
+      });
+    });
+  }
+
+  async VimsAppGetFacilityBookingDetails(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.showLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetFacilityBookingDetails';
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          loading.dismiss();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async GetLocatorName(){
+    var address;
+    try{
+      address = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+      if(!address){
+       return;
+      }
+    }catch(e){
+
+    }
+
+    var loading = await this.showLoading();
+    var ApiUrl = JSON.parse(address).ApiUrl+ '/api/Vims/GetLocatorName';
+    console.log("API: "+ ApiUrl);
+    console.log("Params: {}");
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+      this.http.post(ApiUrl, {}, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        loading.dismiss();
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table1));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  GetVisitorDataById(data){
+    data  = this.setAuthorizedAckInfo(data);
+    // var loading = this.showLoading();
+    var qr = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    var ApiUrl = JSON.parse(qr).ApiUrl + '/api/Vims/GetVisitorDataById';
+    console.log("API: "+ ApiUrl);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+      var body =  JSON.stringify(data);
+      this.http.post(ApiUrl, body,{
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        // console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0){
+            if(output.Table[0].code && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+              if(output.Table1){
+                resolve(JSON.stringify(output.Table1[0]));
+              }else{
+                reject(JSON.stringify(output.Table));
+              }
+
+            }else{
+              reject(JSON.stringify(output.Table));
+            }
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+        // loading.dismiss();
+      }, (err) => {
+        reject(err);
+        // loading.dismiss();
+      });
+    });
+  }
+
+  getVisitorAcknowledgeSetting(data){
+    data  = this.setAuthorizedAckInfo(data);
+    // var loading = this.showLoading();
+    var qr = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    var ApiUrl = JSON.parse(qr).ApiUrl + '/api/Vims/getVisitorAcknowledgeSetting';
+    console.log("API: "+ ApiUrl);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+      var body =  JSON.stringify(data);
+      this.http.post(ApiUrl, body,{
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        // console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0){
+            if(output.Table[0].Code && output.Table[0].Code == 10){
+              if(output.Table1){
+                const rObj = output.Table1[0];
+                rObj.Questions = output.Table2;
+                resolve(JSON.stringify(rObj));
+              }else{
+                reject(JSON.stringify(output.Table));
+              }
+
+            }else{
+              reject(JSON.stringify(output));
+            }
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+        // loading.dismiss();
+      }, (err) => {
+        reject(err);
+        // loading.dismiss();
+      });
+    });
+  }
+
+  GetSecurityAppSettings(data){
+    data  = this.setAuthorizedSecurityInfo(data);
+    // var loading = this.showLoading();
+    var qr = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    var ApiUrl = JSON.parse(qr).ApiUrl + '/api/SecurityApp/GetSecurityAppSettings';
+    console.log("API: "+ ApiUrl);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+      var body =  JSON.stringify(data);
+      this.http.post(ApiUrl, body,{
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        // console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0){
+            if(output.Table[0].Code && output.Table[0].Code == 10){
+              if(output.Table1){
+                resolve(JSON.stringify(output.Table1[0]));
+              }else{
+                reject(JSON.stringify(output.Table));
+              }
+
+            }else{
+              reject(JSON.stringify(output));
+            }
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+        // loading.dismiss();
+      }, (err) => {
+        reject(err);
+        // loading.dismiss();
+      });
+    });
+  }
+
+
+  GetVisitorInfoFromLocator(data){
+    data  = this.setAuthorizedAckInfo(data);
+    // var loading = this.showLoading();
+    var QRCode = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if(!QRCode){
+      return;
+    }
+    data.LocatorName = JSON.parse(QRCode).Location;
+    var ApiUrl = JSON.parse(QRCode).ApiUrl + '/api/Vims/GetVisitorInfoFromLocator';
+    console.log("API: "+ ApiUrl);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      // alert("data: "+ JSON.stringify(data));
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // loading.dismiss();
+          return;
+      }
+      this.http.post(ApiUrl, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table1));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+        // loading.dismiss();
+      }, (err) => {
+        reject(err);
+        // loading.dismiss();
+      });
+    });
+  }
+
+  async SaveVisitorCheckinInfo(data){
+    data  = this.setAuthorizedAckInfo(data);
+    var loading = await this.showLoading();
+    var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SaveVisitorCheckinInfo';
+    console.log("API: "+ api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      this.http.post(api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+              reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+            } else {
+              reject(JSON.stringify({"message":"Error"}));
+            }
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async VimsAppSecurityCheckIn(data){
+    data  = this.setAuthorizedSecurityInfo(data);
+    var loading = await this.showLoading();
+    var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppSecurityCheckIn';
+    console.log("API: "+ api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      this.http.post(api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async VimsAppUpdateVisitorVideoBriefStatus(data){
+    data  = this.setAuthorizedAckInfo(data);
+    var loading = await this.showLoading();
+    var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppUpdateVisitorVideoBriefStatus';
+    console.log("API: "+ api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      this.http.post(api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){ //output.Table[0].Code
+          if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(JSON.stringify(output));
+          }if(output.Table && output.Table.length > 0 && output.Table[0].Code == 20){
+            reject({"message":output.Table[0].description});
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+  async GetSafetyBriefStatus(data){
+    data  = this.setAuthorizedAckInfo(data);
+    var loading = await this.showLoading();
+    var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetSafetyBriefStatus';
+    console.log("API: "+ api);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          loading.dismiss();
+          return;
+      }
+
+      this.http.post(api, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        loading.dismiss();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output ){
+          if(output.length > 0 && (output[0].code == 10 || output[0].Code == 10)){
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+
+      }, (err) => {
+        loading.dismiss();
+        reject(err);
+
+      });
+    });
+  }
+
+}
+
+

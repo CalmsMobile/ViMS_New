@@ -1,0 +1,54 @@
+.booking-main {
+  .item-inner,
+  .input-wrapper {
+    padding: 0px;
+    border-bottom: 0px !important;
+  }
+  ion-label {
+    margin: 0px;
+  }
+  ion-icon {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: contain;
+    background-size: 18px;
+
+    &[ng-reflect-name="customicon"] {
+      background-image: url("../../../assets/images/x-icon/admin.png");
+      &[ng-reflect-is-active="true"] {
+        background-image: url("../../../assets/images/x-icon/admin.png");
+      }
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+  }
+  .apt-left {
+    background-color: theme-colors("mainColors", "primary");
+  }
+  .text-white {
+    color: theme-colors("textColors", "primaryWhite");
+  }
+  .booking-status {
+    padding: 5px;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 8px;
+  }
+  .booking-status.pending {
+    background: rgb(252, 170, 170);
+  }
+  .booking-status.canceled {
+    background: #f2f2f2;
+    color: #aaa;
+  }
+  .booking-status.approved {
+    background: #90d3a3;
+    color: #ffffff;
+  }
+  .card-md p {
+    margin: 0 0 2px;
+    font-size: 1.4rem;
+    font-weight: normal;
+    line-height: 1.5;
+  }
+}

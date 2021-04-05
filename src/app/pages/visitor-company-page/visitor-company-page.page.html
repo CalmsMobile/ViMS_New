@@ -1,0 +1,49 @@
+<!--
+  Generated template for the VisitorCompanyPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-toolbar>
+      <ion-title>{{'VISITORS_COMPANY.TITLE' | translate}}</ion-title>
+      <ion-buttons *ngIf= "false" end>
+          <button ion-button icon-only (click)="goToAddVisitorCompany()">
+            <ion-icon name="add"></ion-icon>
+          </button>
+      </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="favorite">
+      <ion-searchbar [(ngModel)]="VM.queryText"
+      placeholder="{{'VISITORS_COMPANY.SEARCH_COMPANY' | translate}}" (ionChange)="getVisitorsCompanyBySearch(true, null)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
+          <!-- (ionChange)="updateSchedule()" -->
+      </ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+      <ion-refresher (ionRefresh)="doRefresh($event)">
+          <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+      <button *ngIf="(VM.companyList.length == 0 && VM.queryText.length > 2)" ion-button full (click)="addVisitors()">ADD</button>
+      <ion-list radio-group *ngFor="let company of VM.companyList" [(ngModel)]="relationship">
+          <ion-item>
+            <ion-label>{{company.visitor_comp_name}}</ion-label>
+            <ion-radio value="{{company.visitor_comp_code}}" (ionSelect)="selectCompany(company)"></ion-radio>
+          </ion-item>
+        </ion-list>
+
+</ion-content>
+
+<ion-footer >
+    <ion-toolbar (click)="addVisitorsCompany()" *ngIf= "done">
+      <!-- <ion-title>{{'VISITORS_COMPANY.DONE' | translate}}</ion-title> -->
+      <ion-buttons end>
+          <button ion-button> {{'VISITORS_COMPANY.DONE' | translate}}
+            <!-- <ion-icon name="checkmark"></ion-icon> -->
+          </button>
+        </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>

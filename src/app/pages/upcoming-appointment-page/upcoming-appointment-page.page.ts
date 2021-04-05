@@ -1,0 +1,318 @@
+import { Component, OnInit } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
+import { NavController, AlertController, NavParams } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { RestProvider } from 'src/app/providers/rest/rest';
+import { AppSettings } from 'src/app/services/app-settings';
+import { EventsService } from 'src/app/services/EventsService';
+
+@Component({
+  selector: 'app-upcoming-appointment-page',
+  templateUrl: './upcoming-appointment-page.page.html',
+  styleUrls: ['./upcoming-appointment-page.page.scss'],
+})
+export class UpcomingAppointmentPagePage implements OnInit {
+
+  OffSet = 0;
+  futureAppointments = [];
+  todayAppointments = [];
+  tomorrowAppointments = [];
+  appointments = [];
+  notificationCount = 0;
+  T_SVC:any;
+  loadingFinished = true;
+  isAdmin = false;
+  constructor(public navCtrl: NavController,
+    private events : EventsService,
+    private router: Router,
+    private translate : TranslateService,
+    // public menu: MenuController,
+    private alertCtrl: AlertController, public apiProvider: RestProvider, public navParams: NavParams) {
+    this.translate.get([
+      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
+        this.T_SVC = t;
+    });
+    events.observeDataCompany().subscribe((data1:any) => {
+      if (data1.action === "NotificationReceived") {
+        console.log("Notification Received: " + data1.title);
+        this.showNotificationCount();
+      }
+    });
+
+
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter UpcomingAppointmentPage');
+  }
+
+  ionViewWillEnter() {
+
+    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+    var qrCode = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    try{
+      var qrCodeObj = JSON.parse(qrCode);
+      var settingsObj = JSON.parse(settings);
+      if(settings && qrCodeObj && settingsObj){
+        if(qrCodeObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
+          this.isAdmin = (settingsObj.Table4.length>0);
+        }else if(qrCodeObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
+          this.isAdmin = (settingsObj.Table3.length>0);
+        }
+      }
+    }catch(e){
+      console.log("Error in setting Admin", e);
+    }
+    this.events.publishDataCompany({
+      action: "page",
+      title:  "HomeView",
+      message: ''
+    });
+    this.showNotificationCount();
+		console.log('ionViewWillEnter UpcomingAppointmentPage');
+    this.OffSet = 0;
+    // this.menu.enable(true,"myLeftMenu");
+    this.getAppointmentHistory(null);
+
+  }
+
+  ionViewWillLeave(){
+    this.events.publishDataCompany({
+      action: "page",
+      title: "HomeView1",
+      message: ''
+    });
+  }
+
+  showNotificationCount(){
+    var count = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT);
+    if(count){
+      this.notificationCount = parseInt(count);
+    }
+  }
+
+  getDayofDate(dateString){
+		let dateObject = new Date(dateString);
+		let weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+		return weekdays[dateObject.getDay()];
+  }
+
+  gotoAdminPage(){
+    this.router.navigateByUrl('admin-home');
+  }
+
+  gotoNotification(){
+    this.router.navigateByUrl('notifications');
+  }
+
+
+
+  checkIsToday(fromDate, toDate, dateCondition){
+    if(fromDate && toDate){
+      let fromdateObject = new Date(fromDate.split("T")[0]).getTime();
+      let todateObject = new Date(toDate.split("T")[0]).getTime();
+      let cDatee = new Date();
+
+      if(dateCondition == "Today"){
+        var month = ""+ (cDatee.getMonth()+1);
+        if(cDatee.getMonth()+1 < 10){
+          month = "0"+ (cDatee.getMonth()+1);
+        }
+        var date = ""+ cDatee.getDate();
+        if(cDatee.getDate() < 10){
+          date = "0"+ cDatee.getDate();
+        }
+        let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
+        if(todayObject == fromdateObject){
+          return true;
+        }else{
+          return false;
+        }
+      }else if(dateCondition == "Tomorrow"){
+        cDatee.setDate(cDatee.getDate() + 1);
+        month = ""+ (cDatee.getMonth()+1);
+        if(cDatee.getMonth()+1 < 10){
+          month = "0"+ (cDatee.getMonth()+1);
+        }
+        date = ""+ cDatee.getDate();
+        if(cDatee.getDate()+1 < 10){
+          date = "0"+ cDatee.getDate();
+        }
+        let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
+        if(todayObject == fromdateObject){
+          return true;
+        }else{
+          return false;
+        }
+      }else if(dateCondition == "Future"){
+        cDatee.setDate(cDatee.getDate() + 2);
+        month = ""+ (cDatee.getMonth()+1);
+        if(cDatee.getMonth()+1 < 10){
+          month = "0"+ (cDatee.getMonth()+1);
+        }
+        date = ""+ cDatee.getDate();
+        if(cDatee.getDate()+1 < 10){
+          date = "0"+ cDatee.getDate();
+        }
+        let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
+        if(todayObject <= fromdateObject){
+          return true;
+        }else{
+          return false;
+        }
+      }
+
+    }else{
+      return false;
+    }
+
+  }
+
+
+	doRefresh(refresher) {
+    // this.OffSet = this.OffSet + 20;
+    this.getAppointmentHistory(refresher);
+    //setTimeout(()=>{refresher.complete();},2000)
+	}
+
+	getAppointmentHistory(refresher){
+
+		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if(hostData){
+      this.loadingFinished = false;
+      var hostId = JSON.parse(hostData).HOST_ID;
+			var params = {"hostID":hostId,
+			"lastSyncDate":"",
+			"OffSet": ""+ this.OffSet,
+			"Rows":"100"
+		};
+			// this.VM.host_search_id = "adam";
+			this.apiProvider.syncAppointment(params, true,true).then(
+				(val) => {
+          this.loadingFinished = true;
+					var aList = JSON.parse(val.toString());
+					if(refresher ){
+            // this.appointments = aList.concat(this.appointments);
+            this.appointments = aList;
+						refresher.complete();
+					}else{
+						this.appointments = aList;
+					}
+          this.todayAppointments = [];
+          this.tomorrowAppointments = [];
+          this.futureAppointments = [];
+          this.OffSet = this.OffSet + aList.length;
+          for(let items in this.appointments){
+            var cObj = this.appointments[items];
+            if(this.checkIsToday(cObj.START_DATE, cObj.END_DATE, "Today")){
+              this.todayAppointments.push(cObj);
+            }else if(this.checkIsToday(cObj.START_DATE, cObj.END_DATE, "Tomorrow")){
+              this.tomorrowAppointments.push(cObj);
+            }else if(this.checkIsToday(cObj.START_DATE, cObj.END_DATE, "Future")){
+              this.futureAppointments.push(cObj);
+            }
+
+          }
+				},
+				async (err) => {
+          this.loadingFinished = true;
+          if(refresher ){
+            refresher.complete();
+          }
+          if(err && err.message == "No Internet"){
+            return;
+          }
+          this.appointments = [];
+          var message = "";
+        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        } else if(err && JSON.parse(err) && JSON.parse(err).message){
+          message =JSON.parse(err).message;
+        }
+        if(message){
+          // message = " Unknown"
+          let alert = await this.alertCtrl.create({
+            header: 'Error !',
+            message: message,
+            cssClass: 'alert-danger',
+            buttons: ['Okay']
+          });
+            alert.present();
+        }
+				}
+			);
+		}
+	}
+
+  viewBooking(list){
+    if(list[0].isFacilityAlone){
+      const navigationExtras: NavigationExtras = {
+        state: {
+          passData: {
+            appointment: list
+          }
+        }
+      };
+      this.router.navigate(['appointment-details'], navigationExtras);
+      return;
+    }
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if(hostData ){
+      var HOSTIC = JSON.parse(hostData).HOSTIC;
+			var params = {
+			"STAFF_IC":HOSTIC,
+			"appointment_group_id": list[0].appointment_group_id
+		};
+		// this.VM.host_search_id = "adam";
+		this.apiProvider.GetAppointmentByGroupId(params).then(
+			(val) => {
+				var aList = JSON.parse(val.toString());
+        const navigationExtras: NavigationExtras = {
+          state: {
+            passData: {
+              appointment: aList
+            }
+          }
+        };
+        this.router.navigate(['appointment-details'], navigationExtras);
+			},
+			async (err) => {
+        if(err && err.message == "No Internet"){
+          return;
+        }
+        var message = "";
+        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        } else if(err && JSON.parse(err) && JSON.parse(err).message){
+          message =JSON.parse(err).message;
+        }
+        if(message){
+          // message = " Unknown"
+          let alert = await this.alertCtrl.create({
+            header: 'Error !',
+            message: message,
+            cssClass: 'alert-danger',
+            buttons: ['Okay']
+          });
+            alert.present();
+        }
+			}
+		);
+	}
+	}
+	createBooking(){
+    this.router.navigateByUrl('add-appointment');
+  }
+
+  takeActionForScan(page){
+    if(page.component == "AddAppointmentPage"){
+      this.router.navigateByUrl(page.component);
+    }else{
+      this.router.navigateByUrl(page.component);
+    }
+  }
+
+  ngOnInit() {
+  }
+
+}

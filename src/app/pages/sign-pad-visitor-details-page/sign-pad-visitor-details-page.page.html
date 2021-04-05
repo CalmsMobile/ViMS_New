@@ -1,0 +1,167 @@
+<!--
+  Generated template for the SignPadVisitorDetailsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content [ngStyle]="{'background': 'linear-gradient(' + customStyle.DetailsPage.backgroundcolor1 + ', ' + customStyle.DetailsPage.backgroundcolor2 + ') no-repeat center'}">
+  <!-- <ion-list style="margin: 0 auto;display: table;" *ngIf= "(screenSize == tab_land || screenSize == nor_land)"> -->
+
+    <div *ngIf="visitor">
+      <ion-grid>
+        <ion-row justify-content-between>
+          <ion-col col-6 >
+            <ion-card class="card1TabLand" item-start>
+              <div class="title" [ngStyle]= "{'background' : customStyle.DetailsPage.backgroundcolor2}">My Details</div>
+              <ion-avatar  *ngIf = "base64Image"  text-center margin-bottom style="margin-top: 0px;margin: 0 auto">
+                  <img style ="margin: 0 auto;" onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize !== tab_land)}" [src]="base64Image" (click)= "presentActionSheet()"/>
+              </ion-avatar>
+              <ion-avatar  *ngIf = "!base64Image" text-center margin-bottom style="margin-top: 0px;margin: 0 auto">
+                  <img style ="margin: 0 auto;" onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize !== tab_land)}" *ngIf="appSettings.VisitorDetails.VisitorImgRef.value" [src]="logo+visitor.VisitorImgRef+RefTypeVP" (click)= "presentActionSheet()"/>
+                  <img style ="margin: 0 auto;" onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize !== tab_land)}" *ngIf="!appSettings.VisitorDetails.VisitorImgRef.value" [src]="logo+'0'+RefTypeVP" (click)= "presentActionSheet()"/>
+                  <ion-icon app-logo-img style="display: block;
+                  margin: 0 auto;
+                  margin-top: -20px;
+                  margin-bottom: 10px;
+                  width: 30px;
+                  height: 30px;
+                  border-radius: 50%;
+                  background: whitesmoke;
+                  padding: 7px;
+                  color: grey;" class="animated fadeInDown delay-1s" *ngIf = "appSettings.ImageCaptureEnabled" (click)= "presentActionSheet()" name="camera"></ion-icon>
+              </ion-avatar>
+              <ion-item no-lines>
+                  <div item-start class="leftDiv">IC</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}"> : <ion-icon class="iconClass" name="card"></ion-icon> <b>{{visitor.VisitorSeqId}}</b></p>
+              </ion-item>
+              <ion-item no-lines>
+                  <div item-start class="leftDiv">Name</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "visitor.VisitorName && appSettings.VisitorDetails.VisitorName.value"> : <ion-icon class="iconClass" name="person"></ion-icon> <b>{{visitor.VisitorName}}</b></p>
+              </ion-item>
+              <ion-item no-lines>
+                  <div item-start class="leftDiv">Company</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}"> : <img src="../../assets/images/business.png" class="mybusinessicon"/><b>{{visitor.VisitorCompName? (' ' + visitor.VisitorCompName) : ' -- '}}</b></p>
+              </ion-item>
+              <ion-item no-lines>
+                  <div item-start class="leftDiv">Email</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "visitor.VisitorEmail && appSettings.VisitorDetails.VisitorEmail.value" > : <ion-icon class="iconClass" name="mail"></ion-icon><b>{{visitor.VisitorEmail}}</b></p>
+              <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "!(visitor.VisitorEmail && appSettings.VisitorDetails.VisitorEmail.value)" > : <ion-icon class="iconClass" name="mail"></ion-icon> -- </p>
+              </ion-item>
+              <ion-item no-lines style="border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;">
+                  <div item-start class="leftDiv">Contact</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "visitor.VisitorMobNo && appSettings.VisitorDetails.VisitorMobNo.value" > : <ion-icon class="iconClass" name="call"></ion-icon><b>{{visitor.VisitorMobNo}}</b></p>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "!(visitor.VisitorMobNo && appSettings.VisitorDetails.VisitorMobNo.value)" > : <ion-icon class="iconClass" name="call"></ion-icon>-- </p>
+              </ion-item>
+          </ion-card>
+          </ion-col>
+          <ion-col col-6 >
+            <ion-card class="card1TabLand" >
+              <div class="title" [ngStyle]= "{'background' : customStyle.DetailsPage.backgroundcolor2}">Host Details</div>
+              <ion-avatar [ngStyle]= "{'margin-bottom' : appSettings.ImageCaptureEnabled? '24px' : '0px'}" *ngIf="!visitor.HostSeqId || !appSettings.VisitorDetails.HostImage.value" style="margin-top: 0px;" >
+                  <img style ="margin: 0 auto;" onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize !== tab_land)}"  src="../../assets/images/user.png"/>
+              </ion-avatar>
+              <ion-avatar style="margin-top: 0px;" [ngStyle]= "{'margin-bottom' : appSettings.ImageCaptureEnabled? '24px' : '0px'}" *ngIf = "visitor.HostSeqId && appSettings.VisitorDetails.HostImage.value" text-center margin-bottom style="margin-top: 0px;">
+                  <img style ="margin: 0 auto;" onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize !== tab_land)}" [src]="logo+visitor.HostSeqId+ RefType"/>
+              </ion-avatar>
+              <ion-item no-lines>
+                  <div item-start class="leftDiv">Name</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="visitor.HostName && appSettings.VisitorDetails.HostName.value"> : <ion-icon class="iconClass" name="person"></ion-icon><b>{{visitor.HostName}}</b></p>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="!visitor.HostName || !appSettings.VisitorDetails.HostName.value"> : <ion-icon class="iconClass" name="person"></ion-icon> -- </p>
+              </ion-item>
+              <!-- <ion-item no-lines>
+                  <div item-start class="leftDiv">Email</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}"> : <ion-icon class="iconClass" name="mail"></ion-icon><b>{{visitor.HostEmail? visitor.HostEmail: '--'}}</b></p>
+              </ion-item> -->
+              <ion-item no-lines>
+                  <div item-start class="leftDiv">Company</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}"> : <img src="../../assets/images/business.png" class="mybusinessicon"/><b>{{visitor.CompanyName? ('  ' + visitor.CompanyName) : ' -- '}}</b></p>
+              </ion-item>
+              <ion-item no-lines>
+                  <div item-start class="leftDiv">Purpose</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="visitor.att_reason && appSettings.VisitorDetails.Purpose.value" > : <b>{{ '  ' + visitor.att_reason}}</b></p>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="!visitor.att_reason || !appSettings.VisitorDetails.Purpose.value" > : -- </p>
+              </ion-item>
+              <ion-item no-lines>
+                  <div item-start class="leftDiv">Department</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="visitor.DeptDesc && appSettings.VisitorDetails.Department.value" > : <b>{{'  ' +  visitor.DeptDesc}}</b></p>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="!visitor.DeptDesc || !appSettings.VisitorDetails.Department.value" > : -- </p>
+              </ion-item>
+              <ion-item no-lines style="border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;">
+                  <div item-start class="leftDiv">Floor</div>
+                  <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="visitor.HostFloor && appSettings.VisitorDetails.Floor.value" > : <b>{{'  ' + visitor.HostFloor}}</b></p>
+              <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="!visitor.HostFloor || !appSettings.VisitorDetails.Floor.value" > : -- </p>
+              </ion-item>
+          </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+
+    </div>
+      <!-- <ion-item style="background: transparent" no-lines *ngIf="visitor"> -->
+
+
+          <!-- <ion-card class="card1TabLand" item-start>
+              <div [ngClass]="{ 'contentTabLand1': (screenSize == tab_land), 'contentNormalLand': (screenSize == nor_land)}">
+                  <div [ngClass]="{ 'profile-info1': (screenSize == tab_land), 'profile-infoLandNormal1': (screenSize == nor_land)}" padding>
+                  <div>
+                      <div>Visitor Profile</div>
+                      <ion-avatar  *ngIf = "base64Image"  text-center margin-bottom style="margin-top: 0px;">
+                          <img onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize == nor_land)}" [src]="base64Image" (click)= "presentActionSheet()"/>
+                      </ion-avatar>
+                      <ion-avatar  *ngIf = "!base64Image" text-center margin-bottom style="margin-top: 0px;">
+                          <img onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize == nor_land)}" *ngIf="appSettings.VisitorDetails.VisitorImgRef.value" [src]="logo+visitor.VisitorImgRef+RefTypeVP" (click)= "presentActionSheet()"/>
+                          <img onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize == nor_land)}" *ngIf="!appSettings.VisitorDetails.VisitorImgRef.value" [src]="logo+'0'+RefTypeVP" (click)= "presentActionSheet()"/>
+                          <ion-icon app-logo-img class="animated fadeInDown delay-1s" [ngClass]="{ 'cameraImgTabLand': (screenSize == tab_land), 'cameraImgNormalLand': (screenSize == nor_land)}" *ngIf = "appSettings.ImageCaptureEnabled" (click)= "presentActionSheet()" name="camera"></ion-icon>
+                      </ion-avatar>
+                      <h4 [ngStyle]="{'margin-top' : appSettings.ImageCaptureEnabled? '0px' : '15px'}" [ngClass]="{ 'head1TabLand': (screenSize == tab_land), 'head1NormalLand': (screenSize == nor_land)}"><b>{{appSettings.VisitorDetails.VisitorName.name}}</b></h4>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "visitor.VisitorName && appSettings.VisitorDetails.VisitorName.value"><b>{{visitor.VisitorName}}</b></p>
+                      <h4 [ngClass]="{ 'head1TabLand': (screenSize == tab_land), 'head1NormalLand': (screenSize == nor_land)}" ><b>{{appSettings.VisitorDetails.VisitorEmail.name}}</b></h4>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "visitor.VisitorEmail && appSettings.VisitorDetails.VisitorEmail.value" ><b>{{visitor.VisitorEmail}}</b></p>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "!(visitor.VisitorEmail && appSettings.VisitorDetails.VisitorEmail.value)" > -- </p>
+                      <h4 [ngClass]="{ 'head1TabLand': (screenSize == tab_land), 'head1NormalLand': (screenSize == nor_land)}"><b>{{appSettings.VisitorDetails.VisitorMobNo.name}}</b></h4>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "visitor.VisitorMobNo && appSettings.VisitorDetails.VisitorMobNo.value" ><b>{{visitor.VisitorMobNo}}</b></p>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf= "!(visitor.VisitorMobNo && appSettings.VisitorDetails.VisitorMobNo.value)" > -- </p>
+                  </div>
+                  </div>
+              </div>
+          </ion-card>
+          <ion-card class="card1TabLand" >
+              <div [ngClass]="{ 'contentTabLand1': (screenSize == tab_land), 'contentNormalLand': (screenSize == nor_land)}">
+                  <div [ngClass]="{ 'profile-info1': (screenSize == tab_land), 'profile-infoLandNormal': (screenSize == nor_land)}" padding>
+                      <div>Host Profile</div>
+                      <ion-avatar *ngIf="!visitor.HostSeqId || !appSettings.VisitorDetails.HostImage.value" style="margin-top: 0px;" >
+                              <img onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize == nor_land)}"  src="../../assets/images/user.png"/>
+                      </ion-avatar>
+                      <ion-avatar style="margin-top: 0px;" *ngIf = "visitor.HostSeqId && appSettings.VisitorDetails.HostImage.value" text-center margin-bottom style="margin-top: 0px;">
+                          <img onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize == nor_land)}" [src]="logo+visitor.HostSeqId+ RefType"/>
+                      </ion-avatar>
+                      <h4 [ngStyle]="{'margin-top' : appSettings.ImageCaptureEnabled? '15px' : '0px'}" [ngClass]="{ 'head1TabLand': (screenSize == tab_land), 'head1NormalLand': (screenSize == nor_land)}"><b>{{appSettings.VisitorDetails.HostName.name}}</b></h4>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="visitor.HostName && appSettings.VisitorDetails.HostName.value"><b>{{visitor.HostName}}</b></p>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="!visitor.HostName || !appSettings.VisitorDetails.HostName.value"> -- </p>
+                      <h4 [ngClass]="{ 'head1TabLand': (screenSize == tab_land), 'head1NormalLand': (screenSize == nor_land)}"><b>{{appSettings.VisitorDetails.Purpose.name}}</b></h4>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="visitor.att_reason && appSettings.VisitorDetails.Purpose.value" ><b>{{visitor.att_reason}}</b></p>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="!visitor.att_reason || !appSettings.VisitorDetails.Purpose.value" > -- </p>
+                      <h4 [ngClass]="{ 'head1TabLand': (screenSize == tab_land), 'head1NormalLand': (screenSize == nor_land)}"><b>{{appSettings.VisitorDetails.Department.name}}</b></h4>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="visitor.DeptDesc && appSettings.VisitorDetails.Department.value" ><b>{{visitor.DeptDesc}}</b></p>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="!visitor.DeptDesc || !appSettings.VisitorDetails.Department.value" > -- </p>
+                      <h4 [ngClass]="{ 'head1TabLand': (screenSize == tab_land), 'head1NormalLand': (screenSize == nor_land)}"><b>{{appSettings.VisitorDetails.Floor.name}}</b></h4>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="visitor.HostFloor && appSettings.VisitorDetails.Floor.value" ><b>{{visitor.HostFloor}}</b></p>
+                      <p [ngClass]="{ 'pTabLand': (screenSize == tab_land), 'pNormalLand': (screenSize == nor_land)}" *ngIf="!visitor.HostFloor || !appSettings.VisitorDetails.Floor.value" > -- </p>
+
+                  </div>
+              </div>
+          </ion-card>                 -->
+      <!-- </ion-item> -->
+<!-- </ion-list> -->
+</ion-content>
+<ion-footer transparent>
+  <ion-toolbar transparent>
+      <button bottom right outline ion-button icon-right align-items-end round
+      [ngClass]="{ 'buttonProceedLand': (screenSize == tab_land || screenSize == nor_land), 'buttonNormal': (screenSize == tab_por || screenSize == nor_por)}" [disabled]="!visitor"
+      (click)="proceedToNextStep()">
+          {{'ACC_MAPPING.PROCEED' | translate}}
+        <ion-icon class="icon siva-icon-right-open"></ion-icon>
+      </button>
+  </ion-toolbar>
+</ion-footer>

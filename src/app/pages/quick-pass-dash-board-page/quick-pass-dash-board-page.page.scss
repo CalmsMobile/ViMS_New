@@ -1,0 +1,86 @@
+.para {
+  // color:red;
+  font-size: 32px;
+}
+.card1 {
+  margin: 0px;
+  margin-left: 10px;
+  /* margin-right: 10px; */
+  padding: 5px;
+  border-radius: 5%;
+  border: 1px solid #dedede;
+  height: 120px !important;
+}
+
+.itemTextExpired {
+  font-size: 14px;
+  padding: 5px;
+  color: coral;
+  text-align: center;
+}
+
+.itemTextActive {
+  font-size: 14px;
+  padding: 5px;
+  color: green;
+  text-align: center;
+}
+.itemTextUsed {
+  font-size: 14px;
+  padding: 5px;
+  color: blue;
+  text-align: center;
+}
+.itemTextUnused {
+  font-size: 14px;
+  padding: 5px;
+  color: gray;
+  text-align: center;
+}
+.itemTextOverstay {
+  font-size: 14px;
+  padding: 5px;
+  color: rgb(252, 23, 7);
+  text-align: center;
+}
+
+.itemCheckOut {
+  font-size: 14px;
+  padding: 5px;
+  color: rgb(231, 41, 130);
+  text-align: center;
+}
+
+.myDivider {
+  min-height: 0px !important;
+  height: 15px;
+}
+
+.myCol {
+  padding: 0px !important;
+}
+.myRow {
+  padding: 0px !important;
+  margin-top: 20px;
+}
+
+.myowCenter {
+  padding: 0px !important;
+  margin: 0 auto;
+  display: block;
+  min-width: 50%;
+  margin-top: 20px;
+}
+
+.myHomeTitle {
+  margin: 0 auto;
+  padding: 0px;
+  font-size: 24px;
+  color: deeppink;
+  display: block;
+  margin-bottom: 0px !important;
+}
+
+.scroll-content {
+  margin-top: 0px !important;
+}

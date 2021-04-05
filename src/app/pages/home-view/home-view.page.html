@@ -1,0 +1,67 @@
+<ion-content>
+
+  <!-- HOSTAPPT -->
+  <ion-tabs #myTabs color="danger" [selectedIndex]="myIndex" *ngIf= "appType == HOSTAPPT && showQP">
+    <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
+    <!-- <ion-tab [root]="tab2Root"  tabTitle="Create" tabIcon="add"></ion-tab> -->
+    <ion-tab [root]="tab3Root" tabTitle="History" tabIcon="md-calendar"></ion-tab>
+    <!-- <ion-tab [root]="tab4Root"  tabTitle="Notification" tabIcon="ios-notifications"></ion-tab> -->
+    <ion-tab [root]="tab6Root"  tabTitle="Calendar" tabIcon="ios-list"></ion-tab>
+    <ion-tab [root]="tab5Root"  tabTitle="Settings" tabIcon="cog"></ion-tab>
+    <ion-tab [root]="tab7Root"  tabTitle="Quick Pass" tabIcon="aperture"></ion-tab>
+
+  </ion-tabs>
+
+   <!-- HOSTAPPT -->
+   <ion-tabs #myTabs color="danger" [selectedIndex]="myIndex" *ngIf= "appType == HOSTAPPT && !showQP">
+      <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
+      <!-- <ion-tab [root]="tab2Root"  tabTitle="Create" tabIcon="add"></ion-tab> -->
+      <ion-tab [root]="tab3Root" tabTitle="History" tabIcon="md-calendar"></ion-tab>
+      <!-- <ion-tab [root]="tab4Root"  tabTitle="Notification" tabIcon="ios-notifications"></ion-tab> -->
+      <ion-tab [root]="tab6Root"  tabTitle="Calendar" tabIcon="ios-list"></ion-tab>
+      <ion-tab [root]="tab5Root"  tabTitle="Settings" tabIcon="cog"></ion-tab>
+    </ion-tabs>
+
+  <!-- HOSTAPPT_FACILITYAPP -->
+  <ion-tabs #myTabs color="danger" [selectedIndex]="myIndex" *ngIf= "appType == HOSTAPPT_FACILITYAPP  && showQP">
+    <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
+    <!-- <ion-tab [root]="tab2Root"  tabTitle="Create" tabIcon="add"></ion-tab> -->
+    <ion-tab [root]="tab3Root"  tabTitle="History" tabIcon="md-calendar"></ion-tab>
+    <!-- <ion-tab [root]="tab4Root"  tabTitle="Notification" tabIcon="ios-notifications"></ion-tab> -->
+    <!-- <ion-tab [root]="tab6Root"  tabTitle="Admin" tabIcon="customicon"></ion-tab> -->
+    <ion-tab [root]="tab6Root"  tabTitle="Calendar" tabIcon="ios-list"></ion-tab>
+    <ion-tab [root]="tab5Root"  tabTitle="Settings" tabIcon="cog"></ion-tab>
+    <ion-tab [root]="tab7Root"  tabTitle="Quick Pass" tabIcon="aperture"></ion-tab>
+  </ion-tabs>
+
+  <ion-tabs #myTabs color="danger" [selectedIndex]="myIndex" *ngIf= "appType == HOSTAPPT_FACILITYAPP  && !showQP">
+      <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
+      <!-- <ion-tab [root]="tab2Root"  tabTitle="Create" tabIcon="add"></ion-tab> -->
+      <ion-tab [root]="tab3Root"  tabTitle="History" tabIcon="md-calendar"></ion-tab>
+      <!-- <ion-tab [root]="tab4Root"  tabTitle="Notification" tabIcon="ios-notifications"></ion-tab> -->
+      <!-- <ion-tab [root]="tab6Root"  tabTitle="Admin" tabIcon="customicon"></ion-tab> -->
+      <ion-tab [root]="tab6Root"  tabTitle="Calendar" tabIcon="ios-list"></ion-tab>
+      <ion-tab [root]="tab5Root"  tabTitle="Settings" tabIcon="cog"></ion-tab>
+    </ion-tabs>
+    <!-- FACILITY -->
+  <ion-tabs #myTabs color="danger" [selectedIndex]="myIndex" *ngIf= "appType == FACILITY && showQP">
+      <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
+      <!-- <ion-tab [root]="tab2Root"  tabTitle="Create" tabIcon="add"></ion-tab> -->
+      <ion-tab [root]="tab3Root"  tabTitle="History" tabIcon="md-calendar"></ion-tab>
+      <!-- <ion-tab [root]="tab4Root"  tabTitle="Notification" tabIcon="ios-notifications"></ion-tab> -->
+      <ion-tab [root]="tab6Root"  tabTitle="Calendar" tabIcon="ios-list"></ion-tab>
+      <ion-tab [root]="tab5Root"  tabTitle="Settings" tabIcon="cog"></ion-tab>
+      <ion-tab [root]="tab7Root"  tabTitle="Quick Pass" tabIcon="aperture"></ion-tab>
+  </ion-tabs>
+  <ion-tabs #myTabs color="danger" [selectedIndex]="myIndex" *ngIf= "appType == FACILITY && !showQP">
+      <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
+      <!-- <ion-tab [root]="tab2Root"  tabTitle="Create" tabIcon="add"></ion-tab> -->
+      <ion-tab [root]="tab3Root"  tabTitle="History" tabIcon="md-calendar"></ion-tab>
+      <!-- <ion-tab [root]="tab4Root"  tabTitle="Notification" tabIcon="ios-notifications"></ion-tab> -->
+      <ion-tab [root]="tab6Root"  tabTitle="Calendar" tabIcon="ios-list"></ion-tab>
+      <ion-tab [root]="tab5Root"  tabTitle="Settings" tabIcon="cog"></ion-tab>
+  </ion-tabs>
+</ion-content>
+<ion-fab *ngIf="showFab" bottom right style="margin-bottom: 55px" (click)="createBooking()">
+  <button ion-fab color="danger"><ion-icon name="add"></ion-icon></button>
+</ion-fab>

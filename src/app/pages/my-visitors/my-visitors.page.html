@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+    <button ion-button menuToggle start>
+      <ion-icon class="siva-icon-menu-1"></ion-icon>
+    </button>
+    <ion-title>{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="favorite">
+    <ion-searchbar [(ngModel)]="VM.queryText"
+    placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch()" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
+        <!-- (ionChange)="updateSchedule()" -->
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <ion-list #visitorsList>
+      <ion-item style="margin: 50% auto;
+      text-align: center;" *ngIf="VM.visitors == undefined || VM.visitors == null || VM.visitors.length == 0">
+          {{'MANG_VISITORS.NO_VISITORS_AVAILABLE' | translate}}
+      </ion-item>
+        <ion-item-sliding #slideDOM no-lines *ngFor="let item of VM.visitors">
+            <ion-item sp-visitor-item class="myItem">
+                <div item-left [ngClass]="{ 'myItemCIO': (item.VisitorStatus == '20'),'myItemCINO':   (item.VisitorStatus == '10'), 'myItemCIExpired': (item.VisitorStatus == '30')}">
+                    <ion-avatar>
+                        <img onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType">
+                    </ion-avatar>
+                </div>
+
+                <ion-label>
+                  <ion-row>
+                      <ion-icon name="person" class="myIcons"></ion-icon>
+                      <h2 class="myName"><b>{{doCapitalize(item.visitor_name)}}</b></h2>
+                  </ion-row>
+
+                  <!-- <p>{{item.visitor_comp_id}}</p> -->
+                  <ion-row>
+                    <ion-icon name="grid" class="myIcons"></ion-icon>
+                    <p>{{doCapitalize(item.visitor_comp_name)}}</p>
+                  </ion-row>
+                  <ion-row class="myRow">
+                      <ion-col col-6 class="myCol">
+                          <ion-row class="myRow">
+                            <ion-icon name="book" class="myIcons"></ion-icon>
+                            <p>{{doCapitalize(item.att_reason)}}</p>
+                          </ion-row>
+                      </ion-col>
+                      <ion-col col-6 class="myCol" *ngIf="item.visitor_mobile_no">
+                          <ion-row class="myRow">
+                            <ion-icon name="phone-portrait" class="myIcons"></ion-icon>
+                            <p>{{item.visitor_mobile_no}}</p>
+                          </ion-row>
+                      </ion-col>
+                  </ion-row>
+                  <ion-row class="myRow">
+                      <ion-col col-6 class="myCol">
+                          <ion-row class="myRow">
+                            <ion-icon name="time" class="myIcons"></ion-icon>
+                            <p class="mytime">{{item.CheckInDatetime}}</p>
+                          </ion-row>
+                      </ion-col>
+                      <ion-col col-6 class="myCol">
+                        <ion-row class="myRow">
+                          <ion-icon name="time" class="myIcons"></ion-icon>
+                          <p class="mytime">{{item.CheckOutDatetime? item.CheckOutDatetime : 'still inside'}}</p>
+                        </ion-row>
+                      </ion-col>
+                    </ion-row>
+                </ion-label>
+
+
+            </ion-item>
+            <ion-item-options side="right">
+                <!-- <button ion-button icon-only color="danger" outline no-border (click)="editVisitors(slideDOM, 'delete', item)">
+                <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
+              </button> -->
+              <button ion-button color="danger" (click)="addVisitors(slideDOM, item)">
+                  ADD
+              </button>
+              </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+</ion-content>
+
+<ion-footer >
+  <ion-toolbar *ngIf="false">
+    <!-- <ion-title>{{'MANG_VISITORS.DONE' | translate}}</ion-title> -->
+    <ion-buttons end>
+        <button ion-button>
+            {{'MANG_VISITORS.DONE' | translate}}
+          <!-- <ion-icon name="checkmark"></ion-icon> -->
+        </button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

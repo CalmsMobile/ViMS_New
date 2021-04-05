@@ -1,0 +1,98 @@
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Your Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content >
+  <!-- <div header-background-image [ngStyle]="{'background-image': ''}"> -->
+  <div profile-bg [ngStyle]="{'background-image': ''}">
+    <ion-thumbnail *ngIf = "base64Image" text-center margin-bottom (click)= "presentActionSheet()">
+      <img onError="this.src='../../assets/images/user.png';" class="circle-pic" [src]="base64Image"/>
+    </ion-thumbnail>
+    <ion-thumbnail *ngIf = "!base64Image" text-center margin-bottom (click)= "presentActionSheet()" style="margin-top: 0px;">
+        <img onError="this.src='../../assets/images/user.png';" class="circle-pic" [src]="data.logo+data.profile.SEQID+RefType"/>
+      </ion-thumbnail>
+</div>
+  <ion-grid>
+      <ion-row style="margin-top:55px" padding-horizontal align-items-start>
+        <!-- <ion-col col-12 no-padding>
+                <button ion-button text-capitalize round float-right color="danger"
+                (click)="onEvent('onGoBack')">
+                {{'USER_PROFILE.LOGIN' | translate}}</button>
+        </ion-col> -->
+        <form novalidate col-12 col-sm-12 col-md-12 (ngSubmit)="UpdateProfile()" [formGroup]="userProfile" class="simple-form">
+          <ion-col no-padding col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+              <!---Logo-->
+              <!-- <ion-thumbnail align-right>
+                  <img class="animated fadeInDown delay-1s" [src]="data.logo">
+              </ion-thumbnail> -->
+              <!--Form Title-->
+              <ion-row><h6 style="    margin: 0 auto;" ion-text color="favorite">{{data.profile.HOST_EMAIL}}</h6></ion-row>
+              <!---Input field username-->
+              <ion-item class="box_round_corner" no-lines no-padding transparent>
+                  <ion-label color="dark" style="font-size: 16px;" stacked>{{'USER_PROFILE.LAB_USER_NAME' | translate}}</ion-label>
+                  <ion-input no-lines required placeholder="{{'USER_PROFILE.USER_NAME' | translate}}" type="text" [(ngModel)]="data.profile.HOSTNAME"
+                  formControlName="username" [class.error1]="!userProfile.controls.username.valid && userProfile.controls.username.dirty"
+                  ></ion-input>
+              </ion-item>
+              <ion-item no-lines transparent no-lines *ngIf="( userProfile.get('username').hasError('minlength') || userProfile.get('username').hasError('maxlength') ||userProfile.get('username').hasError('pattern') ||userProfile.get('username').hasError('required') ) && userProfile.get('username').touched">
+                <div class="error" *ngIf="userProfile.get('username').hasError('required') && userProfile.get('username').touched">
+                  {{'USER_PROFILE.ERROR.USERNAME_REQUIRED' | translate}}
+                </div>
+                <div class="error" *ngIf="userProfile.get('username').hasError('minlength') && userProfile.get('username').touched">
+                  {{'USER_PROFILE.ERROR.USERNAME_MIN4' | translate}}
+                </div>
+                <div class="error" *ngIf="userProfile.get('username').hasError('maxlength') && userProfile.get('username').touched">
+                  {{'USER_PROFILE.ERROR.USERNAME_MAX20' | translate}}
+                </div>
+                <div class="error" *ngIf="userProfile.get('username').hasError('pattern') && userProfile.get('username').touched">
+                  {{'USER_PROFILE.ERROR.USERNAME_ALPHA' | translate}}
+                </div>
+              </ion-item>
+              <ion-item class="box_round_corner" no-lines no-padding transparent>
+                  <ion-label color="favorite" style="font-size: 16px;" stacked>{{'USER_PROFILE.LAB_USER_IC' | translate}}</ion-label>
+                  <ion-input placeholder="{{'USER_PROFILE.USER_IC' | translate}}" type="text" [(ngModel)]="data.profile.HOSTIC" [disabled]="true"
+                  formControlName="icPassport"></ion-input>
+              </ion-item>
+              <!-- <ion-item transparent no-lines *ngIf="(userProfile.get('icPassport').hasError('required') && userProfile.get('icPassport').touched)">
+                  <div class="error" *ngIf="userProfile.get('icPassport').hasError('required') && userProfile.get('icPassport').touched">
+                    {{'USER_PROFILE.ERROR.IC_REQUIRED' | translate}}
+                  </div>
+              </ion-item> -->
+              <ion-item class="box_round_corner" no-lines no-padding transparent *ngIf="false">
+                  <ion-label color="favorite" style="font-size: 16px;" stacked>{{'USER_PROFILE.HOST_ID' | translate}}</ion-label>
+                  <ion-input required placeholder="{{'USER_PROFILE.ID' | translate}}" type="text" [(ngModel)]="data.profile.HOST_ID"
+                  formControlName="hostId" [class.error1]="!userProfile.controls.hostId.valid && userProfile.controls.hostId.dirty"
+                  ></ion-input>
+              </ion-item>
+              <ion-item no-lines no-padding transparent>
+                  <ion-label color="favorite" style="font-size: 16px;" stacked>{{'USER_PROFILE.LAB_FLOOR' | translate}}</ion-label>
+                  <ion-select mode="ios" formControlName="floor" [(ngModel)]="data.profile.HostFloor" placeholder="{{'USER_PROFILE.LAB_FLOOR' | translate}}"
+                  interface="action-sheet" enableBackdropDismiss>
+                  <ion-label>{{'USER_PROFILE.LAB_FLOOR' | translate}}</ion-label>
+                    <ion-select-option text-left *ngFor="let avl_floor of data.AVAIL_FLOOR"
+                      [value]="avl_floor.floor_id" >
+                      {{avl_floor.floor_desc}}
+                    </ion-select-option>
+                  </ion-select>
+              </ion-item>
+              <!-- <ion-item no-padding transparent>
+                  <ion-label>{{'USER_PROFILE.EMAIL_ALERT' | translate}}</ion-label>
+                  <ion-toggle formControlName="emailAlert" color="danger" [(ngModel)]="data.profile.EMAIL_ALERT" [checked]="data.profile.EMAIL_ALERT"></ion-toggle>
+              </ion-item> -->
+              <ion-col align-self-end bottom-form col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+                <button bottom right ion-button icon-right align-items-end round outline color="favorite"
+                style="margin-left: auto;margin-top:10px; display: block;"
+                type="submit" [disabled]="userProfile.invalid">{{'USER_PROFILE.UPDATE_PROFILE' | translate}}</button>
+              </ion-col>
+              <ion-col *ngIf="false" align-self-end bottom-form col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+                <a ion-button round full text-capitalize color="danger" (click)="onEvent('onChangePassword')">
+                  {{'USER_PROFILE.CHANGE_PASSWORD' | translate}}</a>
+              </ion-col>
+          </ion-col>
+
+        </form>
+      </ion-row>
+  </ion-grid>
+</ion-content>

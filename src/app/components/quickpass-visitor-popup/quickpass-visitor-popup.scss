@@ -1,0 +1,71 @@
+.signInModal {
+    padding: 20px;
+    background: #dfd5d6;
+    margin: 0 auto;
+
+    .qrCodeImage{
+     width: 100px  !important;
+     height: 100px  !important;
+     margin: 0 auto;
+     display: block;
+    }
+    
+   .profile-imageTabLand {
+     border-radius: 50%;
+     width: 92px  !important;
+     margin: 0 auto !important;
+     display: block;
+     height: 92px  !important;
+     box-shadow: 0px 11px 20px -3px rgba(142, 136, 146, 0.75);
+   }
+   .cameraImgTabLand {
+     display: block;
+     margin: 0 auto;
+     margin-top: -20px;
+     margin-bottom: 10px;
+     width: 30px;
+     height: 30px;
+     border-radius: 50%;
+     background: #d68f93;
+     padding: 7px;
+     color: #222;
+   }
+   .head1TabLand{
+     margin: 5px 0;
+     margin-top: 10px;
+     color: wheat !important;
+     font-size: 18px;
+     text-align: center
+   }
+   .pTabLand {
+     color: white;
+     font-size: 14px !important;
+     text-align: center
+   }
+    .modal-wrapper {
+         border-radius: 7px;
+         background: rgba(0, 0, 0, 0.5);
+         height: 80vh !important;
+     //     margin-top: 20%;
+          margin:0 auto;
+          display: block;
+         ion-list{               
+               
+              .login-top{
+                   
+                   background: red; 
+                   padding: 5px;
+               //     margin-bottom: 15px;         
+              }
+              
+
+              .item{
+                    
+                   background: none !important;
+                   button{
+                        height:4rem !important;
+                   }
+              }
+         }
+    }
+}

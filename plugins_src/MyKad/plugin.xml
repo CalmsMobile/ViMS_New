@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova.plugin.myKad" version="0.0.1">
+   <name>MyKad</name>
+   <js-module name="MyKad" src="www/MyKad.js">
+      <clobbers target="cordova.plugins.MyKad" />
+   </js-module>
+   <platform name="android">
+      <config-file parent="/*" target="res/xml/config.xml">
+         <feature name="MyKad">
+            <param name="android-package" value="cordova.plugin.myKad.MyKad" />
+         </feature>
+      </config-file>
+      <config-file parent="/*" target="AndroidManifest.xml" />
+      <config-file parent="/manifest" target="AndroidManifest.xml">
+         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+         <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+         <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+         <uses-permission android:name="android.permission.BLUETOOTH" />
+         <uses-permission android:name="android.permission.INTERNET" />
+         <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+         <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+      </config-file>
+      <config-file target="AndroidManifest.xml" parent="/manifest/application">
+			<meta-data 
+				android:name="com.google.android.gms.version"
+				android:value="@integer/google_play_services_version" />
+		</config-file>
+      <source-file src="src/android/MyKad.java" target-dir="src/cordova/plugin/myKad" />
+      <lib-file src="src/android/myID-release.aar" />
+   </platform>
+   <platform name="ios">
+      <config-file parent="/*" target="config.xml">
+         <feature name="MyKad">
+            <param name="ios-package" value="MyKad" />
+         </feature>
+      </config-file>
+      <source-file src="src/ios/MyKad.m" />
+   </platform>
+</plugin>

@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <button ion-button menuToggle start>
+      <ion-icon class="siva-icon-menu-1"></ion-icon>
+    </button>
+    <ion-title>{{'MANG_HOST.TITLE' | translate}}</ion-title>
+</ion-toolbar>
+  <ion-toolbar color="favorite">
+    <ion-searchbar [(ngModel)]="VM.queryText"
+    placeholder="{{'MANG_HOST.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch(true, null)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
+        <!-- (ionChange)="updateSchedule()" -->
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <ion-list #visitorsList>
+      <ion-item style="margin: 50% auto;
+      text-align: center;" *ngIf="VM.visitors == undefined || VM.visitors == null || VM.visitors.length == 0">
+          {{'MANG_HOST.NO_VISITORS_AVAILABLE' | translate}}
+      </ion-item>
+      <ion-item-group *ngFor="let group of VM.visitors">
+        <ion-item-divider sticky>
+          <ion-label>
+            {{group.key}}
+          </ion-label>
+        </ion-item-divider>
+        <ion-item-sliding #slideDOM *ngFor="let item of group.contacts">
+            <ion-item sp-visitor-item no-lines  style="border: 1px solid #dedede;">
+
+                <ion-avatar item-left>
+                    <img onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQID + imageURLType + newImage" style="background-color: darkgrey;
+                    padding: 2px;">
+                </ion-avatar>
+                <ion-label style="padding: 5px;">
+                  <h2>{{item.HOSTNAME}}</h2>
+                  <!-- <p>{{item.visitor_comp_id}}</p> -->
+                  <p>{{item.HOST_EMAIL}}</p>
+                  <p *ngIf="false">{{item.HostExt}}</p>
+                </ion-label>
+
+                <ion-checkbox red item-right [(ngModel)]="item.checked" checked = "item.checked" (click)= "visitorSelected(item)">
+                </ion-checkbox>
+            </ion-item>
+        </ion-item-sliding>
+      </ion-item-group>
+    </ion-list>
+</ion-content>
+
+<ion-footer >
+  <ion-toolbar *ngIf="isAnyoneSelected" (click)="addVisitors()">
+    <!-- <ion-title>{{'MANG_HOST.DONE' | translate}}</ion-title> -->
+    <ion-buttons end>
+        <button ion-button>
+            {{'MANG_HOST.DONE' | translate}}
+          <!-- <ion-icon name="checkmark"></ion-icon> -->
+        </button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1079514185304",
+    "firebase_url": "https://vims-host.firebaseio.com",
+    "project_id": "vims-host",
+    "storage_bucket": "vims-host.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079514185304:android:6f7fbdf9a9eafbfa",
+        "android_client_info": {
+          "package_name": "com.vims.host"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079514185304-9p7e0s3qk2mj5rvbh4bktp3sak7ekh6l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjYKgz6TltEJBV5AjyZ1R2BsZB4M2NX7Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

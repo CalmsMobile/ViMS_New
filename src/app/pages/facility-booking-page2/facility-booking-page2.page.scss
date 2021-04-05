@@ -1,0 +1,70 @@
+.item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus):not(.item-input-has-focus)
+  .item-inner {
+  border-bottom-color: transparent !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus)
+  .item-inner,
+.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus)
+  .item-inner {
+  border-bottom-color: #8e8e93 !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.simple-form {
+  display: flex;
+  overflow-y: scroll;
+  padding-bottom: 1.25rem;
+}
+.simple-form ion-label {
+  margin-left: 10px !important;
+}
+.simple-form ion-input {
+  // margin: 0 .25rem;
+  min-width: 125px;
+  border: 2px solid #d2cccc;
+  border-radius: 5px;
+  transition: border-color 0.5s ease-out;
+  padding: 5px;
+  // padding-left: 0px;
+  text-align: left;
+  margin: 0 auto;
+}
+.simple-form ion-select {
+  // margin: 0 .25rem;
+  // min-width: 125px;
+  border: 1px solid #aaa8a8;
+  border-left: 1px solid #aaa8a8;
+  border-radius: 5px;
+  transition: border-color 0.5s ease-out;
+  padding: 15px !important;
+  // padding-left: 0px;
+  text-align: left;
+  margin: 0 auto;
+  width: 100%;
+  min-width: 100%;
+  padding: 10px;
+  margin-top: 30px;
+}
+.simple-form .box_round_corner {
+  width: 97.5%;
+  border: 2px solid #eee;
+  border-left: 2px solid #eee;
+  border-radius: 5px;
+  transition: border-color 0.5s ease-out;
+  padding: 15px;
+  // padding-left: 0px;
+  text-align: left;
+  margin-top: 25px !important;
+  margin-right: 16px !important;
+}
+.simple-form ion-input:optional {
+  border-left-color: salmon !important;
+}
+.simple-form ion-input:required {
+  border-left-color: palegreen;
+}
+.simple-form ion-input:invalid {
+  border-left-color: salmon !important;
+}

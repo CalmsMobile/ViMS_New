@@ -1,0 +1,278 @@
+.main {
+  background: url("../../../assets/images/background/app_bg.png") no-repeat
+    center;
+}
+.centerPad {
+  height: 100%;
+  width: 100%;
+  /* position: initial; */
+  display: flex;
+  text-align: center;
+  margin: 0 auto;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  background: url("../../../assets/images/background/app_bg.png") no-repeat
+    center;
+  background-size: cover;
+  // background: #E1BEE7;
+  // background: url('../../assets/images/background/app_bg.png') no-repeat center;
+}
+.item-md ion-thumbnail[item-start] {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto;
+  display: contents;
+  padding: 0px;
+  margin: 8px 16px 8px 0;
+}
+
+.icontent {
+  // background: linear-gradient(#6699cc,  #336699) no-repeat center;
+  background-size: cover;
+
+  .ilist {
+    display: -webkit-box;
+  }
+}
+.logoThumb {
+  width: 120px !important;
+  height: 120px !important;
+  margin: 0 auto;
+  // margin-right: 3px;
+  box-shadow: 0 0 10px #ffffff;
+  display: block;
+  border-radius: 50% !important;
+  padding: 10px;
+}
+.logoThumbNorLand {
+  width: 120px !important;
+  height: 120px !important;
+  margin: 0 auto;
+  box-shadow: 0 0 10px #ffffff;
+  display: block;
+  border-radius: 50% !important;
+  padding: 10px;
+}
+.logoThumbTab {
+  width: 180px !important;
+  height: 180px !important;
+  margin: 0 auto;
+  // margin-left: 30%;
+  // margin-right: 5px;
+  box-shadow: 0 0 10px #ffffff;
+  display: block;
+  border-radius: 50% !important;
+  padding: 10px;
+}
+.logoThumbTabLand {
+  width: 180px !important;
+  height: 180px !important;
+  margin: 0 auto;
+  // margin-left: 30%;
+  // margin-right: 5px;
+  box-shadow: 0 0 10px #ffffff;
+  display: block;
+  border-radius: 50% !important;
+  padding: 10px;
+}
+.h1TitleTapPortrait {
+  text-align: center;
+  margin: 0 auto;
+  display: block;
+  padding: 5px;
+  color: ghostwhite;
+  font-size: 35px;
+  text-align: center;
+  margin-top: 10px;
+}
+.h1TitleTapLandScap {
+  margin: 0 auto;
+  display: block;
+  padding: 5px;
+  color: ghostwhite;
+  font-size: 45px;
+  text-align: center;
+  margin-top: 10px;
+}
+.h1TitleNormalPortrait {
+  margin: 0 auto;
+  display: block;
+  padding: 5px;
+  color: ghostwhite;
+  font-size: 26px;
+  text-align: center;
+  margin-top: 10px;
+}
+.h1TitleNormalLandScap {
+  margin: 0 auto;
+  display: block;
+  padding: 5px;
+  color: ghostwhite;
+  font-size: 36px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.h1WelcomeNorPort {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 14px;
+  text-align: -webkit-center;
+}
+.h1WelcomeNorLand {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 14px;
+  text-align: -webkit-center;
+}
+.h1WelcomeTabPort {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 25px;
+  text-align: -webkit-center;
+}
+.h1WelcomeTabLand {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 25px;
+  text-align: -webkit-center;
+}
+
+.myQRCodeImage {
+  background: url("../../../assets/images/qrcode.png") no-repeat center;
+  padding: 0px;
+  width: 50px;
+  height: 60px;
+  margin: 0 auto;
+  display: block;
+  background-size: 75%;
+  border: none;
+}
+
+.myHandImage {
+  background: url("../../../assets/images/keyboard.png") no-repeat center;
+  padding: 0px;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  display: block;
+  background-size: 75%;
+  border: none;
+}
+.versionP {
+  text-align: end;
+  /* display: contents; */
+  padding: 5px;
+  margin: 0px !important;
+  border: none;
+  color: white;
+}
+.OrCol {
+  margin: 0 auto;
+  display: block;
+  align-self: center;
+  color: white;
+  text-align: center;
+}
+
+.myQRCard {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  display: block;
+  border-radius: 20px;
+}
+
+.h1ContentNorPort {
+  display: block;
+  margin: 0 auto;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 14px;
+  text-align: -webkit-center;
+}
+.h1ContentNorLand {
+  display: block;
+  margin: 0 auto;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 14px;
+  text-align: -webkit-center;
+}
+.h1ContentTabPort {
+  display: block;
+  margin: 0 auto;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 25px;
+  text-align: -webkit-center;
+}
+.h1ContentTabLand {
+  display: block;
+  margin: 0 auto;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 25px;
+  text-align: -webkit-center;
+}
+
+.centerPad1 {
+  display: flex;
+  text-align: center;
+  margin: 0 auto;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  background: #e1bee7;
+}
+.mainCard {
+  // padding-top: 20px;
+  padding-left: 20px;
+  width: 600px;
+  // height: 150px;
+  background: rgb(245, 82, 90);
+  background-color: rgb(245, 82, 90);
+  // box-shadow: none;
+  display: block;
+  margin: 0 auto;
+}
+
+.mainCard1 {
+  background: rgb(7, 151, 127);
+  background-color: rgb(7, 151, 127);
+  border-radius: 10px;
+  display: block;
+  margin: 0 auto;
+  z-index: 1;
+  // padding-top: 20px;
+  padding-left: 0px;
+}
+
+.alert-top {
+  padding: 0 !important;
+  align-items: center !important;
+}
+
+.mainCard:after {
+  background: #c1c1c1;
+  position: absolute;
+  animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
+  -webkit-animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s
+    both;
+  -moz-animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s
+    both;
+  -o-animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
+}

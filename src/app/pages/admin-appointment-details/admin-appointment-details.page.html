@@ -1,0 +1,284 @@
+
+<ion-header>
+
+    <ion-toolbar>
+      <ion-title>Appointment Details</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content padding>
+      <div *ngIf="false" class="stable padding-bottom">APPOINTMENT ID: {{appointment[0].appointment_group_id}}</div>
+
+      <h5 theme-text-color *ngIf= "!appointment[0].isFacilityAlone">Visitor's Details</h5>
+      <ion-card no-margin style="width:100%;margin-top:14px !important;border: 1px solid #dedede;" *ngIf= "!appointment[0].isFacilityAlone">
+              <ion-item *ngFor="let visitors of appointment" style="
+              margin-left: 0px;
+              padding: 0px;">
+                  <ion-avatar item-start style="
+                  margin: 3px;
+                  padding: 3px;" (click)="openVisitorDetails(visitors)">
+                      <img class="animated fadeInDown delay-1s" style="    background-color: darkgrey;
+                      padding: 2px;" onError="this.src='../../assets/images/user.png';" [src]="data.logo+visitors.VisitorBookingSeqId + imageURLType">
+                  </ion-avatar>
+                  <h2 (click)="openVisitorDetails(visitors)">{{visitors.VISITOR_NAME}}</h2>
+                  <p (click)="openVisitorDetails(visitors)">{{visitors.EMAIL}}</p>
+                  <p (click)="openVisitorDetails(visitors)">{{visitors.VISITOR_COMPANY}}</p>
+                  <!-- <img item-end style="width: 50px;height: 50px;" [src]="getQREncryptedValue(visitors)" (click) = "shareQR(visitors)"> -->
+                  <img item-end style="width: 50px;height: 50px;" (click) = "shareQR(visitors)" src="assets/images/qrcode.png">
+                  <i *ngIf="true" item-end style="font-size:35px;color: gray" (click) = "shareQR(visitors)">
+                          <ion-icon name="share" style="
+                          font-size: 25px;
+                          margin: 0 auto;
+                          display: block;
+                      "></ion-icon></i>
+              </ion-item>
+      </ion-card>
+      <ion-card padding no-margin style="width:100%;margin-top:5px !important;border: 1px solid #dedede;" class=" pending-info" *ngIf="!facilityBooking || facilityBooking.length == 0">
+          <ion-item-divider style="padding: 0px;">
+              <ion-grid>
+                  <ion-row style="padding: 0px;">
+                          <ion-col col-4>
+                              <p class='stable'><b>From</b></p>
+                          </ion-col>
+                          <ion-col col-auto></ion-col>
+                          <ion-col col-4>
+                              <p>{{appointment[0].START_DATE | date:'MMM d, yyyy h:mm a'}}</p>
+                              <!-- <p class='stable'>{{appointment[0].START_DATE | date:'h:mm a'}}</p> -->
+                          </ion-col>
+
+                  </ion-row>
+              </ion-grid>
+
+
+          </ion-item-divider>
+          <ion-item-divider style="padding: 0px;">
+              <ion-grid>
+                  <ion-row style="padding: 0px;">
+                      <ion-col col-4>
+                          <p class='stable'><b>To</b></p>
+                      </ion-col>
+                      <ion-col col-auto></ion-col>
+                      <ion-col col-4>
+                          <p>{{appointment[0].END_DATE | date:'MMM d, yyyy h:mm a'}}</p>
+                          <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                      </ion-col>
+                  </ion-row>
+              </ion-grid>
+          </ion-item-divider>
+          <ion-item-divider *ngIf="false" style="padding: 0px;">
+              <ion-grid>
+                      <ion-row style="padding: 0px;">
+                          <ion-col col-4>
+                              <p class='stable'><b>Booked On</b></p>
+                          </ion-col>
+                          <ion-col col-auto></ion-col>
+                          <ion-col col-4>
+                              <p>{{appointment.length}}</p>
+                              <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                          </ion-col>
+                      </ion-row>
+                  </ion-grid>
+          </ion-item-divider>
+          <ion-item-divider *ngIf="appointment[0].REASON" style="padding: 0px;">
+                  <ion-grid>
+                          <ion-row style="padding: 0px;">
+                              <ion-col col-4>
+                                  <p class='stable'><b>Purpose</b></p>
+                              </ion-col>
+                              <ion-col col-auto></ion-col>
+                              <ion-col col-4>
+                                  <p>{{appointment[0].REASON}}</p>
+                                  <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                              </ion-col>
+                          </ion-row>
+                      </ion-grid>
+      </ion-item-divider>
+      <ion-item-divider *ngIf="appointment[0].Booked_By" style="padding: 0px;">
+              <ion-grid>
+                      <ion-row style="padding: 0px;">
+                          <ion-col col-4>
+                              <p class='stable'><b>Booked By</b></p>
+                          </ion-col>
+                          <ion-col col-auto></ion-col>
+                          <ion-col col-4>
+                              <p>{{appointment[0].Booked_By}}</p>
+                              <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                          </ion-col>
+                      </ion-row>
+              </ion-grid>
+      </ion-item-divider>
+      <ion-item-divider *ngIf="appointment[0].Floor" style="padding: 0px;">
+              <ion-grid>
+                      <ion-row style="padding: 0px;">
+                          <ion-col col-4>
+                              <p class='stable'><b>Floor</b></p>
+                          </ion-col>
+                          <ion-col col-auto></ion-col>
+                          <ion-col col-4>
+                              <p>{{appointment[0].Floor}}</p>
+                              <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                          </ion-col>
+                      </ion-row>
+              </ion-grid>
+          </ion-item-divider>
+          <ion-item-divider *ngIf="appointment[0].Room" style="padding: 0px;">
+              <ion-grid>
+                      <ion-row style="padding: 0px;">
+                          <ion-col col-4>
+                              <p class='stable'><b>Room</b></p>
+                          </ion-col>
+                          <ion-col col-auto></ion-col>
+                          <ion-col col-4>
+                              <p>{{appointment[0].Room}}</p>
+                              <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                          </ion-col>
+                      </ion-row>
+              </ion-grid>
+      </ion-item-divider>
+      <ion-item-divider *ngIf="appointment[0].PLATE_NUM" style="padding: 0px;">
+        <ion-grid>
+                <ion-row style="padding: 0px;">
+                    <ion-col col-4>
+                        <p class='stable'><b>Vehicle No</b></p>
+                    </ion-col>
+                    <ion-col col-auto></ion-col>
+                    <ion-col col-4>
+                        <p>{{appointment[0].PLATE_NUM}}</p>
+                        <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                    </ion-col>
+                </ion-row>
+        </ion-grid>
+      </ion-item-divider>
+    </ion-card>
+    <ion-card padding no-margin style="width:100%;margin-top:5px !important;border: 1px solid #dedede;" class=" pending-info" *ngIf="facilityBooking && facilityBooking.length > 0">
+        <ion-item-divider style="padding: 0px;">
+            <ion-grid>
+                <ion-row style="padding: 0px;">
+                        <ion-col col-4>
+                            <p class='stable'><b>From</b></p>
+                        </ion-col>
+                        <ion-col col-auto></ion-col>
+                        <ion-col col-4>
+                            <p>{{facilityBooking[0].StartDateTime | date:'MMM d, yyyy h:mm a'}}</p>
+                            <!-- <p class='stable'>{{appointment[0].START_DATE | date:'h:mm a'}}</p> -->
+                        </ion-col>
+
+                </ion-row>
+            </ion-grid>
+        </ion-item-divider>
+        <ion-item-divider style="padding: 0px;">
+            <ion-grid>
+                <ion-row style="padding: 0px;">
+                    <ion-col col-4>
+                        <p class='stable'><b>To</b></p>
+                    </ion-col>
+                    <ion-col col-auto></ion-col>
+                    <ion-col col-4>
+                        <p>{{facilityBooking[0].EndDateTime | date:'MMM d, yyyy h:mm a'}}</p>
+                        <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-item-divider>
+    <ion-item-divider *ngIf="facilityBooking[0].PurposeName" style="padding: 0px;">
+                <ion-grid>
+                        <ion-row style="padding: 0px;">
+                            <ion-col col-4>
+                                <p class='stable'><b>Purpose</b></p>
+                            </ion-col>
+                            <ion-col col-auto></ion-col>
+                            <ion-col col-4>
+                                <p>{{facilityBooking[0].PurposeName}}</p>
+                                <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+    </ion-item-divider>
+        <ion-item-divider *ngIf="facilityBooking[0].FacilityName" style="padding: 0px;">
+            <ion-grid>
+                    <ion-row style="padding: 0px;">
+                        <ion-col col-4>
+                            <p class='stable'><b>Room</b></p>
+                        </ion-col>
+                        <ion-col col-auto></ion-col>
+                        <ion-col col-4>
+                            <p>{{facilityBooking[0].FacilityName}}</p>
+                        </ion-col>
+                    </ion-row>
+            </ion-grid>
+    </ion-item-divider>
+    <ion-item-divider *ngIf="appointment && appointment[0] && appointment[0].PLATE_NUM" style="padding: 0px;">
+            <ion-grid>
+                    <ion-row style="padding: 0px;">
+                        <ion-col col-4>
+                            <p class='stable'><b>Vehicle No</b></p>
+                        </ion-col>
+                        <ion-col col-auto></ion-col>
+                        <ion-col col-4>
+                            <p>{{appointment[0].PLATE_NUM}}</p>
+                            <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                        </ion-col>
+                    </ion-row>
+            </ion-grid>
+        </ion-item-divider>
+        <ion-item-divider *ngIf="facilityBooking && facilityBooking[0]  && facilityBooking[0].Remarks" style="padding: 0px;">
+            <ion-grid>
+                    <ion-row style="padding: 0px;">
+                        <ion-col col-4>
+                            <p class='stable'><b>Remarks</b></p>
+                        </ion-col>
+                        <ion-col col-auto></ion-col>
+                        <ion-col col-4>
+                            <p>{{facilityBooking[0].Remarks}}</p>
+                            <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                        </ion-col>
+                    </ion-row>
+            </ion-grid>
+    </ion-item-divider>
+    </ion-card>
+
+    <ion-card padding no-margin style="width:100%;border: 1px solid #dedede;margin: 0px !important;padding: 0px;
+    margin-top: 15px !important;" class="pending-info" *ngIf="facilityBooking && facilityBooking.length > 0 && FACILITYSLOTLIST && FACILITYSLOTLIST.length > 0">
+        <h2 style="color: white;padding: 10px;width: 100%;background: #ff515a;"><b>Booking Slot</b></h2>
+        <h3 style="color: red;padding: 5px;text-align: center;padding-left: 10px;"><b>PIN Number : </b> {{FACILITYSLOTLIST[0].value[0].PinNumber}}</h3>
+        <div *ngFor="let slots of FACILITYSLOTLIST" style="margin-top:5px">
+            <h3 style="padding: 10px;width: 100%;background: lavender;text-align: center;"><b>{{slots.key | date : 'dd MMM yyyy'}}</b></h3>
+            <ion-row style="width: fit-content;margin: 0 auto;margin-bottom: 5px;">
+                <div [ngClass]= "{'ColSessionEnd': slot.selected == '4','slotUnselected': slot.selected == '0','ColslotSelected': slot.selected == '1',
+                'slotDisable': slot.selected == '2', 'ColslotExpired': slot.selected == '3'}" *ngFor="let slot of slots.value">
+                    <!-- <p text-wrap *ngIf="slot.SessionEnd" class="SessionEnd">{{slot.startDisplayTime}}<br>{{slot.endDisplayTime}}</p> -->
+                    <p text-wrap [ngClass]= "{'SessionEnd': slot.selected == '4','slotUnselected': slot.selected == '0','slotSelected': slot.selected == '1',
+                    'slotDisable': slot.selected == '2', 'slotExpired': slot.selected == '3'}" (click) = "openSlotInfo(slot)">{{slot.startDisplayTime}}<br>{{slot.endDisplayTime}}</p>
+                </div>
+            </ion-row>
+        </div>
+    </ion-card>
+      <ion-card no-margin style="width:100%;    padding: 0px;margin-top:14px !important;border: 1px solid #dedede;" (click) = "selectNotifyAppointment()">
+        <ion-item no-lines style="padding: 0px;">
+            <i item-start theme-text-color class="siva-icon-clock" style="font-size: 35px;margin: 0px;"></i>
+            <h4 style="margin:5px" theme-text-color>NOTIFY ME ABOUT THIS APPOINTMENT</h4>
+            <p style="margin:5px" *ngIf="notifyTime == 0 && notifyMin == 0">Notify Before -- hrs -- mins</p>
+            <p style="margin:5px" *ngIf="notifyTime != 0 || notifyMin != 0">Notify Before {{notifyTime}} hrs {{notifyMin}} mins</p>
+        </ion-item>
+    </ion-card>
+
+      <ion-row *ngIf="autoApproval == '1' && showOption && (!facilityBooking || facilityBooking.length == 0)" style="margin: 20px;padding: 0px;">
+        <ion-col style="margin: 0px;padding: 0px;">
+            <button ion-button outline color="danger" style="margin: 0 auto;
+            display: block;font-size: 12px;max-width: 80px;text-transform: capitalize;" (click)="showChangeAppointmentStatusAlert('Canceled', appointment[0].appointment_group_id)">Cancel<ion-icon style="    margin-left: 5px;" name="close"></ion-icon></button>
+          </ion-col>
+      <ion-col style="margin: 0px;padding: 0px;">
+        <button ion-button outline color="secondary" style="margin: 0 auto;
+        display: block;font-size: 12px;max-width: 80px;text-transform: capitalize;" (click)="showChangeAppointmentStatusAlert('Approved', appointment[0].appointment_group_id)">Approve<ion-icon style="    margin-left: 5px;" name="checkmark"></ion-icon></button>
+      </ion-col>
+
+    </ion-row>
+
+      <!-- <ion-fab bottom right #fab>
+          <button ion-fab color="danger"><i class="siva-icon-ellipsis-vert" style="font-size: 22px;"></i></button>
+          <ion-fab-list side="top">
+              <button ion-fab color="danger" (click)= "remindAppintment(fab)"><i class="siva-icon-calendar-1"></i></button>
+              <button ion-fab color="primary" (click)= "editAppintment(fab)"><i class="siva-icon-pencil"></i></button>
+              <button ion-fab color="danger" (click)= "deleteAppintment(fab)"><i class="siva-icon-trash-empty"></i></button>
+          </ion-fab-list>
+          </ion-fab> -->
+  </ion-content>

@@ -1,0 +1,26 @@
+.item-divider-md {
+  background-color: #f9f9f9;
+  color: theme-colors("textColors", "accent");
+}
+.circle-pic {
+  width: 72px;
+  height: 72px;
+  border-radius: 50% !important;
+  overflow: hidden;
+}
+[sp-visitor-item] {
+  ion-avatar {
+    min-width: 40px;
+    min-height: 40px;
+  }
+  ion-avatar ion-img,
+  ion-avatar img {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+  }
+  .label-md {
+    margin: 7px 8px 7px 0;
+  }
+}

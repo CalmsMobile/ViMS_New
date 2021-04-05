@@ -1,0 +1,87 @@
+
+<ion-header>
+  <ion-toolbar>
+      <button ion-button menuToggle>
+    <ion-icon class="siva-icon-menu-1"></ion-icon>
+  </button>
+      <ion-title>{{"SETTINGS.TITLE" | translate}}
+      </ion-title>
+      <ion-buttons end>
+        <button *ngIf= "isAdmin" ion-button icon-only (click)="gotoAdminPage()">
+            <ion-icon name="customicon"></ion-icon>
+        </button>
+        <button ion-button icon-only (click)="gotoNotification()">
+          <ion-icon name="ios-notifications" style="position:relative">
+                  <span *ngIf= "notificationCount > 0" style="position: absolute;
+                  font-size: 16px;
+                  margin-top: -10px;"><b>{{notificationCount}}</b></span>
+          </ion-icon>
+        </button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list my-set-list>
+      <ion-item-divider color="accent" *ngIf="false">
+        <span>{{'SETTINGS.BASIC' | translate}}</span>
+      </ion-item-divider>
+      <ion-item *ngIf="false">
+          <ion-icon class='siva-icon-language-1' color="favorite" item-start></ion-icon>
+          <ion-label [innerHTML]="'SETTINGS.APP_LANGUAGE' | translate"></ion-label>
+          <ion-select mode="ios" [interfaceOptions]="customActionSheetOptions" interface="action-sheet"  [(ngModel)]="languageSelect.selectedItem"
+              (ionChange)="onChangeLanguage()"
+              multiple="false"
+              customActionSheetOptions
+              okText="{{'COMMON.APPLY' | translate}}"
+              cancelText="{{'COMMON.CANCEL' | translate}}">
+              <ion-select-option *ngFor="let item of languageSelect.items" [value]="item.id">{{item.TCODE | translate}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- <ion-item >
+            <ion-icon class='siva-icon-adjust' item-start color="favorite"></ion-icon>
+            <ion-label>Enable Option 1</ion-label>
+            <ion-toggle color="secondary"></ion-toggle>
+          </ion-item>
+          <ion-item >
+            <ion-icon class='siva-icon-list-add' item-start color="favorite"></ion-icon>
+            <ion-label>Enable Option 2</ion-label>
+            <ion-toggle color="secondary"></ion-toggle>
+          </ion-item>
+
+         <ion-item-divider border-top color="accent">
+           <span>Scan History</span>
+          </ion-item-divider>
+          <ion-item>
+            <ion-label color="dark">Always Maintain</ion-label>
+            <ion-radio name="history" value="always" checked></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label color="dark">Never Maintain</ion-label>
+            <ion-radio name="history" value="locked"></ion-radio>
+          </ion-item>
+        <ion-item-divider color="accent">
+            <span>Other</span>
+        </ion-item-divider>-->
+
+        <button ion-item *ngIf="false" style="padding: 10px;">
+          <ion-icon class='siva-icon-help-circled-1' item-start color="favorite"></ion-icon>
+          <ion-label>{{'SETTINGS.HELP' | translate}}</ion-label>
+        </button>
+        <button ion-item style="padding: 10px;">
+            <ion-icon class='siva-icon-info-circled-1' item-start color="favorite"></ion-icon>
+          <ion-label>{{'SETTINGS.APP_VERSION' | translate}}</ion-label>
+          <ion-note item-end>{{'APP_VERSION' | translate}}</ion-note>
+        </button>
+        <button ion-item (click)="goToUserProfile()" style="padding: 10px;">
+          <ion-icon class='siva-icon-user-circle-o' item-start color="favorite"></ion-icon>
+          <ion-label>{{'SETTINGS.PROFILE' | translate}}</ion-label>
+          <ion-note item-end>{{name}}</ion-note>
+       </button>
+       <button ion-item (click)="logoutMe()">
+          <ion-icon class='siva-icon-logout-2' item-start color="danger"></ion-icon>
+          <ion-label color="danger">{{'SETTINGS.LOGOUT' | translate}}</ion-label>
+        </button>
+    </ion-list>
+</ion-content>
+

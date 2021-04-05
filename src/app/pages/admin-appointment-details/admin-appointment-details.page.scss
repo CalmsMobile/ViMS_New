@@ -1,0 +1,144 @@
+.booking-detail {
+  background-color: #f7f7f7;
+  .stable {
+    color: theme-colors("textColors", "secondary");
+  }
+  .pending-info .row .col * {
+    margin: 2px 0px;
+  }
+  .siva-icon-clock::before {
+    margin: 0px !important;
+  }
+  [theme-text-color] {
+    color: theme-colors("textColors", "accent") !important;
+  }
+}
+
+img {
+  max-width: 62px;
+  max-height: 62px;
+  display: inline;
+}
+.modal-wrapper {
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.5);
+  height: 75% !important;
+  margin-top: 10%;
+
+  ion-list {
+    .login-top {
+      margin-top: -20px;
+      background: #4eb5e2;
+      padding-bottom: 10px;
+      margin-bottom: 25px;
+    }
+    img {
+      margin-top: 15%;
+      max-width: 30%;
+    }
+
+    .item {
+      background: none !important;
+      button {
+        height: 4rem !important;
+      }
+    }
+  }
+}
+
+.ColslotSelected {
+  padding: 0px;
+  padding-bottom: 3px;
+  padding-right: 3px;
+  background: rgb(12, 158, 97);
+  border-radius: 5px;
+
+  position: relative;
+  /* width: 100%; */
+  margin: 0;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  min-height: 1px;
+  -webkit-flex-basis: 0;
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  max-width: 100%;
+}
+
+.ColSessionEnd {
+  padding: 0px;
+  padding-bottom: 3px;
+  padding-right: 3px;
+  background: rgb(26, 122, 151);
+  border-radius: 5px;
+  position: relative;
+  /* width: 100%; */
+  margin: 0;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  min-height: 1px;
+  -webkit-flex-basis: 0;
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  max-width: 100%;
+}
+
+.ColslotExpired {
+  padding: 0px;
+  padding-bottom: 3px;
+  padding-right: 3px;
+  background: #f06060;
+  border-radius: 5px;
+  position: relative;
+  /* width: 100%; */
+  margin: 0;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  min-height: 1px;
+  -webkit-flex-basis: 0;
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  max-width: 100%;
+}
+
+.slotSelected {
+  border: 1px solid rgb(12, 158, 97);
+  border-radius: 5px;
+  background: #ffffff;
+  color: rgb(12, 158, 97);
+  width: fit-content;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+}
+
+.SessionEnd {
+  border: 1px solid rgb(26, 122, 151);
+  border-radius: 5px;
+  background: #ffffff;
+  color: rgb(26, 122, 151);
+  width: fit-content;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+}
+
+.slotExpired {
+  border: 1px solid #f50e0e;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #f50e0e;
+  width: fit-content;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+}

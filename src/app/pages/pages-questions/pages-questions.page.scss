@@ -1,0 +1,137 @@
+.backBtn {
+  display: block;
+  background: #ff515a;
+  color: white;
+  border-radius: 20px;
+  /* padding: 18px; */
+  font-size: 16px;
+  /* padding-left: 5px; */
+  padding: 22px;
+  padding-left: 6px;
+}
+
+.animate-me {
+  // width: 50px;
+  // height: 50px;
+  padding: 20px;
+  // background: #0000ff;
+}
+
+.questionImg {
+  width: 150px;
+  height: 150px;
+  text-align: center;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  margin: 0 auto;
+  display: block;
+  margin-top: 7%;
+  display: none;
+}
+
+.questionClass {
+  text-align: center;
+  color: white;
+  font-size: 26px;
+}
+
+.centerDiv {
+  display: flex !important;
+  align-content: center !important;
+  align-items: center !important;
+}
+
+.yesNoRow {
+  text-align: center;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  display: block;
+  // margin-top: 2.8rem;
+}
+
+.yesBtn {
+  margin-left: 5%;
+  padding: 22px;
+  padding-left: 40px;
+  padding-right: 40px;
+  font-size: 16px;
+  /* opacity: 0.9; */
+  color: white;
+  background: #ff515a;
+  border: 3px solid #ff515a;
+}
+
+.noBtn {
+  margin-right: 5%;
+  padding: 22px;
+  padding-left: 40px;
+  padding-right: 40px;
+  font-size: 16px;
+  /* opacity: 0.9; */
+  color: #ff515a;
+  background: transparent;
+  border: 3px solid #ff515a;
+}
+
+.toolbar-background {
+  background: #fff;
+  border-color: transparent;
+}
+
+.slide-zoom {
+  height: 100%;
+}
+
+.slide-title {
+  margin-top: 20px;
+  margin-left: 10px;
+  color: #352c67;
+  font-size: 20px;
+  margin-right: 20px;
+  /*text-overflow: ellipsis;*/
+  /*overflow: hidden;*/
+  padding-bottom: 0px;
+  padding-top: 0px;
+  /*display: -webkit-box;*/
+  // line-height: 25px;
+
+  /*-webkit-box-orient: vertical;*/
+  // position: fixed;
+  // top: 50%;
+  // width: 100%;
+  // height: 100% !important;
+  // width: 100%;
+  /*display: flex;*/
+  // justify-content: center;
+  // align-items: center;
+  // display: table !important;
+  width: 100% !important;
+  height: 100% !important;
+  // margin-top: -50px;
+  // text-align: center;
+}
+
+.slide-image {
+  max-height: 25%;
+  max-width: 60%;
+  margin: 0 auto;
+  // display: block;
+  display: none;
+}
+
+b {
+  font-weight: 500;
+}
+
+p {
+  padding: 0 40px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #60646b;
+
+  b {
+    color: #000000;
+  }
+}

@@ -1,0 +1,123 @@
+<!--
+  Generated template for the SecurityCheckOutPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-toolbar>
+    <ion-title>{{title}}</ion-title>
+     <ion-buttons end *ngIf="Type == '60' || Type == '50'">
+          <button ion-button icon-only (click)="scanQR()" style="padding: 5px;">
+              <!-- <ion-icon name="contact"></ion-icon> -->
+              <img item-end style="width: 25px;height: 25px;" src="../../assets/images/qrcodescan.png">
+          </button>
+     </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="favorite">
+    <ion-searchbar [(ngModel)]="queryText"
+    placeholder="{{'SECURITY_APP.SEARCH_VISITOR' | translate}}" (ionChange)="getVisitorsBySearch(queryText)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
+        <!-- (ionChange)="updateSchedule()" -->
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="booking-main">
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">
+          <ion-col col-12 col-sm-12 col-md-12>
+                  <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 150px;" src="assets/images/box.png">
+                  <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'SECURITY_APP.NO_LIST' | translate}}</h5>
+          </ion-col>
+    </ion-row>
+    <!-- <h5 style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
+    <ion-list   class="no-margin" style="width: 100%;" >
+      <ion-card *ngFor="let list of appointmentsClone" style="margin-bottom: 5px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);border: 1px solid #dedede;">
+    <ion-item-sliding #slideDOM >
+        <ion-item sp-visitor-item no-lines  style="border: 1px solid #dedede;padding: 0px;">
+          <div class="row no-padding">
+              <div class="col apt-left" style="max-width:100px;padding:5px 0px 0px 0px;;">
+                  <div class="row text-white no-padding" style="display:flex">
+                      <div class="col no-padding" style="display:contents"><h2 class="text-white" style="font-size: 25px;display:flex">{{list.att_check_in_date | date : 'dd'}}</h2></div>
+                      <div class="col">
+                          <h3 class="text-white" style="font-size: 15px;">{{getDayofDate(list.att_check_in_date)}}</h3>
+                          <h3 class="text-white" style="font-size: 12px;">{{(list.att_check_in_time? list.att_check_in_time : list.att_check_in_date) | date:'hh:mm a'}}</h3>
+                      </div>
+                  </div>
+                  <div class="row" style="background:rgba(0,0,0,0.1);">
+                      <div class="col"><h3 class="text-white" style="font-size: 15px;">{{list.att_check_in_date | date : 'MMM' | uppercase}} - {{list.att_check_in_date | date : 'yyyy'}}</h3></div>
+                  </div>
+              </div>
+              <div class="col" style="padding:5px 0px 0px 0px;;">
+                  <ion-item style="padding: 0px;
+                  margin: 0px;
+                  height: 25px;
+                  min-height: 25px;
+                  padding-left: 5px;">
+                          <h2 item-start style="padding: 0px;
+                          margin-left: 0px;
+                          height: 20px;
+                          width: 100px;
+                          text-overflow: ellipsis; overflow: hidden;
+                          display: -webkit-box; -webkit-line-clamp: 2; line-height: 16px; max-height: 16px; -webkit-box-orient: vertical;
+                          text-align: left;
+                          font-size: 16px;"><b>{{(list.visitor_name? list.visitor_name : list.VisitorName)}}</b></h2>
+                          <div item-end>
+                              <button ion-button color="danger" round style="font-size: 14px;">
+                                      <!-- <ion-icon name="people" style="font-size: 10px;
+                                      margin-right: 2px;"></ion-icon> -->
+                                      1
+                              </button>
+                          </div>
+                      </ion-item>
+                  <!-- <div class="row text-white no-padding" style="padding:0px 5px;display: contents;">
+
+
+
+                  </div> -->
+                  <div class="row text-white no-padding" style="padding:0px 5px;" *ngIf="Type == '50'">
+                          <p *ngIf="list.Purpose" style="font-size: 14px;">{{list.Purpose}}</p>
+                          <p *ngIf="!list.Purpose"  style="font-size: 14px;">--</p>
+                          <!-- <h5>{{list.value[0].Category}}</h5>   -->
+                  </div>
+                  <div class="row text-white no-padding" style="padding:0px 5px;" *ngIf="Type == '60'">
+                    <p *ngIf="list.att_reason" style="font-size: 14px;">{{list.att_reason}}</p>
+                    <p *ngIf="!list.att_reason"  style="font-size: 14px;">--</p>
+                    <!-- <h5>{{list.value[0].Category}}</h5>   -->
+                  </div>
+                  <div class="row">
+                      <div class="col" style="padding: 0px;">
+                          <div text-right *ngIf="!list.HostName" style="padding-left: 5px;text-align: left !important">
+                              Staff : --
+                          </div>
+                          <div text-right *ngIf="list.HostName" style="margin: 0 auto;padding-left: 5px;text-align: left !important" class="booking-status.approved">
+                              Staff : {{list.HostName}}
+                          </div>
+                      </div>
+                  </div>
+          </div>
+          </div>
+          </ion-item>
+          <ion-item-options side="right" *ngIf="Type == '60' || Type == '50'">
+              <!-- <button ion-button icon-only color="danger" outline no-border (click)="editVisitors(slideDOM)">
+              <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
+          </button> -->
+          <button ion-button no-padding style="margin-right: 5px;padding-left: 20px !important;padding-right: 20px !important" color="danger" no-border (click)="checkoutVisitor(slideDOM, list)">
+              <ion-icon style="padding-left: 10px;" item-end name="walk"></ion-icon>Out
+          </button>
+          </ion-item-options>
+      </ion-item-sliding>
+      </ion-card>
+    </ion-list>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="{{ 'COMMON.LOADER_MSG.LOADING_MORE_DATA' | translate }}">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ion-content>

@@ -1,0 +1,46 @@
+.booking-main {
+  .fixed-content,
+  .scroll-content1 {
+    display: flex;
+    align-items: center;
+
+    ion-list {
+      max-width: 300px;
+      width: 100%;
+      margin: auto;
+      text-align: center;
+    }
+  }
+  .item-inner,
+  .input-wrapper {
+    padding: 0px;
+    border-bottom: 0px !important;
+  }
+  ion-label {
+    margin: 0px;
+  }
+  .apt-left {
+    background-color: theme-colors("mainColors", "primary");
+  }
+  .text-white {
+    color: theme-colors("textColors", "primaryWhite");
+  }
+  .booking-status {
+    color: white;
+    margin-bottom: -10px;
+    margin-left: -5px;
+    margin-right: -5px;
+    padding: 10px;
+  }
+  .booking-status.pending {
+    background: rgb(252, 170, 170);
+  }
+  .booking-status.canceled {
+    background: #f2f2f2;
+    color: #aaa;
+  }
+  .booking-status.approved {
+    background: #90d3a3;
+    color: #ffffff;
+  }
+}

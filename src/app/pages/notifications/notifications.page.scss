@@ -1,0 +1,107 @@
+[color="favorite"] {
+  .segment-md .segment-button {
+    color: #c51717;
+  }
+  .segment-md .segment-button.activated,
+  .segment-md .segment-button.segment-activated {
+    border-color: #c51717;
+  }
+}
+
+.label-md {
+  margin: 3px;
+}
+
+.myCard {
+  margin: 5px;
+  padding: 15px;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+}
+
+.myText {
+  font-size: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  // margin: 0px;
+  // padding-left: 5px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-height: 16px;
+  -webkit-box-orient: vertical;
+  max-height: 38px;
+  // margin: 10px;
+  color: #8a9095;
+}
+
+ion-card img {
+  width: 40px;
+  margin: 0px !important;
+  margin-right: 5px !important;
+}
+
+.readCard {
+  background: #ffffff;
+  // margin: 5px;
+  padding: 15px;
+  margin-left: 10px;
+  // margin-right: 10px;
+  // margin-bottom: 10px;
+  border: 0.3px solid lightgrey;
+  border-bottom-width: 0px;
+  border-radius: 0px;
+  width: auto;
+  border-bottom-left-radius: 0px;
+}
+.unReadCard {
+  background: #f4f4f4;
+  /* margin: 5px; */
+  padding: 15px;
+  margin-left: 10px;
+  /* margin-right: 10px; */
+  /* margin-bottom: 10px; */
+  border: 0.3px solid lightgrey;
+  border-bottom-width: 0px;
+  /* border-radius: 5px; */
+  width: auto;
+  border-bottom-left-radius: 0px;
+}
+.myItem {
+  margin: 0px;
+  border-bottom: none;
+  padding-left: 0px;
+  background: #f4f4f4 !important;
+}
+
+.myItemRead {
+  margin: 0px;
+  border-bottom: none;
+  padding-left: 0px;
+  background: white !important;
+}
+.mySlidingItem {
+  background: transparent !important;
+}
+
+.ion-item-options {
+  border-bottom: none !important;
+}
+.list-md ion-item-options {
+  border-bottom: none !important;
+}
+
+.searchbar-md {
+  background: inherit;
+  margin: 8px;
+  border: 2px solid #e0dddd;
+  width: auto;
+  padding: 0px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+ion-content.has-refresher > .scroll-content {
+  border-top: none;
+}

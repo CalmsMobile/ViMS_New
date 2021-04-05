@@ -1,0 +1,97 @@
+.md-card-bg .md-card-subtitle,
+.md-card-bg .md-card-title {
+  position: absolute;
+  top: 50%;
+  color: #fff;
+  width: 100%;
+}
+
+.md-card-bg .md-card-title {
+  margin-top: -30px;
+}
+
+.md-card-bg .md-card-subtitle {
+  margin-top: 10px;
+}
+
+.myVisitorImage {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto;
+  padding: 5px;
+}
+
+.myItem {
+  padding: 0px;
+  height: 90px;
+  padding-right: 0px;
+}
+
+.myCard {
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  margin-bottom: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid #dedede;
+}
+
+.myCardImg {
+  padding: 0px;
+  margin: 0px !important;
+  width: 90px;
+  background: #f53d3d;
+}
+
+.myRow {
+  margin-left: 10px;
+}
+
+.navBtnImg {
+  width: 30px;
+  height: 30px;
+  padding: 3px;
+  margin-right: 5px;
+}
+
+.navBtnImg1 {
+  width: 30px;
+  height: 30px;
+  padding: 3px;
+  margin-right: 5px;
+}
+
+.myIcons {
+  // color: #8e8e93;
+  color: rgb(190, 185, 185);
+  padding-left: 7px;
+  padding-right: 7px;
+}
+.myName {
+  padding-left: 3px;
+  margin: 0px;
+  display: block;
+  margin-top: 3px;
+}
+
+ion-label {
+  margin: 0px !important;
+}
+
+.item-md p {
+  color: inherit;
+  margin: 0 auto;
+  margin-left: 5px;
+  display: block;
+  align-self: center;
+  color: lightslategrey;
+  text-transform: capitalize;
+}
+
+.verifiedImg {
+  width: 30px;
+  height: 30px;
+  margin: 0px;
+  padding: 0px;
+}

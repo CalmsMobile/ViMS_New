@@ -1,0 +1,38 @@
+<ion-content>
+    <ion-list no-lines="">
+        <div class="login-top">         
+        <h4 style="color: white;    margin: 5px;" text-center="" text-white="">
+           Appointment 
+          </h4>
+</div>
+    <h6 style="padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;">Following visitor's face not recognized properly</h6>
+    <p style="color: red;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    text-align: left;
+    padding-left: 10px;"><b>Note: </b>You can update visitor image in appointment edit</p>
+    <ion-card *ngFor="let hostData of reaponseArray" mode = "ios" color="primary" style="margin-bottom: 5px;margin-top: 5px;background-color: #d6d8dc!important;border-radius: 3%" no-padding no-border>
+        <ion-item sp-visitor-item no-lines  style="border: 1px solid #dedede;padding: 0px;">
+            <ion-avatar item-start style="    margin: 5px;">
+                <img [src]="imageURL+hostData.SEQ_ID+ imageURLType + newImage" onError="this.src='../../assets/images/user.png';" style="    background-color: darkgrey;
+                padding: 2px;">
+            </ion-avatar>
+            <h2 *ngIf="hostData.visitor_name" theme-text-color>{{hostData.visitor_name}}</h2>
+            <p text-wrap *ngIf="hostData.UploadDesc">{{hostData.UploadDesc}}</p>
+        </ion-item>
+    </ion-card>
+
+
+      </ion-list>
+</ion-content>
+<ion-footer>
+    <ion-item>
+        <button ion-button  round outline color='favorite' 
+                style="padding: 14px 18px 14px 18px;    display: block; margin: 0 auto;"
+                (click)="dismiss()" >
+                Okay
+        </button>
+    </ion-item>
+</ion-footer>

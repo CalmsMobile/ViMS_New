@@ -1,0 +1,53 @@
+[app-bg] {
+  background-color: theme-colors("mainColors", "createAppointment");
+}
+ion-content .scroll-content {
+  margin-bottom: 0px;
+}
+[theme-text-color] {
+  color: theme-colors("textColors", "accent") !important;
+}
+[text-white] {
+  color: white;
+}
+[text-alpha-caption] {
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 1px;
+  font-size: 16px;
+  font-weight: 500;
+}
+[siv-date-picker] {
+  position: absolute;
+  width: calc(100% - 32px);
+  z-index: 1;
+  height: calc(100%);
+
+  .datetime-text {
+    opacity: 0;
+  }
+}
+[margin-bottom-10] {
+  margin-bottom: 10px;
+}
+[margin-top-10] {
+  margin-top: 10px;
+}
+[margin-right-10] {
+  margin-right: 10px;
+}
+
+.footer-md::before,
+.tabs-md[tabsPlacement="bottom"] > .tabbar::before {
+  top: -2px;
+  bottom: auto;
+  background-position: left 0 top 0;
+  height: 0px;
+}
+.circle-pic {
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 50% !important;
+  overflow: hidden;
+  background-color: darkgrey;
+  padding: 2px;
+}

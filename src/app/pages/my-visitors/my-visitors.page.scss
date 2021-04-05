@@ -1,0 +1,81 @@
+.item-divider-md {
+  background-color: #f9f9f9;
+  color: theme-colors("textColors", "accent");
+}
+.circle-pic {
+  width: 100px;
+  height: 100px;
+}
+.myItem {
+  padding: 0px;
+}
+.myRow {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+.myCol {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+.myItemCIO {
+  border: 1px solid #dedede !important;
+  border-top: 0px !important;
+  background: linear-gradient(to right, #f0f7f2 0%, #f0f7f2 70%);
+  padding-left: 0px;
+  color: #58b970;
+  // height: 100px;
+}
+.myItemCINO {
+  border: 1px solid #dedede !important;
+  border-top: 0px !important;
+  background: linear-gradient(to right, #43cd80 0%, #43cd80 70%);
+  padding-left: 0px;
+  color: white;
+  // height: 100px;
+}
+.myItemCIExpired {
+  border: 1px solid #dedede !important;
+  border-top: 0px !important;
+  background: linear-gradient(to right, #fa8072 0%, #fa8072 70%);
+  padding-left: 0px;
+  color: white;
+  // height: 100px;
+}
+.myIcons {
+  // color: #8e8e93;
+  color: darkgray;
+  padding-left: 7px;
+}
+.myName {
+  padding-left: 3px;
+}
+.item-md p {
+  color: inherit;
+  margin: 0 auto;
+  margin-left: 5px;
+  display: block;
+  align-self: center;
+  color: lightslategrey;
+  text-transform: capitalize;
+}
+.mytime {
+  font-size: 10px;
+}
+[sp-visitor-item] {
+  ion-avatar {
+    min-width: 40px;
+    min-height: 40px;
+    margin: 0 auto !important;
+  }
+  ion-avatar ion-img,
+  ion-avatar img {
+    border-radius: 0px !important;
+    padding: 10px !important;
+    // overflow: hidden;
+    // width: 40px;
+    // height: 40px;
+  }
+  .label-md {
+    margin: 7px 8px 7px 0;
+  }
+}

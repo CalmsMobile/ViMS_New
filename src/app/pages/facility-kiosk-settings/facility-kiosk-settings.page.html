@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list my-set-list>
+    <ion-item-divider color="accent">
+      <span>Basic Information</span>
+    </ion-item-divider>
+    <button ion-item>
+      <ion-icon class='siva-icon-mobile' item-start color="favorite"></ion-icon>
+      <ion-label color="gray">Device ID</ion-label>
+      <ion-note item-end>{{deviceId}}</ion-note>
+   </button>
+   <!-- <button ion-item>
+      <ion-icon class='siva-icon-connectdevelop' item-start color="favorite"></ion-icon>
+      <ion-label color="gray">Mapping ID</ion-label>
+      <ion-note item-end></ion-note>
+   </button> -->
+   <button ion-item>
+      <ion-icon class='siva-icon-info-circled-1' item-start color="favorite"></ion-icon>
+    <ion-label color="gray">App Version</ion-label>
+    <ion-note item-end>{{'APP_VERSION' | translate}}</ion-note>
+  </button>
+    <ion-item-divider color="accent">
+      <span>Controls</span>
+    </ion-item-divider>
+    <!-- <button ion-item>
+        <ion-icon class='siva-icon-help-circled-1' item-start color="favorite"></ion-icon>
+        <ion-label>FAQ</ion-label>
+      </button> -->
+      <ion-item>
+          <ion-icon class='siva-icon-fort-awesome' color="favorite" item-start></ion-icon>
+          <ion-label color="gray">Select Your Facility</ion-label>
+          <ion-select mode="ios" [(ngModel)]="SELECTED_FACILITIE.FacilityCode"
+              (ionChange)="onChangeFacility()"
+              multiple="false"
+              interface="action-sheet"
+              [interfaceOptions]="customActionSheetOptions"
+              okText="Ok"
+              cancelText="Cancel">
+              <ion-select-option *ngFor="let item of AVAIL_FACILITIES" [value]="item.FacilityCode" color="gray">{{item.FacilityName}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+    <!-- <button ion-item (click)="goToUserAbout()">
+        <ion-icon class='siva-icon-plug' item-start color="favorite"></ion-icon>
+        <ion-label color="gray">Disconnect this device</ion-label>
+      </button> -->
+    <button ion-item (click)="logoutMe()">
+        <ion-icon class='siva-icon-logout-2' item-start color="danger"></ion-icon>
+        <ion-label color="danger">Exit from account</ion-label>
+      </button>
+      <!-- <ion-item >
+          <ion-icon class='siva-icon-adjust' item-start color="favorite"></ion-icon>
+          <ion-label>Enable Option 1</ion-label>
+          <ion-toggle color="secondary"></ion-toggle>
+        </ion-item>
+        <ion-item >
+          <ion-icon class='siva-icon-list-add' item-start color="favorite"></ion-icon>
+          <ion-label>Enable Option 2</ion-label>
+          <ion-toggle color="secondary"></ion-toggle>
+        </ion-item>
+
+       <ion-item-divider border-top color="accent">
+         <span>Scan History</span>
+        </ion-item-divider>
+        <ion-item>
+          <ion-label color="dark">Always Maintain</ion-label>
+          <ion-radio name="history" value="always" checked></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label color="dark">Never Maintain</ion-label>
+          <ion-radio name="history" value="locked"></ion-radio>
+        </ion-item>
+      <ion-item-divider color="accent">
+          <span>Other</span>
+      </ion-item-divider>-->
+  </ion-list>
+</ion-content>

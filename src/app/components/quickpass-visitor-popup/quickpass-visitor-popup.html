@@ -1,0 +1,45 @@
+<ion-content [ngStyle]="{'background': 'linear-gradient(' + securitySettings.QuickPass.BackgroundColor1 + ', ' + securitySettings.QuickPass.BackgroundColor2 + ') no-repeat center'}">
+    <ion-list no-lines="">
+     <ion-item no-lines style="background:transparent; margin:0 auto">
+       
+               <ion-avatar  *ngIf = "base64Image"  text-center margin-bottom style="margin-top: 0px;    margin-bottom: 0px;">
+                        <img class="profile-imageTabLand" [src]="base64Image" (click)= "presentActionSheet()"/>
+                    </ion-avatar>
+                    <ion-avatar  *ngIf = "!base64Image" text-center margin-bottom style="margin-top: 0px;    margin-bottom: 0px;">
+                        <img class="profile-imageTabLand" onError="this.src='../../assets/images/user.png';" [src]="data.logo+'0'+RefTypeVP" (click)= "presentActionSheet()"/>
+                        <ion-icon app-logo-img class="animated fadeInDown delay-1s" class="cameraImgTabLand" *ngIf = "CheckIn && securitySettings.QuickPass.ImageCaptureEnabled" (click)= "presentActionSheet()" name="camera"></ion-icon>
+                    </ion-avatar>
+                        
+                    <h4 class="head1TabLand"><b>Name</b></h4>
+                    <p class="pTabLand" *ngIf= "QPAppointment.VisitorName"><b>{{QPAppointment.VisitorName}}</b></p>
+                    <h4 class="head1TabLand"><b>Expiry Time</b></h4>
+                    <p class="pTabLand" *ngIf= "QPAppointment.ExpiryTime" ><b>{{QPAppointment.ExpiryTime}}</b></p>
+                    <p class="pTabLand" *ngIf= "!QPAppointment.ExpiryTime" > -- </p>
+                    <h4 class="head1TabLand"><b>Vehicle No</b></h4>
+                    <p class="pTabLand" *ngIf= "QPAppointment.VehicleNo" ><b>{{QPAppointment.VehicleNo}}</b></p>
+                    <p class="pTabLand" *ngIf= "!QPAppointment.VehicleNo" > -- </p>
+                    <h4 class="head1TabLand"><b>Remarks</b></h4>
+                    <p class="pTabLand" *ngIf= "QPAppointment.Purpose" ><b>{{QPAppointment.Purpose}}</b></p>
+                    <p class="pTabLand" *ngIf= "!QPAppointment.Purpose" > -- </p>
+                </ion-item>
+                <ion-item *ngIf="!CheckIn">
+                        <img class="qrCodeImage" [src]="qrCodeString"/>
+                </ion-item>
+                <ion-item>
+                    <button ion-button  round color='favorite' 
+                            style="padding: 14px 7px 14px 18px;    display: block;
+                            margin: 0 auto;min-width: 150px;"
+                            (click)="UpdateQPVisitorCheckInTime()" >
+                            {{CheckIn? ('SECURITY_APP.CHECK_IN' | translate) : ('SECURITY_APP.SHARE_QR' | translate)}}
+                    </button>
+                </ion-item>
+                <ion-item>
+                    <button ion-button  round outline color='light' 
+                        style="padding: 14px 7px 14px 18px;    display: block;
+                        margin: 0 auto;min-width: 150px;"
+                        (click)="dismiss()" >
+                        Cancel
+                    </button>
+            </ion-item>
+      </ion-list>
+</ion-content>

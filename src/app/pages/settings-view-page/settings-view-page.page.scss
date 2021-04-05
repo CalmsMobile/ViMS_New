@@ -1,0 +1,24 @@
+[my-set-list] {
+  // ion-icon[item-start]{
+  //     font-size: 2.2rem !important;
+  // }
+  ion-item.item .item-inner,
+  button.item .item-inner {
+    margin-left: 10px !important;
+  }
+}
+ion-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: contain;
+  background-size: 18px;
+
+  &[ng-reflect-name="customicon"] {
+    background-image: url("../../../assets/images/x-icon/admin.png");
+    &[ng-reflect-is-active="true"] {
+      background-image: url("../../../assets/images/x-icon/admin.png");
+    }
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}

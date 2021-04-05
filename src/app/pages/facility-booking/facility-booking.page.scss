@@ -1,0 +1,66 @@
+[app-bg] {
+  background-color: theme-colors("mainColors", "createAppointment");
+}
+ion-content .scroll-content {
+  margin-bottom: 0px;
+}
+[theme-text-color] {
+  color: theme-colors("textColors", "accent") !important;
+}
+[text-white] {
+  color: white;
+}
+[text-alpha-caption] {
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 1px;
+  font-size: 16px;
+  font-weight: 500;
+}
+[siv-date-picker] {
+  position: absolute;
+  width: calc(100% - 32px);
+  z-index: 1;
+  height: calc(100%);
+
+  .datetime-text {
+    opacity: 0;
+  }
+}
+[margin-bottom-10] {
+  margin-bottom: 10px;
+}
+[margin-top-10] {
+  margin-top: 10px;
+}
+[margin-right-10] {
+  margin-right: 10px;
+}
+
+.ionSelect {
+  border: 2px solid #eee;
+  border-left: 2px solid #eee;
+  border-radius: 5px;
+  transition: border-color 0.5s ease-out;
+  padding: 15px !important;
+  text-align: left;
+  margin: 0 auto;
+  margin-left: 2px;
+  width: 100%;
+  min-width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.ion-md-share {
+  color: #ed4248;
+}
+.ion-md-arrow-dropright-circle {
+  color: #508ae4;
+}
+.ion-md-heart-outline {
+  color: #31d55f;
+}
+.action-sheet-cancel ion-icon,
+.action-sheet-destructive ion-icon {
+  color: #757575;
+}

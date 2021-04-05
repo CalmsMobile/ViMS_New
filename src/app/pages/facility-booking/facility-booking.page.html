@@ -1,0 +1,162 @@
+
+<ion-header tra *ngIf = "true">
+  <ion-toolbar>
+    <ion-title *ngIf="!edit">{{'FACILITY_BOOKING.TITLE' | translate}}</ion-title>
+    <ion-title *ngIf="edit">{{'FACILITY_BOOKING.U_TITLE' | translate}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="checkFacilityAvailability()">
+          <img app-logo-img class="animated fadeInDown delay-1s" style="display: block; margin: 0 auto;width: 30px;height: 30px;margin-right: 10px;" src="../../assets/images/room_available.png">
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+        <!-- <button ion-button (click)="openCalendar()">Open Calendar on Current Date</button> -->
+    <div app-bg>
+        <div padding-top class="item item-body" style="border-bottom:1px solid rgba(0,0,0,0.05);">
+            <div class="row" style="padding: 8px;">
+                <div padding-horizontal class="col" style="border-right: 1px solid rgba(0,0,0,0.05);padding: 0px" (click)="openCalendar(true)">
+                    <div text-alpha-caption margin-bottom-10 style="    color: white;">
+                        <i hidden margin-right-10 class="icon siva-icon-calendar-3"></i>{{'FACILITY_BOOKING.FROM_DATE' | translate}}</div>
+                    <div class="row" style="    display: inline-flex;">
+                        <!-- <ion-datetime siv-date-picker (ionChange)="changeEvent('fromDate')" [(ngModel)]="VM.fromDate" pickerFormat="DD/MM/YYYY hh:mm A" min="{{minDate}}"
+                        max="2050-12-31"></ion-datetime> -->
+                        <h3 text-white text-right no-margin class="col">{{VM.fromDate | date : 'dd'}}</h3>
+                        <div text-white text-uppercase style="margin-left: 8px;align-self: center;">
+                            <b>{{VM.fromDate | date : 'MMM'}}</b>
+                        </div>
+                        <h3 text-white text-right no-margin class="col">{{VM.fromDate | date : 'yyyy'}}</h3>
+                        <!-- <h3 text-white text-right no-margin class="col">{{VM.fromTime}}</h3>
+                        <div text-white text-uppercase margin-left style="line-height: 2.6;margin-left: 3px;">
+                            <b>{{VM.fromTimeSession}}</b>
+                        </div> -->
+                    </div>
+                </div>
+                <div padding-horizontal class="col" style="padding:0px" (click)="openCalendar(false)">
+                    <div text-alpha-caption margin-bottom-10 style="    color: white;">
+                        <i hidden margin-right-10 class="icon siva-icon-calendar-3"></i>{{'FACILITY_BOOKING.TO_DATE' | translate}}</div>
+                    <div class="row row-no-padding" style="    display: inline-flex;">
+                        <!-- <ion-datetime siv-date-picker (ionChange)="changeEvent('toDate')" [(ngModel)]="VM.toDate" pickerFormat="DD/MM/YYYY hh:mm A" min="{{minDate}}"
+                        max="2050-12-31"></ion-datetime> -->
+                        <h3 text-white text-right no-margin class="col">
+                                {{VM.toDate | date : 'dd'}}</h3>
+                        <div text-white text-uppercase style="margin-left: 8px; align-self: center;">
+                            <b>{{VM.toDate | date : 'MMM'}}</b>
+
+                        </div>
+                        <h3 text-white text-right no-margin class="col">{{VM.toDate | date : 'yyyy'}}</h3>
+                        <!-- <h3 text-right text-white no-margin class="col">{{VM.toTime}}</h3>
+                        <div text-white text-uppercase margin-left style="line-height: 2.6;margin-left: 3px;">
+                            <b>{{VM.toTimeSession}}</b>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="item item-body" *ngIf="false">
+            <div margin-bottom no-padding class="row">
+                <div padding-horizontal class="col" style="border-right: 1px solid rgba(0,0,0,0.05);" ng-click="openTimeBreakInPicker()">
+                    <div text-alpha-caption margin-top-10 margin-bottom-10 style="    color: white;">
+                        <i hidden margin-right-10 class="icon siva-icon-clock-2"></i>{{'FACILITY_BOOKING.FROM_TIME' | translate}}</div>
+                    <div class="row row-no-padding">
+                        <ion-datetime siv-date-picker (ionChange)="changeEvent('fromTime')"
+                            pickerFormat="hh:mm A" [(ngModel)]="VM.fromTime"></ion-datetime>
+                        <h1 text-white text-right no-margin class="col">{{VM.fromTime}}</h1>
+                        <div text-white text-uppercase margin-left style="line-height: 2.6;">
+                            <b>{{VM.fromTimeSession}}</b>
+                        </div>
+                    </div>
+                </div>
+                <div padding-horizontal col ng-click="openTimeBreakOutPicker()">
+                    <div text-alpha-caption margin-top-10 margin-bottom-10 style="    color: white;">
+                        <i hidden margin-right-10 class="icon siva-icon-clock-2"></i>{{'FACILITY_BOOKING.TO_TIME' | translate}}</div>
+                    <div class="row row-no-padding">
+                        <ion-datetime siv-date-picker (ionChange)="changeEvent('toTime')"
+                          pickerFormat="hh:mm A" [(ngModel)]="VM.toTime"></ion-datetime>
+                        <h1 text-right text-white no-margin class="col">{{VM.toTime}}</h1>
+                        <div text-white text-uppercase margin-left style="line-height: 2.6;">
+                            <b>{{VM.toTimeSession}}</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <h2>{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</h2> -->
+    <ion-label *ngIf="false" style="    font-size: 16px;    margin-left: 5px;" color="favorite">{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</ion-label>
+    <ion-item *ngIf="false" no-lines no-padding transparent>
+      <ion-select mode="ios" class="ionSelect" interface="action-sheet" style="font-size: 16px;" [(ngModel)]="FacilityCode" interface="action-sheet" placeholder="{{'FACILITY_BOOKING.STEP2.LAB_FACILITY_NAME' | translate}}">
+        <ion-label>{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</ion-label>
+        <ion-select-option text-left *ngFor="let avl_reason of FACILITYMASTERLIST" (ionSelect)="onChangeFacility(avl_reason)" [value]="avl_reason.FacilityCode">
+          {{avl_reason.FacilityName}}
+        </ion-select-option>
+      </ion-select>
+  </ion-item>
+
+    <ion-row style="
+    background: rgb(248, 248, 248);
+">
+        <ion-col col-6>
+                <h3 margin-top padding-horizontal theme-text-color>
+                        {{'FACILITY_BOOKING.NUM_VISITORS' | translate}} ({{VM.visitors.length}}) </h3>
+        </ion-col>
+        <ion-col col-6>
+                <ion-fab right style="    margin-top: 5px;">
+                        <button ion-fab icon-only style="background-color: #f53d3d;width: 40px;height: 40px;" (click)="goToAddManageVisitors()">
+                            <i class="icon siva-icon-user-add" style="font-size:2.0rem;"></i></button>
+                </ion-fab>
+        </ion-col>
+    </ion-row>
+
+
+
+    <div style="margin-top: 25px;height: 45%;">
+
+        <ion-list #visitorsList>
+            <ion-card mode = "ios" color="primary" style="margin-bottom: 5px;margin-top: 5px;" no-padding no-border  *ngFor="let item of VM.visitors">
+            <ion-item-sliding #slideDOM >
+                <ion-item sp-visitor-item no-lines  style="border: 1px solid #dedede;padding: 0px;">
+                    <ion-avatar item-start style="    margin: 5px;">
+                        <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQID+ imageURLType + newImage" style="    background-color: darkgrey;
+                        padding: 2px;">
+                    </ion-avatar>
+                    <h2 theme-text-color>{{item.HOSTNAME}}</h2>
+                    <p>{{item.HOST_EMAIL}}</p>
+                    <p>{{item.HostExt}}</p>
+                    <!-- <ion-note item-end>{{item.phone}}</ion-note> -->
+                    <button  item-end ion-button round outline icon-only color="danger" style="padding: 5px" (click)="removeVisitor(item)">
+                      <ion-icon  name="close" style="    font-size: 18px;
+                      text-align: center;
+                      display: flex;"></ion-icon>
+                    </button>
+
+                    <!-- <ion-buttons item-end >
+                        <ion-icon name="trash" style="padding:8px" (click)="removeVisitor(item)"></ion-icon>
+                         <button ion-button icon-only (click)="removeVisitor(item)" ><ion-icon name="trash"></ion-icon></button>
+                    </ion-buttons> -->
+                </ion-item>
+              </ion-item-sliding>
+        </ion-card>
+    </ion-list>
+    </div>
+    <!-- <button bottom right ion-button icon-right align-items-end round outline color="favorite"
+    style="padding: 14px 7px 14px 18px;height: 40px;margin-left: auto;display: block;"
+    (click)="proceedToNextStep()" [disabled]="(VM.visitors.length == 0)">
+        {{'ACC_MAPPING.PROCEED' | translate}}
+      <ion-icon class="icon siva-icon-right-open"></ion-icon>
+    </button> -->
+
+</ion-content>
+
+
+
+<ion-footer transparent>
+    <ion-toolbar transparent>
+        <button bottom right ion-button icon-right align-items-end round outline color="favorite"
+        style="padding: 14px 7px 14px 18px;height: 40px;margin-left: auto;display: block;"
+        (click)="proceedToNextStep()">
+            {{'ACC_MAPPING.PROCEED' | translate}}
+          <ion-icon class="icon siva-icon-right-open"></ion-icon>
+        </button>
+    </ion-toolbar>
+</ion-footer>

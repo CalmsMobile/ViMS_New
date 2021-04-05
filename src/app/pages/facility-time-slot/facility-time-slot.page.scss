@@ -1,0 +1,108 @@
+.list-md {
+  margin: -1px 0 16px;
+  margin: 0px;
+}
+
+.SessionEnd {
+  border-radius: 50%;
+  padding-top: 20px;
+  // padding-bottom: 25px;
+  padding-left: 3px;
+  font-size: 16px;
+  border: 1px solid rgb(26, 122, 151);
+  background: rgb(26, 122, 151);
+  color: rgb(255, 255, 255);
+  width: 80px;
+  margin: 0 auto;
+  height: 80px;
+  text-align: center;
+}
+
+.slotUnselected {
+  border-radius: 50%;
+  padding-top: 20px;
+  // padding-bottom: 25px;
+  padding-left: 3px;
+  font-size: 16px;
+  border: 1px solid #00a1e1;
+  background: transparent;
+  color: #00a1e1;
+  width: 80px;
+  margin: 0 auto;
+  height: 80px;
+  text-align: center;
+}
+
+.slotSelected {
+  border-radius: 50%;
+  padding-top: 20px;
+  // padding-bottom: 25px;
+  padding-left: 3px;
+  font-size: 16px;
+  border: 1px solid rgb(0, 161, 225);
+  background: rgb(0, 161, 225);
+  color: rgb(255, 255, 255);
+  width: 80px;
+  margin: 0 auto;
+  height: 80px;
+  text-align: center;
+}
+
+.slotExpired {
+  border-radius: 50%;
+  padding-top: 20px;
+  // padding-bottom: 25px;
+  padding-left: 3px;
+  font-size: 16px;
+  border: 1px solid rgb(80, 79, 79);
+  background: rgb(216, 214, 214);
+  color: rgb(91, 93, 94);
+  width: 80px;
+  margin: 0 auto;
+  height: 80px;
+  text-align: center;
+}
+
+.slotDisable {
+  border-radius: 50%;
+  padding-top: 20px;
+  // padding-bottom: 15px;
+  padding-left: 3px;
+  font-size: 16px;
+  border: 1px solid rgb(245, 14, 14);
+  background: rgb(245, 14, 14);
+  color: white;
+  width: 80px;
+  margin: 0 auto;
+  height: 80px;
+  text-align: center;
+}
+
+.activateButton {
+  margin-right: 10px;
+  color: white;
+  background-color: #f53d3d;
+}
+.inactivateButton {
+  margin-right: 10px;
+  color: #f53d3d;
+  background-color: #ffffff;
+}
+ion-segment {
+  display: block;
+  white-space: nowrap;
+  font-size: 0;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  ion-segment-button.segment-button {
+    display: inline-block;
+    min-width: 100px;
+    width: auto;
+  }
+}

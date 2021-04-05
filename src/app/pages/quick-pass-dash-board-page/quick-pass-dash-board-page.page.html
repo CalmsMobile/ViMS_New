@@ -1,0 +1,118 @@
+<!--
+  Generated template for the QuickPassDashBoardPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-toolbar>
+    <button ion-button menuToggle>
+      <ion-icon class="siva-icon-menu-1"></ion-icon>
+    </button>
+    <ion-title>{{title}}</ion-title>
+    <ion-buttons end>
+        <button *ngIf= "isAdmin" ion-button icon-only (click)="gotoAdminPage()">
+            <ion-icon name="customicon"></ion-icon>
+        </button>
+        <button ion-button icon-only (click)="gotoNotification()">
+            <ion-icon name="ios-notifications" style="position:relative">
+                    <span *ngIf= "notificationCount > 0" style="position: absolute;
+                    font-size: 16px;
+                    margin-top: -10px;"><b>{{notificationCount}}</b></span>
+            </ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content padding style="background: url('assets/images/background/app_bg.png') no-repeat center;background-size: cover;height: 100%">
+<ion-refresher (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content></ion-refresher-content>
+</ion-refresher>
+
+<ion-grid style="height: 100%; width: 100%; display: flex; justify-content: center;">
+  <h1 class="myHomeTitle">{{title1}}</h1>
+  <ion-row class="myRow">
+
+
+    <ion-col col-6 class="myCol">
+        <ion-card class="card1" (click)= "statesClicked('TotalGuestInside')">
+          <h3 text-wrap class="itemTextActive"><b>Guest Inside</b></h3>
+          <ion-item-divider class="myDivider"></ion-item-divider>
+          <ion-item>
+            <img style="width: 30px;margin:0 auto" item-end src="../../assets/images/active1.png"/>
+            <!-- <ion-icon item-end name="walk" color="danger"></ion-icon>                   -->
+            <h1 class="para">{{TotalGuestInside}}</h1>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+      <ion-col col-6 class="myCol">
+          <ion-card class="card1" (click)= "statesClicked('TotalUnusedExpiredPass')">
+            <h3 text-wrap class="itemTextExpired"><b>Unused Expired</b></h3>
+            <ion-item-divider class="myDivider"></ion-item-divider>
+            <ion-item>
+              <img style="width: 30px;margin:0 auto" item-end src="../../assets/images/expired.png"/>
+              <h1 class="para">{{TotalUnusedExpiredPass}}</h1>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+  </ion-row>
+
+  <ion-row class="myRow">
+
+      <ion-col col-6 class="myCol">
+        <ion-card class="card1" (click)= "statesClicked('TotalUsedPass')">
+          <h3 text-wrap class="itemTextUsed"><b>Utilized Pass</b></h3>
+          <ion-item-divider class="myDivider"></ion-item-divider>
+          <ion-item>
+            <img style="width: 30px;margin:0 auto" item-end src="../../assets/images/used.png"/>
+            <!-- <ion-icon item-end name="walk" color="danger"></ion-icon> -->
+
+            <h1 class="para">{{TotalUsedPass}}</h1>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+      <ion-col col-6 class="myCol">
+          <ion-card class="card1" (click)= "statesClicked('TotalUnusedPass')">
+            <h3 text-wrap class="itemTextUnused"><b>Unutilized Pass</b></h3>
+            <ion-item-divider class="myDivider"></ion-item-divider>
+            <ion-item>
+              <img style="width: 30px;margin:0 auto" item-end src="../../assets/images/unused.png"/>
+              <!-- <ion-icon item-end name="walk" color="danger"></ion-icon> -->
+
+              <h1 class="para">{{TotalUnusedPass}}</h1>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+    </ion-row>
+    <ion-row class="myRow">
+
+        <ion-col col-6 class="myCol">
+          <ion-card class="card1" (click)= "statesClicked('TotalFinishedOverstayPass')">
+            <h3 text-wrap class="itemTextOverstay"><b>Finished OverStay Pass</b></h3>
+            <ion-item-divider class="myDivider"></ion-item-divider>
+            <ion-item>
+              <img style="width: 30px;margin:0 auto" item-end src="../../assets/images/overstay1.png"/>
+              <!-- <ion-icon item-end name="walk" color="danger"></ion-icon> -->
+
+              <h1 class="para">{{TotalFinishedOverstayPass}}</h1>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+        <ion-col col-6 class="myCol">
+            <ion-card class="card1" (click)= "statesClicked('TotalCurrentOverStayPass')">
+              <h3 text-wrap class="itemCheckOut"><b>Ongoing OverStay Pass</b></h3>
+              <ion-item-divider class="myDivider"></ion-item-divider>
+              <ion-item>
+                <!-- <img style="width: 30px;margin:0 auto" item-end src="../../assets/images/unused.png"/> -->
+                <ion-icon item-end name="walk" color="dark"></ion-icon>
+
+                <h1 class="para">{{TotalCurrentOverStayPass}}</h1>
+              </ion-item>
+            </ion-card>
+          </ion-col>
+      </ion-row>
+  </ion-grid>
+</ion-content>

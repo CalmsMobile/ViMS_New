@@ -1,0 +1,36 @@
+<!--
+  Generated template for the SignPadTermsAndConditionPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content padding [ngStyle]="{'background': 'linear-gradient(' + customStyle.DetailsPage.backgroundcolor1 + ', ' + customStyle.DetailsPage.backgroundcolor2 + ') no-repeat center'}">
+  <div item-text-wrap [innerHTML]="appSettings.TermsAndConditionDesc.trim()" text-wrap style="font-size: 20px;color: white;
+  padding-left: 5px;    padding-bottom: 0px; padding-top: 0px; margin: 10px;"></div>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="{{ 'COMMON.LOADER_MSG.LOADING_MORE_DATA' | translate }}">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>
+<ion-footer transparent>
+    <ion-toolbar transparent>
+        <ion-row>
+          <ion-col>
+            <ion-item no-lines style="background: transparent;color: white; font-size: 18px;">
+              <ion-label>I AGREE TO ALL</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="isChecked" [disabled]= "disableCheckbox"></ion-checkbox>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <button bottom right ion-button icon-right align-items-end round color="favorite"
+            style="padding: 14px 10px 18px 20px;margin-bottom: 10px;margin-top: 10px;margin-left: auto;display: block;"
+            (click)="proceedToNextStep()" [disabled]="!isChecked">
+                {{'ACC_MAPPING.PROCEED' | translate}}
+              <ion-icon class="icon siva-icon-right-open"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+    </ion-toolbar>
+</ion-footer>

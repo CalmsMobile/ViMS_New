@@ -1,0 +1,19 @@
+{
+  "name": "cordova.plugins.myKadReader",
+  "version": "0.0.1",
+  "description": "This plugin used to read from MyKad",
+  "cordova": {
+    "id": "cordova.plugins.myKadReader",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Velusamy Vijay",
+  "license": "ISC"
+}

@@ -1,0 +1,32 @@
+<ion-content>
+    <ion-list no-lines="">
+      <div class="login-top">
+        <h4 style="color: white;    margin: 5px;" text-center="" text-white="">
+           {{visitor.VISITOR_NAME}}
+          </h4>
+      </div>
+      <ion-item>
+          <img class="animated fadeInDown delay-1s" style="
+          width: 150px;
+          height: 150px;
+          margin: 0 auto;
+          display: block;
+      " onError="this.src='../../assets/images/user.png';" [src]="data.logo+qrJsonString1+imageURLType">
+      </ion-item>
+      <ion-item lines="none">
+      <button ion-button  round color='favorite'
+              style="padding: 14px 7px 14px 18px;    display: block;
+              margin: 0 auto;min-width: 150px;"
+              (click)="share()" >
+              Share QR Code</button>
+      </ion-item>
+      <ion-item>
+      <button ion-button  round outline color='favorite'
+              style="padding: 14px 7px 14px 18px;    display: block;
+              margin: 0 auto;min-width: 150px;"
+              (click)="dismiss()" >
+              Cancel
+      </button>
+    </ion-item>
+      </ion-list>
+</ion-content>

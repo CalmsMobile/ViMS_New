@@ -1,0 +1,90 @@
+ion-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: contain;
+  background-size: 18px;
+
+  &[ng-reflect-name="customicon"] {
+    background-image: url("../../../assets/images/x-icon/admin.png");
+    &[ng-reflect-is-active="true"] {
+      background-image: url("../../../assets/images/x-icon/admin.png");
+    }
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}
+[admin] {
+  margin: 0 5px 0 0;
+  vertical-align: middle;
+  $sz: 20px;
+  width: $sz;
+  height: $sz;
+  background: url("../../../assets/images/x-icon/admin.png") no-repeat 50% 50%;
+  background-size: contain;
+}
+[app-logo-img] {
+  max-width: 72px;
+  max-height: 72px;
+}
+.default-background {
+  background-image: url("../../../assets/images/background/app_bg.png");
+  // background-size: 100%;
+  // background-repeat: no-repeat;
+
+  a {
+    color: theme-colors("textColors", "accent") !important;
+    text-decoration: none;
+    visibility: visible !important;
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    right: 25px;
+  }
+}
+ion-slide {
+  .slide-zoom {
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+[sp-home-slide-grid] {
+  margin-top: 45px;
+}
+[home-grid-option] {
+  p {
+    color: #444;
+    margin-top: 7px;
+    font-size: 12px;
+    margin-bottom: 3px;
+  }
+  button {
+    height: 60px;
+    width: 60px;
+    padding: 10px;
+
+    i {
+      font-size: 25px;
+    }
+  }
+}
+[sp-card-appointmets] {
+  margin: 0px 0px 7px 0px !important;
+  width: 100%;
+  h2,
+  p {
+    // margin-bottom: 10px;
+  }
+  .item-md ion-avatar {
+    min-width: 40px;
+    min-height: 40px;
+    img {
+      width: 40px;
+      height: auto;
+      border-radius: 50%;
+      -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    }
+  }
+}

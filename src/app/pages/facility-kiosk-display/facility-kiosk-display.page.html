@@ -1,0 +1,114 @@
+<ion-content *ngIf="K_PROPERTIES && K_PROPERTIES['screen_ui'] && K_PROPERTIES['screen_ui']['upcoming_block']" [attr.sidemenu-type]="K_PROPERTIES['screen_ui']['upcoming_block']['type']"
+[attr.sidemenu-effect]="K_PROPERTIES['screen_ui']['upcoming_block']['positn']"
+[style.backgroundImage]="'url('+ APP_DEFAULT_BG +')'" style="background-size: 100% 100%;background-repeat: no-repeat;"
+[attr.text-header]="(K_PROPERTIES['screen_ui']['header']['show_header']) ?
+K_PROPERTIES['screen_ui']['header']['header_txt_size'] : ''"
+ [attr.text-footer]="K_PROPERTIES['screen_ui']['footer']['footer_txt_size']">
+  <div custom-header *ngIf="K_PROPERTIES['screen_ui']['header']['show_header']">
+    <div *ngIf="K_PROPERTIES['screen_ui']['header']['show_logo']" logo [style.backgroundImage]="'url('+ APP_DEFAULT_LOGO +')'"></div>
+    <span *ngIf="K_PROPERTIES['screen_ui']['header']['show_title']"
+    [style.color]="K_PROPERTIES['screen_ui']['header']['title_txt_color']">
+    {{K_PROPERTIES['screen_ui']['header']['header_txt']}}</span>
+    <span *ngIf="K_PROPERTIES['screen_ui']['header']['show_dateTime']" time-stamp
+    [style.color]="K_PROPERTIES['screen_ui']['header']['date_txt_color']">{{CURRENT_TIME | date: K_PROPERTIES['screen_ui']['header']['date_formate']}}</span>
+  </div>
+  <div active-room [attr.status-type]="ACTIVE_BLOCK_CURRENT_DATA.XYZ_STATUS"
+  [attr.bg-type]="K_PROPERTIES['screen_ui']['active_block']['bg_type']">
+    <ion-content padding>
+        <button *ngIf= "showStopButton" stopbutton ion-fab (click)="takeActForStopEvent()"
+        style="position: absolute;right: 10px;background: red;"><ion-icon name="square"></ion-icon></button>
+      <div active-room-body>
+          <div style="border-bottom: 1vh solid;"
+          *ngIf="K_PROPERTIES['screen_ui']['active_block']['field1']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['active_block']['field1']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['active_block']['field1']['clr']">
+          {{ACTIVE_BLOCK_CURRENT_DATA.XYZ_ROOM}}</div>
+          <div *ngIf="K_PROPERTIES['screen_ui']['active_block']['field2']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['active_block']['field2']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['active_block']['field2']['clr']">
+          {{ACTIVE_BLOCK_CURRENT_DATA.XYZ_PURP}}</div>
+          <div *ngIf="!ACTIVE_BLOCK_CURRENT_DATA.SessionEnd && K_PROPERTIES['screen_ui']['active_block']['field6']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['active_block']['field6']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['active_block']['field6']['clr']">
+          {{ACTIVE_BLOCK_CURRENT_DATA.XYZ_NO_PERSON}}</div>
+          <div *ngIf="!ACTIVE_BLOCK_CURRENT_DATA.SessionEnd && K_PROPERTIES['screen_ui']['active_block']['field4']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['active_block']['field4']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['active_block']['field4']['clr']">
+          {{ACTIVE_BLOCK_CURRENT_DATA.XYZ_REASON}}</div>
+          <div *ngIf="!ACTIVE_BLOCK_CURRENT_DATA.SessionEnd && K_PROPERTIES['screen_ui']['active_block']['field5']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['active_block']['field5']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['active_block']['field5']['clr']">
+          {{ACTIVE_BLOCK_CURRENT_DATA.XYZ_CRETBY}}</div>
+          <div *ngIf="K_PROPERTIES['screen_ui']['active_block']['field3']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['active_block']['field3']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['active_block']['field3']['clr']">
+          {{ACTIVE_BLOCK_CURRENT_DATA.XYZ_STIME}} - {{ACTIVE_BLOCK_CURRENT_DATA.XYZ_ETIME}}</div>
+      </div>
+    </ion-content>
+    <div custom-footer *ngIf="K_PROPERTIES['screen_ui']['footer']['show_footer']">
+        <div logo *ngIf="K_PROPERTIES['screen_ui']['footer']['show_logo']"
+        [style.backgroundImage]="'url('+ APP_DEFAULT_LOGO +')'"></div>
+        <div headnews *ngIf="K_PROPERTIES['screen_ui']['footer']['show_title']"
+         [style.color]="K_PROPERTIES['screen_ui']['footer']['title_txt_color']">
+        {{K_PROPERTIES['screen_ui']['footer']['footer_txt']}}
+        </div>
+      </div>
+  </div>
+  <div upcoming-room [attr.gear]="CURRENT_SIDEMENU_GEAR">
+    <div popover-gear (click)="toggleSideMenuGear()">
+      <div *ngIf="K_PROPERTIES['screen_ui']['upcoming_block']['positn'] == 'right'">
+          <ion-icon name="arrow-forward" *ngIf="CURRENT_SIDEMENU_GEAR == 'open'"></ion-icon>
+          <ion-icon name="arrow-back" *ngIf="CURRENT_SIDEMENU_GEAR == 'close'"></ion-icon>
+      </div>
+      <div *ngIf="K_PROPERTIES['screen_ui']['upcoming_block']['positn'] == 'left'">
+        <ion-icon name="arrow-back" *ngIf="CURRENT_SIDEMENU_GEAR == 'open'"></ion-icon>
+        <ion-icon name="arrow-forward" *ngIf="CURRENT_SIDEMENU_GEAR == 'close'"></ion-icon>
+      </div>
+    </div>
+    <div header text-center *ngIf="K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['enb']" >
+        <div
+        [attr.text]="K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['fontSiz']"
+        [style.color]="K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['clr']">
+        {{K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['txt']}}</div>
+    </div>
+    <ion-content>
+        <ion-refresher slot="fixed" (ionRefresh)="getFacilityBookingSlats($event)">
+            <ion-refresher-content></ion-refresher-content>
+          </ion-refresher>
+      <ion-list no-lines>
+        <div ion-item *ngFor="let event of UPCOMING_DATA_LIST" [attr.status-type]="event.XYZ_STATUS" >
+          <div *ngIf="K_PROPERTIES['screen_ui']['upcoming_block']['field1']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['upcoming_block']['field1']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['upcoming_block']['field1']['clr']">
+          {{event.XYZ_ROOM}}</div>
+          <div *ngIf="K_PROPERTIES['screen_ui']['upcoming_block']['field2']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['upcoming_block']['field2']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['upcoming_block']['field2']['clr']">
+          {{event.XYZ_PURP}}</div>
+          <div *ngIf="!event.SessionEnd && K_PROPERTIES['screen_ui']['upcoming_block']['field5']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['upcoming_block']['field5']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['upcoming_block']['field5']['clr']">
+          {{event.XYZ_CRETBY}}</div>
+          <div *ngIf="!event.SessionEnd && K_PROPERTIES['screen_ui']['upcoming_block']['field4']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['upcoming_block']['field4']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['upcoming_block']['field4']['clr']">
+          {{event.XYZ_REASON}}</div>
+          <div *ngIf="!event.SessionEnd && K_PROPERTIES['screen_ui']['upcoming_block']['field6']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['upcoming_block']['field6']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['upcoming_block']['field6']['clr']">
+          {{event.XYZ_NO_PERSON}}</div>
+          <div *ngIf="K_PROPERTIES['screen_ui']['upcoming_block']['field3']['enb']"
+          [attr.text]="K_PROPERTIES['screen_ui']['upcoming_block']['field3']['siz']"
+          [style.color]="K_PROPERTIES['screen_ui']['upcoming_block']['field3']['clr']">
+          {{event.XYZ_STIME}} - {{event.XYZ_ETIME}}</div>
+        </div>
+      </ion-list>
+    </ion-content>
+  </div>
+  <button ion-button (click)="gotoCountClickSettings()"
+style="position: absolute;background-color: transparent;
+right: 0;
+min-height: 15vh;
+min-width: 15vh;box-shadow: none;">
+</button>
+</ion-content>

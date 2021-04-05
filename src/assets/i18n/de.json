@@ -1,0 +1,12 @@
+{
+	"HOME": {
+		"TITLE": "Translation Demo",
+		"DETAIL": "German",
+		"MENU": "English"
+	},
+	"LANGUAGE": {
+		"ENGLISH": "English",
+		"MALAY": "Malay",
+		"TAMIL": "Tamil"
+	}
+}

@@ -1,0 +1,58 @@
+
+
+  <ion-content class = "icontent" [ngStyle]="{'background': 'linear-gradient(' + customStyle.WelcomePage.backgroundcolor1 + ', ' + customStyle.WelcomePage.backgroundcolor2 + ') no-repeat center'}">
+    <button ion-long-press [interval]="1000" style="width:100%;height:100px;background:transparent" (onPressStart)="pressed()" (onPressing)="active()" (onPressEnd)="released()"></button>
+    <div style="height: 100%; width: 100%; margin-top:-100px; display: flex; justify-content: center; align-items: center;">
+        <div class="centerColor">
+          <ion-thumbnail>
+            <img *ngIf="!companyData.LogoImg || !companyData.StorageURL" [ngClass]="{ 'logoThumbTab': (screenSize == tab_por),'logoThumbTabLand':   (screenSize == tab_land), 'logoThumb': (screenSize == nor_por),'logoThumbNorLand':   (screenSize == nor_land) }" src="../../assets/images/welcome_logo.png">
+            <img *ngIf="companyData.LogoImg && companyData.StorageURL" [ngClass]="{ 'logoThumbTab': (screenSize == tab_por),'logoThumbTabLand':   (screenSize == tab_land), 'logoThumb': (screenSize == nor_por),'logoThumbNorLand':   (screenSize == nor_land) }" onError="this.src='../../assets/images/welcome_logo.png';" [src]="companyData.StorageURL + companyData.LogoImg">
+          </ion-thumbnail>
+
+          <ion-item no-lines style="background: transparent;">
+            <ion-row >
+                <h1 [style.font-family] = "customStyle.WelcomePage.Title.fontFamily" text-wrap [style.font-size]="customStyle.WelcomePage.Title.fontSize + 'px'" [ngClass]="{ 'h1TitleTapPortrait': (screenSize == tab_por),'h1TitleTapLandScap': (screenSize == tab_land),'h1TitleNormalPortrait': (screenSize == nor_por),'h1TitleNormalLandScap': (screenSize == nor_land) }"><b>{{companyData.HomeTitle}}</b></h1>
+            </ion-row>
+            <p [style.font-family] = "customStyle.WelcomePage.welcomeText.fontFamily" [style.font-size]="customStyle.WelcomePage.welcomeText.fontSize + 'px'" [ngClass]="{ 'h1WelcomeTabPort': (screenSize == tab_por),'h1WelcomeTabLand': (screenSize == tab_land),'h1WelcomeNorPort': (screenSize == nor_por),'h1WelcomeNorLand': (screenSize == nor_land) }">Welcome</p>
+            <ion-row style="margin-top:20px;">
+
+              <p [style.font-family] = "customStyle.WelcomePage.WelcomeDescription.fontFamily" text-wrap [style.font-size]="customStyle.WelcomePage.WelcomeDescription.fontSize + 'px'" [ngClass]="{ 'h1ContentTabPort': (screenSize == tab_por),'h1ContentTabLand': (screenSize == tab_land),'h1ContentNorPort': (screenSize == nor_por),'h1ContentNorLand': (screenSize == nor_land) }">{{companyData.HomeContent}}</p>
+            </ion-row>
+          </ion-item>
+
+          <ion-row style="margin-top:20px;" *ngIf="this.QRData && this.QRData.type == TYPE2">
+              <ion-col col-5>
+                <ion-card class="myQRCard">
+                  <button scan-qr-code ion-button color='light' outline
+                  class="myQRCodeImage"
+                  (click)="takeActForScanQR()">
+                  </button>
+                </ion-card>
+              </ion-col>
+              <ion-col col-2 class="OrCol">
+                <p><b>Or</b></p>
+              </ion-col>
+              <ion-col col-5>
+                <ion-card class="myQRCard">
+                  <button scan-qr-code ion-button color='light' outline
+                  class="myHandImage"
+                  (click)="takeActForManualEntry()">
+                  </button>
+                </ion-card>
+              </ion-col>
+          </ion-row>
+        </div>
+    </div>
+
+
+
+  </ion-content>
+  <ion-footer no-lines no-border>
+      <ion-row item-end no-lines no-border>
+          <ion-col>
+                  <p class="versionP">{{'APP_NAME' | translate}} V{{'APP_VERSION' | translate}}</p>
+          </ion-col>
+
+
+      </ion-row>
+  </ion-footer>
