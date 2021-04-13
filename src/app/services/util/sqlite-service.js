@@ -8,7 +8,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Injectable } from '@angular/core';
-import { SQLite } from '@ionic-native/sqlite';
+import { SQLite } from '@ionic-native/sqlite/ngx';
 import { AppSettings } from '../app-settings';
 var SqliteService = /** @class */ (function () {
     function SqliteService(sqlite) {

@@ -18,7 +18,7 @@
   // background: #E1BEE7;
   // background: url('../../assets/images/background/app_bg.png') no-repeat center;
 }
-.item-md ion-thumbnail[item-start] {
+.item-md ion-thumbnail[slot="start"] {
   width: 72px;
   height: 72px;
   margin: 0 auto;

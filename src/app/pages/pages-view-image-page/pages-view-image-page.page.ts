@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, NavParams } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-pages-view-image-page',
@@ -11,8 +11,7 @@ export class PagesViewImagePagePage implements OnInit {
 
   imagePath = '';
   constructor(public navCtrl: NavController, private route: ActivatedRoute,
-    private router: Router,
-    public navParams: NavParams) {
+    private router: Router) {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         const passData = this.router.getCurrentNavigation().extras.state.passData;

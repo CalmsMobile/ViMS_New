@@ -1,8 +1,7 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { NavController, NavParams, AlertController, ToastController, ModalController, ActionSheetController, IonItemSliding } from '@ionic/angular';
+import { NavController, AlertController, ToastController, ModalController, ActionSheetController, IonItemSliding, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AddAppointmentAlertPopupComponent } from 'src/app/components/add-appointment-alert/add-appointment-alert-popup';
 import { AddAppointmentModel } from 'src/app/model/addAppointmentModel';
@@ -20,7 +19,7 @@ export class AddAppointmentPage implements OnInit {
 
   @ViewChild('visitorsList') visitorsList: any;
   // @ViewChild(Navbar) navBar: Navbar;
-  @ViewChild(Content) content: Content;
+  @ViewChild(IonContent) content: IonContent;
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
   imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
@@ -38,10 +37,16 @@ export class AddAppointmentPage implements OnInit {
     toTime:"02:02",
     fromTimeSession:"AM",
     toTimeSession:"AM",
-    appointment: {}
+    appointment: {},
+    addVisitorSettings: '',
+    visitor_ctg: {
+      visitor_ctg_id: '',
+      visitor_ctg_desc: ''
+    }
   }
   FACILITYMASTERLIST = [];
   contactsarray:any = [];
+  VISITOR_CATEGORY:any = [];
   hostSettings : any = {};
   minDate: any = "";
   edit = false;
@@ -49,7 +54,7 @@ export class AddAppointmentPage implements OnInit {
   QRObj : any = {};
   showFacility = true;
   passData: any ={};
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     public events: EventsService,
     private toastCtrl:ToastController,
@@ -144,6 +149,8 @@ export class AddAppointmentPage implements OnInit {
         this.VM.toDate = this.VM.appointment[0].END_DATE;
         this.VM.toTime =  etime.split(":")[0]+":"+etime.split(":")[1];
 
+        // this.VM.visitor_ctg = VisitorCategory;
+        this.addAppointmentModel.visitor_ctg_id = this.VM.appointment[0].VisitorCategory;
         if(stime.split(":")[0] > 11){
           this.VM.fromTimeSession = "PM";
         }
@@ -178,7 +185,9 @@ export class AddAppointmentPage implements OnInit {
 
 
         this.VM.visitors = visitorsLocal1;
-
+        setTimeout(() => {
+          this.onChangeCategory(this.addAppointmentModel.visitor_ctg_id, false);
+        }, 1000);
       }else{
         this.contactsarray = this.passData.data;
         if(this.passData.aData){
@@ -216,6 +225,11 @@ export class AddAppointmentPage implements OnInit {
             fromTimeSession:"AM",
             toTimeSession:"AM",
             appointment: {},
+            addVisitorSettings: '',
+            visitor_ctg: {
+              visitor_ctg_id: '',
+              visitor_ctg_desc: ''
+            }
           }
           var today = new Date();
 
@@ -281,7 +295,7 @@ export class AddAppointmentPage implements OnInit {
                     visitorCats.VisitorCategory_ID=visitor.VisitorCategory_ID,
                     visitorCats.VISITOR_IMG=visitor.VISITOR_IMG,
                     visitorCats.PLATE_NUM=visitor.PLATE_NUM,
-                    visitorCats.checked = true,
+                    visitorCats.isChecked = true,
                     visitorCats.visitor_RemoveImg =visitor.visitor_RemoveImg,
                     visitorCats.ImageChanged = visitor.ImageChanged,
                     this.newImage = this.newImage +"_"+ new Date().getTime();
@@ -421,12 +435,15 @@ export class AddAppointmentPage implements OnInit {
     console.log('ionViewDidEnter AddAppointmentPage');
     this.events.publishDataCompany({
       action : "page",
-      title: "AddAppointmentPage",
+      title: "add-appointment",
       message: ''
     });
     var appntmntData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA);
     if(appntmntData && !this.edit && (!this.VM.visitors || this.VM.visitors.length == 0)){
       this.VM.visitors =  JSON.parse(appntmntData).visitors;
+      this.VM.addVisitorSettings = JSON.parse(appntmntData).addVisitorSettings;
+      this.VM.visitor_ctg = JSON.parse(appntmntData).visitor_ctg;
+      this.addAppointmentModel.visitor_ctg_id = this.VM.visitor_ctg.visitor_ctg_id;
     }
     if(this.showFacility){
       this.loadVimsAppFacilityMasterList();
@@ -501,51 +518,13 @@ export class AddAppointmentPage implements OnInit {
 
   async proceedToNextStep(){
 
-    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
 
-    if(settings && JSON.parse(settings)){
-      try{
-
-        if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-          var sett = JSON.parse(settings).Table3;
-          if(sett && sett.length > 0){
-            this.hostSettings = sett[0];
-            this.hostSettings.isFacility = true;
-          }else{
-            let toast = await this.toastCtrl.create({
-              message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
-              duration: 3000,
-              position: 'bottom'
-            });
-            toast.present();
-          }
-
-        }else{
-          sett = JSON.parse(settings).Table2;
-          if(sett && sett.length > 0){
-            this.hostSettings = sett[0];
-            this.hostSettings.isFacility = false;
-          }else{
-            let toast = await this.toastCtrl.create({
-              message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
-              duration: 3000,
-              position: 'bottom'
-            });
-            toast.present();
-          }
-
-        }
-
-      }catch(e){
-
-      }
-    }
 
     var type = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
     var allow = true;
 
     if(type == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-      if(settings){
+      if(this.hostSettings && this.hostSettings.available){
         allow = true;
       }else{
         allow = false;
@@ -569,7 +548,7 @@ export class AddAppointmentPage implements OnInit {
           }
         }
       };
-      this.router.navigate(['manage-visitors'], navigationExtras);
+      this.router.navigate(['add-appointment-step2'], navigationExtras);
       return;
     }
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -725,6 +704,7 @@ export class AddAppointmentPage implements OnInit {
             let toast = await this.toastCtrl.create({
               message: this.T_SVC['ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS'],
               duration: 3000,
+              color: 'primary',
               position: 'bottom'
             });
             toast.present();
@@ -793,6 +773,7 @@ export class AddAppointmentPage implements OnInit {
           let toast = await this.toastCtrl.create({
             message: this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS'],
             duration: 3000,
+            color: 'primary',
             cssClass: 'alert-danger',
             position: 'bottom'
           });
@@ -803,9 +784,9 @@ export class AddAppointmentPage implements OnInit {
             message: messageArray
           });
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-          this.navCtrl.navigateRoot('Home').then((data)=>{
+          this.navCtrl.navigateRoot('home-view').then((data)=>{
             var page = {
-              component :"FacilityBookingHistoryPage"
+              component :"facility-booking-history"
             }
             this.events.publishDataCompany({action : 'ChangeTab',
             title: page,
@@ -819,6 +800,7 @@ export class AddAppointmentPage implements OnInit {
       let toast = await this.toastCtrl.create({
         message: 'Server Error',
         duration: 3000,
+        color: 'primary',
         cssClass: 'alert-danger',
         position: 'bottom'
       });
@@ -933,6 +915,11 @@ export class AddAppointmentPage implements OnInit {
     );
   }
 
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
+
   async checkFacilityAvailability(){
     var btns = [];
     for(let item of this.FACILITYMASTERLIST){
@@ -962,7 +949,126 @@ export class AddAppointmentPage implements OnInit {
     actionSheet.present();
   }
 
+  _prepareForNewVisitor(){
+    this._getVisitorCategory();
+  }
+
+  onChangeCategory(visitor_ctg_id, allowCheck){
+
+    if (allowCheck && visitor_ctg_id !== this.VM.visitor_ctg.visitor_ctg_id) {
+      this.VM.visitors = [];
+    }
+
+    this.VM.visitor_ctg.visitor_ctg_id = visitor_ctg_id;
+    this.VISITOR_CATEGORY.forEach(element => {
+      if (element.visitor_ctg_id === visitor_ctg_id) {
+        this.VM.visitor_ctg.visitor_ctg_desc = element.visitor_ctg_desc;
+      }
+    });
+
+    this.addAppointmentModel.visitor_ctg_id = visitor_ctg_id;
+    this.addAppointmentModel.Category = this.VM.visitor_ctg.visitor_ctg_desc;
+    console.log(visitor_ctg_id + "///"  + this.addAppointmentModel.Category);
+
+    this.apiProvider.GetAddVisitorSettings({"RefVisitorCateg": visitor_ctg_id}).then(
+      (val) => {
+        var result = JSON.parse(JSON.stringify(val));
+        if(result){
+          if (result.Table.length > 0) {
+            if (result.Table[0].Code === 10) {
+              this.VM.addVisitorSettings = result.Table1[0].HostSettingDetail;
+            } else {
+              this.showToast(result.Table[0].Description);
+              this.VM.addVisitorSettings = "";
+            }
+          }
+
+        }
+      },
+      (err) => {
+        this.VM.addVisitorSettings = "";
+      }
+    );
+  }
+  _getVisitorCategory(){
+
+    var masterDetails = this.getCategory(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+    if(masterDetails){
+      this.VISITOR_CATEGORY = JSON.parse(masterDetails).Table4;
+
+      if(this.addAppointmentModel.visitor_ctg_id){
+        for(var i1 = 0 ; i1 < this.VISITOR_CATEGORY.length ; i1++){
+          if(this.VISITOR_CATEGORY[i1].visitor_ctg_desc == this.addAppointmentModel.visitor_ctg_id){
+            this.addAppointmentModel.visitor_ctg_id = this.VISITOR_CATEGORY[i1].visitor_ctg_id;
+            this.addAppointmentModel.Category = this.VISITOR_CATEGORY[i1].visitor_ctg_desc;
+            break;
+          }
+        }
+      }
+    }else{
+      this.apiProvider.GetMasterDetails().then(
+        (val) => {
+          var result = JSON.parse(JSON.stringify(val));
+          if(result){
+            //this.storage.set(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(val));
+            this.VISITOR_CATEGORY = result.Table4;
+          }
+        },
+        (err) => {
+        }
+      );
+    }
+  }
+
+  public getCategory(settingName){
+    //return this.storage.get(settingName);
+    return window.localStorage.getItem(settingName);
+  }
+
   ngOnInit() {
+    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+
+    if(settings && JSON.parse(settings)){
+      try{
+
+        if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
+          var sett = JSON.parse(settings).Table1;
+          if(sett && sett.length > 0){
+            this.hostSettings = sett[0];
+            this.hostSettings.available = true;
+            this.hostSettings.isFacility = true;
+          }else{
+            this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
+          }
+
+        }else{
+          sett = JSON.parse(settings).Table1;
+          if(sett && sett.length > 0){
+            this.hostSettings = sett[0];
+            this.hostSettings.available = true;
+            this.hostSettings.isFacility = false;
+          }else{
+            this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
+          }
+
+        }
+
+      }catch(e){
+
+      }
+    }
+    this._prepareForNewVisitor();
+  }
+
+  async showToast(msg) {
+    let toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      color: 'primary',
+      position: 'bottom'
+    });
+    toast.present();
   }
 
 }

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
-import { Camera } from '@ionic-native/camera';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { StreamingMedia, StreamingVideoOptions } from '@ionic-native/streaming-media/ngx';
-import { NavController, AlertController, LoadingController, ToastController, ModalController, Platform, ActionSheetController, NavParams } from '@ionic/angular';
+import { NavController, AlertController, LoadingController, ToastController, ModalController, Platform, ActionSheetController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -81,8 +81,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
     private translate: TranslateService,
     private screenOrientation : ScreenOrientation,
     private streamingMedia : StreamingMedia,
-    private actionSheetCtrl : ActionSheetController,
-    public navParams: NavParams) {
+    private actionSheetCtrl : ActionSheetController) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'ALERT_TEXT.VISITOR_CHECKIN_SUCCESS',
@@ -325,10 +324,14 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
               }
             }
             if(moveToWelcome){
-              // if(_currentClass.modal){
-              //   _currentClass.modal.dismiss();
-              // }
-              // _currentClass.events.publish('user:created', "CheckIn Acknowledgment", "CheckIn Acknowledgment");
+              if(_currentClass.modal){
+                _currentClass.modal.dismiss();
+              }
+              _currentClass.events.publishDataCompany({
+                action: 'user:created',
+                title: "CheckIn Acknowledgment",
+                message: "CheckIn Acknowledgment"
+              });
               return;
             }
           },
@@ -471,6 +474,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
           let toast = await this.toastCtrl.create({
             message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_SUCCESS'],
             duration: 3000,
+            color: 'primary',
             position: 'bottom'
           });
           toast.present();
@@ -495,6 +499,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
         let toast = await this.toastCtrl.create({
           message: 'Server Error',
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -625,6 +630,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
     let toast = await this.toastCtrl.create({
       message: text,
       duration: 3000,
+      color: 'primary',
       position: 'top'
     });
     toast.present();

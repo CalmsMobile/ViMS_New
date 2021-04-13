@@ -6,7 +6,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
-import { ToastController, Platform, LoadingController, NavParams, ModalController } from '@ionic/angular';
+import { ToastController, Platform, LoadingController, ModalController, NavParams } from '@ionic/angular';
 
 /**
  * Generated class for the CustomVisitorPopupComponent component.
@@ -33,7 +33,7 @@ export class CustomVisitorPopupComponent{
   qrCodeString: any = "";
   qrJsonString1:any = "";
   T_SVC:any;
-
+  qrCodePath = '';
   constructor(public viewCtrl: ModalController,
     public toastCtrl: ToastController,
     private platform: Platform,
@@ -43,11 +43,11 @@ export class CustomVisitorPopupComponent{
     private transfer: FileTransfer, private file: File,
     public socialSharing: SocialSharing,
     public navParams: NavParams) {
-      this.visitor = navParams.get("visitor");
-      this.aptid = navParams.get("aptid");
-      this.aptgid = navParams.get("aptgid");
-      this.cid = navParams.get("cid");
-      var HexCode = navParams.get("HexCode");
+      this.visitor = navParams.data.data.visitor;
+      this.aptid = navParams.data.data.aptid;
+      this.aptgid = navParams.data.data.aptgid;
+      this.cid = navParams.data.data.cid;
+      var HexCode = navParams.data.data.HexCode;
 
 
 
@@ -69,7 +69,8 @@ export class CustomVisitorPopupComponent{
     this.translate.get(['ALERT_TEXT.QRSHARE_SUCCESS']).subscribe(t => {
         this.T_SVC = t;
       });
-
+      this.qrCodePath = this.data.logo+this.qrJsonString1+this.imageURLType;
+      console.log(this.qrCodePath);
 
   //   var decrypted = CryptoJS.AES.decrypt(encrypted, key, {
   //     keySize: 128,
@@ -133,7 +134,8 @@ export class CustomVisitorPopupComponent{
                   let toast = await this.toastCtrl.create({
                     message: 'Error',
                     duration: 3000,
-                    position: 'bottom'
+                    color: 'primary',
+                    position: 'bottom',
                   });
                   toast.present();
                 });
@@ -144,7 +146,8 @@ export class CustomVisitorPopupComponent{
                 let toast = await this.toastCtrl.create({
                   message: 'Download Error',
                   duration: 3000,
-                  position: 'bottom'
+                  position: 'bottom',
+                  color: 'primary'
                 });
                 toast.present();
                 console.log("Download Error: "+ error);
@@ -165,8 +168,9 @@ export class CustomVisitorPopupComponent{
 
 
 
-
-    // Share via email data.logo+qrCodeString+imageURLType
+    const imagepath = this.data.logo+qrCodeString+this.imageURLType;
+      console.log(imagepath);
+    // Share via email
     // this.socialSharing.share('Please click below URL and use the QRCode for Appointment', 'VIMS Appointment QRCode', null ,this.data.logo+this.qrCodeString+this.imageURLType).then(() => {
     //   // Success!
     //   this.dismiss();

@@ -1,7 +1,7 @@
 .booking-detail {
   background-color: #f7f7f7;
   .stable {
-    color: theme-colors("textColors", "secondary");
+    color: #8e8e93;
   }
   .pending-info .row .col * {
     margin: 2px 0px;
@@ -10,14 +10,13 @@
     margin: 0px !important;
   }
   [theme-text-color] {
-    color: theme-colors("textColors", "accent") !important;
+    color: #ff515a !important;
   }
 }
 
 img {
-  max-width: 62px;
-  max-height: 62px;
-  display: inline;
+  width: 45px;
+  height: 45px;
 }
 
 .modal-wrapper {
@@ -51,7 +50,7 @@ img {
   padding: 0px;
   padding-bottom: 3px;
   padding-right: 3px;
-  background: rgb(12, 158, 97);
+  // background: rgb(12, 158, 97);
   border-radius: 5px;
 
   position: relative;
@@ -72,7 +71,7 @@ img {
   padding: 0px;
   padding-bottom: 3px;
   padding-right: 3px;
-  background: rgb(26, 122, 151);
+  // background: rgb(26, 122, 151);
   border-radius: 5px;
   position: relative;
   /* width: 100%; */
@@ -92,7 +91,7 @@ img {
   padding: 0px;
   padding-bottom: 3px;
   padding-right: 3px;
-  background: #f06060;
+  // background: #f06060;
   border-radius: 5px;
   position: relative;
   /* width: 100%; */
@@ -109,7 +108,7 @@ img {
 }
 
 .slotSelected {
-  border: 1px solid rgb(12, 158, 97);
+  border: 4px solid rgb(12, 158, 97);
   border-radius: 5px;
   background: #ffffff;
   color: rgb(12, 158, 97);
@@ -121,7 +120,7 @@ img {
 }
 
 .SessionEnd {
-  border: 1px solid rgb(26, 122, 151);
+  border: 4px solid rgb(26, 122, 151);
   border-radius: 5px;
   background: #ffffff;
   color: rgb(26, 122, 151);
@@ -133,7 +132,7 @@ img {
 }
 
 .slotExpired {
-  border: 1px solid #f50e0e;
+  border: 4px solid #f50e0e;
   border-radius: 5px;
   background: #ffffff;
   color: #f50e0e;

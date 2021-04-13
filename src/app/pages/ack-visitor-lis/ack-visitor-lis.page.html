@@ -5,40 +5,40 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="danger">
     <ion-title>Safety Brief</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only style="font-size: 25px;" (click)="addMoreVisitor()" *ngIf="false">
+    <ion-buttons slot="end">
+      <ion-button slot="icon-only" style="font-size: 25px;" (click)="addMoreVisitor()" *ngIf="false">
           <ion-icon name="add-circle"></ion-icon>
-      </button>
+      </ion-button>
       <ion-row>
-        <ion-col col-6>
-            <button ion-button clear icon-only style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="manualScan()">
+        <ion-col size="6">
+            <ion-button fill="clear" slot="icon-only" style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="manualScan()">
                 <img class="navBtnImg" src="../../assets/images/keypad_white.png"  />
-              </button>
+              </ion-button>
         </ion-col>
-        <ion-col col-6>
-            <button ion-button clear icon-only style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="ConfirmQrAfterBriefing1(false)">
+        <ion-col size="6">
+            <ion-button fill="clear" slot="icon-only" style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="ConfirmQrAfterBriefing1(false)">
                 <img class="navBtnImg1" src="../../assets/images/qrcodescan2.png" />
-              </button>
+              </ion-button>
         </ion-col>
 
       </ion-row>
-      <!-- <button ion-button icon-only style="font-size: 30px;" (click)="takeActForScanQR()" *ngIf="isGroup">
+      <!-- <ion-button slot="icon-only" style="font-size: 30px;" (click)="takeActForScanQR()" *ngIf="isGroup">
         <ion-icon name="customiconScan"></ion-icon>
-      </button>
-      <button ion-button icon-only style="font-size: 30px;" (click)="takeActForScanQR()" *ngIf="isGroup">
+      </ion-button>
+      <ion-button slot="icon-only" style="font-size: 30px;" (click)="takeActForScanQR()" *ngIf="isGroup">
         <ion-icon name="customiconManual"></ion-icon>
-      </button> -->
-      <!-- <button ion-button color='light' outline class="myQRCodeImage" (click)="takeActForScanQR()">
-      </button> -->
-      <!-- <button ion-button color='light' outline class="myHandImage" (click)="takeActForManualEntry()">
-      </button> -->
+      </ion-button> -->
+      <!-- <ion-button color='light' fill="outline" class="myQRCodeImage" (click)="takeActForScanQR()">
+      </ion-button> -->
+      <!-- <ion-button color='light' fill="outline" class="myHandImage" (click)="takeActForManualEntry()">
+      </ion-button> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
   <ion-list #visitorsList>
     <ion-card class="myCard" *ngFor="let item of scannedData">
       <ion-item-sliding #slideDOM >
@@ -54,7 +54,7 @@
                       <ion-icon name="grid" class="myIcons"></ion-icon>
                       <p>{{item.visitor_comp_id}}</p>
                   </ion-row>
-                  <img item-end class="verifiedImg" src="../../assets/images/verified.png" *ngIf="item.confirmed"/>
+                  <img slot="end" class="verifiedImg" src="../../assets/images/verified.png" *ngIf="item.confirmed"/>
               </ion-item>
 
           </ion-row>
@@ -68,18 +68,18 @@
                 </ion-checkbox> -->
             </ion-row>
 
-          <ion-card item-start class="myCardImg">
+          <ion-card slot="start" class="myCardImg">
             <img  class="myVisitorImage"  [src]="logo+item.SEQ_ID+RefTypeVP" onError="this.src='../../assets/images/user.png';">
           </ion-card>
         </ion-item>
-        <ion-item-options side="right">
-            <button ion-button color="danger" (click)="removeVisitor(slideDOM, item)" style="text-transform: none">
+        <ion-item-options side="end">
+            <ion-button color="danger" (click)="removeVisitor(slideDOM, item)" style="text-transform: none">
                 <ion-icon name="trash" style="font-size: 18px;"></ion-icon>
                 Remove
-              </button>
-          <!-- <button ion-button no-padding color="danger" no-border (click)="editVisitors(slideDOM, 'edit', item)">
+              </ion-button>
+          <!-- <ion-button no-padding color="danger" no-border (click)="editVisitors(slideDOM, 'edit', item)">
               <ion-icon name="delete"></ion-icon>
-          </button> -->
+          </ion-button> -->
         </ion-item-options>
       </ion-item-sliding>
     </ion-card>
@@ -89,11 +89,11 @@
 <ion-footer>
     <ion-toolbar *ngIf="scannedData && scannedData.length > 0" (click)="playGroupVideo()">
         <!-- <ion-title>{{'MANG_HOST.DONE' | translate}}</ion-title> -->
-        <ion-buttons end>
-            <button ion-button>
+        <ion-buttons slot="end">
+            <ion-button>
                 {{showConfirmScanBtns ? ('SECURITY_APP.FINISH' | translate) : 'ACC_MAPPING.PROCEED' | translate}}
               <!-- <ion-icon name="checkmark"></ion-icon> -->
-            </button>
+            </ion-button>
           </ion-buttons>
       </ion-toolbar>
 </ion-footer>

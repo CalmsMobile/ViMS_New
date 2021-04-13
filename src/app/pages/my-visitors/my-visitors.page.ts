@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { NavController, AlertController, NavParams } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 
@@ -23,8 +23,7 @@ export class MyVisitorsPage implements OnInit {
   constructor(public navCtrl: NavController,
     private alertCtrl : AlertController,
     private router: Router,
-    private apiProvider : RestProvider,
-    public navParams: NavParams) {
+    private apiProvider : RestProvider) {
   }
 
   ionViewDidEnter() {
@@ -85,7 +84,7 @@ export class MyVisitorsPage implements OnInit {
 
     this.OffSet = this.VM.searchContactsArray.length;
     this.getAllMyVisitors(false, refresher);
-    //setTimeout(()=>{refresher.complete();},2000)
+    //setTimeout(()=>{refresher.target.complete();},2000)
   }
 
   getAllMyVisitors(showLoading, refresher){
@@ -103,7 +102,7 @@ export class MyVisitorsPage implements OnInit {
         var searchContactsArray= JSON.parse(val.toString());
         if(refresher){
           this.VM.visitors = searchContactsArray.concat(this.VM.visitors);
-          refresher.complete();
+          refresher.target.complete();
         }else{
           this.VM.visitors = searchContactsArray;
         }
@@ -111,7 +110,7 @@ export class MyVisitorsPage implements OnInit {
        },
        async (err) => {
          if(refresher){
-          refresher.complete();
+          refresher.target.complete();
          }else{
           this.VM.visitors = [];
          }
@@ -164,8 +163,13 @@ export class MyVisitorsPage implements OnInit {
     this.router.navigate(['add-appointment'], navigationExtras);
   }
 
-  getVisitorsBySearch(){
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
 
+  getVisitorsBySearch(queryText){
+    this.VM.queryText = queryText;
     if(this.VM.queryText){
       var fList = [];
       for(var i = 0 ; i < this.VM.searchContactsArray.length; i++){

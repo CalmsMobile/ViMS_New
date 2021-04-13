@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavController, NavParams, ToastController, MenuController, AlertController } from '@ionic/angular';
+import { NavController, ToastController, MenuController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -44,7 +44,7 @@ export class FacilityKioskDisplayPage implements OnInit {
   showStopButton = false;
   constructor(
     public navCtrl: NavController,
-     public navParams: NavParams,
+
      private datePipe:DatePipe,
      private toastCtrl:ToastController,
      private router: Router,

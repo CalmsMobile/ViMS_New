@@ -20,22 +20,6 @@
     margin: 0px;
   }
 
-  ion-icon {
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: contain;
-    background-size: 18px;
-
-    &[ng-reflect-name="customicon"] {
-      background-image: url("../../../assets/images/x-icon/admin.png");
-      &[ng-reflect-is-active="true"] {
-        background-image: url("../../../assets/images/x-icon/admin.png");
-      }
-      width: 2.4rem;
-      height: 2.4rem;
-    }
-  }
-
   button {
     ion-badge {
       position: absolute;
@@ -50,16 +34,15 @@
   }
 
   .apt-left {
-    background-color: theme-colors("mainColors", "primary");
+    background-color: #eb445a;
   }
   .text-white {
-    color: theme-colors("textColors", "primaryWhite");
+    color: white;
   }
   .booking-status {
-    color: white;
-    margin-bottom: -10px;
-    margin-left: -5px;
-    margin-right: -5px;
+    padding: 5px;
+    color: #ffffff;
+    font-size: 16px;
     padding: 8px;
   }
   .booking-status.pending {
@@ -72,5 +55,21 @@
   .booking-status.approved {
     background: #90d3a3;
     color: #ffffff;
+  }
+}
+
+ion-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: contain;
+  background-size: 18px;
+  padding: 5px;
+  &[ng-reflect-name="customicon"] {
+    background-image: url("../../../assets/images/x-icon/admin.png");
+    &[ng-reflect-is-active="true"] {
+      background-image: url("../../../assets/images/x-icon/admin.png");
+    }
+    width: 2.4rem;
+    height: 2.4rem;
   }
 }

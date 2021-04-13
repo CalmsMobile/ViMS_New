@@ -1,8 +1,7 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { NavController, NavParams, AlertController, ActionSheetController } from '@ionic/angular';
+import { NavController, AlertController, ActionSheetController, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -18,7 +17,7 @@ export class FacilityBookingPage implements OnInit {
 
   @ViewChild('visitorsList') visitorsList: any;
   // @ViewChild(Navbar) navBar: Navbar;
-  @ViewChild(Content) content: Content;
+  @ViewChild(IonContent) content: IonContent;
   translation:any = {};
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
@@ -41,7 +40,7 @@ export class FacilityBookingPage implements OnInit {
   edit = false;
   FacilityCode: any = '';
   FACILITYMASTERLIST = [];
- constructor(public navCtrl: NavController, public navParams: NavParams,
+ constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     public events: EventsService,
     private dateformat : DateFormatPipe,
@@ -317,7 +316,7 @@ export class FacilityBookingPage implements OnInit {
   ionViewWillEnter(){
     // this.events.publishDataCompany({
     //   action: "page",
-    //   title: "HomeView1",
+    //   title: "home-view1",
     //   message: ''
     // });
     this.newImage = this.newImage +"_"+ new Date().getTime();
@@ -385,16 +384,16 @@ export class FacilityBookingPage implements OnInit {
 
   }
 
-  onChangeFacility(facilityItem){
+  onChangeFacility(FacilityCode){
     var str = JSON.stringify(this.VM);
     var data = JSON.parse(str);
-    console.log(""+ facilityItem);
+    console.log(""+ FacilityCode);
   const navigationExtras: NavigationExtras = {
     state: {
-      passData: { "FacilityCode": facilityItem.FacilityCode,
+      passData: { "FacilityCode": FacilityCode,
       "START_DATE":data.fromDate,
       "END_DATE":data.toDate,
-      "facility": facilityItem.FacilityCode,
+      "facility": FacilityCode,
       "edit":this.edit,
       "availability": true
     }
@@ -446,6 +445,11 @@ export class FacilityBookingPage implements OnInit {
       buttons: btns
     });
     actionSheet.present();
+  }
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
   }
 
   ngOnInit() {

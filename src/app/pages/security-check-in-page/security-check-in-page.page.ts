@@ -1,11 +1,10 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { BarcodeScannerOptions, BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
-import { NavController, NavParams, AlertController, ActionSheetController, ToastController, Platform, LoadingController } from '@ionic/angular';
+import { NavController, AlertController, ActionSheetController, ToastController, Platform, LoadingController, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { VisitorInfoModal } from 'src/app/model/visitorInfoModal';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
@@ -22,7 +21,7 @@ declare var cordova: any;
 export class SecurityCheckInPagePage implements OnInit {
 
 
-  @ViewChild(Content) content: Content;
+  @ViewChild(IonContent) content: IonContent;
   active: boolean;
 
   lastImage: string = null;
@@ -65,7 +64,7 @@ export class SecurityCheckInPagePage implements OnInit {
   T_SVC:any;
   options :BarcodeScannerOptions;
   constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+
     public toastService: ToastService,
     private translate:TranslateService,
     public apiProvider: RestProvider,
@@ -702,6 +701,7 @@ private async presentToast(text) {
   let toast = await this.toastCtrl.create({
     message: text,
     duration: 3000,
+    color: 'primary',
     position: 'top'
   });
   toast.present();
@@ -770,9 +770,14 @@ ionViewDidEnter() {
     this._getVisitorCategory();
   }
 
-  onChangeCategory(category){
-    this.visitorInfoModal.visitor_ctg_id = category.visitor_ctg_id;
-    this.visitorInfoModal.visitor_ctg_name = category.visitor_ctg_desc;
+  onChangeCategory(visitor_ctg_id){
+    this.visitorInfoModal.visitor_ctg_id = visitor_ctg_id;
+    this.VISITOR_CATEGORY.forEach(element => {
+      if (element.visitor_ctg_id === visitor_ctg_id) {
+        this.visitorInfoModal.visitor_ctg_name = element.visitor_ctg_desc;
+      }
+    });
+
   }
   _getVisitorCategory(){
 
@@ -815,6 +820,7 @@ ionViewDidEnter() {
       let toast = await this.toastCtrl.create({
         message: this.T_SVC['ALERT_TEXT.SELECT_VISITOR_COMPANY'],
         duration: 3000,
+        color: 'primary',
         position: 'bottom'
       });
       toast.present();
@@ -980,6 +986,7 @@ ionViewDidEnter() {
             let toast = await this.toastCtrl.create({
               message: this.translation['ADD_VISITORS.SUCCESS.ADD_VISITOR_COMPANY_SUCCESS'],
               duration: 3000,
+              color: 'primary',
               position: 'bottom'
             });
             toast.present();
@@ -992,6 +999,7 @@ ionViewDidEnter() {
         let toast = await this.toastCtrl.create({
           message: this.translation['USER_PROFILE.ERROR.SERVER_ERROR'],
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -1026,7 +1034,7 @@ ionViewDidEnter() {
   subscribeToIonScroll() {
     if (this.content && this.content['ionScroll']) {
         this.content['ionScroll'].subscribe((d) => {
-            if (d && d.scrollTop < 80 ) {
+            if (d && d['scrollTop'] < 80 ) {
                 this.active = false;
                 return;
             }

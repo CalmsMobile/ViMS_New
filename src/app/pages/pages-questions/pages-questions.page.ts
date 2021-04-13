@@ -1,8 +1,7 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { StreamingMedia, StreamingVideoOptions } from '@ionic-native/streaming-media/ngx';
-import { NavController, Platform, ToastController, AlertController, ModalController, NavParams } from '@ionic/angular';
+import { NavController, Platform, ToastController, AlertController, ModalController, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -17,8 +16,7 @@ import * as anime from 'animejs';
 export class PagesQuestionsPage implements OnInit {
 
 
-  @ViewChild(Content)
-  content:Content;
+  @ViewChild(IonContent) content:IonContent;
 
   T_SVC:any;
   disableCheckbox = true;
@@ -56,7 +54,7 @@ export class PagesQuestionsPage implements OnInit {
     private route: ActivatedRoute,
     private translate: TranslateService,
     private alertCntrl : AlertController,
-    public modalController:ModalController,  public navParams: NavParams) {
+    public modalController:ModalController) {
 
       this.translate.get([
         'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
@@ -401,6 +399,7 @@ callAnime() {
           let toast = await this.toastCtrl.create({
             message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_SUCCESS'],
             duration: 3000,
+            color: 'primary',
             position: 'bottom'
           });
           toast.present();
@@ -425,6 +424,7 @@ callAnime() {
         let toast = await this.toastCtrl.create({
           message: 'Server Error',
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();

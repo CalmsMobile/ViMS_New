@@ -5,12 +5,12 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="danger">
     <ion-title>QRCode Reciept</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
 
 <h1 class="myHeader">{{'SECURITY_APP.WELCOME' | translate}}</h1>
 <p class="myPara"><b>{{VisitorName}}</b></p>
@@ -19,13 +19,13 @@
     <img class="qrCodeImage" [src]="qrCodeString"/>
 </ion-item>
 <ion-item style="background-color: transparent;">
-  <button ion-button  round color='favorite'
+  <ion-button  shape="round" color='danger'
           style="    padding: 18px 18px 18px 18px;
           display: block;
           margin: 0 auto;
           min-width: 150px;"
           (click)="finishProcess()" >
           {{'SECURITY_APP.FINISH' | translate}}
-  </button>
+  </ion-button>
 </ion-item>
 </ion-content>

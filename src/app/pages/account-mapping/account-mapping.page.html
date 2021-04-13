@@ -1,309 +1,286 @@
 <ion-content style="--background: url('assets/images/background/app_bg.png') no-repeat;background-size: cover;height: 100%">
-  <ion-label my_selection *ngIf="false" style="width: 25px;height: 25px;color: white;    display: flex;">
-    <p class="icon siva-icon-language-1" style="margin:auto"></p></ion-label>
-  <ion-item no-lines *ngIf="false" style="width: 30px;height: 30px;background: transparent;">
+  <div id="container">
+      <ion-label my_selection *ngIf="false" style="width: 25px;height: 25px;color: white;    display: flex;">
+        <p class="icon siva-icon-language-1" style="margin:auto"></p></ion-label>
+      <ion-item lines="none" *ngIf="false" style="width: 30px;height: 30px;background: transparent;">
 
-    <!-- <ion-select style="opacity:0;"  [(ngModel)]="languageSelect.selectedItem"
-        (ionChange)="onChangeLanguage()"
-        multiple="false"
-        [selectOptions]="{'title':(languageSelect.title | translate),'subTitle':(languageSelect.subTitle | translate)}"
-        okText="{{'COMMON.APPLY' | translate}}"
-        cancelText="{{'COMMON.CANCEL' | translate}}">
-        <ion-option *ngFor="let item of languageSelect.items" [value]="item.id" [selected]="(item.id == languageSelect.selectedItem)">{{item.TCODE | translate}}</ion-option>
-    </ion-select> -->
-  </ion-item>
+        <!-- <ion-select style="opacity:0;"  [(ngModel)]="languageSelect.selectedItem"
+            (ionChange)="onChangeLanguage()"
+            multiple="false"
+            [selectOptions]="{'title':(languageSelect.title | translate),'subTitle':(languageSelect.subTitle | translate)}"
+            okText="{{'COMMON.APPLY' | translate}}"
+            cancelText="{{'COMMON.CANCEL' | translate}}">
+            <ion-option *ngFor="let item of languageSelect.items" [value]="item.id" [selected]="(item.id == languageSelect.selectedItem)">{{item.TCODE | translate}}</ion-option>
+        </ion-select> -->
+      </ion-item>
 
-  <!-- <ion-row style="height: 100%; width: 100%; margin-top:100px; display: flex; justify-content: center; align-items: center;">
-    <ion-col col-12 col-sm-12 col-md-12>
-            <img app-logo-img class="animated fadeInDown delay-1s" style="
-            display: block;
-            margin: 0 auto;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        " src="../../../assets/images/logo/2.png">
-            <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_UPPCOMING_LIST' | translate}}</h5>
-    </ion-col>
-  </ion-row> -->
+      <ion-grid *ngIf="showUI" no-padding class="animated fadeInUp delay-1s" style="height: 100%; width: 100%; justify-content: center;">
+        <h1 *ngIf="STOPS == 'STOP1'" class="accountHead"><b>{{'COMMON.WELCOME' | translate}}</b></h1>
+        <p *ngIf="STOPS == 'STOP1'" class="accountPara"><b>{{'ACC_MAPPING.SELECT_TYPE_OF_LOGIN' | translate}}</b></p>
+        <div *ngIf="STOPS == 'STOP1'">
 
+            <ion-grid>
+                <ion-row style="margin: 0 auto; display: block; text-align:center">
+                  <ion-col size="6" style="    display: contents;">
+                    <ion-card class="cardQR">
+                        <img src="../../../assets/images/qrcode1.png" class="qrcode"
+                        (click)="takeActForScanQR()">
+                    </ion-card>
 
+                  </ion-col>
 
-  <ion-grid *ngIf="showUI" no-padding class="animated fadeInUp delay-1s" style="height: 100%; width: 100%; justify-content: center;">
-    <h1 *ngIf="STOPS == 'STOP1'" class="accountHead"><b>{{'COMMON.WELCOME' | translate}}</b></h1>
-    <p *ngIf="STOPS == 'STOP1'" class="accountPara"><b>{{'ACC_MAPPING.SELECT_TYPE_OF_LOGIN' | translate}}</b></p>
-    <ion-row *ngIf="STOPS == 'STOP1'">
-
-        <ion-grid>
-            <ion-row style="margin: 0 auto; display: block; text-align:center">
-              <ion-col col-6 style="    display: contents;">
-                <ion-card class="cardQR">
-                    <img src="../../../assets/images/qrcode1.png" class="qrcode"
-                    (click)="takeActForScanQR()">
-                </ion-card>
-
-               </ion-col>
-
-            </ion-row >
-            <ion-row style="margin: 0 auto; display: block; text-align:center">
-            <ion-col col-6 style="    display: contents;">
-                <ion-card class="cardQR1">
-                    <img src="../../../assets/images/keyboard.png" class="qrcode"
-                    (click)="moveToManualRegistration()">
-                </ion-card>
-             </ion-col>
-            </ion-row >
-          </ion-grid>
-          <p style="width: 100%;font-weight: 400;color: red;padding: 0px;margin: 20px;margin-top: 0px;text-align: center !important" text-center>{{'ACC_MAPPING.SCAN_ACCOUNT_QR' | translate}}</p>
-      <!-- <ion-col align-self-center text-center col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
-        <h3 padding-horizontal ion-text color="favorite" *ngIf="true" no-margin>{{'ACC_MAPPING.SCAN_TITLE' | translate}}</h3>
-        <button scan-qr-code ion-button color='secondary' outline
-        style="background: url('assets/images/qrcode.png') no-repeat center;padding: 0px;width: 150px;height: 150px;background-size: 75%;"
-        (click)="takeActForScanQR()">
-        </button>
-        <p style="font-weight: 400;color: #dd488aff;padding: 0px;margin: 20px;margin-top: 0px;text-align: left !important" text-center>{{'ACC_MAPPING.SCAN_ACCOUNT_QR' | translate}}</p>
-      </ion-col>
-      <ion-col col-12 col-sm-12 col-md-12>
-      </ion-col> -->
-    </ion-row>
-    <!-- <ion-row *ngIf="STOPS == 'STOP1'" style="margin-top:20px;">
-        <ion-card class="cardQR">
-            <img src="../../../assets/images/qrcode.png" class="qrcode"
-            (click)="takeActForScanQR()">
-        </ion-card>
-    </ion-row> -->
-    <ion-item *ngIf="STOPS == 'STOP1'" text-wrap no-border lines="none" style="--background: transparent">
-
-        <!-- <p text-wrap class="manualText"><b>Press here for manual registration</b></p>
-        <ion-icon item-end name="fastforward"></ion-icon> -->
-
-        <!-- <ion-icon item-end name="arrow-round-forward"></ion-icon> -->
-        <!-- <img class= "manualRegIcon" item-end src="../../../assets/images/logo/2.png"/> -->
-        <!-- <ion-icon class= "manualRegIcon" name="keypad"></ion-icon> -->
-    </ion-item>
-    <ion-row padding-horizontal align-self-start *ngIf="false" style="    margin-top: 70px;">
-      <ion-col align-self-start col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
-
-      </ion-col>
-      <ion-col align-self-end col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
-        <!---Logo-->
-        <img app-logo-img class="animated fadeInDown delay-1s" *ngIf="false" style="
-        display: block;
-        margin: 0 auto;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    " src="assets/images/logo/2.png">
-        <!---Logo Title-->
-      </ion-col>
-
-    </ion-row>
-
-
-
-
-    <ion-row *ngIf="STOPS == 'STOP2'" class="animated fadeInUp delay-1s" style="    margin-top: -20px;">
-      <!-- <h3 padding-horizontal ion-text color="favorite" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
-      <h3 padding-horizontal ion-text color="favorite" no-margin>{{'ACC_MAPPING.ACC_HOLD_ORG_DETAILS' | translate}}</h3>
-      <ion-col col-12 col-sm-12 col-md-12     style=" margin-top: 5px;">
-        <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.ACC_HOLD_ORG_DETAILS' | translate}}</h5> -->
-        <ion-card sp-card-map-acc-org>
-            <ion-item>
-              <ion-avatar item-start style="background:transparent">
-                <img [src]="companyImage" onError="this.src='../../assets/logo/2.png';">
-              </ion-avatar>
-              <h2 class="sticky">{{companyInfo.comp_name}}</h2>
-              <p *ngIf="companyInfo.comp_fax_no"><b>Fax:</b>{{companyInfo.comp_fax_no}}</p>
-              <p *ngIf="companyInfo.comp_email"><b>Email:</b>{{companyInfo.comp_email}}</p>
-              <p *ngIf="companyInfo.comp_office_no"><b>Office:</b>{{companyInfo.comp_office_no}}</p>
-            </ion-item>
-            <ion-card-content *ngIf="companyInfo.comp_address_1">
-              <p><b>Address:</b> {{companyInfo.comp_address_1}} {{companyInfo.comp_address_2}} {{companyInfo.comp_address_3}} {{companyInfo.comp_postcode}} {{companyInfo.comp_city}} , {{companyInfo.comp_state}} , {{companyInfo.comp_country}}</p>
-            </ion-card-content>
-        </ion-card>
-      </ion-col>
-      <ion-col col-12 col-sm-12 col-md-12  margin-vertical>
-        <ion-item no-lines transparent>
-          <ion-label>{{'ACC_MAPPING.YES_THIS_IS_MY_ORG' | translate}}</ion-label>
-          <ion-checkbox color="dark" checked="VM.org_yes_chk_box" [(ngModel)]="VM.org_yes_chk_box"></ion-checkbox>
-        </ion-item>
-      </ion-col>
-      <div *ngIf="VM.org_yes_chk_box && (scannedJson != null && (scannedJson.HostId == undefined || scannedJson.HostId == null || scannedJson.HostId == ''))" padding-horizontal margin-vertical type-search-code>
-          <h5 ion-text>{{'ACC_MAPPING.ENTR_HOST_ACC_ID' | translate}}</h5>
-          <input type="text" placeholder=" {{'ACC_MAPPING.ENTR_HOST_ACC_ID_PLACE_HOLD' | translate}} "
-              [(ngModel)]="VM.host_search_id" />
-      </div>
-      <ion-col col-12 col-sm-12 col-md-12  margin-vertical>
-        <div style="padding: 0px 7px;">
-            <button ion-button  icon-left float-left round outline color='favorite'
-            style="padding: 14px 18px 14px 7px;" (click)="takeActionForGoBack('STOP1')">
-                <ion-icon color='favorite' class="icon siva-icon-left-open"></ion-icon>
-                <span color='favorite'>{{'ACC_MAPPING.GO_BACK' | translate}}</span>
-              </button>
-              <button ion-button  icon-right float-right round color='favorite'
-              style="padding: 14px 7px 14px 18px;"
-              [disabled]="!VM.org_yes_chk_box"
-              (click)="takeActionForProceed('STOP3')" >
-                  {{'ACC_MAPPING.PROCEED' | translate}}
-                <ion-icon class="icon siva-icon-right-open"></ion-icon>
-              </button>
+                </ion-row >
+                <ion-row style="margin: 0 auto; display: block; text-align:center">
+                <ion-col size="6" style="    display: contents;">
+                    <ion-card class="cardQR1">
+                        <img src="../../../assets/images/keyboard.png" class="qrcode"
+                        (click)="moveToManualRegistration()">
+                    </ion-card>
+                </ion-col>
+                </ion-row >
+              </ion-grid>
+              <p style="width: 100%;font-weight: 400;color: red;padding: 0px;margin: 20px;margin-top: 0px;text-align: center !important" class="ion-text-center">{{'ACC_MAPPING.SCAN_ACCOUNT_QR' | translate}}</p>
         </div>
-      </ion-col>
-    </ion-row>
-    <ion-row padding *ngIf="STOPS == 'STOP3'" class="animated fadeInUp delay-1s" [ngStyle]="{'margin-top' : VM.if_already_mapped || VM.if_already_registered_same_device ? '50px' : '-40px'}">
-      <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="favorite" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
-      <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="favorite" no-margin><b>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</b></h3> -->
-      <ion-col col-12 col-sm-12 col-md-12 style="margin-top: 5px">
-        <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</h5> -->
-        <ion-card sp-card-map-acc-org>
-          <ion-item>
-            <ion-avatar item-start style="background:transparent">
-              <img [src]="hostImage" onError="this.src='../../../assets/images/user.png';">
-            </ion-avatar>
-            <h1 class="sticky">{{hostInfo.HOSTNAME}}</h1>
-            <p style="
-            margin-top: 5px;
-        "><b>Department : </b>{{hostInfo.DEPARTMENT_REFID}}</p>
-          </ion-item>
-          <ion-card-content>
-            <p *ngIf="hostInfo.HostExt"><b>Contact: </b> {{hostInfo.HostExt}}</p>
-            <p *ngIf="hostInfo.HostFloor"><b>Floor: </b> {{hostInfo.HostFloor}}</p>
-            <!-- <p><b>ID:</b>{{hostInfo.HOST_ID}}</p> -->
-            <p><b>Email: </b> {{hostInfo.HOST_EMAIL}}</p>
-          </ion-card-content>
-        </ion-card>
-        <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.DO_NT_PROCEED_NOT_U' | translate}}</p>
-      </ion-col>
-      <ion-col col-12 col-sm-12 col-md-12 *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device">
-          <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.DEVICE_DETAILS' | translate}}</h5>
-          <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p>
-          <ion-card sp-card-map-acc-org>
-            <ion-item no-margin>
-              <ion-icon *ngIf= "VM.DevicePlatform != 'Android'" item-start color='favorite' class="icon siva-icon-apple" style="font-size: 3.5rem;"></ion-icon>
-              <ion-icon *ngIf= "VM.DevicePlatform == 'Android'" item-start color='favorite' class="icon siva-icon-android" style="font-size: 3.5rem;">
-              </ion-icon>
-              <h2 class="sticky" style="margin-top:0px">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
-              <p>{{VM.DeviceDetails['model']}}</p>
-            </ion-item>
-          </ion-card>
-        </ion-col>
-        <ion-col col-12 col-sm-12 col-md-12 *ngIf="VM.if_already_registered_same_device">
-          <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.DEVICE_DETAILS' | translate}}</h5> -->
-          <!-- <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p> -->
-          <ion-card sp-card-map-acc-org>
-            <ion-item no-margin>
-              <h2 style="margin: 0 auto;" class="sticky">This device already used by another user account, Do you want to proceed ?</h2>
-            </ion-item>
-          </ion-card>
-        </ion-col>
-      <ion-col col-12 col-sm-12 col-md-12  margin-top *ngIf="!VM.if_already_mapped && !VM.if_already_registered_same_device">
-        <ion-item no-lines transparent>
-          <ion-label text-wrap	>{{'ACC_MAPPING.YES_THIS_IS_MY' | translate}}</ion-label>
-          <ion-checkbox color="dark" checked="VM.user_yes_chk_box" [(ngModel)]="VM.user_yes_chk_box"></ion-checkbox>
-        </ion-item>
-      </ion-col>
-      <ion-col col-12 col-sm-12 col-md-12 margin-bottom *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device">
-          <ion-item no-lines transparent>
-            <ion-label text-wrap	>{{'ACC_MAPPING.I_AGREE_DISCONCT_OLD_DEVICE' | translate}}</ion-label>
-            <ion-checkbox color="dark" checked="VM.user_alreadymapremove_yes_chk_box" [(ngModel)]="VM.user_alreadymapremove_yes_chk_box"></ion-checkbox>
-          </ion-item>
-        </ion-col>
-        <ion-col col-12 col-sm-12 col-md-12 margin-bottom *ngIf="VM.if_already_registered_same_device">
-          <ion-item no-lines transparent>
-            <ion-label text-wrap	>{{'ACC_MAPPING.I_AGREE_DISCONCT_OLD_ACCOUNT' | translate}}</ion-label>
-            <ion-checkbox color="dark" checked="VM.user_alreadymapremove_yes_chk_box" [(ngModel)]="VM.user_alreadymapremove_yes_chk_box"></ion-checkbox>
-          </ion-item>
-        </ion-col>
 
-        <ion-col col-12 col-sm-12 col-md-12  margin-vertical>
-          <div style="padding: 0px 7px;">
-              <button ion-button  icon-left float-left round outline color='favorite'
-              style="padding: 14px 18px 14px 7px;" (click)="takeActionForGoBack('STOP2')">
-                  <ion-icon color='favorite' class="icon siva-icon-left-open"></ion-icon>
-                  <span color='favorite'>{{'ACC_MAPPING.GO_BACK' | translate}}</span>
-                </button>
-                <button ion-button  icon-right float-right round color='favorite'
-                style="padding: 14px 7px 14px 18px;"
-                [disabled]="(!VM.user_yes_chk_box &&!VM.if_already_mapped && !VM.if_already_registered_same_device) || (!VM.user_alreadymapremove_yes_chk_box && (VM.if_already_mapped || VM.if_already_registered_same_device))"
-                (click)="takeActionForProceed('FINISH')" >
-                    {{'ACC_MAPPING.PROCEED' | translate}}
-                  <ion-icon class="icon siva-icon-right-open"></ion-icon>
-                </button>
+        <div *ngIf="STOPS == 'STOP2'" class="animated fadeInUp delay-1s" style="    margin-top: -20px;">
+          <!-- <h3 padding-horizontal ion-text color="danger" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
+          <h3 padding-horizontal ion-text color="danger" no-margin>{{'ACC_MAPPING.ACC_HOLD_ORG_DETAILS' | translate}}</h3>
+          <div     style=" margin-top: 5px;width: -webkit-fill-available;">
+            <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.ACC_HOLD_ORG_DETAILS' | translate}}</h5> -->
+            <ion-card sp-card-map-acc-org>
+                <ion-item>
+                  <ion-avatar slot="start" style="background:transparent">
+                    <img [src]="companyImage" onError="this.src='../../assets/logo/2.png';">
+                  </ion-avatar>
+                  <div>
+                    <h2 class="sticky">{{companyInfo.comp_name}}</h2>
+                    <p *ngIf="companyInfo.comp_fax_no"><b>Fax:</b>{{companyInfo.comp_fax_no}}</p>
+                    <p *ngIf="companyInfo.comp_email"><b>Email:</b>{{companyInfo.comp_email}}</p>
+                    <p *ngIf="companyInfo.comp_office_no"><b>Office:</b>{{companyInfo.comp_office_no}}</p>
+                  </div>
+                </ion-item>
+                <ion-card-content *ngIf="companyInfo.comp_address_1 || companyInfo.comp_address_2 || companyInfo.comp_address_3">
+                  <p><b>Address:</b> {{companyInfo.comp_address_1}} {{companyInfo.comp_address_2}} {{companyInfo.comp_address_3}} {{companyInfo.comp_postcode}} {{companyInfo.comp_city}} , {{companyInfo.comp_state}} , {{companyInfo.comp_country}}</p>
+                </ion-card-content>
+            </ion-card>
           </div>
-        </ion-col>
-    </ion-row>
+          <div  margin-vertical>
 
-    <!-- Ack -->
-
-    <ion-row padding *ngIf="STOPS == 'STOP4'" class="animated fadeInUp delay-1s" style="margin-top: -20px">
-        <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="favorite" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
-        <!-- <h3 *ngIf="STOPS == 'STOP4'" padding-horizontal ion-text color="favorite" no-margin><b>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</b></h3> -->
-        <ion-col col-12 col-sm-12 col-md-12 style="margin-top: 5px">
-          <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</h5> -->
-          <ion-card sp-card-map-acc-org>
-            <ion-item>
-              <h1 class="sticky">{{hostInfo.Name}}</h1>
-              <p style="margin-top: 15px;">{{hostInfo.Desc}}</p>
+            <ion-item lines="none" transparent>
+              <ion-label>{{'ACC_MAPPING.YES_THIS_IS_MY_ORG' | translate}}</ion-label>
+              <ion-checkbox slot="start" color="danger" checked="VM.org_yes_chk_box" [(ngModel)]="VM.org_yes_chk_box"></ion-checkbox>
             </ion-item>
-
-          </ion-card>
-          <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.DO_NT_PROCEED_NOT_U' | translate}}</p>
-        </ion-col>
-        <ion-col col-12 col-sm-12 col-md-12 *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device">
-            <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.DEVICE_DETAILS' | translate}}</h5>
-            <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p>
-            <ion-card sp-card-map-acc-org>
-              <ion-item no-margin>
-                <ion-icon *ngIf= "VM.DevicePlatform != 'Android'" item-start color='favorite' class="icon siva-icon-apple" style="font-size: 3.5rem;"></ion-icon>
-                <ion-icon *ngIf= "VM.DevicePlatform == 'Android'" item-start color='favorite' class="icon siva-icon-android" style="font-size: 3.5rem;">
-                </ion-icon>
-                <h2 class="sticky" style="margin-top:0px">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
-                <p>{{VM.DeviceDetails['model']}}</p>
-              </ion-item>
-            </ion-card>
-          </ion-col>
-          <ion-col col-12 col-sm-12 col-md-12 *ngIf="VM.if_already_registered_same_device">
-            <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.DEVICE_DETAILS' | translate}}</h5> -->
-            <!-- <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p> -->
-            <ion-card sp-card-map-acc-org>
-              <ion-item no-margin>
-                <h2 style="margin: 0 auto;" class="sticky">This device already used by another account. Do you want to proceed?</h2>
-              </ion-item>
-            </ion-card>
-          </ion-col>
-        <ion-col col-12 col-sm-12 col-md-12  margin-top *ngIf="!VM.if_already_mapped && !VM.if_already_registered_same_device">
-          <ion-item no-lines transparent>
-            <ion-label text-wrap	>{{'ACC_MAPPING.YES_THIS_IS_MY' | translate}}</ion-label>
-            <ion-checkbox color="dark" checked="VM.user_yes_chk_box" [(ngModel)]="VM.user_yes_chk_box"></ion-checkbox>
-          </ion-item>
-        </ion-col>
-        <ion-col col-12 col-sm-12 col-md-12 margin-bottom *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device">
-            <ion-item no-lines transparent>
-              <ion-label text-wrap	>{{'ACC_MAPPING.I_AGREE_DISCONCT_OLD_DEVICE' | translate}}</ion-label>
-              <ion-checkbox color="dark" checked="VM.user_alreadymapremove_yes_chk_box" [(ngModel)]="VM.user_alreadymapremove_yes_chk_box"></ion-checkbox>
-            </ion-item>
-          </ion-col>
-          <ion-col col-12 col-sm-12 col-md-12 margin-bottom *ngIf="VM.if_already_registered_same_device">
-            <ion-item no-lines transparent>
-              <ion-label text-wrap	>{{'ACC_MAPPING.I_AGREE_DISCONCT_OLD_ACCOUNT' | translate}}</ion-label>
-              <ion-checkbox color="dark" checked="VM.user_alreadymapremove_yes_chk_box" [(ngModel)]="VM.user_alreadymapremove_yes_chk_box"></ion-checkbox>
-            </ion-item>
-          </ion-col>
-
-          <ion-col col-12 col-sm-12 col-md-12  margin-vertical>
-            <div style="padding: 0px 7px;">
-                <button ion-button  icon-left float-left round outline color='favorite'
-                style="padding: 14px 18px 14px 7px;" (click)="takeActionForGoBack('STOP1')">
-                    <ion-icon color='favorite' class="icon siva-icon-left-open"></ion-icon>
-                    <span color='favorite'>{{'ACC_MAPPING.GO_BACK' | translate}}</span>
-                  </button>
-                  <button ion-button  icon-right float-right round color='favorite'
-                  style="padding: 14px 7px 14px 18px;"
-                  [disabled]="(!VM.user_yes_chk_box &&!VM.if_already_mapped && !VM.if_already_registered_same_device) || (!VM.user_alreadymapremove_yes_chk_box && (VM.if_already_mapped || VM.if_already_registered_same_device))"
-                  (click)="takeActionForack()" >
+          </div>
+          <div *ngIf="VM.org_yes_chk_box && (scannedJson != null && (scannedJson.HostId == undefined || scannedJson.HostId == null || scannedJson.HostId == ''))" padding-horizontal margin-vertical type-search-code>
+              <h5 ion-text>{{'ACC_MAPPING.ENTR_HOST_ACC_ID' | translate}}</h5>
+              <input type="text" placeholder=" {{'ACC_MAPPING.ENTR_HOST_ACC_ID_PLACE_HOLD' | translate}} "
+                  [(ngModel)]="VM.host_search_id" />
+          </div>
+            <div style="padding: 15px 7px;
+            width: -webkit-fill-available;">
+                <ion-row>
+                  <ion-col size="6">
+                    <ion-button icon-left float-left shape="round" fill="outline" color='danger'
+                 (click)="takeActionForGoBack('STOP1')">
+                    <ion-icon color='danger' class="icon siva-icon-left-open"></ion-icon>
+                    <span color='danger'>{{'ACC_MAPPING.GO_BACK' | translate}}</span>
+                  </ion-button>
+                  </ion-col>
+                  <ion-col size="6">
+                    <ion-button icon-right float-right shape="round" color='danger'
+                  [disabled]="!VM.org_yes_chk_box"
+                  (click)="takeActionForProceed('STOP3')" >
                       {{'ACC_MAPPING.PROCEED' | translate}}
                     <ion-icon class="icon siva-icon-right-open"></ion-icon>
-                  </button>
+                  </ion-button>
+                  </ion-col>
+                </ion-row>
             </div>
-          </ion-col>
-      </ion-row>
+        </div>
+        <div *ngIf="STOPS == 'STOP3'" class="ion-padding animated fadeInUp delay-1s" [ngStyle]="{'margin-top' : VM.if_already_mapped || VM.if_already_registered_same_device ? '50px' : '40px'}">
+          <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="danger" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
+          <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="danger" no-margin><b>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</b></h3> -->
+          <div style="margin-top: 5px">
+            <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</h5> -->
+            <ion-card sp-card-map-acc-org>
+              <ion-item>
+                <ion-avatar slot="start" style="background:transparent">
+                  <img [src]="hostImage" onError="this.src='../../../assets/images/user.png';">
+                </ion-avatar>
+                <div>
+                  <h1 class="sticky">{{hostInfo.HOSTNAME}}</h1>
+                  <p style="margin-top: 5px;"><b>Department : </b>{{hostInfo.DEPARTMENT_REFID ? hostInfo.DEPARTMENT_REFID : '--'}}</p>
+                </div>
+              </ion-item>
+              <ion-card-content>
+                <p *ngIf="hostInfo.HostExt"><b>Contact: </b> {{hostInfo.HostExt}}</p>
+                <p *ngIf="hostInfo.HostFloor"><b>Floor: </b> {{hostInfo.HostFloor}}</p>
+                <!-- <p><b>ID:</b>{{hostInfo.HOST_ID}}</p> -->
+                <p><b>Email: </b> {{hostInfo.HOST_EMAIL}}</p>
+              </ion-card-content>
+            </ion-card>
+            <p style="color: #eb445a;" italic padding-horizontal margin-vertical>{{'ACC_MAPPING.DO_NT_PROCEED_NOT_U' | translate}}</p>
+          </div>
+          <div *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device">
+              <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.DEVICE_DETAILS' | translate}}</h5>
+              <p style="color: #eb445a;" italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p>
+              <ion-card sp-card-map-acc-org>
+                <ion-item no-margin style="--padding-start: 0px;">
+                  <ion-icon *ngIf= "VM.DevicePlatform != 'Android'" slot="start" color='danger' class="icon siva-icon-apple" style="margin-right: 7px;
+                  font-size: 3.5rem;
+                  padding: 0px;
+                  color: #eb445a;
+                  padding-right: 10px;
+                  padding-bottom: 22px;"></ion-icon>
+                  <!-- <ion-icon color="danger" style="margin-right: 7px;
+                  font-size: 3.5rem;
+                  padding: 0px;
+                  color: #eb445a;
+                  padding-right: 10px;
+                  padding-bottom: 22px;" *ngIf= "VM.DevicePlatform == 'Android'" slot="start" color='danger' name="logo-android"></ion-icon> -->
+                  <ion-icon *ngIf= "VM.DevicePlatform == 'Android'" slot="start" color='danger' class="icon siva-icon-android" style="margin-right: 7px;
+                  font-size: 3.5rem;
+                  padding: 0px;
+                  color: #eb445a;
+                  padding-right: 10px;
+                  padding-bottom: 22px;">
+                  </ion-icon>
+                  <h2 class="sticky" style="margin-top:0px">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
+                  <p>{{VM.DeviceDetails['model']}}</p>
+                </ion-item>
+              </ion-card>
+            </div>
+            <div *ngIf="VM.if_already_registered_same_device">
+              <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.DEVICE_DETAILS' | translate}}</h5> -->
+              <!-- <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p> -->
+              <ion-card sp-card-map-acc-org>
+                <ion-item no-margin>
+                  <h2 style="margin: 0 auto;" class="sticky">This device already used by another user account, Do you want to proceed ?</h2>
+                </ion-item>
+              </ion-card>
+            </div>
+          <div  margin-top *ngIf="!VM.if_already_mapped && !VM.if_already_registered_same_device">
+            <ion-item lines="none" transparent>
+              <ion-label text-wrap	>{{'ACC_MAPPING.YES_THIS_IS_MY' | translate}}</ion-label>
+              <ion-checkbox slot="start" color="danger" checked="VM.user_yes_chk_box" [(ngModel)]="VM.user_yes_chk_box"></ion-checkbox>
+            </ion-item>
+          </div>
+          <div margin-bottom *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device">
+              <ion-item lines="none" transparent>
+                <ion-label text-wrap	>{{'ACC_MAPPING.I_AGREE_DISCONCT_OLD_DEVICE' | translate}}</ion-label>
+                <ion-checkbox slot="start" color="danger" checked="VM.user_alreadymapremove_yes_chk_box" [(ngModel)]="VM.user_alreadymapremove_yes_chk_box"></ion-checkbox>
+              </ion-item>
+            </div>
+            <div margin-bottom *ngIf="VM.if_already_registered_same_device">
+              <ion-item lines="none" transparent>
+                <ion-label text-wrap	>{{'ACC_MAPPING.I_AGREE_DISCONCT_OLD_ACCOUNT' | translate}}</ion-label>
+                <ion-checkbox slot="start" color="danger" checked="VM.user_alreadymapremove_yes_chk_box" [(ngModel)]="VM.user_alreadymapremove_yes_chk_box"></ion-checkbox>
+              </ion-item>
+            </div>
 
-  </ion-grid>
+            <div  margin-vertical>
+              <div style="padding: 0px 7px;margin-top: 40px;">
+                  <ion-row>
+                    <ion-col>
+                      <ion-button  icon-left float-left shape="round" fill="outline" color='danger'
+                       (click)="takeActionForGoBack('STOP2')">
+                      <ion-icon color='danger' class="icon siva-icon-left-open"></ion-icon>
+                      <span color='danger'>{{'ACC_MAPPING.GO_BACK' | translate}}</span>
+                      </ion-button>
+                    </ion-col>
+                    <ion-col>
+                      <ion-button  icon-right float-right shape="round" color='danger'
+
+                      [disabled]="(!VM.user_yes_chk_box &&!VM.if_already_mapped && !VM.if_already_registered_same_device) || (!VM.user_alreadymapremove_yes_chk_box && (VM.if_already_mapped || VM.if_already_registered_same_device))"
+                      (click)="takeActionForProceed('FINISH')" >
+                          {{'ACC_MAPPING.PROCEED' | translate}}
+                        <ion-icon class="icon siva-icon-right-open"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+              </div>
+            </div>
+        </div>
+
+        <!-- Ack -->
+
+        <div *ngIf="STOPS == 'STOP4'" class="ion-padding animated fadeInUp delay-1s" style="margin-top: -20px">
+            <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="danger" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
+            <!-- <h3 *ngIf="STOPS == 'STOP4'" padding-horizontal ion-text color="danger" no-margin><b>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</b></h3> -->
+            <div style="margin-top: 5px">
+              <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</h5> -->
+              <ion-card sp-card-map-acc-org>
+                <ion-item>
+                  <div>
+                    <h1 class="sticky">{{hostInfo.Name}}</h1>
+                    <p style="margin-top: 15px;">{{hostInfo.Desc}}</p>
+                  </div>
+                </ion-item>
+
+              </ion-card>
+              <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.DO_NT_PROCEED_NOT_U' | translate}}</p>
+            </div>
+            <div *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device">
+                <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.DEVICE_DETAILS' | translate}}</h5>
+                <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p>
+                <ion-card sp-card-map-acc-org>
+                  <ion-item no-margin>
+                    <ion-icon *ngIf= "VM.DevicePlatform != 'Android'" slot="start" color='danger' class="icon siva-icon-apple" style="font-size: 3.5rem;"></ion-icon>
+                    <ion-icon *ngIf= "VM.DevicePlatform == 'Android'" slot="start" color='danger' class="icon siva-icon-android" style="font-size: 3.5rem;">
+                    </ion-icon>
+                    <h2 class="sticky" style="margin-top:0px">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
+                    <p>{{VM.DeviceDetails['model']}}</p>
+                  </ion-item>
+                </ion-card>
+              </div>
+              <div *ngIf="VM.if_already_registered_same_device">
+                <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.DEVICE_DETAILS' | translate}}</h5> -->
+                <!-- <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p> -->
+                <ion-card sp-card-map-acc-org>
+                  <ion-item no-margin>
+                    <h2 style="margin: 0 auto;" class="sticky">This device already used by another account. Do you want to proceed?</h2>
+                  </ion-item>
+                </ion-card>
+              </div>
+            <div margin-top *ngIf="!VM.if_already_mapped && !VM.if_already_registered_same_device">
+
+              <ion-item lines="none" transparent>
+                <ion-label text-wrap	>{{'ACC_MAPPING.YES_THIS_IS_MY' | translate}}</ion-label>
+                <ion-checkbox slot="start" color="danger" checked="VM.user_yes_chk_box" [(ngModel)]="VM.user_yes_chk_box"></ion-checkbox>
+              </ion-item>
+            </div>
+            <div margin-bottom *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device">
+                <ion-item lines="none" transparent>
+                  <ion-label text-wrap	>{{'ACC_MAPPING.I_AGREE_DISCONCT_OLD_DEVICE' | translate}}</ion-label>
+                  <ion-checkbox slot="start" color="danger" checked="VM.user_alreadymapremove_yes_chk_box" [(ngModel)]="VM.user_alreadymapremove_yes_chk_box"></ion-checkbox>
+                </ion-item>
+              </div>
+              <div margin-bottom *ngIf="VM.if_already_registered_same_device">
+                <ion-item lines="none" transparent>
+                  <ion-label text-wrap	>{{'ACC_MAPPING.I_AGREE_DISCONCT_OLD_ACCOUNT' | translate}}</ion-label>
+                  <ion-checkbox slot="start" color="danger" checked="VM.user_alreadymapremove_yes_chk_box" [(ngModel)]="VM.user_alreadymapremove_yes_chk_box"></ion-checkbox>
+                </ion-item>
+              </div>
+
+              <div margin-vertical style="    margin-top: 40px;">
+                <div style="margin-top: 20px;">
+
+                    <ion-button color="danger" shape="round" fill="outline" style="    margin-right: 20px;"
+                     (click)="takeActionForGoBack('STOP1')">
+                        <ion-icon color='danger' class="icon siva-icon-left-open"></ion-icon>
+                        <span color='danger'>{{'ACC_MAPPING.GO_BACK' | translate}}</span>
+                      </ion-button>
+                      <ion-button slot="end" float-right shape="round" color='danger' style="    margin-left: 20px;"
+
+                      [disabled]="(!VM.user_yes_chk_box &&!VM.if_already_mapped && !VM.if_already_registered_same_device) || (!VM.user_alreadymapremove_yes_chk_box && (VM.if_already_mapped || VM.if_already_registered_same_device))"
+                      (click)="takeActionForack()" >
+                          {{'ACC_MAPPING.PROCEED' | translate}}
+                        <ion-icon class="icon siva-icon-right-open"></ion-icon>
+                      </ion-button>
+                </div>
+              </div>
+          </div>
+
+      </ion-grid>
+    </div>
 </ion-content>

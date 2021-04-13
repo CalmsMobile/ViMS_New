@@ -7,26 +7,11 @@
   ion-label {
     margin: 0px;
   }
-  ion-icon {
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: contain;
-    background-size: 18px;
-
-    &[ng-reflect-name="customicon"] {
-      background-image: url("../../../assets/images/x-icon/admin.png");
-      &[ng-reflect-is-active="true"] {
-        background-image: url("../../../assets/images/x-icon/admin.png");
-      }
-      width: 2.4rem;
-      height: 2.4rem;
-    }
-  }
   .apt-left {
-    background-color: theme-colors("mainColors", "primary");
+    background-color: #eb445a;
   }
   .text-white {
-    color: theme-colors("textColors", "primaryWhite");
+    color: white;
   }
   .booking-status {
     padding: 5px;
@@ -50,5 +35,20 @@
     font-size: 1.4rem;
     font-weight: normal;
     line-height: 1.5;
+  }
+}
+ion-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: contain;
+  background-size: 18px;
+
+  &[ng-reflect-name="customicon"] {
+    background-image: url("../../../assets/images/x-icon/admin.png");
+    &[ng-reflect-is-active="true"] {
+      background-image: url("../../../assets/images/x-icon/admin.png");
+    }
+    width: 2.4rem;
+    height: 2.4rem;
   }
 }

@@ -1,26 +1,24 @@
 <ion-header>
-  <ion-toolbar>
-    <button ion-button menuToggle start>
-      <ion-icon class="siva-icon-menu-1"></ion-icon>
-    </button>
+  <ion-toolbar color="danger">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
   </ion-toolbar>
-  <ion-toolbar color="favorite">
-    <ion-searchbar [(ngModel)]="VM.queryText"
-    placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch()" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
+  <ion-toolbar color="danger">
+    <ion-searchbar mode="ios"
+    placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch($event.target.value)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
         <!-- (ionChange)="updateSchedule()" -->
     </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
     <ion-list #visitorsList>
-      <ion-item style="margin: 50% auto;
+      <div style="margin: 50% auto;
       text-align: center;" *ngIf="VM.visitors == undefined || VM.visitors == null || VM.visitors.length == 0">
-          {{'MANG_VISITORS.NO_VISITORS_AVAILABLE' | translate}}
-      </ion-item>
+          <ion-label>{{'MANG_VISITORS.NO_VISITORS_AVAILABLE' | translate}}</ion-label>
+      </div>
         <ion-item-sliding #slideDOM no-lines *ngFor="let item of VM.visitors">
             <ion-item sp-visitor-item class="myItem">
                 <div item-left [ngClass]="{ 'myItemCIO': (item.VisitorStatus == '20'),'myItemCINO':   (item.VisitorStatus == '10'), 'myItemCIExpired': (item.VisitorStatus == '30')}">
@@ -41,13 +39,13 @@
                     <p>{{doCapitalize(item.visitor_comp_name)}}</p>
                   </ion-row>
                   <ion-row class="myRow">
-                      <ion-col col-6 class="myCol">
+                      <ion-col size="6" class="myCol">
                           <ion-row class="myRow">
                             <ion-icon name="book" class="myIcons"></ion-icon>
                             <p>{{doCapitalize(item.att_reason)}}</p>
                           </ion-row>
                       </ion-col>
-                      <ion-col col-6 class="myCol" *ngIf="item.visitor_mobile_no">
+                      <ion-col size="6" class="myCol" *ngIf="item.visitor_mobile_no">
                           <ion-row class="myRow">
                             <ion-icon name="phone-portrait" class="myIcons"></ion-icon>
                             <p>{{item.visitor_mobile_no}}</p>
@@ -55,13 +53,13 @@
                       </ion-col>
                   </ion-row>
                   <ion-row class="myRow">
-                      <ion-col col-6 class="myCol">
+                      <ion-col size="6" class="myCol">
                           <ion-row class="myRow">
                             <ion-icon name="time" class="myIcons"></ion-icon>
                             <p class="mytime">{{item.CheckInDatetime}}</p>
                           </ion-row>
                       </ion-col>
-                      <ion-col col-6 class="myCol">
+                      <ion-col size="6" class="myCol">
                         <ion-row class="myRow">
                           <ion-icon name="time" class="myIcons"></ion-icon>
                           <p class="mytime">{{item.CheckOutDatetime? item.CheckOutDatetime : 'still inside'}}</p>
@@ -72,13 +70,13 @@
 
 
             </ion-item>
-            <ion-item-options side="right">
-                <!-- <button ion-button icon-only color="danger" outline no-border (click)="editVisitors(slideDOM, 'delete', item)">
+            <ion-item-options side="end">
+                <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM, 'delete', item)">
                 <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
-              </button> -->
-              <button ion-button color="danger" (click)="addVisitors(slideDOM, item)">
+              </ion-button> -->
+              <ion-button color="danger" (click)="addVisitors(slideDOM, item)">
                   ADD
-              </button>
+              </ion-button>
               </ion-item-options>
         </ion-item-sliding>
     </ion-list>
@@ -87,11 +85,11 @@
 <ion-footer >
   <ion-toolbar *ngIf="false">
     <!-- <ion-title>{{'MANG_VISITORS.DONE' | translate}}</ion-title> -->
-    <ion-buttons end>
-        <button ion-button>
+    <ion-buttons slot="end">
+        <ion-button>
             {{'MANG_VISITORS.DONE' | translate}}
           <!-- <ion-icon name="checkmark"></ion-icon> -->
-        </button>
+        </ion-button>
       </ion-buttons>
   </ion-toolbar>
 </ion-footer>

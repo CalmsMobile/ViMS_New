@@ -1,10 +1,9 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Camera } from '@ionic-native/camera/ngx';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { NavController, NavParams, AlertController, ActionSheetController, ToastController, Platform, LoadingController } from '@ionic/angular';
+import { NavController, AlertController, ActionSheetController, ToastController, Platform, LoadingController, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { VisitorInfoModal } from 'src/app/model/visitorInfoModal';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
@@ -21,7 +20,7 @@ import { ToastService } from 'src/app/services/util/Toast.service';
 export class CreateQuickPassPage implements OnInit {
 
 
-  @ViewChild(Content) content: Content;
+  @ViewChild(IonContent) content: IonContent;
   active: boolean;
 
   lastImage: string = null;
@@ -42,7 +41,7 @@ export class CreateQuickPassPage implements OnInit {
   T_SVC:any;
   expiryTime : any;
   constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+
     public toastService: ToastService,
     private translate:TranslateService,
     public apiProvider: RestProvider,
@@ -71,7 +70,7 @@ export class CreateQuickPassPage implements OnInit {
       });
       var hostSettings =  window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
       if(hostSettings && JSON.parse(hostSettings)){
-        var result1 = JSON.parse(hostSettings).Table2[0];
+        var result1 = JSON.parse(hostSettings).Table1[0];
         if(result1 && JSON.parse(result1.QuickPassSettings)){
           this.hostSettings = JSON.parse(result1.QuickPassSettings).CreatePass;
         }
@@ -185,7 +184,10 @@ export class CreateQuickPassPage implements OnInit {
 
 
 
-
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
 
 
   async addVisitors(){
@@ -194,6 +196,7 @@ export class CreateQuickPassPage implements OnInit {
       let toast = await this.toastCtrl.create({
         message: this.T_SVC['ALERT_TEXT.SELECT_EXPIRY_TIME'],
         duration: 3000,
+        color: 'primary',
         cssClass: 'alert-danger',
         position: 'bottom'
       });
@@ -219,13 +222,13 @@ export class CreateQuickPassPage implements OnInit {
                 let toast = await this.toastCtrl.create({
                   message: this.T_SVC['ALERT_TEXT.QUICKPASS_CREATE_SUCCESS'],
                   duration: 3000,
+                  color: 'primary',
                   position: 'bottom'
                 });
                 toast.present();
                 this.navCtrl.pop();
-                // this.navCtrl.push('QuickPassDashBoardPage', []);
                 var page = {
-                  component : "QuickPassDashBoardPage"
+                  component : "quick-pass-dash-board-page"
                 }
                 this.events.publishDataCompany({
                   action: 'ChangeTab',
@@ -258,6 +261,7 @@ export class CreateQuickPassPage implements OnInit {
             let toast = await this.toastCtrl.create({
               message: 'Server Error',
               duration: 3000,
+              color: 'primary',
               position: 'bottom'
             });
             toast.present();
@@ -310,7 +314,7 @@ export class CreateQuickPassPage implements OnInit {
   subscribeToIonScroll() {
     if (this.content && this.content['ionScroll']) {
         this.content['ionScroll'].subscribe((d) => {
-            if (d && d.scrollTop < 80 ) {
+            if (d && d['scrollTop'] < 80 ) {
                 this.active = false;
                 return;
             }

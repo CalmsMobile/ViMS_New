@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { NavController, AlertController, NavParams } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -27,7 +27,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
   OffSet = 0;
   appointments = [];
   notificationCount = 0;
-  isAdmin = false;
+  isAdmin = true;
 
   TotalGuestInsideAppointments = [];
   TotalUnusedExpiredPassAppointments = [];
@@ -42,8 +42,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
     private alertCtrl: AlertController,
     public apiProvider: RestProvider,
     private dateformat : DateFormatPipe,
-    private events : EventsService,
-    public navParams: NavParams) {
+    private events : EventsService) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
         this.T_SVC = t;
@@ -58,31 +57,14 @@ export class QuickPassDashBoardPagePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log('ionViewDidEnter QuickPassDashBoardPage');
+    console.log('ionViewDidEnter quick-pass-dash-board-page');
 
   }
 
   ionViewWillEnter(){
-
-    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-    var qrCode = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    try{
-      var qrCodeObj = JSON.parse(qrCode);
-      var settingsObj = JSON.parse(settings);
-      if(settings && qrCodeObj && settingsObj){
-        if(qrCodeObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-          this.isAdmin = (settingsObj.Table4.length>0);
-        }else if(qrCodeObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
-          this.isAdmin = (settingsObj.Table3.length>0);
-        }
-      }
-    }catch(e){
-      console.log("Error in setting Admin", e);
-    }
-
     this.events.publishDataCompany({
       action: "page",
-      title: "QuickPassDashBoardPage",
+      title: "quick-pass-dash-board-page",
       message: ''
     });
     this.GetAllQuickPassVisitorsHistory(null, true);
@@ -91,7 +73,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
   ionViewWillLeave(){
     this.events.publishDataCompany({
       action: "page",
-      title: "QuickPassDashBoardPage",
+      title: "quick-pass-dash-board-page",
       message: ''
     });
   }
@@ -114,7 +96,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
   statesClicked(type){
     switch(type){
       case AppSettings.QUICKPASS_TYPES.TotalGuestInside:
-        let navigationExtras: NavigationExtras = {
+        const navigationExtras: NavigationExtras = {
           state: {
             passData: {
               list : this.TotalGuestInsideAppointments,
@@ -125,7 +107,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
         this.router.navigate(['quick-pass-history-page'], navigationExtras);
         break;
       case AppSettings.QUICKPASS_TYPES.TotalUnusedExpiredPass:
-          navigationExtras = {
+        const navigationExtras1 = {
             state: {
               passData: {
                 list : this.TotalUnusedExpiredPassAppointments,
@@ -133,10 +115,10 @@ export class QuickPassDashBoardPagePage implements OnInit {
               }
             }
           };
-          this.router.navigate(['quick-pass-history-page'], navigationExtras);
+          this.router.navigate(['quick-pass-history-page'], navigationExtras1);
         break;
       case AppSettings.QUICKPASS_TYPES.TotalUsedPass:
-          navigationExtras = {
+          const navigationExtras3 = {
             state: {
               passData: {
                 list : this.TotalUsedPassAppointments,
@@ -144,10 +126,10 @@ export class QuickPassDashBoardPagePage implements OnInit {
               }
             }
           };
-          this.router.navigate(['quick-pass-history-page'], navigationExtras);
+          this.router.navigate(['quick-pass-history-page'], navigationExtras3);
         break;
       case AppSettings.QUICKPASS_TYPES.TotalUnusedPass:
-          navigationExtras = {
+         const navigationExtras4 = {
             state: {
               passData: {
                 list : this.TotalUnusedPassAppointments,
@@ -155,10 +137,10 @@ export class QuickPassDashBoardPagePage implements OnInit {
               }
             }
           };
-          this.router.navigate(['quick-pass-history-page'], navigationExtras);
+          this.router.navigate(['quick-pass-history-page'], navigationExtras4);
         break;
       case AppSettings.QUICKPASS_TYPES.TotalFinishedOverstayPass:
-          navigationExtras = {
+          const navigationExtras5 = {
             state: {
               passData: {
                 list : this.TotalFinisedOverstayAppointments,
@@ -166,10 +148,10 @@ export class QuickPassDashBoardPagePage implements OnInit {
               }
             }
           };
-          this.router.navigate(['quick-pass-history-page'], navigationExtras);
+          this.router.navigate(['quick-pass-history-page'], navigationExtras5);
         break;
         case AppSettings.QUICKPASS_TYPES.TotalCurrentOverStayPass:
-          navigationExtras = {
+          const navigationExtras6 = {
             state: {
               passData: {
                 list : this.TotalCurrentOverStayAppointments,
@@ -177,7 +159,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
               }
             }
           };
-          this.router.navigate(['quick-pass-history-page'], navigationExtras);
+          this.router.navigate(['quick-pass-history-page'], navigationExtras6);
         break;
     }
   }
@@ -203,7 +185,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
 
           if(refresher){
           //   this.appointments = aList.concat(this.appointments);
-            refresher.complete();
+            refresher.target.complete();
           }
           // else {
             this.appointments = aList;
@@ -219,7 +201,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
         },
         async (err) => {
           if(refresher){
-            refresher.complete();
+            refresher.target.complete();
           }
           if(err && err.message == "No Internet"){
             return;

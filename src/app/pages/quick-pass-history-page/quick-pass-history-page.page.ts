@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NavController, AlertController, ModalController, NavParams } from '@ionic/angular';
+import { NavController, AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
+import { EventsService } from 'src/app/services/EventsService';
 
 @Component({
   selector: 'app-quick-pass-history-page',
@@ -26,10 +27,10 @@ export class QuickPassHistoryPagePage implements OnInit {
     private alertCtrl: AlertController,
     public apiProvider: RestProvider,
     private dateformat : DateFormatPipe,
+    private events: EventsService,
     private router: Router,
     private route: ActivatedRoute,
-    private modalCtrl : ModalController,
-    public navParams: NavParams) {
+    private modalCtrl : ModalController) {
     this.translate.get([
     'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
     'ALERT_TEXT.DELETE_QUICK_PASS',
@@ -83,6 +84,11 @@ export class QuickPassHistoryPagePage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter QuickPassHistoryPage');
+    this.events.publishDataCompany({
+      action: "page",
+      title: "quick-pass-dash-board-page",
+      message: ''
+    });
   }
 
   ionViewWillEnter() {
@@ -99,7 +105,7 @@ export class QuickPassHistoryPagePage implements OnInit {
   doRefresh(refresher) {
     this.OffSet = 0;
     this.GetAllQuickPassVisitorsHistory(refresher, true);
-    //setTimeout(()=>{refresher.complete();},2000)
+    //setTimeout(()=>{refresher.target.complete();},2000)
   }
 
   getVisitorsBySearch(queryText){
@@ -123,6 +129,12 @@ export class QuickPassHistoryPagePage implements OnInit {
     this.sortByDate();
   }
 
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
+
+
   GetAllQuickPassVisitorsHistory(refresher, showLoading){
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
@@ -139,7 +151,7 @@ export class QuickPassHistoryPagePage implements OnInit {
 
           if(refresher){
           //   this.appointments = aList.concat(this.appointments);
-            refresher.complete();
+            refresher.target.complete();
           }
 
           var appointments = aList;
@@ -205,7 +217,7 @@ export class QuickPassHistoryPagePage implements OnInit {
         },
         async (err) => {
           if(refresher){
-            refresher.complete();
+            refresher.target.complete();
           }
           if(err && err.message == "No Internet"){
             return;

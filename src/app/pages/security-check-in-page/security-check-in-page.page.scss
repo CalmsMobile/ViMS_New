@@ -53,14 +53,14 @@ ion-header.transparent-header::after {
   }
 
   100% {
-    background-color: theme-colors("mainColors", "primary") !important;
+    background-color: #eb445a !important;
   }
 }
 .transparent-header ion-navbar.active .toolbar-background,
 .transparent-header ion-navbar.active {
   animation-name: color-change;
   animation-duration: 400ms;
-  background-color: theme-colors("mainColors", "primary") !important;
+  background-color: #eb445a !important;
 }
 ion-header.transparent-header.active::after {
   background-image: initial;
@@ -119,8 +119,8 @@ ion-header.transparent-header.active::after {
 }
 .simple-form .box_round_corner {
   width: 97.5%;
-  border: 2px solid #eee;
-  border-left: 2px solid #eee;
+  border: 3px solid #eee;
+  border-left: 3px solid #eee;
   border-radius: 5px;
   transition: border-color 0.5s ease-out;
   padding: 15px;

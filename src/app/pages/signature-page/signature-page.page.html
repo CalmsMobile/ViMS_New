@@ -1,48 +1,50 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="danger">
     <ion-title>Signature</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-<signature-pad [options]="signaturePadOptions"  id="signatureCanvas"></signature-pad>
+<ion-content class="ion-padding">
+<!-- <signature-pad [options]="signaturePadOptions"  id="signatureCanvas"></signature-pad> -->
+<!-- <ion-signaturepad [(ngModel)]="signature" [canvasWidth]="300" [canvasHeight]="300" [backgroundColor]="'#ffffff'"></ion-signaturepad> -->
+<div class="signature-pad">
+  <div class="signature-pad--body">
+    <canvas #sPad width="900" height="600" style="touch-action: none;"></canvas>
+  </div>
+</div>
+<br>
+<br>
 
 </ion-content>
 <ion-footer transparent>
-    <ion-toolbar transparent>
+    <ion-toolbar transparent style="padding: 10px;">
         <!-- <ion-grid> -->
             <!-- <ion-row> -->
               <!-- <ion-col > -->
-                  <ion-buttons end>
+                  <ion-buttons slot="end">
 
-                  <button bottom right ion-button align-items-end round
-                  class="mySignBtn" style="    background-color: transparent;
-                  border: 2px solid red;
-                  color: red;
-              "
+                  <ion-button color="primary" bottom right align-items-end shape="round"
+                  class="mySignBtn" fill="outline"
                   (click)="drawCancel()">
                   Cancel
 
-                  </button>
+                  </ion-button>
               <!-- </ion-col> -->
               <!-- <ion-col > -->
-                  <button bottom right ion-button  align-items-end round
-                  class="mySignBtn" style="    background-color: transparent;
-                  border: 2px solid red;
-                  color: red;
-              "
+                  <ion-button color="primary" bottom right align-items-end shape="round" fill="outline"
+                  class="mySignBtn"
                   (click)="drawClear()">
                   UNDO
 
-                  </button>
+                  </ion-button>
 
               <!-- </ion-col>
               <ion-col > -->
-                  <button bottom right ion-button align-items-end round
+                  <ion-button color="primary" bottom right align-items-end shape="round" fill="solid"
                   class="mySignBtn" (click)="drawComplete()">
                       {{'MANG_HOST.DONE' | translate}}
 
-                  </button>
+                  </ion-button>
                 </ion-buttons>
               <!-- </ion-col> -->
             <!-- </ion-row> -->

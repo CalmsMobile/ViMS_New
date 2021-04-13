@@ -1,20 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { AlertController, ToastController, NavController, Platform, NavParams, ModalController } from '@ionic/angular';
+import { AlertController, ToastController, NavController, Platform, ModalController, NavParams } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { SignaturePad } from 'angular2-signaturepad';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
+import SignaturePad from 'signature_pad';
+
 @Component({
   selector: 'app-signature-page',
   templateUrl: './signature-page.page.html',
   styleUrls: ['./signature-page.page.scss'],
 })
-export class SignaturePagePage implements OnInit {
-
-  @ViewChild(SignaturePad) public signaturePad : any;
-
+export class SignaturePagePage implements OnInit,AfterViewInit {
+  @ViewChild('sPad', {static: true}) signaturePadElement;
+  signaturePad: any;
+  // signature='';
   public signaturePadOptions : Object = {
     'minWidth': 2,
     'canvasWidth': 340,
@@ -32,10 +33,10 @@ export class SignaturePagePage implements OnInit {
     private toastCtrl: ToastController,
     public navCtrl: NavController,
     private router: Router,
+    private navParams: NavParams,
     private route: ActivatedRoute,
     private translate : TranslateService,
-    private platform : Platform,
-    public navParams: NavParams) {
+    private platform : Platform) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'ALERT_TEXT.PLEASE_SIGN',
@@ -61,6 +62,21 @@ export class SignaturePagePage implements OnInit {
       }
     });
 
+    try {
+      try{
+        this.visitorImage =  navParams.get('visitorImage');
+        this.visitor = JSON.parse(navParams.get('visitor'));
+      }catch(e){
+         this.visitor = navParams.get('visitor');
+      }
+
+      if(!this.visitor || !this.visitor.VisitorSeqId) {
+        this.navCtrl.navigateRoot('sign-pad-idle-page');
+        return;
+      }
+    } catch (error) {
+
+    }
 
     var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS);
     if(settings && JSON.parse(settings)){
@@ -115,7 +131,7 @@ export class SignaturePagePage implements OnInit {
 
    async drawComplete() {
     this.signatureImage = this.signaturePad.toDataURL();
-    if(!this.signatureImage || this.signaturePad.signaturePad._data.length == 0 || this.signaturePad.signaturePad.points.length == 0){
+    if(!this.signatureImage){
       let alert = await this.alertCtrl.create({
         header: 'Error',
         message: this.T_SVC['ALERT_TEXT.PLEASE_SIGN'],
@@ -127,6 +143,12 @@ export class SignaturePagePage implements OnInit {
     }
     if(!this.visitorImage){
       this.visitorImage = "";
+    }
+    try {
+     const parseData = JSON.parse(this.visitor+'');
+     this.visitor = parseData;
+    } catch (error) {
+
     }
     if(!this.visitor || !this.visitor.VisitorSeqId){
       return;
@@ -147,6 +169,7 @@ export class SignaturePagePage implements OnInit {
           let toast = await this.toastCtrl.create({
             message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_SUCCESS'],
             duration: 3000,
+            color: 'primary',
             position: 'bottom'
           });
           toast.present();
@@ -173,6 +196,7 @@ export class SignaturePagePage implements OnInit {
         let toast = await this.toastCtrl.create({
           message: 'Server Error',
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -221,8 +245,9 @@ export class SignaturePagePage implements OnInit {
   }
 
   ngAfterViewInit() {
-        this.signaturePad.clear();
-        this.canvasResize();
+    // this.signaturePad.clear();
+    this.signaturePad = new SignaturePad(this.signaturePadElement.nativeElement);
+    this.canvasResize();
   }
 
   ngOnInit() {

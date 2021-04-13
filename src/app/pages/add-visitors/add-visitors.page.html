@@ -1,205 +1,169 @@
 <ion-header class="transparent-header">
   <ion-navbar class="" [ngClass]="{'active':isClassActive()}">
-    <ion-title color="favorite">{{"ADD_VISITORS.TITLE" | translate}}</ion-title>
-    <ion-buttons end>
-        <button ion-button icon-only (click)="getPhoneBookContact()">
-            <!-- <ion-icon name="contact"></ion-icon> -->
-          <img item-end style="width: 35px;height: 35px;" src="../../assets/images/phone-book.png">
-        </button>
-    </ion-buttons>
+    <ion-toolbar color="primary">
+      <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
+      <ion-title color="danger" style="color: white;">{{"ADD_VISITORS.TITLE" | translate}}</ion-title>
+      <ion-buttons slot="end">
+          <ion-button (click)="getPhoneBookContact()">
+              <!-- <ion-icon name="contact"></ion-icon> -->
+            <img slot="end" style="width: 35px;height: 35px;" src="../../assets/images/phone-book.png">
+          </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
   </ion-navbar>
 </ion-header>
 <ion-content>
-<div padding profile-bg [ngStyle]="{'background-image': ''}" style="height:180px">
-    <ion-thumbnail *ngIf="!visitorInfoModal.VisitorBookingSeqId && !visitor_RemoveImg && !data.profile && !data.contact" text-center margin-top (click)= "presentActionSheet()">
+<div profile-bg [ngStyle]="{'background-image': ''}" style="height:180px">
+    <div *ngIf="!visitorInfoModal.VisitorBookingSeqId && !visitor_RemoveImg && !data.profile && !data.contact" class="ion-text-center" margin-top (click)= "presentActionSheet()">
       <img  onError="this.src='../../assets/images/user.png';" [src]="data.logo+visitorSEQID + imageType" (load)="loaded = true"  [ngClass]="{'img-loaded':loaded , 'eventImg':!loaded}" [hidden]="!loaded">
-      <ion-spinner item-start [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
-    </ion-thumbnail>
-    <ion-thumbnail *ngIf="visitorInfoModal.VisitorBookingSeqId && !visitor_RemoveImg && !data.profile && !data.contact" text-center margin-top (click)= "presentActionSheet()">
+      <ion-spinner slot="start" [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
+    </div>
+    <div *ngIf="visitorInfoModal.VisitorBookingSeqId && !visitor_RemoveImg && !data.profile && !data.contact" class="ion-text-center" margin-top (click)= "presentActionSheet()">
       <img  onError="this.src='../../assets/images/user.png';" [src]="data.logo+visitorInfoModal.VisitorBookingSeqId+imageType" (load)="loaded = true"  [ngClass]="{'img-loaded':loaded , 'eventImg':!loaded}" [hidden]="!loaded">
-      <ion-spinner item-start [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
-    </ion-thumbnail>
-    <ion-thumbnail *ngIf="!visitor_RemoveImg && data.profile" text-center margin-top (click)= "presentActionSheet()">
+      <ion-spinner slot="start" [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
+    </div>
+    <div *ngIf="!visitor_RemoveImg && data.profile" class="ion-text-center" margin-top (click)= "presentActionSheet()">
       <img  onError="this.src='../../assets/images/user.png';" [src]="base64Image" (load)="loaded = true"  [ngClass]="{'img-loaded':loaded , 'eventImg':!loaded}" [hidden]="!loaded"/>
-      <ion-spinner item-start [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
-    </ion-thumbnail>
-    <ion-avatar *ngIf="!visitor_RemoveImg && data.contact" text-center margin-top (click)= "presentActionSheet()">
+      <ion-spinner slot="start" [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
+    </div>
+    <div *ngIf="!visitor_RemoveImg && data.contact" class="ion-text-center" margin-top (click)= "presentActionSheet()">
       <img onError="this.src='../../assets/images/user.png';" [src]="data.contact"  (load)="loaded = true"  [ngClass]="{'img-loaded':loaded , 'eventImg':!loaded}" [hidden]="!loaded">
-      <ion-spinner item-start [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
-    </ion-avatar>
-    <ion-avatar *ngIf="visitor_RemoveImg" text-center margin-top (click)= "presentActionSheet()">
+      <ion-spinner slot="start" [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
+    </div>
+    <div *ngIf="visitor_RemoveImg" class="ion-text-center" margin-top (click)= "presentActionSheet()">
         <img  src="../../assets/images/user.png" (load)="loaded = true"  [ngClass]="{'img-loaded':loaded , 'eventImg':!loaded}" [hidden]="!loaded"/>
-        <ion-spinner item-start [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
-    </ion-avatar>
+        <ion-spinner slot="start" [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
+    </div>
 </div>
-<ion-grid padding>
+<ion-grid class="ion-padding">
   <ion-row align-items-start>
-    <form novalidate col-12 col-sm-12 col-md-12 (ngSubmit)="addVisitors()"
+    <form novalidate size="12" size-sm size-md (ngSubmit)="addVisitors()"
     [formGroup]="visitorProfile" class="simple-form">
-      <ion-col no-padding col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+      <ion-col no-padding size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
 
           <!---Input field username-->
 
-          <!-- <ion-item no-lines no-padding transparent *ngIf= "hostSettings || hostSettings.NameRequired">
-              <ion-label color="favorite" stacked>{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
+          <!-- <ion-item lines="none" no-padding transparent *ngIf= "hostSettings || hostSettings.NameRequired">
+              <ion-label color="danger" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
               <ion-input no-lines required type="text" [(ngModel)]="visitorInfoModal.visitor_name" placeholder="{{'ADD_VISITORS.LAB_PH_USER_NAME' | translate}}"
               formControlName="username" [class.error1]="!visitorProfile.controls.username.valid && visitorProfile.controls.username.dirty"
               ></ion-input>
           </ion-item> -->
-          <ion-item no-lines no-padding transparent>
-              <ion-label color="favorite" stacked>{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
-              <ion-input no-lines type="text" [(ngModel)]="visitorInfoModal.visitor_name" placeholder=""
-              formControlName="username" [class.error1]="!visitorProfile.controls.username.valid && visitorProfile.controls.username.dirty"
-              ></ion-input>
+
+          <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent>
+              <ion-label color="danger" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
+              <ion-input no-lines type="text" [(ngModel)]="visitorInfoModal.visitor_name"
+              [ngStyle]="{'border': hostSettings.NameRequired ? '3px solid #cf3c4f': '3px solid #eee'}" placeholder="Enter Name"
+              formControlName="username"></ion-input>
           </ion-item>
-          <ion-item no-lines no-border no-margin transparent *ngIf="( visitorProfile.get('username').hasError('minlength') || visitorProfile.get('username').hasError('maxlength') ||visitorProfile.get('username').hasError('pattern') ||visitorProfile.get('username').hasError('required') ) && visitorProfile.get('username').touched">
-            <div class="error" no-border no-margin *ngIf="visitorProfile.get('username').hasError('required') && visitorProfile.get('username').touched">
-              {{'ADD_VISITORS.ERROR.USERNAME_REQUIRED' | translate}}
-            </div>
-            <div class="error" no-border no-margin *ngIf="visitorProfile.get('username').hasError('minlength') && visitorProfile.get('username').touched">
-              {{'ADD_VISITORS.ERROR.USERNAME_MIN4' | translate}}
-            </div>
-            <div class="error" no-border no-margin *ngIf="visitorProfile.get('username').hasError('maxlength') && visitorProfile.get('username').touched">
-              {{'ADD_VISITORS.ERROR.USERNAME_MAX20' | translate}}
-            </div>
-            <!-- <div class="error" *ngIf="visitorProfile.get('username').hasError('pattern') && visitorProfile.get('username').touched">
-              {{'ADD_VISITORS.ERROR.USERNAME_ALPHA' | translate}}
-            </div> -->
-          </ion-item>
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.IdProofEnabled && hostSettings.IdProofRequired">
-          <ion-label stacked>{{'ADD_VISITORS.LAB_USER_IC' | translate}}</ion-label>
+
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.IdProofEnabled && hostSettings.IdProofRequired">
+          <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_IC' | translate}}</ion-label>
           <ion-input type="text" required placeholder="{{'ADD_VISITORS.LAB_PH_USER_IC' | translate}}" [(ngModel)]="visitorInfoModal.visitor_ic" [disabled] = "disableIc"
-          formControlName="icPassport" [class.error1]="!visitorProfile.controls.icPassport.valid && visitorProfile.controls.icPassport.dirty"
-          ></ion-input>
+          formControlName="icPassport"
+          [ngStyle]="{'border': hostSettings.IdProofRequired ? '3px solid #cf3c4f': '3px solid #eee'}" ></ion-input>
         </ion-item>
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.IdProofEnabled && !hostSettings.IdProofRequired">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_USER_IC' | translate}}</ion-label>
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.IdProofEnabled && !hostSettings.IdProofRequired">
+            <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_IC' | translate}}</ion-label>
             <ion-input type="text" placeholder="{{'ADD_VISITORS.LAB_PH_USER_IC' | translate}}" [(ngModel)]="visitorInfoModal.visitor_ic" [disabled] = "disableIc"
-            formControlName="icPassport" [class.error1]="!visitorProfile.controls.icPassport.valid && visitorProfile.controls.icPassport.dirty"
-            ></ion-input>
+            formControlName="icPassport" [ngStyle]="{'border': hostSettings.IdProofRequired ? '3px solid #cf3c4f': '3px solid #eee'}"></ion-input>
           </ion-item>
-        <ion-item no-lines transparent no-lines *ngIf="(visitorProfile.get('icPassport').hasError('required') && visitorProfile.get('icPassport').touched)">
-          <div class="error" *ngIf="visitorProfile.get('icPassport').hasError('required') && visitorProfile.get('icPassport').touched">
-            {{'ADD_VISITORS.ERROR.IC_REQUIRED' | translate}}
-          </div>
-        </ion-item>
-
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.EmailEnabled && hostSettings.EmailRequired">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_E_MAIL' | translate}}</ion-label>
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.EmailEnabled && hostSettings.EmailRequired">
+            <ion-label position="stacked">{{'ADD_VISITORS.LAB_E_MAIL' | translate}}</ion-label>
             <ion-input editable='false' required placeholder="{{'ADD_VISITORS.LAB_PH_EMAIL' | translate}}" type="email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" [(ngModel)]="visitorInfoModal.visitor_email"
-              formControlName="email" [class.error1]="!visitorProfile.controls.email.valid && visitorProfile.controls.email.dirty"
-            ></ion-input>
+              formControlName="email" [ngStyle]="{'border': hostSettings.EmailRequired ? '3px solid #cf3c4f': '3px solid #eee'}"></ion-input>
         </ion-item>
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.EmailEnabled && !hostSettings.EmailRequired">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_E_MAIL' | translate}}</ion-label>
-            <ion-input editable='false' type="email" placeholder="{{'ADD_VISITORS.LAB_PH_EMAIL' | translate}}" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" required [(ngModel)]="visitorInfoModal.visitor_email"
-              formControlName="email" [class.error1]="!visitorProfile.controls.email.valid && visitorProfile.controls.email.dirty"
-            ></ion-input>
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.EmailEnabled && !hostSettings.EmailRequired">
+            <ion-label position="stacked">{{'ADD_VISITORS.LAB_E_MAIL' | translate}}</ion-label>
+            <ion-input editable='false' type="email" placeholder="{{'ADD_VISITORS.LAB_PH_EMAIL' | translate}}" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" [(ngModel)]="visitorInfoModal.visitor_email"
+              formControlName="email" [ngStyle]="{'border': hostSettings.EmailRequired ? '3px solid #cf3c4f': '3px solid #eee'}"></ion-input>
         </ion-item>
-        <ion-item no-lines transparent no-lines *ngIf="( visitorProfile.get('email').hasError('minlength') || visitorProfile.get('email').hasError('pattern') ||visitorProfile.get('email').hasError('required') ) && visitorProfile.get('email').touched">
-          <div class="error" *ngIf="visitorProfile.get('email').hasError('required') && visitorProfile.get('email').touched">
-              {{'ADD_VISITORS.ERROR.EMAIL_REQUIRED' | translate}}
+        <ion-item lines="none" class="ion-no-padding commonItem box_round_corner" [ngStyle]="{'border': hostSettings.CompanyRequired ? '3px solid #cf3c4f': '3px solid #eee'}" no-padding transparent (click)="openVisitorCompany()"
+        *ngIf= "hostSettings && hostSettings.CompanyEnabled">
+          <div>
+            <ion-label style="margin:0px; color: #8e8e93 !important;margin-left: 3px !important;    padding: 5px;margin-bottom: 0px !important;">{{'ADD_VISITORS.LAB_USER_COMPANY' | translate}}</ion-label>
+            <ion-label *ngIf="visitorInfoModal.visitor_comp_name" style="    padding-bottom: 8px; margin-left: 5px;color: #000000!important;margin-bottom: 0px !important">{{visitorInfoModal.visitor_comp_name}} </ion-label>
           </div>
-          <div class="error" *ngIf="visitorProfile.get('email').hasError('pattern') && visitorProfile.get('email').touched">
-              {{'ADD_VISITORS.ERROR.EMAIL_PATERN' | translate}}
-          </div>
+          <ion-icon name="arrow-forward" slot="end"></ion-icon>
         </ion-item>
-        <ion-item class= "box_round_corner" no-lines no-padding transparent (click)="openVisitorCompany()" *ngIf= "hostSettings && hostSettings.CompanyEnabled">
-          <ion-label style="margin:0px; color: #8e8e93 !important;margin-left: 3px !important;    padding: 5px;" stacked>{{'ADD_VISITORS.LAB_USER_COMPANY' | translate}}</ion-label>
-          <ion-icon name="arrow-forward" item-right></ion-icon>
-          <ion-label *ngIf="visitorInfoModal.visitor_comp_name" style="    padding-bottom: 8px; margin-left: 5px;color: #000000!important;margin-bottom: 0px !important">{{visitorInfoModal.visitor_comp_name}} </ion-label>
-        </ion-item>
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.CategoryEnabled && hostSettings.CategoryRequired">
-          <ion-label stacked>{{'ADD_VISITORS.LAB_USER_CATE' | translate}}</ion-label>
-          <ion-select mode="ios" required [(ngModel)]="visitorInfoModal.visitor_ctg_id" interface="action-sheet" placeholder="{{'ADD_VISITORS.LAB_USER_CATE' | translate}}"
-          formControlName="vistorCategory">
-          <ion-label stacked>{{'ADD_VISITORS.LAB_USER_CATE' | translate}}</ion-label>
-            <ion-select-option text-left *ngFor="let vis_cat of VISITOR_CATEGORY" (ionSelect)="onChangeCategory(vis_cat)"
-              [value]="vis_cat.visitor_ctg_id" >
-              {{vis_cat.visitor_ctg_desc}} <span float-right>({{vis_cat.time_permit}})</span>
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.CategoryEnabled && !hostSettings.CategoryRequired">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_USER_CATE' | translate}}</ion-label>
-            <ion-select mode="ios" [(ngModel)]="visitorInfoModal.visitor_ctg_id" interface="action-sheet" placeholder="{{'ADD_VISITORS.LAB_PH_USER_CATE' | translate}}"
-            formControlName="vistorCategory">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_USER_CATE' | translate}}</ion-label>
-              <ion-select-option text-left *ngFor="let vis_cat of VISITOR_CATEGORY" (ionSelect)="onChangeCategory(vis_cat)"
-                [value]="vis_cat.visitor_ctg_id" >
-                {{vis_cat.visitor_ctg_desc}} <span float-right>({{vis_cat.time_permit}})</span>
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-item no-lines transparent no-lines *ngIf="(visitorProfile.get('vistorCategory').hasError('required') && visitorProfile.get('vistorCategory').touched)">
-              <div class="error" *ngIf="visitorProfile.get('vistorCategory').hasError('required') && visitorProfile.get('vistorCategory').touched">
-                {{'ADD_VISITORS.ERROR.CATE_REQUIRED' | translate}}
-              </div>
-          </ion-item>
-
-         <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.ContactNumberEnabled && hostSettings.ContactNumberRequired">
-          <ion-label stacked>{{'ADD_VISITORS.LAB_USER_CONTACT' | translate}}</ion-label>
+         <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.ContactNumberEnabled && hostSettings.ContactNumberRequired">
+          <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_CONTACT' | translate}}</ion-label>
           <ion-input type="text" placeholder="{{'ADD_VISITORS.LAB_PH_USER_CONTACT' | translate}}" required formControlName="contact" [(ngModel)]="visitorInfoModal.visitor_mobile_no"
-          ></ion-input>
+          [ngStyle]="{'border': hostSettings.ContactNumberRequired ? '3px solid #cf3c4f': '3px solid #eee'}"></ion-input>
         </ion-item>
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.ContactNumberEnabled && !hostSettings.ContactNumberRequired">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_USER_CONTACT' | translate}}</ion-label>
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.ContactNumberEnabled && !hostSettings.ContactNumberRequired">
+            <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_CONTACT' | translate}}</ion-label>
             <ion-input type="text" placeholder="{{'ADD_VISITORS.LAB_PH_USER_CONTACT' | translate}}" formControlName="contact" [(ngModel)]="visitorInfoModal.visitor_mobile_no"
-            ></ion-input>
+            [ngStyle]="{'border': hostSettings.ContactNumberRequired ? '3px solid #cf3c4f': '3px solid #eee'}"></ion-input>
           </ion-item>
-        <ion-item no-lines transparent no-lines *ngIf="(visitorProfile.get('contact').hasError('required') && visitorProfile.get('contact').touched)">
-            <div class="error" *ngIf="visitorProfile.get('contact').hasError('required') && visitorProfile.get('contact').touched">
-              {{'ADD_VISITORS.ERROR.CONTACT_REQUIRED' | translate}}
-            </div>
-        </ion-item>
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.VehicleNumberEnabled && hostSettings.VehicleNumberRequired">
-            <ion-label stacked>{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.VehicleNumberEnabled && hostSettings.VehicleNumberRequired">
+            <ion-label position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
             <ion-input type="text" required placeholder="{{'ADD_APPOIN.STEP2.PH_VECHILE_NO' | translate}}" formControlName="vechile" [(ngModel)]="visitorInfoModal.vehicle_no"
-            ></ion-input>
+            [ngStyle]="{'border': hostSettings.VehicleNumberRequired ? '3px solid #cf3c4f': '3px solid #eee'}"></ion-input>
           </ion-item>
-          <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.VehicleNumberEnabled && !hostSettings.VehicleNumberRequired">
-              <ion-label stacked>{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
+          <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.VehicleNumberEnabled && !hostSettings.VehicleNumberRequired">
+              <ion-label position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
               <ion-input type="text" placeholder="{{'ADD_APPOIN.STEP2.PH_VECHILE_NO' | translate}}" formControlName="vechile" [(ngModel)]="visitorInfoModal.vehicle_no"
-              ></ion-input>
+              [ngStyle]="{'border': hostSettings.VehicleNumberRequired ? '3px solid #cf3c4f': '3px solid #eee'}"></ion-input>
           </ion-item>
-          <ion-item no-lines transparent no-lines *ngIf="(visitorProfile.get('vechile').hasError('required') && visitorProfile.get('vechile').touched)">
-              <div class="error" *ngIf="visitorProfile.get('vechile').hasError('required') && visitorProfile.get('vechile').touched">
-                {{'ADD_VISITORS.ERROR.VECHILE_REQUIRED' | translate}}
-              </div>
-          </ion-item>
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.GenderEnabled && hostSettings.GenderRequired">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}</ion-label>
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.GenderEnabled && hostSettings.GenderRequired">
+            <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}</ion-label>
           <ion-select mode="ios" required [(ngModel)]="visitorInfoModal.visitor_gender" interface="action-sheet" placeholder="{{'COMMON.SELECT_GENDER' | translate}}"
-          formControlName="gender">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}</ion-label>
+          formControlName="gender" [ngStyle]="{'border': hostSettings.GenderRequired ? '3px solid #cf3c4f': '3px solid #eee'}">
+            <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}</ion-label>
             <ion-select-option *ngFor="let gender of GenderList" [value]="gender.value">{{gender.name}}</ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-item no-lines no-padding transparent *ngIf= "hostSettings && hostSettings.GenderEnabled && !hostSettings.GenderRequired">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}</ion-label>
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.GenderEnabled && !hostSettings.GenderRequired">
+            <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}</ion-label>
             <ion-select mode="ios" [(ngModel)]="visitorInfoModal.visitor_gender" interface="action-sheet" placeholder="{{'COMMON.SELECT_GENDER' | translate}}"
-          formControlName="gender">
-            <ion-label stacked>{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}</ion-label>
+          formControlName="gender" [ngStyle]="{'border': hostSettings.GenderRequired ? '3px solid #cf3c4f': '3px solid #eee'}">
+            <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}</ion-label>
             <ion-select-option *ngFor="let gender of GenderList" [value]="gender.value">{{gender.name}}</ion-select-option>
           </ion-select>
-        </ion-item>
-        <ion-item no-lines transparent no-lines *ngIf="(visitorProfile.get('gender').hasError('required') && visitorProfile.get('gender').touched)">
-            <div class="error" *ngIf="visitorProfile.get('gender').hasError('required') && visitorProfile.get('gender').touched">
-              {{'ADD_VISITORS.ERROR.GENDER_REQUIRED' | translate}}
-            </div>
         </ion-item>
 
-        <button *ngIf="!visitor" bottom right ion-button icon-right align-items-end round outline color="favorite"
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.AddressEnabled && hostSettings.AddressRequired">
+          <ion-label position="stacked">{{'ADD_APPOIN.STEP2.ADDRESS' | translate}}</ion-label>
+          <ion-input type="text" required placeholder="{{'ADD_APPOIN.STEP2.ENTER_ADDRESS' | translate}}" formControlName="address" [(ngModel)]="visitorInfoModal.visitor_address"
+          [ngStyle]="{'border': hostSettings.AddressRequired ? '3px solid #cf3c4f': '3px solid #eee'}"></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.AddressEnabled && !hostSettings.AddressRequired">
+            <ion-label position="stacked">{{'ADD_APPOIN.STEP2.ADDRESS' | translate}}</ion-label>
+            <ion-input type="text" placeholder="{{'ADD_APPOIN.STEP2.ENTER_ADDRESS' | translate}}" formControlName="address" [(ngModel)]="visitorInfoModal.visitor_address"
+            [ngStyle]="{'border': hostSettings.AddressRequired ? '3px solid #cf3c4f': '3px solid #eee'}"></ion-input>
+        </ion-item>
+
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.CountryEnabled && hostSettings.CountryRequired">
+          <ion-label position="stacked">{{'ADD_VISITORS.LAB_COUNTRY' | translate}}</ion-label>
+          <ion-select mode="ios" required [(ngModel)]="visitorInfoModal.visitor_country" interface="action-sheet" placeholder="{{'COMMON.SELECT_COUNTRY' | translate}}"
+        formControlName="country" [ngStyle]="{'border': hostSettings.CountryRequired ? '3px solid #cf3c4f': '3px solid #eee'}">
+          <ion-label position="stacked">{{'ADD_VISITORS.LAB_COUNTRY' | translate}}</ion-label>
+          <ion-select-option *ngFor="let country of countryList" [value]="country.name">{{country.name}}</ion-select-option>
+        </ion-select>
+        </ion-item>
+
+
+        <ion-item lines="none" class="ion-no-padding commonItem" no-padding transparent *ngIf= "hostSettings && hostSettings.CountryEnabled && !hostSettings.CountryRequired">
+          <ion-label position="stacked">{{'ADD_VISITORS.LAB_COUNTRY' | translate}}</ion-label>
+          <ion-select mode="ios" [(ngModel)]="visitorInfoModal.visitor_country" interface="action-sheet" placeholder="{{'COMMON.SELECT_COUNTRY' | translate}}"
+        formControlName="country" [ngStyle]="{'border': hostSettings.CountryRequired ? '3px solid #cf3c4f': '3px solid #eee'}">
+          <ion-label position="stacked">{{'ADD_VISITORS.LAB_COUNTRY' | translate}}</ion-label>
+          <ion-select-option *ngFor="let country of countryList" [value]="country.code">{{country.name}}</ion-select-option>
+        </ion-select>
+        </ion-item>
+
+        <ion-button *ngIf="!visitor" bottom right icon-right align-items-end shape="round" fill="outline" color="danger"
         style="margin-left: auto;margin-top:15px; display: block;"
         type="submit" [disabled]="visitorProfile.invalid">
-        <i start class="icon siva-icon-plus"> </i>{{'COMMON.ADD' | translate}}</button>
-        <button *ngIf="visitor" bottom right ion-button icon-right align-items-end round outline color="favorite"
+        <i start class="icon siva-icon-plus"> </i>{{'COMMON.ADD' | translate}}</ion-button>
+        <ion-button *ngIf="visitor" bottom right icon-right align-items-end shape="round" fill="outline" color="danger"
         style="margin-left: auto;margin-top:15px; display: block;"
         type="submit" [disabled]="visitorProfile.invalid">
-        {{'EDIT_VISITOR.UPDATE' | translate}}</button>
+        {{'EDIT_VISITOR.UPDATE' | translate}}</ion-button>
       </ion-col>
 
-      <!-- <ion-col align-self-end bottom-form col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6> -->
+      <!-- <ion-col align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6> -->
 
       <!-- </ion-col> -->
     </form>

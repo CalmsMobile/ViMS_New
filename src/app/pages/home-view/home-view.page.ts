@@ -3,7 +3,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { Firebase } from '@ionic-native/firebase/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { NavController, Platform, MenuController, NavParams, IonTabs } from '@ionic/angular';
+import { NavController, Platform, MenuController, IonTabs } from '@ionic/angular';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
@@ -17,12 +17,11 @@ export class HomeViewPage implements OnInit {
 
   @ViewChild("myTabs") myTabs: IonTabs;
   private firstLoaded: boolean = false;
-  tab1Root: any = 'UpcomingAppointmentPage';
-  tab3Root: any = 'AppointmentHistoryPage';
-  tab5Root: any = 'SettingsViewPage';
-  tab6Root: any = 'ManageAppointmentPage';
-  tab7Root: any = 'QuickPassDashBoardPage';
-  myIndex: number;
+  tab1Root: any = 'upcoming-appointment-page';
+  tab3Root: any = 'appointment-history';
+  tab5Root: any = 'settings-view-page';
+  tab6Root: any = 'manage-appointment';
+  tab7Root: any = 'quick-pass-dash-board-page';
   showTit = true;
 
   HOSTAPPT = AppSettings.LOGINTYPES.HOSTAPPT;
@@ -31,21 +30,21 @@ export class HomeViewPage implements OnInit {
 
 
   cntrls = [
-    // {"bg":"#E53935","title":"Home","icon":"siva-icon-home-3", "component":"HomeView"},
-    {"bg":"#512DA8","title":"Home", "root":"tab1Root" ,"icon":"siva-icon-calendar-3", "component":"UpcomingAppointmentPage"},
-    // {"bg":"#512DA8","title":"Create Appointment", "root":"tab2Root" ,"icon":"siva-icon-calendar-plus-o", "component":"AddAppointmentPage"},
-    {"bg":"#6A1B9A","title":"Appointment History","root":"tab3Root" ,"icon":"siva-icon-calendar-3", "component":"AppointmentHistoryPage"},
+    // {"bg":"#E53935","title":"Home","icon":"siva-icon-home-3", "component": "home-view"},
+    {"bg":"#512DA8","title":"Home", "root":"tab1Root" ,"icon":"siva-icon-calendar-3", "component":"upcoming-appointment-page"},
+    // {"bg":"#512DA8","title":"Create Appointment", "root":"tab2Root" ,"icon":"siva-icon-calendar-plus-o", "component":"add-appointment"},
+    {"bg":"#6A1B9A","title":"Appointment History","root":"tab3Root" ,"icon":"siva-icon-calendar-3", "component":"appointment-history"},
     // {"bg":"#455A64","title":"Manage Appointments","icon":"siva-icon-list-nested", "component":"ManageAppointmentView"},
     // {"bg":"#C2185B","title":"Manage Visitors","icon":"siva-icon-user-add-outline", "component":"ManageVisitors"},
-    // {"bg":"#388E3C","title":"Notification","root":"tab4Root" ,"icon":"siva-icon-bell-2", "component":"NotificationPage"},
-    // {"bg":"#AD1457","title":"Chat","icon":"siva-icon-chat-3", "component":"HomeView"},
-    // {"bg":"#424242","title":"Profile","icon":"siva-icon-user-outline", "component":"HomeView"},
-    {"bg":"#8E24AA","title":"Settings","root":"tab5Root" ,"icon":"siva-icon-sliders", "component":"SettingsViewPage"},
-    {"bg":"#8E24AA","title":"Admin","root":"tab6Root" ,"icon":"siva-icon-sliders", "component":"AdminLoginPage"}
+    // {"bg":"#388E3C","title":"Notification","root":"tab4Root" ,"icon":"siva-icon-bell-2", "component":"notifications"},
+    // {"bg":"#AD1457","title":"Chat","icon":"siva-icon-chat-3", "component": "home-view"},
+    // {"bg":"#424242","title":"Profile","icon":"siva-icon-user-outline", "component": "home-view"},
+    {"bg":"#8E24AA","title":"Settings","root":"tab5Root" ,"icon":"siva-icon-sliders", "component":"settings-view-page"},
+    {"bg":"#8E24AA","title":"Admin","root":"tab6Root" ,"icon":"siva-icon-sliders", "component":"admin-login"}
   ];
 
-  currentPage = "HomeView";
-  appType = AppSettings.LOGINTYPES.HOSTAPPT;
+  currentPage = "home-view";
+  appType = '';
   showFab = true;
   QRObj : any = {};
   isNotificationClicked = false;
@@ -58,8 +57,7 @@ export class HomeViewPage implements OnInit {
     public menu: MenuController,
     private router: Router,
     private statusBar: StatusBar,
-    public events: EventsService, public apiProvider: RestProvider, navParams: NavParams) {
-        this.myIndex = navParams.data.tabIndex || 0;
+    public events: EventsService, public apiProvider: RestProvider) {
         this.statusBar.backgroundColorByHexString(AppSettings.STATUS_BAR_COLOR);
         this.events.publishDataCompany({
           action: 'user:created',
@@ -73,28 +71,21 @@ export class HomeViewPage implements OnInit {
               console.log("position:"+ position);
               console.log("page:"+ page.component);
               switch(page.component){
-                case "HomeView":
-                  this.myIndex = 0;
+                case "home-view":
                   this.updateSettings();
                 break;
-                case "AppointmentHistoryPage":
-                  this.myIndex = 1;
+                case "appointment-history":
                 break;
-                case "SettingsViewPage":
-                  this.myIndex = 3;
+                case "settings-view-page":
                 break;
-                case "FacilityBookingHistoryPage":
-                  this.myIndex = 1;
+                case "facility-booking-history":
                 break;
-                case "ManageAppointmentPage":
-                  this.myIndex = 2;
+                case "manage-appointment":
                 break;
-                case "FacilityUpcomingPage":
-                  this.myIndex = 0;
+                case "facility-upcoming":
                   this.updateSettings();
                 break;
-                case "QuickPassDashBoardPage":
-                    this.myIndex = 4;
+                case "quick-pass-dash-board-page":
                   break;
               }
 
@@ -108,16 +99,16 @@ export class HomeViewPage implements OnInit {
               if(data){
                 this.currentPage = data;
                 switch(this.currentPage){
-                  case "Profile":
-                  case "AddAppointmentPage":
-                  case "AdminAppointmentDetailsPage":
+                  case "user-profile-page":
+                  case "add-appointment":
+                  case "admin-appointment-details":
                   case "Admin":
-                  case "AppointmentDetailsPage":
-                  case "FacilityBookingHistoryPage":
-                  case "CreateFacilityPage":
-                  case "HomeView1":
-                  case "CreateQuickPassPage":
-                  case "NotificationPage":
+                  case "appointment-details":
+                  case "facility-booking-history":
+                  case "facility-booking":
+                  case  "home-view1":
+                  case "create-quick-pass":
+                  case "notifications":
                     this.showFab = false;
                     break;
                   default:
@@ -169,10 +160,17 @@ export class HomeViewPage implements OnInit {
             break;
           case AppSettings.LOGINTYPES.FACILITY:
             this.GetHostAppSettings(AppSettings.LOGINTYPES.FACILITY);
-            this.tab1Root = 'FacilityUpcomingPage';
-            this.tab3Root = 'FacilityBookingHistoryPage';
-            this.tab5Root = 'SettingsViewPage';
-            this.tab6Root = 'ManageAppointmentPage';
+            this.tab1Root = 'facility-upcoming';
+            this.tab3Root = 'facility-booking-history';
+            this.tab5Root = 'settings-view-page';
+            this.tab6Root = 'manage-appointment';
+            var cClass = this;
+              this._zone.run(function() {
+                // cClass.myTabs._tabs[cClass.myIndex].btn.onClick();
+                setTimeout(() => {
+                  cClass.myTabs.select('facility-upcoming');
+                }, 1000);
+              });
             break;
           case AppSettings.LOGINTYPES.DISPLAYAPP:
 
@@ -181,12 +179,13 @@ export class HomeViewPage implements OnInit {
 
             break;
       }
+      // this.myTabs.select(this.tab1Root);
     }
   }
 
   createBooking(){
     var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    if(this.currentPage == "QuickPassDashBoardPage"){
+    if(this.currentPage == "quick-pass-dash-board-page"){
       this.router.navigateByUrl("create-quick-pass");
     }else if(qrInfo && JSON.parse(qrInfo) && JSON.parse(qrInfo).MAppId == AppSettings.LOGINTYPES.FACILITY){
       this.router.navigateByUrl("facility-booking");
@@ -202,14 +201,14 @@ export class HomeViewPage implements OnInit {
   ionViewWillEnter(){
     this.showFab = true;
 
-    if(this.currentPage == "QuickPassDashBoardPage"){
+    if(this.currentPage == "quick-pass-dash-board-page"){
       this.events.publishDataCompany({
         action: 'refreshQuickPass',
         title: '',
         message: ''
       });
     }else{
-      this.currentPage = "HomeView";
+      this.currentPage = "home-view";
     }
 
     // this.myTabs._tabs[this.myIndex].btn.onClick();
@@ -343,7 +342,7 @@ subscribeToPushNotifications() {
           });
           // let view = this.navCtrl.getActive();
         //alert("Cuent Page: " + this.currentPage);
-        if (crntClass.currentPage == "NotificationPage"){
+        if (crntClass.currentPage == "notifications"){
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "0");
         }else if (crntClass.currentPage != "Admin"){
           var noti = new Date();
@@ -408,7 +407,7 @@ subscribeToPushNotifications() {
              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS,JSON.stringify(val));
 
              try{
-                var hostSettings = result.Table2[0];
+                var hostSettings = result.Table1[0];
                 this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
               }catch(e){
               }

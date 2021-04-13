@@ -1,5 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -32,7 +31,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
 import { Firebase } from '@ionic-native/firebase/ngx';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { VimsFacilityDisplay } from './services/vims-facility-display';
 import { DateFormatPipe } from './pipes/custom/DateFormat';
 import { CustomPipe } from './pipes/custom/custom';
@@ -42,13 +41,15 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { MenuService } from './services/menu-service';
-import { SignaturePadModule } from 'angular2-signaturepad';
 import { NgCalendarModule  } from 'ionic2-calendar';
 import { AddAppointmentAlertPopupComponent } from './components/add-appointment-alert/add-appointment-alert-popup';
 import { CustomVisitorPopupComponent } from './components/custom-visitor-popup/custom-visitor-popup';
 import { IntroPageWizardComponent } from './components/intro-page-wizard/intro-page-wizard';
 import { QuickPassVisitorPopupComponent } from './components/quickpass-visitor-popup/quickpass-visitor-popup';
 import { UtilPopupWizardComponent } from './components/util-popup-wizard/util-popup-wizard';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { SignaturePadModule } from 'angular2-signaturepad';
+import { IonicGestureConfig } from './services/util/IonicGestureConfig';
 
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent,
@@ -57,10 +58,11 @@ import { UtilPopupWizardComponent } from './components/util-popup-wizard/util-po
   entryComponents: [],
   exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-  imports: [BrowserModule,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [ BrowserModule,
     HttpClientModule,
     LongPressModule,
+    CommonModule,
     SignaturePadModule,
     AppRoutingModule,
     NgCalendarModule,
@@ -81,6 +83,7 @@ import { UtilPopupWizardComponent } from './components/util-popup-wizard/util-po
     HttpClientModule,
     ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {provide: HAMMER_GESTURE_CONFIG, useClass: IonicGestureConfig},
     MenuService,
     BarcodeScanner,
     StatusBar,

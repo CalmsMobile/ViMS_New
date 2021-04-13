@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, ToastController, AlertController, NavParams } from '@ionic/angular';
+import { NavController, ToastController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { VisitorInfoModal } from 'src/app/model/visitorInfoModal';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -32,8 +32,7 @@ export class VisitorCompanyPagePage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public events: EventsService,
-    private alertCtrl : AlertController,
-    public navParams: NavParams) {
+    private alertCtrl : AlertController) {
       this.translate.get([
         'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
           this.T_SVC = t;
@@ -72,7 +71,7 @@ export class VisitorCompanyPagePage implements OnInit {
           this.loadingFinished = true;
           if(refresher){
             this.VM.companyList = JSON.parse(val.toString()).concat(this.VM.companyList);
-            refresher.complete();
+            refresher.target.complete();
            }else{
             this.VM.companyList = JSON.parse(val.toString());
            }
@@ -80,7 +79,7 @@ export class VisitorCompanyPagePage implements OnInit {
         async (err) => {
           this.loadingFinished = true;
           if(refresher){
-            refresher.complete();
+            refresher.target.complete();
            }else{
             this.VM.companyList = [];
 
@@ -106,7 +105,7 @@ export class VisitorCompanyPagePage implements OnInit {
 
     }else{
       if(refresher){
-        refresher.complete();
+        refresher.target.complete();
        }
     }
 
@@ -115,6 +114,11 @@ export class VisitorCompanyPagePage implements OnInit {
 
   goToAddVisitorCompany(){
     this.router.navigateByUrl("add-visitor-company");
+  }
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
   }
 
   addVisitors(){
@@ -139,6 +143,7 @@ export class VisitorCompanyPagePage implements OnInit {
             let toast = await this.toastCtrl.create({
               message: this.translation['ADD_VISITORS.SUCCESS.ADD_VISITOR_COMPANY_SUCCESS'],
               duration: 3000,
+              color: 'primary',
               position: 'bottom'
             });
             toast.present();
@@ -151,6 +156,7 @@ export class VisitorCompanyPagePage implements OnInit {
         let toast = await this.toastCtrl.create({
           message: this.translation['USER_PROFILE.ERROR.SERVER_ERROR'],
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -203,7 +209,7 @@ export class VisitorCompanyPagePage implements OnInit {
     }
 
     this.getVisitorsCompanyBySearch(false, refresher);
-    //setTimeout(()=>{refresher.complete();},2000)
+    //setTimeout(()=>{refresher.target.complete();},2000)
   }
 
   addVisitorsCompany(){

@@ -1,7 +1,7 @@
 .booking-detail {
   background-color: #f7f7f7;
   .stable {
-    color: theme-colors("textColors", "secondary");
+    color: #8e8e93;
   }
   .pending-info .row .col * {
     margin: 2px 0px;
@@ -10,14 +10,22 @@
     margin: 0px !important;
   }
   [theme-text-color] {
-    color: theme-colors("textColors", "accent") !important;
+    color: #ff515a !important;
   }
+}
+
+.iconiconClass {
+  border: 1px solid black;
+  border-radius: 50%;
+  padding: 7px;
+  margin-left: 4px;
 }
 
 img {
   max-width: 62px;
   max-height: 62px;
   display: inline;
+  padding: 10px;
 }
 .modal-wrapper {
   border-radius: 7px;

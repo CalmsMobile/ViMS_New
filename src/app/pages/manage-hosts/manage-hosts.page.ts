@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, NavParams, AlertController, IonList } from '@ionic/angular';
+import { NavController, AlertController, IonList } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -33,7 +33,7 @@ export class ManageHostsPage implements OnInit {
 
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     public apiProvider: RestProvider,
     private events: EventsService,
@@ -100,7 +100,7 @@ export class ManageHostsPage implements OnInit {
     var visitorTemp = [];
     for(let contacts in this.VM.visitors){
       for(let visitors in this.VM.visitors[contacts].contacts){
-        if(this.VM.visitors[contacts].contacts[visitors]["checked"]){
+        if(this.VM.visitors[contacts].contacts[visitors]["isChecked"]){
           visitorTemp.push(this.VM.visitors[contacts].contacts[visitors]);
         }
       }
@@ -136,9 +136,15 @@ export class ManageHostsPage implements OnInit {
     this.VM.visitors = [];
   }
 
-  getVisitorsBySearch(typing, refresher){
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
+
+  getVisitorsBySearch(queryText, typing, refresher){
     if(typing){
       this.OffSet = 0;
+      this.VM.queryText = queryText;
     }
     // this.VM.host_search_id = "adam";
     if(this.VM.queryText.length >= 3){
@@ -153,7 +159,7 @@ export class ManageHostsPage implements OnInit {
 
         //  for(let contacts in this.contactsArray){
         //   for(let visitors in this.contactsArray[contacts].contacts){
-        //     if(this.contactsArray[contacts].contacts[visitors]["checked"]){
+        //     if(this.contactsArray[contacts].contacts[visitors]["isChecked"]){
         //       this.tempContactArray.push(this.contactsArray[contacts].contacts[visitors]);
         //     }
         //   }
@@ -161,9 +167,10 @@ export class ManageHostsPage implements OnInit {
 
 
          for(let items in this.VM.searchContactsArray){
+          this.VM.searchContactsArray[items].isChecked = false;
           for(let olditems in this.visitors1){
             if(this.visitors1[olditems].SEQID == this.VM.searchContactsArray[items].SEQID){
-              this.VM.searchContactsArray[items].checked = true;
+              this.VM.searchContactsArray[items].isChecked = true;
               break;
             }
           }
@@ -179,7 +186,7 @@ export class ManageHostsPage implements OnInit {
 
          if(refresher){
           this.VM.visitors = result.concat(this.VM.visitors);
-          refresher.complete();
+          refresher.target.complete();
          }else{
           this.VM.visitors = result;
          }
@@ -187,7 +194,7 @@ export class ManageHostsPage implements OnInit {
        },
        async (err) => {
          if(refresher){
-          refresher.complete();
+          refresher.target.complete();
          }else{
           this.VM.visitors = [];
          }
@@ -217,7 +224,7 @@ export class ManageHostsPage implements OnInit {
      );
     }else{
       if(refresher){
-        refresher.complete();
+        refresher.target.complete();
        }
     }
 
@@ -228,7 +235,7 @@ export class ManageHostsPage implements OnInit {
     this.isAnyoneSelected = false;
     for(let contacts in this.VM.visitors){
       for(let visitors in this.VM.visitors[contacts].contacts){
-        if(this.VM.visitors[contacts].contacts[visitors]["checked"]){
+        if(this.VM.visitors[contacts].contacts[visitors]["isChecked"]){
           this.isAnyoneSelected = true;
           return;
         }
@@ -240,8 +247,8 @@ export class ManageHostsPage implements OnInit {
   doRefresh(refresher) {
 
     this.OffSet = this.VM.searchContactsArray.length;
-    this.getVisitorsBySearch(false, refresher);
-    //setTimeout(()=>{refresher.complete();},2000)
+    this.getVisitorsBySearch('', false, refresher);
+    //setTimeout(()=>{refresher.target.complete();},2000)
   }
 
   ngOnInit() {

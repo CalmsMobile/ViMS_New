@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { NavController, AlertController, NavParams } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -21,13 +21,13 @@ export class UpcomingAppointmentPagePage implements OnInit {
   notificationCount = 0;
   T_SVC:any;
   loadingFinished = true;
-  isAdmin = false;
+  isAdmin = true;
   constructor(public navCtrl: NavController,
     private events : EventsService,
     private router: Router,
     private translate : TranslateService,
     // public menu: MenuController,
-    private alertCtrl: AlertController, public apiProvider: RestProvider, public navParams: NavParams) {
+    private alertCtrl: AlertController, public apiProvider: RestProvider) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
         this.T_SVC = t;
@@ -47,25 +47,9 @@ export class UpcomingAppointmentPagePage implements OnInit {
   }
 
   ionViewWillEnter() {
-
-    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-    var qrCode = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    try{
-      var qrCodeObj = JSON.parse(qrCode);
-      var settingsObj = JSON.parse(settings);
-      if(settings && qrCodeObj && settingsObj){
-        if(qrCodeObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-          this.isAdmin = (settingsObj.Table4.length>0);
-        }else if(qrCodeObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
-          this.isAdmin = (settingsObj.Table3.length>0);
-        }
-      }
-    }catch(e){
-      console.log("Error in setting Admin", e);
-    }
     this.events.publishDataCompany({
       action: "page",
-      title:  "HomeView",
+      title:   "home-view",
       message: ''
     });
     this.showNotificationCount();
@@ -79,7 +63,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
   ionViewWillLeave(){
     this.events.publishDataCompany({
       action: "page",
-      title: "HomeView1",
+      title: "home-view1",
       message: ''
     });
   }
@@ -135,7 +119,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
           month = "0"+ (cDatee.getMonth()+1);
         }
         date = ""+ cDatee.getDate();
-        if(cDatee.getDate()+1 < 10){
+        if(cDatee.getDate() < 10){
           date = "0"+ cDatee.getDate();
         }
         let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
@@ -151,7 +135,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
           month = "0"+ (cDatee.getMonth()+1);
         }
         date = ""+ cDatee.getDate();
-        if(cDatee.getDate()+1 < 10){
+        if(cDatee.getDate() < 10){
           date = "0"+ cDatee.getDate();
         }
         let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
@@ -172,7 +156,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
 	doRefresh(refresher) {
     // this.OffSet = this.OffSet + 20;
     this.getAppointmentHistory(refresher);
-    //setTimeout(()=>{refresher.complete();},2000)
+    //setTimeout(()=>{refresher.target.complete();},2000)
 	}
 
 	getAppointmentHistory(refresher){
@@ -194,7 +178,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
 					if(refresher ){
             // this.appointments = aList.concat(this.appointments);
             this.appointments = aList;
-						refresher.complete();
+						refresher.target.complete();
 					}else{
 						this.appointments = aList;
 					}
@@ -217,7 +201,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
 				async (err) => {
           this.loadingFinished = true;
           if(refresher ){
-            refresher.complete();
+            refresher.target.complete();
           }
           if(err && err.message == "No Internet"){
             return;
@@ -305,7 +289,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
   }
 
   takeActionForScan(page){
-    if(page.component == "AddAppointmentPage"){
+    if(page.component == "add-appointment"){
       this.router.navigateByUrl(page.component);
     }else{
       this.router.navigateByUrl(page.component);

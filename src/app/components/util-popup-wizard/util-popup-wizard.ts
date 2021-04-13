@@ -28,7 +28,7 @@ export class UtilPopupWizardComponent {
     }
   }
   constructor(params: NavParams, public viewCtrl: ModalController) {
-    this.pop_type = params.get('pop_type');
+    this.pop_type = params.data.data.pop_type;
     if(this.pop_type != "common"){
       this.pop_data = this.pop_types[this.pop_type];
     }

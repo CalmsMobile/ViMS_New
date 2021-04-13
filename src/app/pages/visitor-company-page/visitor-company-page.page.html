@@ -6,15 +6,16 @@
 -->
 <ion-header>
 
-  <ion-toolbar>
+  <ion-toolbar color="danger">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
       <ion-title>{{'VISITORS_COMPANY.TITLE' | translate}}</ion-title>
       <ion-buttons *ngIf= "false" end>
-          <button ion-button icon-only (click)="goToAddVisitorCompany()">
+          <ion-button slot="icon-only" (click)="goToAddVisitorCompany()">
             <ion-icon name="add"></ion-icon>
-          </button>
+          </ion-button>
       </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar color="favorite">
+  <ion-toolbar color="danger">
       <ion-searchbar [(ngModel)]="VM.queryText"
       placeholder="{{'VISITORS_COMPANY.SEARCH_COMPANY' | translate}}" (ionChange)="getVisitorsCompanyBySearch(true, null)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
           <!-- (ionChange)="updateSchedule()" -->
@@ -23,27 +24,28 @@
 </ion-header>
 
 
-<ion-content padding>
-      <ion-refresher (ionRefresh)="doRefresh($event)">
+<ion-content class="ion-padding">
+      <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
           <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
-      <button *ngIf="(VM.companyList.length == 0 && VM.queryText.length > 2)" ion-button full (click)="addVisitors()">ADD</button>
-      <ion-list radio-group *ngFor="let company of VM.companyList" [(ngModel)]="relationship">
+      <ion-button *ngIf="(VM.companyList.length == 0 && VM.queryText.length > 2)" expand="full" (click)="addVisitors()">ADD</ion-button>
+      <ion-radio-group *ngFor="let company of VM.companyList"
+      (ionChange)="selectCompany(company)" [(ngModel)]="relationship">
           <ion-item>
             <ion-label>{{company.visitor_comp_name}}</ion-label>
-            <ion-radio value="{{company.visitor_comp_code}}" (ionSelect)="selectCompany(company)"></ion-radio>
+            <ion-radio value="{{company.visitor_comp_code}}"></ion-radio>
           </ion-item>
-        </ion-list>
+        </ion-radio-group>
 
 </ion-content>
 
 <ion-footer >
     <ion-toolbar (click)="addVisitorsCompany()" *ngIf= "done">
       <!-- <ion-title>{{'VISITORS_COMPANY.DONE' | translate}}</ion-title> -->
-      <ion-buttons end>
-          <button ion-button> {{'VISITORS_COMPANY.DONE' | translate}}
+      <ion-buttons slot="end">
+          <ion-button> {{'VISITORS_COMPANY.DONE' | translate}}
             <!-- <ion-icon name="checkmark"></ion-icon> -->
-          </button>
+          </ion-button>
         </ion-buttons>
     </ion-toolbar>
   </ion-footer>

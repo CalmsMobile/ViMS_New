@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import { NavController, AlertController, Platform, NavParams } from '@ionic/angular';
+import { NavController, AlertController, Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -26,8 +26,7 @@ export class NotiificationViewPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private translate:TranslateService,
-    private events : EventsService,
-    public navParams: NavParams) {
+    private events : EventsService) {
       this.route.queryParams.subscribe(params => {
         if (this.router.getCurrentNavigation().extras.state) {
           const passData = this.router.getCurrentNavigation().extras.state.passData;
@@ -51,7 +50,7 @@ export class NotiificationViewPage implements OnInit {
   ionViewWillEnter(){
 		this.events.publishDataCompany({
       action:"page",
-      title:  "NotificationPage",
+      title:  "notifications",
       message: ''
     });
 	}
@@ -113,6 +112,11 @@ export class NotiificationViewPage implements OnInit {
       }
     );
   }
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+   }
 
   ngOnInit() {
   }

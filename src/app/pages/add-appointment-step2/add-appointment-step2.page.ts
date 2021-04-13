@@ -1,8 +1,7 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NavController, NavParams, AlertController, ToastController, ModalController } from '@ionic/angular';
+import { NavController, AlertController, ToastController, ModalController, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AddAppointmentAlertPopupComponent } from 'src/app/components/add-appointment-alert/add-appointment-alert-popup';
 import { AddAppointmentModel } from 'src/app/model/addAppointmentModel';
@@ -17,7 +16,7 @@ import { EventsService } from 'src/app/services/EventsService';
 })
 export class AddAppointmentStep2Page implements OnInit {
 
-  @ViewChild (Content) content:Content;
+  @ViewChild (IonContent) content:IonContent;
 
   addAppointmentModel = new AddAppointmentModel();
   START_TIME = "PM";
@@ -58,7 +57,7 @@ export class AddAppointmentStep2Page implements OnInit {
   QRObj :any = {
 
   }
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
     public events: EventsService,
@@ -90,18 +89,20 @@ export class AddAppointmentStep2Page implements OnInit {
         try{
           if(this.QRObj && this.QRObj.MAppId){
             if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-              var sett = JSON.parse(settings).Table3;
+              var sett = JSON.parse(settings).Table1;
               if(sett && sett.length > 0){
                 this.hostSettings = sett[0];
+                this.hostSettings.available = true;
                 this.hostSettings.isFacility = true;
               }else{
                 this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
               }
 
             }else{
-              sett = JSON.parse(settings).Table2;
+              sett = JSON.parse(settings).Table1;
               if(sett && sett.length > 0){
                 this.hostSettings = sett[0];
+                this.hostSettings.available = true;
                 this.hostSettings.isFacility = false;
               }else{
                 this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
@@ -162,7 +163,9 @@ export class AddAppointmentStep2Page implements OnInit {
 
                 this.onedit = true;
               }else{
-                this.addAppointmentModel.REASON = data.appointment[0].REASON;
+                setTimeout(() => {
+                  this.addAppointmentModel.REASON = data.appointment[0].REASON;
+                }, 1000);
                 // this.PurposeCode = data.appointment[0].PurposeCode;
               }
             }
@@ -199,6 +202,7 @@ export class AddAppointmentStep2Page implements OnInit {
     let toast = await this.toastCtrl.create({
       message: message1,
       duration: 3000,
+      color: 'primary',
       position: 'bottom'
     });
     toast.present();
@@ -262,19 +266,29 @@ export class AddAppointmentStep2Page implements OnInit {
     );
   }
 
-  onChangePurpose(purposeItem){
-    console.log(""+ purposeItem);
-    this.PurposeCode = purposeItem.PurposeCode;
-    this.addAppointmentModel.REASON = purposeItem.PurposeName;
+  onChangePurpose(PurposeCode){
+    console.log(""+ PurposeCode);
+    this.PurposeCode = PurposeCode;
+    this.VM.FACILITYPURPOSELIST.forEach(element => {
+      if (element.PurposeCode === PurposeCode) {
+        this.addAppointmentModel.REASON = element.PurposeName;
+      }
+    });
+
   }
 
-  onChangeFacility(facilityItem){
-    console.log(""+ facilityItem);
-    this.FacilityCode = facilityItem.FacilityCode;
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
+
+  onChangeFacility(FacilityCode){
+    console.log(""+ FacilityCode);
+    this.FacilityCode = FacilityCode;
 
     const navigationExtras: NavigationExtras = {
       state: {
-        passData: { "FacilityCode": facilityItem.FacilityCode,
+        passData: { "FacilityCode": FacilityCode,
         "START_DATE":this.addAppointmentModel.START_DATE,
         "END_DATE":this.addAppointmentModel.END_DATE,
         "facility": this.VM.facility,
@@ -453,7 +467,7 @@ export class AddAppointmentStep2Page implements OnInit {
       for(var i1 = 0; i1 < this.visitorsArray.length ; i1++){
         var item = this.visitorsArray[i1];
         delete item.visitor_RemoveImg;
-        delete item.checked;
+        delete item.isChecked;
       }
     }
     var params = {
@@ -527,6 +541,7 @@ export class AddAppointmentStep2Page implements OnInit {
           let toast = await this.toastCtrl.create({
             message: this.T_SVC['ALERT_TEXT.ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS'],
             duration: 3000,
+            color: 'primary',
             position: 'bottom'
           });
           toast.present();
@@ -585,6 +600,7 @@ export class AddAppointmentStep2Page implements OnInit {
         let toast = await this.toastCtrl.create({
           message: this.T_SVC['ALERT_TEXT.ALERT_TEXT.SELECT_PURPOSE'],
           duration: 3000,
+          color: 'primary',
           cssClass: 'alert-danger',
           position: 'bottom'
         });
@@ -714,6 +730,7 @@ export class AddAppointmentStep2Page implements OnInit {
           let toast = await this.toastCtrl.create({
             message: this.T_SVC['ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS'],
             duration: 3000,
+            color: 'primary',
             cssClass: 'alert-danger',
             position: 'bottom'
           });
@@ -724,10 +741,14 @@ export class AddAppointmentStep2Page implements OnInit {
             message: messageArray
           });
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-          this.navCtrl.navigateRoot('Home').then((data)=>{
+          this.navCtrl.navigateRoot('home-view').then((data)=>{
             var page = {
-              component :"FacilityBookingHistoryPage"
+              component :"appointment-history"
             }
+            if(this.QRObj.MAppId == AppSettings.LOGINTYPES.FACILITY){
+              page.component = 'facility-booking-history';
+            }
+
             this.events.publishDataCompany({
               action:'ChangeTab',
               title: page,
@@ -741,6 +762,7 @@ export class AddAppointmentStep2Page implements OnInit {
       let toast = await this.toastCtrl.create({
         message: 'Server Error',
         duration: 3000,
+        color: 'primary',
         cssClass: 'alert-danger',
         position: 'bottom'
       });

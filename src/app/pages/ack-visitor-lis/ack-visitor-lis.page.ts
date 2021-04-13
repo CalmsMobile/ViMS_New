@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner/ngx';
 import { StreamingMedia, StreamingVideoOptions } from '@ionic-native/streaming-media/ngx';
-import { NavController, AlertController, Platform, NavParams, IonItemSliding } from '@ionic/angular';
+import { NavController, AlertController, Platform, IonItemSliding } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -36,8 +36,8 @@ export class AckVisitorLisPage implements OnInit {
     private translate:TranslateService,
     private streamingMedia : StreamingMedia,
     private barcodeScanner: BarcodeScanner,
-    private platform : Platform,
-    public navParams: NavParams) {
+    private platform : Platform
+    ) {
 
       this.route.queryParams.subscribe(params => {
         if (this.router.getCurrentNavigation().extras.state) {

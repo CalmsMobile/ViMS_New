@@ -7,7 +7,7 @@ import { File } from '@ionic-native/file/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from '../../providers/rest/rest';
-import { ToastController, Platform, ActionSheetController, AlertController, LoadingController, NavParams, ModalController } from '@ionic/angular';
+import { ToastController, Platform, ActionSheetController, AlertController, LoadingController, ModalController, NavParams } from '@ionic/angular';
 
 /**
  * Generated class for the QuickPassVisitorPopupComponent component.
@@ -56,11 +56,11 @@ export class QuickPassVisitorPopupComponent {
         this.T_SVC = t;
       });
 
-      var QPAppointment = navParams.get("QPAppointment");
+      var QPAppointment = navParams.data.data.QPAppointment;
       if(QPAppointment){
         this.QPAppointment = JSON.parse(QPAppointment);
       }
-      this.CheckIn = navParams.get("CheckIn");
+      this.CheckIn = navParams.data.data.CheckIn;
 
       this.qrCodeString = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=' + this.QPAppointment["HexCode"] + '&RefType=QR&Refresh='+ new Date().getTime();
 
@@ -76,7 +76,7 @@ export class QuickPassVisitorPopupComponent {
           var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
           if(settings && JSON.parse(settings)){
               try{
-                  var hostSettings = JSON.parse(settings).Table2[0];
+                  var hostSettings = JSON.parse(settings).Table1[0];
                   var QPData = JSON.parse(hostSettings.QuickPassSettings);
                   if(QPData){
                     this.securitySettings.QuickPass = {
@@ -193,6 +193,7 @@ private async presentToast(text) {
   let toast = await this.toastCtrl.create({
     message: text,
     duration: 3000,
+    color: 'primary',
     position: 'bottom'
   });
   toast.present();
@@ -336,6 +337,7 @@ private async presentToast(text) {
                       let toast = await this.toastCtrl.create({
                         message: 'Error',
                         duration: 3000,
+                        color: 'primary',
                         position: 'bottom'
                       });
                       toast.present();
@@ -347,6 +349,7 @@ private async presentToast(text) {
                     let toast = await this.toastCtrl.create({
                       message: 'Download Error',
                       duration: 3000,
+                      color: 'primary',
                       position: 'bottom'
                     });
                     toast.present();

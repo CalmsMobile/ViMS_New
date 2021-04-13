@@ -1,7 +1,7 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { BarcodeScannerOptions, BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
-import { NavController, Platform, AlertController, ModalController, ToastController, NavParams } from '@ionic/angular';
+import { NavController, Platform, AlertController, ModalController, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -83,8 +83,7 @@ export class SecurityDashBoardPagePage implements OnInit {
     private toastCtrl1 : ToastService,
     private dateformat : DateFormatPipe,
     private events : EventsService,
-    private _zone : NgZone,
-    public navParams: NavParams) {
+    private _zone : NgZone) {
 
       this.translate.get(['ACC_MAPPING.INVALID_QR', 'ACC_MAPPING.INVALID_ORG_TITLE',
       'ACC_MAPPING.INVALID_FCM_TITLE',
@@ -1121,7 +1120,7 @@ export class SecurityDashBoardPagePage implements OnInit {
      'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
     ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
       let loginConfirm = await this.alertCtrl.create({
-        header: "<span class='failed'>" + t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'] + '</span>',
+        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
         message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
         cssClass: 'alert-warning',
         buttons: [

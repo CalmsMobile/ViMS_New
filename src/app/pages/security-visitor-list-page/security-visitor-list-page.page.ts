@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { BarcodeScannerOptions, BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
-import { NavController, Platform, AlertController, LoadingController, ToastController, NavParams, IonItemSliding } from '@ionic/angular';
+import { NavController, Platform, AlertController, LoadingController, ToastController, IonItemSliding } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -53,8 +53,7 @@ export class SecurityVisitorListPagePage implements OnInit {
     private router: Router,
     private events : EventsService,
     private translate : TranslateService,
-    public sanitizer: DomSanitizer,
-    public navParams: NavParams) {
+    public sanitizer: DomSanitizer) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'ALERT_TEXT.VISITOR_CHECKED_IN',
@@ -226,6 +225,7 @@ export class SecurityVisitorListPagePage implements OnInit {
     let toast = this.toastCtrl.create({
       message: text,
       duration: 3000,
+      color: 'primary',
       position: 'top'
     });
     (await toast).present();
@@ -342,10 +342,14 @@ export class SecurityVisitorListPagePage implements OnInit {
     );
   }
 
-  onChangeHost(hostData){
-    this.host_name = hostData.HOSTNAME;
-    this.hostIc = hostData.HOSTIC;
-    console.log("Selected Host : " + JSON.stringify(hostData));
+  onChangeHost(HOSTIC){
+    this.hostIc = HOSTIC;
+    this.HostList.forEach(element => {
+      if (element.HOSTIC === HOSTIC) {
+        this.host_name = element.HOSTNAME;
+        console.log("Selected Host : " + JSON.stringify(element));
+      }
+    });
   }
 
   async proceedNext(){
@@ -354,6 +358,7 @@ export class SecurityVisitorListPagePage implements OnInit {
       let toast = await this.toastCtrl.create({
         message: this.T_SVC['ADD_APPOIN.NO_VISITROS'],
         duration: 3000,
+        color: 'primary',
         cssClass: 'alert-danger',
         position: 'bottom'
       });
@@ -365,6 +370,7 @@ export class SecurityVisitorListPagePage implements OnInit {
       let toast = await this.toastCtrl.create({
         message: this.T_SVC['ALERT_TEXT.SELECT_STAFF'],
         duration: 3000,
+        color: 'primary',
         cssClass: 'alert-danger',
         position: 'bottom'
       });
@@ -376,6 +382,7 @@ export class SecurityVisitorListPagePage implements OnInit {
       let toast = await this.toastCtrl.create({
         message: this.T_SVC['ALERT_TEXT.ALERT_TEXT.SELECT_PURPOSE'],
         duration: 3000,
+        color: 'primary',
         cssClass: 'alert-danger',
         position: 'bottom'
       });
@@ -407,6 +414,7 @@ export class SecurityVisitorListPagePage implements OnInit {
           let toast = await this.toastCtrl.create({
             message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKED_IN'],
             duration: 3000,
+            color: 'primary',
             position: 'bottom'
           });
           toast.present();
@@ -416,6 +424,7 @@ export class SecurityVisitorListPagePage implements OnInit {
         let toast = await this.toastCtrl.create({
           message: 'Server Error',
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();

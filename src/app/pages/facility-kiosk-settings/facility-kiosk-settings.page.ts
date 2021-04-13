@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Device } from '@ionic-native/device/ngx';
-import { NavController, MenuController, NavParams, AlertController } from '@ionic/angular';
+import { NavController, MenuController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -22,7 +22,7 @@ export class FacilityKioskSettingsPage implements OnInit {
   constructor(
     public navCtrl: NavController,
     private menuCtrl: MenuController,
-    public navParams: NavParams,
+
     private device: Device,
     private toastCtrl : ToastService,
     private alertCtrl : AlertController,
@@ -67,7 +67,7 @@ export class FacilityKioskSettingsPage implements OnInit {
      'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
     ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
       let loginConfirm = await this.alertCtrl.create({
-        header: "<span class='failed'>" + t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'] + '</span>',
+        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
         message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
         cssClass: 'alert-warning',
         buttons: [

@@ -1,7 +1,6 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NavController, NavParams, ToastController, AlertController, LoadingController } from '@ionic/angular';
+import { NavController, ToastController, AlertController, LoadingController, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { ToastService } from 'src/app/services/util/Toast.service';
@@ -13,7 +12,7 @@ import { ToastService } from 'src/app/services/util/Toast.service';
 })
 export class AddVisitorCompanyPage implements OnInit {
 
-  @ViewChild(Content) content: Content;
+  @ViewChild(IonContent) content: IonContent;
   active: boolean;
   T_SVC:any;
   data: any = {
@@ -40,7 +39,7 @@ export class AddVisitorCompanyPage implements OnInit {
 
 
   constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+
     public toastService: ToastService,
     private toastCtrl: ToastController,
     private translate:TranslateService,
@@ -96,6 +95,7 @@ export class AddVisitorCompanyPage implements OnInit {
             let toast = await this.toastCtrl.create({
               message: this.translation['ADD_VISITORS.SUCCESS.ADD_VISITOR_COMPANY_SUCCESS'],
               duration: 3000,
+              color: 'primary',
               position: 'bottom'
             });
             toast.present();
@@ -105,6 +105,7 @@ export class AddVisitorCompanyPage implements OnInit {
         let toast = await this.toastCtrl.create({
           message: this.translation['USER_PROFILE.ERROR.SERVER_ERROR'],
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -156,7 +157,7 @@ export class AddVisitorCompanyPage implements OnInit {
   subscribeToIonScroll() {
     if (this.content && this.content['ionScroll']) {
         this.content['ionScroll'].subscribe((d) => {
-            if (d.scrollTop < 80 ) {
+            if (d['scrollTop'] < 80 ) {
                 this.active = false;
                 return;
             }

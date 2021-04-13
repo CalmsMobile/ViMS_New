@@ -11,6 +11,8 @@ export class VisitorInfoModal
     visitor_comp_name: any = "";
     visitor_comp_name1: any = "";
     visitor_gender: any = "";
+    visitor_country: any = "";
+    visitor_address: any = "";
     visitor_mobile_no: any = "";
     vehicle_no:any = "";
     VisitorBookingSeqId:any = "";

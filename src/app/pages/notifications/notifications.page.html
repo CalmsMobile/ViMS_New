@@ -1,27 +1,20 @@
 <ion-header>
-  <ion-toolbar>
-
+  <ion-toolbar color="danger">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>{{'NOTIFICATION.TITLE' | translate}}</ion-title>
-
   </ion-toolbar>
 
 
-  <ion-segment color="danger" *ngIf= "selectedTap == 'general'" [(ngModel)]="selectedTap">
-      <ion-segment-button value="general" (click)= "showNotification('general')" style="    color: white;background-color: #f53d3d;">
+  <ion-toolbar color="danger" mode="ios">
+    <ion-segment [(ngModel)]="selectedTap"  mode="ios">
+      <ion-segment-button value="general" (click)= "showNotification('general')">
         General
       </ion-segment-button>
       <ion-segment-button value="in" (click)= "showNotification('in')" >
         Visitor
       </ion-segment-button>
     </ion-segment>
-    <ion-segment color="danger" *ngIf= "selectedTap == 'in'" [(ngModel)]="selectedTap">
-        <ion-segment-button value="general" (click)= "showNotification('general')" >
-          General
-        </ion-segment-button>
-        <ion-segment-button value="in" (click)= "showNotification('in')" style="color: white;background-color: #f53d3d;">
-          Visitor
-        </ion-segment-button>
-      </ion-segment>
+  </ion-toolbar>
   <!-- <ion-toolbar >
 
     <ion-searchbar [(ngModel)]="queryText" (ionInput)="filterTechnologies($event.target.value)" placeholder="Search">
@@ -32,12 +25,14 @@
 
 <ion-content>
 
-    <ion-searchbar *ngIf= "(selectedTap == 'general' && (queryText || (VM.searchGeneralNotificationList && VM.searchGeneralNotificationList.length > 0)))" [(ngModel)]="queryText" (ionInput)="filterTechnologies()" placeholder="Search">
+    <ion-searchbar  mode="ios" *ngIf= "(selectedTap == 'general')" (ionChange)="filterTechnologies($event.target.value)"
+      color="light" placeholder="search" animated>
         <!-- (ionChange)="updateSchedule()" -->
     </ion-searchbar>
 
 
-    <ion-searchbar *ngIf= "(selectedTap == 'in'  && (queryText || ( VM.searchInNotificationList && VM.searchInNotificationList.length > 0)))" [(ngModel)]="queryText" (ionInput)="filterTechnologies()" placeholder="Search">
+    <ion-searchbar  mode="ios" *ngIf= "(selectedTap == 'in')" (ionChange)="filterTechnologies($event.target.value)"
+      color="light" placeholder="search" animated>
       <!-- (ionChange)="updateSchedule()" -->
     </ion-searchbar>
 
@@ -47,7 +42,7 @@
         <ion-item>
         </ion-item>
       </ion-list> -->
-      <ion-refresher (ionRefresh)="doRefresh($event)">
+      <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
@@ -57,13 +52,13 @@
             <ion-item-sliding #slideDOM class="mySlidingItem"  (ionDrag)="ondrag($event, slideDOM, notification)">
 
               <!-- <ion-item-divider style="padding:0px"> -->
-              <ion-item [ngClass]="{'myItemRead': (notification.IsRead === true || notification.IsRead === 'true'), 'myItem':(notification.IsRead === false || notification.IsRead === 'false')}" (click)= "viewNotification(notification)">
+              <ion-item lines="none" [ngClass]="{'myItemRead': (notification.IsRead === true || notification.IsRead === 'true'), 'myItem':(notification.IsRead === false || notification.IsRead === 'false')}" (click)= "viewNotification(notification)">
                   <!-- <ion-item-divider> -->
-                  <!-- <ion-avatar item-start> -->
-                      <img item-start class="animated fadeInDown delay-1s" onError="this.src='../../assets/images/user.png';" [src]="(notification.IsRead == true || notification.IsRead == 'true') ? '../../assets/images/read.png' : '../../assets/images/unread.png'">
+                  <!-- <ion-avatar slot="start"> -->
+                  <img slot="start" class="animated fadeInDown delay-1s" onError="this.src='../../assets/images/user.png';" [src]="(notification.IsRead == true || notification.IsRead == 'true') ? '../../assets/images/read.png' : '../../assets/images/unread.png'">
                   <!-- </ion-avatar> -->
                   <div item-text-wrap [innerHTML]="notification.HtmlContent.trim()" text-wrap class="myText"></div>
-                  <div item-right style="margin: 0px;">
+                  <div slot="end" style="margin: 0px;">
                     <p style="
                     font-size: 14px;"><b>{{notification.CreatedOn | date : 'dd'}} {{notification.CreatedOn | date : 'MMM'}}</b></p>
                     <p style="
@@ -71,10 +66,10 @@
                   </div>
 
               </ion-item>
-              <ion-item-options no-border no-lines side="right">
-                <!-- <button ion-button icon-only color="danger" outline no-border (click)="deleteNotification(slideDOM, notification)">
+              <ion-item-options no-border no-lines side="end">
+                <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="deleteNotification(slideDOM, notification)">
                   <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
-                </button> -->
+                </ion-button> -->
               </ion-item-options>
           </ion-item-sliding>
         </ion-card>
@@ -84,11 +79,11 @@
           <ion-card [ngClass]="{'readCard': (notification.IsRead == true || notification.IsRead == 'true'), 'unReadCard':(notification.IsRead == false || notification.IsRead == 'false')}" *ngFor="let notification of VM.searchInNotificationList">
           <ion-item-sliding #slideDOM class="mySlidingItem" (ionDrag)="ondrag($event, slideDOM, notification)">
 
-            <ion-item [ngClass]="{'myItemRead': (notification.IsRead === true || notification.IsRead === 'true'), 'myItem':(notification.IsRead === false || notification.IsRead === 'false')}" (click)= "viewNotification(notification)">
+            <ion-item lines="none" [ngClass]="{'myItemRead': (notification.IsRead === true || notification.IsRead === 'true'), 'myItem':(notification.IsRead === false || notification.IsRead === 'false')}" (click)= "viewNotification(notification)">
                 <!-- <ion-item-divider> -->
-                <img item-start class="animated fadeInDown delay-1s" onError="this.src='../../assets/images/user.png';" [src]="(notification.IsRead == true || notification.IsRead == 'true') ? '../../assets/images/read.png' : '../../assets/images/unread.png'">
+                <img slot="start" class="animated fadeInDown delay-1s" onError="this.src='../../assets/images/user.png';" [src]="(notification.IsRead == true || notification.IsRead == 'true') ? '../../assets/images/read.png' : '../../assets/images/unread.png'">
                 <div item-text-wrap [innerHTML]="notification.HtmlContent.trim()" text-wrap class="myText"></div>
-                <div item-right style="margin: 0px;">
+                <div slot="end" style="margin: 0px;">
                   <p style="
                   font-size: 14px;"><b>{{notification.CreatedOn | date : 'dd'}} {{notification.CreatedOn | date : 'MMM'}}</b></p>
                   <p style="
@@ -96,16 +91,16 @@
                 </div>
 
             </ion-item>
-            <ion-item-options side="right">
-                <!-- <button ion-button icon-only color="danger" outline no-border (click)="deleteNotification(slideDOM, notification)">
+            <ion-item-options side="end">
+                <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="deleteNotification(slideDOM, notification)">
                   <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
-                </button> -->
+                </ion-button> -->
               </ion-item-options>
           </ion-item-sliding>
         </ion-card>
         </ion-list>
         <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="loadingFinished && (selectedTap == 'general' && VM.searchGeneralNotificationList.length == 0) || (selectedTap == 'in' && VM.searchInNotificationList.length == 0)">
-          <ion-col col-12 col-sm-12 col-md-12>
+          <ion-col size="12" size-sm size-md>
                   <img app-logo-img class="animated fadeInDown delay-1s" style="
                   display: block;
                   margin: 0 auto;

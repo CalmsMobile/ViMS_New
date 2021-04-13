@@ -4,7 +4,6 @@ import { NavController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
-import { SettingsService } from 'src/app/services/settings-service';
 import { ToastService } from 'src/app/services/util/Toast.service';
 
 @Component({
@@ -23,7 +22,7 @@ export class SettingsViewPagePage implements OnInit {
   hostInfo :any = {};
   name = "";
   notificationCount = 0;
-  isAdmin = false;
+  isAdmin = true;
   customActionSheetOptions: any = {
     header: '',
     subHeader: ''
@@ -34,8 +33,7 @@ export class SettingsViewPagePage implements OnInit {
      private toastCtrl:ToastService,
      private events : EventsService,
      private router: Router,
-     private translate:TranslateService,
-     public settingsService:SettingsService) {
+     private translate:TranslateService) {
 
       if(localStorage.getItem("SEL_LANGUAGE") != undefined && localStorage.getItem("SEL_LANGUAGE") != ""){
         this.selecLang = (localStorage.getItem("SEL_LANGUAGE"));
@@ -71,17 +69,6 @@ export class SettingsViewPagePage implements OnInit {
         }
 
 			});
-
-
-    // this.settingsService.getAllBasicSetup().subscribe(snapshot => {
-    //   this.basicSetupData = snapshot;
-
-    //   this.languageSelect = {
-    //     data: this.basicSetupData.language,
-    //     events: this.getSelectedLanguage()
-    //   };
-
-    // });
   }
   getSelectedLanguage = () => {
 
@@ -99,25 +86,9 @@ export class SettingsViewPagePage implements OnInit {
   }
 
   ionViewWillEnter() {
-    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-    var qrCode = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    try{
-      var qrCodeObj = JSON.parse(qrCode);
-      var settingsObj = JSON.parse(settings);
-      if(settings && qrCodeObj && settingsObj){
-        if(qrCodeObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-          this.isAdmin = (settingsObj.Table4.length>0);
-        }else if(qrCodeObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
-          this.isAdmin = (settingsObj.Table3.length>0);
-        }
-      }
-    }catch(e){
-      console.log("Error in setting Admin", e);
-    }
-
     this.events.publishDataCompany({
       action: "page",
-      title: "HomeView",
+      title: "home-view",
       message: ''
     });
 		console.log('ionViewWillEnter SettingsViewPage');
@@ -127,7 +98,7 @@ export class SettingsViewPagePage implements OnInit {
   ionViewWillLeave(){
     this.events.publishDataCompany({
       action: "page",
-      title: "HomeView1",
+      title: "home-view1",
       message: ''
     });
   }
@@ -163,9 +134,10 @@ export class SettingsViewPagePage implements OnInit {
      'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
     ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
       let loginConfirm = await this.alertCtrl.create({
-        header: "<span class='failed'>" + t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'] + '</span>',
+        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
         message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
         cssClass: 'alert-warning-logout',
+        mode: 'ios',
         buttons: [
           {
             text: t['COMMON.EXIT1'],

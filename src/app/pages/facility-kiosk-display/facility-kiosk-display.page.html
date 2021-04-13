@@ -14,9 +14,9 @@ K_PROPERTIES['screen_ui']['header']['header_txt_size'] : ''"
   </div>
   <div active-room [attr.status-type]="ACTIVE_BLOCK_CURRENT_DATA.XYZ_STATUS"
   [attr.bg-type]="K_PROPERTIES['screen_ui']['active_block']['bg_type']">
-    <ion-content padding>
-        <button *ngIf= "showStopButton" stopbutton ion-fab (click)="takeActForStopEvent()"
-        style="position: absolute;right: 10px;background: red;"><ion-icon name="square"></ion-icon></button>
+    <ion-content class="ion-padding">
+        <ion-button *ngIf= "showStopButton" stopbutton ion-fab (click)="takeActForStopEvent()"
+        style="position: absolute;right: 10px;background: red;"><ion-icon name="square"></ion-icon></ion-button>
       <div active-room-body>
           <div style="border-bottom: 1vh solid;"
           *ngIf="K_PROPERTIES['screen_ui']['active_block']['field1']['enb']"
@@ -65,7 +65,7 @@ K_PROPERTIES['screen_ui']['header']['header_txt_size'] : ''"
         <ion-icon name="arrow-forward" *ngIf="CURRENT_SIDEMENU_GEAR == 'close'"></ion-icon>
       </div>
     </div>
-    <div header text-center *ngIf="K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['enb']" >
+    <div header class="ion-text-center" *ngIf="K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['enb']" >
         <div
         [attr.text]="K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['fontSiz']"
         [style.color]="K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['clr']">
@@ -105,10 +105,10 @@ K_PROPERTIES['screen_ui']['header']['header_txt_size'] : ''"
       </ion-list>
     </ion-content>
   </div>
-  <button ion-button (click)="gotoCountClickSettings()"
+  <ion-button (click)="gotoCountClickSettings()"
 style="position: absolute;background-color: transparent;
 right: 0;
 min-height: 15vh;
 min-width: 15vh;box-shadow: none;">
-</button>
+</ion-button>
 </ion-content>

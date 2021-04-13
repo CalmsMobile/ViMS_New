@@ -6,12 +6,13 @@
 -->
 <ion-header>
 
-  <ion-toolbar>
+  <ion-toolbar color="danger">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>Facility TimeSlot</ion-title>
-    <ion-buttons end *ngIf="showDone">
-          <button ion-button icon-only (click)="moveToNextStep()">
+    <ion-buttons slot="end" *ngIf="showDone">
+          <ion-button slot="icon-only" (click)="moveToNextStep()">
             <ion-icon name="checkmark"></ion-icon>
-          </button>
+          </ion-button>
       </ion-buttons>
   </ion-toolbar>
 
@@ -39,7 +40,7 @@
     </ion-card>
 
     <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="!FACILITYSLOTLIST || FACILITYSLOTLIST.length == 0">
-        <ion-col col-12 col-sm-12 col-md-12>
+        <ion-col size="12" size-sm size-md>
                 <img app-logo-img class="animated fadeInDown delay-1s" style="
                 display: block;
                 margin: 0 auto;
@@ -52,7 +53,7 @@
   </ion-row>
   <div *ngIf="FACILITYSLOTLIST && FACILITYSLOTLIST.length > 0">
 
-    <button ion-button [ngClass]= "'activateButton'" style="margin-right: 1px;
+    <ion-grid [ngClass]= "'activateButton'" style="margin-right: 1px;
     color: white;
     background-color: #f53d3d;    margin: 0 auto;
 width: 100%;
@@ -72,7 +73,7 @@ text-align: -webkit-center;">
              >
           </ion-col>
         </ion-row>
-    </button>
+    </ion-grid>
 
 
       <ion-list   class="no-margin" style="width: 100%;" *ngFor="let list of FACILITYSLOTLIST">
@@ -86,7 +87,7 @@ text-align: -webkit-center;">
 
         <ion-row >
             <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="!list.value || list.value.length == 0">
-                <ion-col col-12 col-sm-12 col-md-12>
+                <ion-col size="12" size-sm size-md>
                         <img app-logo-img class="animated fadeInDown delay-1s" style="
                         display: block;
                         margin: 0 auto;
@@ -98,13 +99,13 @@ text-align: -webkit-center;">
                 </ion-col>
           </ion-row>
           <ion-row *ngIf="list.key == selectedTap">
-              <div class="col col-15" *ngFor="let slot of list.value">
+              <ion-col size="3" *ngFor="let slot of list.value">
                   <p *ngIf="slot.SessionEnd" class="SessionEnd" (click) = "selectSlot(slot)">{{slot.startDisplayTime}}<br>{{slot.endDisplayTime}}</p>
 
                   <p *ngIf="!slot.SessionEnd" [ngClass]= "{'slotUnselected': slot.selected == '0','slotSelected': slot.selected == '1',
                   'slotDisable': slot.selected == '2', 'slotExpired': slot.selected == '3'}" (click) = "selectSlot(slot)">{{slot.startDisplayTime}}<br>{{slot.endDisplayTime}}</p>
                   <!-- <p width="100%" ></p> -->
-              </div>
+              </ion-col>
           </ion-row>
 
         </ion-row>

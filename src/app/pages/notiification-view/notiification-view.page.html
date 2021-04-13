@@ -6,14 +6,15 @@
 -->
 <ion-header>
 
-  <ion-toolbar>
+  <ion-toolbar color="danger">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>Notiification Details</ion-title>
   </ion-toolbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="ion-padding">
   <h6 style="margin: 10px;
   color: red;">{{notification.CreatedOn| date : 'dd MMM yyyy hh:mm a'}}</h6>
   <ion-card>

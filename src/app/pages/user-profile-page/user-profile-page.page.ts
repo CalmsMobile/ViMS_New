@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Camera } from '@ionic-native/camera/ngx';
 import { Device } from '@ionic-native/device/ngx';
-import { NavController, NavParams, ToastController, Platform, ActionSheetController, AlertController, LoadingController } from '@ionic/angular';
+import { NavController, ToastController, Platform, ActionSheetController, AlertController, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { HostInfoModel } from 'src/app/model/hostInfoModel';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -36,7 +36,7 @@ export class UserProfilePagePage implements OnInit {
   loading: any;
   T_SVC : any;
   constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+
     public toastCtrl: ToastController,
     private translate:TranslateService,
     public apiProvider: RestProvider,
@@ -118,7 +118,7 @@ export class UserProfilePagePage implements OnInit {
   ionViewDidEnter() {
     this.events.publishDataCompany({
       action:"page",
-      title: "Profile",
+      title: "user-profile-page",
       message: ''
     });
     console.log('ionViewDidEnter RegisterPage');
@@ -191,6 +191,7 @@ export class UserProfilePagePage implements OnInit {
     let toast = await this.toastCtrl.create({
       message: text,
       duration: 3000,
+      color: 'primary',
       position: 'top'
     });
     toast.present();
@@ -214,6 +215,7 @@ export class UserProfilePagePage implements OnInit {
       let toast = await this.toastCtrl.create({
         message: this.T_SVC['ERROR_UPDATE_IC'],
         duration: 3000,
+        color: 'primary',
         position: 'bottom'
       });
       toast.present();
@@ -259,6 +261,7 @@ export class UserProfilePagePage implements OnInit {
           let toast = await this.toastCtrl.create({
             message: this.T_SVC['USER_PROFILE.SUCCESS.REGISTER_TITLE'],
             duration: 3000,
+            color: 'primary',
             position: 'bottom'
           });
           toast.present();
@@ -268,6 +271,7 @@ export class UserProfilePagePage implements OnInit {
       let toast = await this.toastCtrl.create({
         message: 'Server Error',
         duration: 3000,
+        color: 'primary',
         position: 'bottom'
       });
       toast.present();
@@ -464,5 +468,11 @@ export class UserProfilePagePage implements OnInit {
 
   ngOnInit() {
   }
+
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+   }
 
 }

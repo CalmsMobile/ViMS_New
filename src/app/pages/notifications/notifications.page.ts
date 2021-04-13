@@ -1,9 +1,8 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite/ngx';
-import { NavController, NavParams, AlertController, ToastController, Platform, IonItemSliding } from '@ionic/angular';
+import { NavController, AlertController, ToastController, Platform, IonItemSliding, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -16,7 +15,7 @@ import { EventsService } from 'src/app/services/EventsService';
 })
 export class NotificationsPage implements OnInit {
 
-  @ViewChild(Content)	content:Content;
+  @ViewChild(IonContent)	content:IonContent;
 
   VM = {
     "act_segment":"all",
@@ -38,7 +37,7 @@ export class NotificationsPage implements OnInit {
 	imageURLType = '01&RefType=VP&Refresh='+ new Date().getTime();
 	loadingFinished = true;
 	showDelete = false;
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     private toastCtrl:ToastController,
 		public apiProvider: RestProvider,
@@ -159,7 +158,6 @@ export class NotificationsPage implements OnInit {
 	showNotification(type){
 
 		if(type == 'general'){
-			this.queryText = "";
 			this.VM.searchGeneralNotificationList = [];
 			for(var i = 0 ; i < this.VM.notificationList.length ; i++){
 				if(this.VM.notificationList[i].NotificationType == '10'){
@@ -168,7 +166,6 @@ export class NotificationsPage implements OnInit {
 			}
 			//alert("size:" + this.VM.searchGeneralNotificationList.length);
 		}else{
-			this.queryText = "";
 			this.VM.searchInNotificationList = [];
 			for(i = 0 ; i < this.VM.notificationList.length ; i++){
 				if(this.VM.notificationList[i].NotificationType == '20'){
@@ -186,10 +183,10 @@ export class NotificationsPage implements OnInit {
 
 	}
 
-	filterTechnologies() : void
+	filterTechnologies(searchtext) : void
 	{
-		 let val : string 	= this.queryText;
-
+		 let val : string 	= searchtext;
+     this.queryText = val;
 		 // DON'T filter the technologies IF the supplied input is an empty string
 		 if (val && val.trim() !== '')
 		 {
@@ -198,13 +195,13 @@ export class NotificationsPage implements OnInit {
 				this.VM.searchGeneralNotificationList = lList;
 				this.VM.searchGeneralNotificationList =  this.VM.searchGeneralNotificationList.filter((item) =>
 				{
-					return item.HtmlContent.toLowerCase().indexOf(val.toLowerCase()) > -1;
+					return item.NotificationType == '10' && item.HtmlContent.toLowerCase().indexOf(val.toLowerCase()) > -1;
 				})
 			 }else{
 				this.VM.searchInNotificationList = lList;
 				this.VM.searchInNotificationList =  this.VM.searchInNotificationList.filter((item) =>
 				{
-					return item.HtmlContent.toLowerCase().indexOf(val.toLowerCase()) > -1;
+					return item.NotificationType == '20' && item.HtmlContent.toLowerCase().indexOf(val.toLowerCase()) > -1;
 				})
 			 }
 
@@ -212,8 +209,16 @@ export class NotificationsPage implements OnInit {
 			lList= this.VM.notificationList;
 			if(this.selectedTap == 'general'){
 				this.VM.searchGeneralNotificationList = lList;
+        this.VM.searchGeneralNotificationList =  this.VM.searchGeneralNotificationList.filter((item) =>
+				{
+					return item.NotificationType == '10';
+				})
 			}else{
 				this.VM.searchInNotificationList = lList;
+        this.VM.searchInNotificationList =  this.VM.searchInNotificationList.filter((item) =>
+				{
+					return item.NotificationType == '20';
+				})
 			}
 
 
@@ -241,7 +246,7 @@ export class NotificationsPage implements OnInit {
 				(val) => {
 					this.loadingFinished = true
 					if(refresher){
-						refresher.complete();
+						refresher.target.complete();
 					}
 					var aList = JSON.parse(val.toString());
 					// aList = aList.reverse();
@@ -285,7 +290,7 @@ export class NotificationsPage implements OnInit {
 				async (err) => {
 					this.loadingFinished = true
 					if(refresher){
-						refresher.complete();
+						refresher.target.complete();
 					}
 					if(err && err.message == "No Internet"){
 						return;
@@ -310,6 +315,11 @@ export class NotificationsPage implements OnInit {
 			);
 		}
 	}
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+   }
 
 	async goAsyncFunction(currentClass, aList){
 		try{
@@ -442,7 +452,8 @@ export class NotificationsPage implements OnInit {
 
 							let toast = this.toastCtrl.create({
 								message: this.T_SVC['ALERT_TEXT.DELETE_SUCCESS'],
-								duration: 3000
+								duration: 3000,
+                color: 'primary'
 							});
 							(await toast).present();
 						},
@@ -496,7 +507,7 @@ export class NotificationsPage implements OnInit {
 	ionViewWillEnter(){
 		this.events.publishDataCompany({
       action: "page",
-      title: "NotificationPage",
+      title: "notifications",
       message: ''
     });
 	}
@@ -504,7 +515,7 @@ export class NotificationsPage implements OnInit {
 	ionViewWillLeave(){
     	this.events.publishDataCompany({
         action: "page",
-        title: "HomeView",
+        title: "home-view",
         message: ''
       });
   	}

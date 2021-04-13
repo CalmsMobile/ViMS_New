@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { NavController, NavParams, ActionSheetController, ToastController, AlertController } from '@ionic/angular';
+import { NavController, ActionSheetController, ToastController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CustomPipe } from 'src/app/pipes/custom/custom';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -35,9 +35,9 @@ export class ManageAppointmentPage implements OnInit {
   QRObj : any;
   T_SVC:any;
   notificationCount = 0;
-  isAdmin = false;
+  isAdmin = true;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController,
     private actionSheetCtrl: ActionSheetController,
     private apiProvider: RestProvider,
     private groupBy : CustomPipe,
@@ -87,22 +87,9 @@ export class ManageAppointmentPage implements OnInit {
 	}
 
   ionViewWillEnter(){
-    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-    try{
-      if(settings && JSON.parse(settings)){
-        if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-          this.isAdmin = (JSON.parse(settings).Table4.length>0);
-        }else if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
-          this.isAdmin = (JSON.parse(settings).Table3.length>0);
-        }
-
-      }
-    }catch(e){
-
-    }
     this.events.publishDataCompany({
       action: "page",
-      title: "HomeView",
+      title: "home-view",
       message: ''
     });
     this.showNotificationCount();

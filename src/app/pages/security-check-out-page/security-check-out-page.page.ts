@@ -1,8 +1,7 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BarcodeScannerOptions, BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
-import { NavController, AlertController, Platform, NavParams } from '@ionic/angular';
+import { NavController, AlertController, Platform, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -14,7 +13,7 @@ import { AppSettings } from 'src/app/services/app-settings';
 })
 export class SecurityCheckOutPagePage implements OnInit {
 
-  @ViewChild(Content)	content:Content;
+  @ViewChild(IonContent)	content:IonContent;
 
   OffSet = 0;
   isFetching = false;
@@ -32,8 +31,7 @@ export class SecurityCheckOutPagePage implements OnInit {
      private barcodeScanner: BarcodeScanner,
      private platform: Platform,
      private router: Router,
-     private route: ActivatedRoute,
-     public navParams: NavParams) {
+     private route: ActivatedRoute) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'ACC_MAPPING.INVALID_QR', 'COMMON.OK',
       'ALERT_TEXT.CHECKOUT_MESSAGE1', 'ALERT_TEXT.CONFIRMATION',
@@ -120,7 +118,7 @@ export class SecurityCheckOutPagePage implements OnInit {
         this.VimsAppGetCheckInVisitorList(refresher, true);
     }
 
-    //setTimeout(()=>{refresher.complete();},2000)
+    //setTimeout(()=>{refresher.target.complete();},2000)
   }
 
   loadData(event) {
@@ -189,7 +187,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 					var aList = JSON.parse(val.toString());
 					if(refresher){
 						this.appointments = aList;
-						refresher.complete();
+						refresher.target.complete();
 					}else {
             this.appointments = aList.concat(this.appointments);
 					}
@@ -202,7 +200,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 				},
 				async (err) => {
 					if(refresher){
-						refresher.complete();
+						refresher.target.complete();
 					}
 					if(err && err.message == "No Internet"){
 						return;
@@ -245,7 +243,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 
 					if(refresher){
 						this.appointments = aList;
-						refresher.complete();
+						refresher.target.complete();
 					}else {
             this.appointments = aList.concat(this.appointments);
 					}
@@ -258,7 +256,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 				},
 				async (err) => {
 					if(refresher){
-						refresher.complete();
+						refresher.target.complete();
 					}
 					if(err && err.message == "No Internet"){
 						return;
@@ -307,7 +305,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 
 					if(refresher){
             this.appointments = aList;
-						refresher.complete();
+						refresher.target.complete();
 					}else {
 						this.appointments = aList.concat(this.appointments);
           }
@@ -320,7 +318,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 				},
 				async (err) => {
 					if(refresher){
-						refresher.complete();
+						refresher.target.complete();
 					}
 					if(err && err.message == "No Internet"){
 						return;

@@ -3,7 +3,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
-import { NavController, Platform, ToastController, ModalController, LoadingController, NavParams, AlertController } from '@ionic/angular';
+import { NavController, Platform, ToastController, ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CustomVisitorPopupComponent } from 'src/app/components/custom-visitor-popup/custom-visitor-popup';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
@@ -13,7 +13,7 @@ import { EventsService } from 'src/app/services/EventsService';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { FileTransferObject,  FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-
+import * as CryptoJS from 'crypto-js';
 @Component({
   selector: 'app-admin-appointment-details',
   templateUrl: './admin-appointment-details.page.html',
@@ -171,7 +171,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private translate : TranslateService,
-    private localNotifications: LocalNotifications, public navParams: NavParams,private alertCtrl: AlertController) {
+    private localNotifications: LocalNotifications, private alertCtrl: AlertController) {
 
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
@@ -321,6 +321,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
                   let toast = this.toastCtrl.create({
                     message: 'Error',
                     duration: 3000,
+                    color: 'primary',
                     position: 'bottom'
                   });
                   (await toast).present();
@@ -372,6 +373,11 @@ export class AdminAppointmentDetailsPage implements OnInit {
       });
       return await presentModel.present();
 
+  }
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
   }
 
   ionViewDidEnter() {
@@ -554,6 +560,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
                   let toast = this.toastCtrl.create({
                     message: this.T_SVC['ALERT_TEXT.REMINDER_SUCCESS'],
                     duration: 3000,
+                    color: 'primary',
                     position: 'bottom'
                   });
                   (await toast).present();
@@ -638,6 +645,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
                   let toast = this.toastCtrl.create({
                     message:this.T_SVC['ALERT_TEXT.APPOINTMENT_DELETE_SUCCESS'],
                     duration: 3000,
+                    color: 'primary',
                     position: 'bottom'
                   });
                   (await toast).present();
@@ -681,7 +689,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     }
   }
 
-  async showChangeAppointmentStatusAlert(type, appointment_group_id){
+  async showChangeAppointmentStatusAlert(type, appointment_group_id, seqId){
     var status = "Cancel this appointment?";
     // var buttonText = "Ok"
     if(type == "Approved"){
@@ -704,13 +712,20 @@ export class AdminAppointmentDetailsPage implements OnInit {
         {
           text: 'Proceed',
           handler: () => {
-            this.ChangeAppointmentStatus(type, appointment_group_id)
+            if (seqId) {
+              this.AppointmentApprovalByVisitor(type, seqId);
+            } else{
+              this.ChangeAppointmentStatus(type, appointment_group_id);
+            }
+
           }
         }
       ]
     });
     (await alert).present();
   }
+
+
 
   ChangeAppointmentStatus(type, appointment_group_id){
     var hostDetails = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS));
@@ -721,6 +736,44 @@ export class AdminAppointmentDetailsPage implements OnInit {
     }
 
     this.apiProvider.ChangeAppointmentStatus(params).then(
+      (val) => {
+        this.navCtrl.pop();
+      },
+      async (err) => {
+        if(err && err.message == "No Internet"){
+          return;
+        }
+
+        var message = "";
+        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        } else if(err && JSON.parse(err) && JSON.parse(err).message){
+          message =JSON.parse(err).message;
+        }
+        if(message){
+          // message = " Unknown"
+          let alert = this.alertCtrl.create({
+            header: 'Error !',
+            message: message,
+            cssClass:'alert-danger',
+            buttons: ['Okay']
+            });
+            (await alert).present();
+        }
+      }
+    );
+  }
+
+  AppointmentApprovalByVisitor(type, seqId){
+    var hostDetails = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS));
+    var params = {
+      "SEQ_ID": + seqId,
+      "Status": type,
+      "HOSTIC" : hostDetails.HOSTIC,
+      "CancelRemarks": ''
+    }
+
+    this.apiProvider.AppointmentApprovalByVisitor(params).then(
       (val) => {
         this.navCtrl.pop();
       },
@@ -765,7 +818,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
   }
 
   VimsAppGetFacilityBookingDetails(){
-    if(!this.appointment[0].FacilityBookingID){
+    if(!this.appointment[0].FacilityBookingID || this.appointment[0].FacilityBookingID === '0'){
       this.setNotifyTime();
       return;
     }

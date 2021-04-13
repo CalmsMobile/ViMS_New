@@ -1,21 +1,31 @@
 
 <ion-header>
-  <ion-toolbar>
-    <ion-title *ngIf="!edit">{{'ADD_APPOIN.TITLE' | translate}}</ion-title>
-    <ion-title *ngIf="edit">{{'ADD_APPOIN.U_TITLE' | translate}}</ion-title>
-    <ion-buttons end *ngIf="showFacility">
-        <button ion-button icon-only (click)="checkFacilityAvailability()">
+  <ion-toolbar color="danger">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
+    <ion-title>{{edit? ('ADD_APPOIN.U_TITLE' | translate) : ('ADD_APPOIN.TITLE' | translate)}}</ion-title>
+    <ion-buttons slot="end" *ngIf="showFacility">
+        <ion-button slot="icon-only" (click)="checkFacilityAvailability()">
             <img app-logo-img class="animated fadeInDown delay-1s" style="display: block; margin: 0 auto;width: 30px;height: 30px;margin-right: 10px;" src="../../assets/images/room_available.png">
-        </button>
+        </ion-button>
       </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-        <!-- <button ion-button (click)="openCalendar()">Open Calendar on Current Date</button> -->
+        <!-- <ion-button (click)="openCalendar()">Open Calendar on Current Date</ion-button> -->
     <div app-bg>
+      <ion-item sp-visitor-item lines="none" *ngIf="!edit" style="padding: 10px; --padding-start: 0px;">
+        <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+hostData.SEQID+ imageURLTypeHOST + newImage" style="    background-color: darkgrey;
+        padding: 2px;    width: 72px;height: 72px;
+  border-radius: 50%;">
+          <div style="padding-left: 5px;
+          font-weight: bold;">
+            <ion-label text-color-white>You</ion-label>
+            <ion-label text-color-white>{{hostData.HOST_EMAIL ? hostData.HOST_EMAIL : '--'}}</ion-label>
+          </div>
+      </ion-item>
         <div padding-top class="item item-body" style="border-bottom:1px solid rgba(0,0,0,0.05);">
-            <div class="row" style="padding: 8px;">
-                <div padding-horizontal class="col" style="border-right: 1px solid rgba(0,0,0,0.05);padding: 0px" (click)="openCalendar(true)">
+            <ion-row style="padding: 8px;">
+                <ion-col size="6" padding-horizontal class="col" style="border-right: 1px solid rgba(0,0,0,0.05);padding: 0px" (click)="openCalendar(true)">
                     <div text-alpha-caption margin-bottom-10 style="    color: white;">
                         <i hidden margin-right-10 class="icon siva-icon-calendar-3"></i>{{'ADD_APPOIN.FROM_DATE' | translate}}</div>
                     <div class="row" style="    display: inline-flex;">
@@ -26,13 +36,13 @@
                             <b>{{VM.fromDate | date : 'MMM'}}</b>
                             <div>{{VM.fromDate | date : 'yyyy'}}</div>
                         </div>
-                        <h3 text-white text-right no-margin class="col">{{VM.fromTime}}</h3>
+                        <h3 text-white text-right no-margin class="col" style="align-self: center;">{{VM.fromTime}}</h3>
                         <div text-white text-uppercase margin-left style="line-height: 2.6;margin-left: 3px;">
                             <b>{{VM.fromTimeSession}}</b>
                         </div>
                     </div>
-                </div>
-                <div padding-horizontal class="col" style="padding:0px" (click)="openCalendar(false)">
+                  </ion-col>
+                <ion-col size="6" padding-horizontal class="col" style="padding:0px" (click)="openCalendar(false)">
                     <div text-alpha-caption margin-bottom-10 style="    color: white;">
                         <i hidden margin-right-10 class="icon siva-icon-calendar-3"></i>{{'ADD_APPOIN.TO_DATE' | translate}}</div>
                     <div class="row row-no-padding" style="    display: inline-flex;">
@@ -44,13 +54,13 @@
                             <b>{{VM.toDate | date : 'MMM'}}</b>
                             <div>{{VM.toDate | date : 'yyyy'}}</div>
                         </div>
-                        <h3 text-right text-white no-margin class="col">{{VM.toTime}}</h3>
+                        <h3 text-right text-white no-margin class="col" style="align-self: center;">{{VM.toTime}}</h3>
                         <div text-white text-uppercase margin-left style="line-height: 2.6;margin-left: 3px;">
                             <b>{{VM.toTimeSession}}</b>
                         </div>
                     </div>
-                </div>
-            </div>
+                  </ion-col>
+            </ion-row>
         </div>
         <div class="item item-body" *ngIf="false">
             <div margin-bottom no-padding class="row">
@@ -81,90 +91,82 @@
             </div>
         </div>
     </div>
-    <ion-card mode = "ios" color="primary" *ngIf="!edit" style="margin-bottom: 5px;margin-top: 5px;background-color: #d6d8dc!important;border-radius: 3%" no-padding no-border>
-        <ion-item sp-visitor-item no-lines  style="border: 1px solid #dedede;padding: 0px;">
-            <ion-avatar item-start style="    margin: 5px;">
-                <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+hostData.SEQID+ imageURLTypeHOST + newImage" style="    background-color: darkgrey;
-                padding: 2px;">
-            </ion-avatar>
-            <h2 theme-text-color>You</h2>
-            <h3 *ngIf="hostData.HOST_EMAIL">{{hostData.HOST_EMAIL}}</h3>
-            <p *ngIf="hostData.HostExt">{{hostData.HostExt}}</p>
+
+    <div>
+       <ion-item lines="none" no-padding transparent>
+          <h3 theme-text-color position="floating">{{'ADD_VISITORS.LAB_USER_CATE' | translate}}</h3>
+          <ion-select class="categorySelect" mode="ios" [(ngModel)]="addAppointmentModel.visitor_ctg_id" (ionChange)="onChangeCategory($event.detail.value, true)" interface="action-sheet" placeholder="{{'ADD_VISITORS.LAB_USER_CATE' | translate}}">
+          <ion-label position="floating">{{'ADD_VISITORS.LAB_USER_CATE' | translate}}</ion-label>
+            <ion-select-option text-left *ngFor="let vis_cat of VISITOR_CATEGORY"
+              [value]="vis_cat.visitor_ctg_id" >
+              {{vis_cat.visitor_ctg_desc}} <span float-right>({{vis_cat.time_permit}})</span>
+            </ion-select-option>
+          </ion-select>
         </ion-item>
-    </ion-card>
-    <ion-row style="
-    background: rgb(248, 248, 248);
-">
-        <ion-col col-6>
+    </div>
+    <ion-row style="background: rgb(248, 248, 248);    margin-top: 10px;" *ngIf="VM.addVisitorSettings">
+        <ion-col size="8">
                 <h3 margin-top padding-horizontal theme-text-color>
                         {{'ADD_APPOIN.NUM_VISITORS' | translate}} ({{VM.visitors.length}}) </h3>
         </ion-col>
-        <ion-col col-6>
-                <ion-fab right style="    margin-top: 5px;">
-                        <button ion-fab icon-only style="background-color: #f53d3d;width: 40px;height: 40px;" (click)="goToAddManageVisitors()">
-                            <i class="icon siva-icon-user-add" style="font-size:2.0rem;"></i></button>
-                </ion-fab>
+        <ion-col size="4" style="text-align: end;">
+          <ion-fab-button color="primary" (click)="goToAddManageVisitors()" style="    display: inline-block;
+          margin-right: 10px;"><ion-icon name="person-add-outline" style="font-size:2.0rem;" ></ion-icon></ion-fab-button>
         </ion-col>
     </ion-row>
 
 
 
-    <div style="margin-top: 25px;height: 45%;">
+    <div style="height: 45%;">
 
 
         <ion-list #visitorsList>
 
-            <ion-card mode = "ios" color="primary" style="margin-bottom: 5px;margin-top: 5px;background-color: #d6d8dc!important;border-radius: 3%" no-padding no-border  *ngFor="let item of VM.visitors">
+            <ion-card mode="ios" no-padding no-border  *ngFor="let item of VM.visitors" style="margin:10px">
             <ion-item-sliding #slideDOM >
-                <ion-item sp-visitor-item no-lines  style="border: 1px solid #dedede;padding: 0px;">
-                    <ion-avatar *ngIf="item.visitor_RemoveImg || (!item.VISITOR_IMG && item.SEQ_ID)" item-start style="    margin: 5px;">
-                        <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType + newImage" style="    background-color: darkgrey;
-                        padding: 2px;">
-                    </ion-avatar>
-                    <ion-avatar *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && !item.SEQ_ID && !item.VisitorBookingSeqId" item-start style="    margin: 5px;">
-                        <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType + newImage" style="    background-color: darkgrey;
-                        padding: 2px;">
-                    </ion-avatar>
-                    <ion-avatar *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && item.VisitorBookingSeqId" item-start style="    margin: 5px;">
-                            <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.VisitorBookingSeqId + imageURLTypeVPB + newImage" style="    background-color: darkgrey;
-                            padding: 2px;">
-                    </ion-avatar>
-                    <ion-avatar item-start style="margin: 5px;" *ngIf="item.VISITOR_IMG">
-                            <img class="circle-pic" onError="this.src='../../assets/images/user.png';" [src]="'data:image/jpeg;base64,' + item.VISITOR_IMG" />
-                    </ion-avatar>
-                    <h2 theme-text-color>{{item.VISITOR_NAME}}</h2>
-                    <h3 *ngIf="item.EMAIL">{{item.EMAIL}}</h3>
-                    <p *ngIf="item.TELEPHONE_NO">{{item.TELEPHONE_NO}}</p>
-                    <!-- <ion-note item-end>{{item.phone}}</ion-note> -->
-                    <button  item-end ion-button round outline icon-only color="danger" style="padding: 5px" (click)="removeVisitor(item)">
-                        <ion-icon  name="close" style="    font-size: 18px;
-                        text-align: center;
-                        display: flex;"></ion-icon>
-                    </button>
-
-                    <!-- <ion-buttons item-end >
-                        <ion-icon name="trash" style="padding:8px" (click)="removeVisitor(item)"></ion-icon>
-                         <button ion-button icon-only (click)="removeVisitor(item)" ><ion-icon name="trash"></ion-icon></button>
-                    </ion-buttons> -->
+                <ion-item mode="ios" sp-visitor-item lines="none" style="padding: 3px;--padding-start: 5px;">
+                  <img class="visitorImage" *ngIf="item.visitor_RemoveImg || (!item.VISITOR_IMG && item.SEQ_ID)" slot="start" onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType + newImage" style="    background-color: darkgrey;
+                  padding: 2px;"/>
+                  <img class="visitorImage" *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && !item.SEQ_ID && !item.VisitorBookingSeqId" slot="start" onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType + newImage" style="    background-color: darkgrey;
+                  padding: 2px;"/>
+                    <img class="visitorImage" *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && item.VisitorBookingSeqId" slot="start" onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.VisitorBookingSeqId + imageURLTypeVPB + newImage" style="    background-color: darkgrey;
+                    padding: 2px;"/>
+                    <img  slot="start" *ngIf="item.VISITOR_IMG" class="visitorImage circle-pic" onError="this.src='../../assets/images/user.png';" [src]="'data:image/jpeg;base64,' + item.VISITOR_IMG" />
+                   <div>
+                    <h2 no-margin style="font-size: 18px;
+                    font-weight: 600;
+                    color: black;
+                    opacity: 0.9;">{{item.VISITOR_NAME}}</h2>
+                    <ion-label no-margin *ngIf="item.EMAIL" style="margin-top: 5px !important;
+                    color: gray;">{{item.EMAIL}}</ion-label>
+                    <ion-label style="margin-bottom: 5px;color: gray;
+                    margin-top: 5px;" *ngIf="item.TELEPHONE_NO">{{item.TELEPHONE_NO}}</ion-label>
+                   </div>
+                    <!-- <ion-note slot="end">{{item.phone}}</ion-note> -->
+                    <ion-button slot="end" shape="round" fill="outline" color="danger" style="width: 38px;
+                    height: 38px;" (click)="removeVisitor(item)">
+                        <ion-icon name="close-circle-outline" style="font-size: 35px;padding: 0px;
+                        text-align: center;"></ion-icon>
+                    </ion-button>
                 </ion-item>
-                <ion-item-options side="right">
-                    <!-- <button ion-button icon-only color="danger" outline no-border (click)="editVisitors(slideDOM)">
+                <ion-item-options side="end">
+                    <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM)">
                     <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
-                </button> -->
-                <button ion-button icon-only no-padding color="primary" outline no-border (click)="editVisitors(slideDOM, 'edit', item)">
+                </ion-button> -->
+                <ion-button slot="icon-only" no-padding color="primary" fill="outline" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                     <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>
-                </button>
+                </ion-button>
                 </ion-item-options>
             </ion-item-sliding>
         </ion-card>
     </ion-list>
     </div>
-    <!-- <button bottom right ion-button icon-right align-items-end round outline color="favorite"
+    <!-- <ion-button bottom right icon-right align-items-end shape="round" fill="outline" color="danger"
     style="padding: 14px 7px 14px 18px;height: 40px;margin-left: auto;display: block;"
     (click)="proceedToNextStep()" [disabled]="(VM.visitors.length == 0)">
         {{'ACC_MAPPING.PROCEED' | translate}}
       <ion-icon class="icon siva-icon-right-open"></ion-icon>
-    </button> -->
+    </ion-button> -->
 
 </ion-content>
 
@@ -172,11 +174,11 @@
 
 <ion-footer transparent>
     <ion-toolbar transparent>
-        <button bottom right ion-button icon-right align-items-end round outline color="favorite"
-        style="padding: 14px 7px 14px 18px;height: 40px;margin-left: auto;display: block;"
+        <ion-button bottom slot="end" icon-right align-items-end shape="round" fill="outline" color="danger"
+        style="height: 40px;margin-left: auto;display: block;"
         (click)="proceedToNextStep()" [disabled]="(VM.visitors.length == 0)">
             {{'ACC_MAPPING.PROCEED' | translate}}
           <ion-icon class="icon siva-icon-right-open"></ion-icon>
-        </button>
+        </ion-button>
     </ion-toolbar>
 </ion-footer>

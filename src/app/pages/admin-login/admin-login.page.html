@@ -1,28 +1,28 @@
 
 <ion-header>
   <ion-toolbar hideBackButton="false"  color="danger">
-      <button ion-button menuToggle>
-              <ion-icon class="siva-icon-menu-1"></ion-icon>
-      </button>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
       <ion-title>{{'ADMIN_LOGIN.LOGIN' | translate}}</ion-title>
-      <ion-buttons end>
-         <button ion-button icon-only (click)="gotoNotification()">
-          <ion-icon name="ios-notifications" style="position:relative">
+      <ion-buttons slot="end">
+         <ion-button slot="icon-only" (click)="gotoNotification()">
+          <ion-icon name="notifications-outline" style="position:relative">
                   <span *ngIf= "notificationCount > 0" style="position: absolute;
                   font-size: 16px;
                   margin-top: -10px;"><b>{{notificationCount}}</b></span>
           </ion-icon>
-        </button>
+        </ion-button>
       </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding style="background: url('assets/images/background/app_bg.png') no-repeat center;background-size: cover;">
+<ion-content class="ion-padding" style="background: url('assets/images/background/app_bg.png') no-repeat center;background-size: cover;">
 <ion-row padding-horizontal align-self-start >
-    <ion-col align-self-start col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+    <ion-col align-self-start size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
 
     </ion-col>
-    <ion-col align-self-end col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+    <ion-col align-self-end size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
       <!---Logo-->
       <img app-logo-img class="animated fadeInDown delay-1s" style="
       display: block;
@@ -32,7 +32,7 @@
   " src="assets/images/logo/2.png">
       <!---Logo Title-->
     </ion-col>
-    <ion-col align-self-end col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+    <ion-col align-self-end size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
         <ion-label class="animated fadeInDown delay-1s" style="display: block;font-size: 20px;margin: 0 auto;    text-align: center;
         color: red;"><b>{{'ADMIN_LOGIN.WELCOME_TO_ADMIN_LOGIN' | translate}}</b></ion-label>
     </ion-col>
@@ -46,20 +46,20 @@
                 <ion-list inset>
 
                   <ion-item>
-                    <ion-label color="favorite" floating>{{'ADMIN_LOGIN.USERNAME' | translate}}</ion-label>
+                    <ion-label color="danger" floating>{{'ADMIN_LOGIN.USERNAME' | translate}}</ion-label>
                     <ion-input type="text" name="name" [(ngModel)]="username" required></ion-input>
                   </ion-item>
                   <ion-item>
-                    <ion-label color="favorite" floating>{{'ADMIN_LOGIN.PASSWORD' | translate}}</ion-label>
+                    <ion-label color="danger" floating>{{'ADMIN_LOGIN.PASSWORD' | translate}}</ion-label>
                     <ion-input type="password" name="password" [(ngModel)]="password" required></ion-input>
                   </ion-item>
 
-                  <ion-col align-self-end bottom-form col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
-                      <button ion-button round outline color="favorite"
+                  <ion-col align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+                      <ion-button shape="round" fill="outline" color="danger"
                       style="margin-left: auto;margin-top:10px; display: block;"
                       (click)="proceedToNextStep()" [disabled]= "!username || !password">
                           {{'ADMIN_LOGIN.LOGIN' | translate}}
-                      </button>
+                      </ion-button>
                   </ion-col>
                 </ion-list>
               </ion-col>

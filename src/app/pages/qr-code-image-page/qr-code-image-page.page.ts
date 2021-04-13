@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, NavParams } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
 
@@ -17,8 +17,7 @@ export class QrCodeImagePagePage implements OnInit {
   constructor(public navCtrl: NavController,
     private route: ActivatedRoute,
     private router: Router,
-    private events : EventsService,
-    public navParams: NavParams) {
+    private events : EventsService) {
 
       this.route.queryParams.subscribe(params => {
         if (this.router.getCurrentNavigation().extras.state) {

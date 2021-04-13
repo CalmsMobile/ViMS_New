@@ -15,13 +15,12 @@ import { MenuService } from './services/menu-service';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  providers: [MenuService]
 })
 export class AppComponent {
   // @ViewChild(Nav) nav: Nav;
-  @ViewChild(NavController) navCtrl: NavController;
 
-  rootPage = "AccountMappingPage";//"HomeView";
-  // rootPage = "FacilityKioskDisplayPage";
+
   pages:any;
   params:any;
   leftMenuTitle:string;
@@ -38,6 +37,7 @@ export class AppComponent {
     public events: EventsService,
     // private app : App,
     // private ionicApp: IonicApp,
+    private navCtrl: NavController,
     private apiProvider : RestProvider,
     private firebase: Firebase,
     public alertCtrl: AlertController,
@@ -58,9 +58,9 @@ export class AppComponent {
       // this.params.hostImage = "assets/images/logo/2.png";
       // alert(this.params.hostImage);
       if(user == "addAppointment"){
-        this.navCtrl.navigateRoot('HomeView');
+        this.navCtrl.navigateRoot('home-view');
         setTimeout(()=>{
-           this.navCtrl.navigateRoot('HomeView');
+           this.navCtrl.navigateRoot('home-view');
         },1000);
       }else if(user == "ReloadMenu"){
         this.loadMenuData(true);
@@ -68,18 +68,16 @@ export class AppComponent {
         var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno='+time+ "&RefType=HP&Refresh="+ new Date().getTime();
         this.params.hostImage = tempImage;
       } else if(user == "AdminEnabled"){
-        this.rootPage = "AdminHomePage";
-        this.navCtrl.navigateRoot('AdminHomePage');
-
+        this.navCtrl.navigateRoot("admin-home");
        // this.navCtrl.setRoot('AdminHomePage');
       } else if(user == "SignPad"){
-        // this.rootPage = "SignPadIdlePage";
-        this.navCtrl.navigateRoot('SignPadIdlePage');
+        // this.navCtrl.navigateRoot("sign-pad-idle-page");;
+        this.navCtrl.navigateRoot('sign-pad-idle-page');
       } else if(user == "CheckIn Acknowledgment"){
-        this.navCtrl.navigateRoot('SignPadIdlePage');
+        this.navCtrl.navigateRoot('sign-pad-idle-page');
       } else if(user == "UserInActive"){
         // this.rootPage = "AccountMappingPage";
-        this.navCtrl.navigateRoot('AccountMappingPage');
+        this.navCtrl.navigateRoot('account-mapping');
           let alert = this.alertCtrl.create({
             header: 'Alert',
             message: this.T_SVC['ALERT_TEXT.USER_INACTIVE'],
@@ -111,7 +109,7 @@ export class AppComponent {
         window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
         if(!this.alertShowing){
           this.alertShowing = true;
-          this.navCtrl.navigateRoot('AccountMappingPage');
+          this.navCtrl.navigateRoot('account-mapping');
           let alert = this.alertCtrl.create({
             header: 'Alert',
             message: time,
@@ -208,7 +206,7 @@ export class AppComponent {
       // var loginType = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.LOGIN_TYPE);
       // if(loginType){
       //   this.menu.enable(false,"myLeftMenu");
-      //   this.rootPage = "AdminHomePage";
+      //   this.navCtrl.navigateRoot("admin-home");;
 
       // } else {
 
@@ -223,7 +221,7 @@ export class AppComponent {
               }
               this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
               this.menu.enable(true,"myLeftMenu");
-              this.rootPage = "HomeView";
+              this.navCtrl.navigateRoot("");;
               break;
             case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
               hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -233,7 +231,7 @@ export class AppComponent {
               }
               this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP);
               this.menu.enable(true,"myLeftMenu");
-              this.rootPage = "HomeView";
+              this.navCtrl.navigateRoot("home-view");;
               break;
             case AppSettings.LOGINTYPES.FACILITY:
               hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -243,16 +241,16 @@ export class AppComponent {
               }
               this.GetHostAppSettings(AppSettings.LOGINTYPES.FACILITY);
               this.menu.enable(true,"myLeftMenu");
-              this.rootPage = "HomeView";
+              this.navCtrl.navigateRoot("home-view");;
               break;
             case AppSettings.LOGINTYPES.DISPLAYAPP:
-              this.rootPage = "FacilityKioskDisplayPage";
+              this.navCtrl.navigateRoot("facility-kiosk-display");;
               this.menu.enable(false,"myLeftMenu");
               break;
             case AppSettings.LOGINTYPES.ACKAPPT:
               this.getAcknowledgementSettings();
               this.menu.enable(false,"myLeftMenu");
-              this.rootPage = "SignPadIdlePage";
+              this.navCtrl.navigateRoot("sign-pad-idle-page");
               break;
             case AppSettings.LOGINTYPES.SECURITYAPP:
               hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
@@ -261,7 +259,7 @@ export class AppComponent {
                 return;
               }
               this.getSecuritySettings();
-              this.rootPage = "SecurityDashBoardPage";
+              this.navCtrl.navigateRoot("security-dash-board-page");
               break;
           }
         // }
@@ -443,11 +441,10 @@ initializeFirebaseIOS() {
     var scannedJson1 = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if(scannedJson1 && JSON.parse(scannedJson1).MAppId){
       if(JSON.parse(scannedJson1).MAppId == AppSettings.LOGINTYPES.FACILITY){
-        if(page.component == "NotificationPage" || page.component == "FacilityBookingPage"){
+        if(page.component == "notifications" || page.component == "facility-booking"){
           this.router.navigateByUrl(page.component);
         }else if(page.component == "FacilityUpcomingPage"){
-          // this.navCtrl.navigateRoot("HomeView");
-          this.rootPage  = "HomeView";
+          this.navCtrl.navigateRoot("home-view");
           this.events.publishDataCompany({
             action: 'ChangeTab',
             title: page,
@@ -463,19 +460,19 @@ initializeFirebaseIOS() {
         }
       }else{
         switch(page.component){
-          case "CreateQuickPassPage":
-          case "AddAppointmentPage":
-          case "FacilityBookingPage":
-          case "FacilityBookingHistoryPage":
-          case "NotificationPage":
-          case "MyVisitorsPage":
+          case "create-quick-pass":
+          case "add-appointment":
+          case "facility-booking":
+          case "facility-booking-history":
+          case "notifications":
+          case "my-visitors":
             this.router.navigateByUrl(page.component);
             break;
-          case "HomeView":
+          case  "home-view":
             var currentClass =this;
             this._zone.run(function() {
               // currentClass.navCtrl.navigateRoot(page.component);
-              currentClass.rootPage  = "HomeView";
+              currentClass.navCtrl.navigateRoot("home-view");
               currentClass.events.publishDataCompany({
                 action: 'ChangeTab',
                 title: page,

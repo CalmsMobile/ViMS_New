@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SpinnerDialog } from '@ionic-native/spinner-dialog';
+import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 import { Observable } from 'rxjs';
 
 @Injectable()

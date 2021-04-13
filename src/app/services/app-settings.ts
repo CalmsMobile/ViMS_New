@@ -27,9 +27,9 @@ export const AppSettings = Object.freeze({
             api_url:'',
             api_img_url:'',
         }
-        
+
     },
-    
+
     // -------- SQlite DB Setup ------------
     LOCAL_SQLITE_DB_NAME:"ViMS-HOST-01.db",
     LOCAL_USER_SETUP:{
@@ -58,7 +58,7 @@ export const AppSettings = Object.freeze({
     OtherSource : "Other source",
 
     SHOW_START_WIZARD: false, // Intro wizard Show / Hide Option
-    
+
     // -------- Language Setup ------------
     AVAILABLE_LANGUAGE:[
         {"id" : "en", "TCODE": "LANGUAGE.ENGLISH"},
@@ -70,14 +70,8 @@ export const AppSettings = Object.freeze({
         //Samsung
         // SAMPLE_DEVICE_ID : "9f2b72d35e1b64a6",
         // Redmi
-        SAMPLE_DEVICE_ID : "b3e4f63b8f6b7042",
-        //Secrity
-        SAMPLE_SECURITY_SEQ_ID : "108",
-        SAMPLE_HOST_IC : "vijay",
-        // SAMPLE_HOST_IC :"vijaytrova",
-        SAMPLE_DEV_ACK_SEQ_ID : "195",
-        SAMPLE_DISPLAY_DEV_SEQ_ID : "199"
-        
+        SAMPLE_DEVICE_ID : "b3e4f63b8f6b7042"
+
     },
     APPOINTMENT_BufferTime : 120,
     IdleListenBufferTime : 60000,
@@ -97,7 +91,7 @@ export const AppSettings = Object.freeze({
             PushSeqId:"PushSeqId",
             HtmlContent: "HtmlContent",
             NotificationType : "NotificationType",
-            CreatedOn : "CreatedOn"            
+            CreatedOn : "CreatedOn"
         }
 
     },

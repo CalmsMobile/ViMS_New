@@ -19,6 +19,7 @@ import { Device } from '@ionic-native/device/ngx';
 export class RestProvider {
   alertShowing = false;
   T_SVC : any;
+  isLoading = false;
   constructor(public http: HttpClient,
     public networkProvider: NetworkProvider,
     public platform: Platform,
@@ -55,42 +56,56 @@ export class RestProvider {
     });
   }
 
-  async checkConnection(){
+  checkConnection(){
     var result = false;
     if (this.isNotConnected()) {
-      if(!this.alertShowing){
-        this.alertShowing = true;
-        let alert = this.alertCtrl.create({
-          header: 'Error',
-          message: this.T_SVC['ALERT_TEXT.NETWORK_ERROR'],
-          cssClass:'alert-danger',
-          buttons: [{
-              text: 'Okay',
-              handler: () => {
-                console.log('Cancel clicked');
-                this.alertShowing = false;
-              }
-            }]
-          });
-          (await alert).present();
-          (await alert).onDidDismiss().then(() => {
-            this.alertShowing = false;
-          });
-      }
-
         result = true;
+        this.showAlert();
     }
     return result;
   }
 
-  async showLoading(){
-    let loading = this.loadingCtrl.create({
+  async showAlert() {
+    if(!this.alertShowing){
+      this.alertShowing = true;
+      let alert = this.alertCtrl.create({
+        header: 'Error',
+        message: this.T_SVC['ALERT_TEXT.NETWORK_ERROR'],
+        cssClass:'alert-danger',
+        buttons: [{
+            text: 'Okay',
+            handler: () => {
+              console.log('Cancel clicked');
+              this.alertShowing = false;
+            }
+          }]
+        });
+        (await alert).present();
+        (await alert).onDidDismiss().then(() => {
+          this.alertShowing = false;
+        });
+    }
+  }
+
+  async presentLoading() {
+    this.isLoading = true;
+    return await this.loadingCtrl.create({
       message: 'Please wait...',
       backdropDismiss: true,
       showBackdrop: true
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.isLoading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+        }
+      });
     });
-    (await loading).present();
-    return loading;
+  }
+
+  async dismissLoading() {
+    this.isLoading = false;
+    return await this.loadingCtrl.dismiss().then(() => console.log('dismissed'));
   }
 
   validateUser(data){
@@ -111,7 +126,7 @@ export class RestProvider {
       return;
     }
     data  = this.setAuthorizedInfo(data);
-    // var loading = this.showLoading();
+    // var loading = this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetHostAppSettings';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -119,13 +134,13 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
-        // loading.dismiss();
+        // this.dismissLoading();
         return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        //  loading.dismiss();
+        //  this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(this.validateUser(output)){
@@ -139,13 +154,13 @@ export class RestProvider {
 
       }, (err) => {
         reject(err);
-        // loading.dismiss();
+        // this.dismissLoading();
       });
     });
   }
 
   async GetAckAppDeviceInfo(data, ApiUrl){
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var Api = ApiUrl + '/api/Vims/GetAckAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -153,7 +168,7 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
-        loading.dismiss();
+        this.dismissLoading();
         return;
       }
 
@@ -161,7 +176,7 @@ export class RestProvider {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
-        loading.dismiss();
+        this.dismissLoading();
         var output = JSON.parse(response[0].Data);
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
           resolve(JSON.stringify(output));
@@ -171,14 +186,14 @@ export class RestProvider {
 
       }, (err) => {
 
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
   }
 
   GetSecurityAppDeviceInfo(data, ApiUrl){
-    var loading = this.showLoading();
+    var loading = this.presentLoading();
     var Api = ApiUrl + '/api/SecurityApp/GetSecurityAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -186,7 +201,7 @@ export class RestProvider {
     return new Promise(async (resolve, reject) => {
 
       if (this.isNotConnected()) {
-        (await loading).dismiss();
+        this.dismissLoading();
         return;
       }
 
@@ -194,7 +209,7 @@ export class RestProvider {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(async response => {
         console.log("Result: "+ JSON.stringify(response));
-        (await loading).dismiss();
+        this.dismissLoading();
         var output = JSON.parse(response[0].Data);
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
           resolve(JSON.stringify(output));
@@ -203,7 +218,7 @@ export class RestProvider {
         }
 
       }, async (err) => {
-        (await loading).dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -211,7 +226,7 @@ export class RestProvider {
   }
 
   async GetDisplayAppDeviceInfo(data, ApiUrl){
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var Api = ApiUrl + '/api/Vims/GetDisplayAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -219,14 +234,14 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
-        loading.dismiss();
+        this.dismissLoading();
         return;
       }
 
       this.http.post(Api, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        loading.dismiss();
+        this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
@@ -236,7 +251,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -244,7 +259,7 @@ export class RestProvider {
   }
 
   async SaveDisplayAppDeviceInfo(data, ApiUrl){
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var Api = ApiUrl + '/api/Vims/SaveDisplayAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -252,14 +267,14 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
-        loading.dismiss();
+        this.dismissLoading();
         return;
       }
 
       this.http.post(Api, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        loading.dismiss();
+        this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
@@ -269,7 +284,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -277,7 +292,7 @@ export class RestProvider {
   }
 
   GetDisplaySettings(data){
-    // var loading = this.showLoading();
+    // var loading = this.presentLoading();
     data = this.setAuthorizedDisplayInfo(data);
     var Api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetDisplaySettings';
     console.log("API: "+ Api);
@@ -286,7 +301,7 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
-        // loading.dismiss();
+        // this.dismissLoading();
         return;
       }
 
@@ -295,7 +310,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        // loading.dismiss();
+        // this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -307,7 +322,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        // loading.dismiss();
+        // this.dismissLoading();
         reject(err);
 
       });
@@ -315,7 +330,7 @@ export class RestProvider {
   }
 
   DisplayApp_FacilityMasterList(data){
-    // var loading = this.showLoading();
+    // var loading = this.presentLoading();
     data = this.setAuthorizedDisplayInfo(data);
     var Api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/DisplayApp_FacilityMasterList';
     console.log("API: "+ Api);
@@ -324,7 +339,7 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
-        // loading.dismiss();
+        // this.dismissLoading();
         return;
       }
 
@@ -333,7 +348,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        // loading.dismiss();
+        // this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -346,13 +361,13 @@ export class RestProvider {
 
       }, (err) => {
         reject(err);
-        // loading.dismiss();
+        // this.dismissLoading();
       });
     });
   }
 
   SaveSecurityAppDeviceInfo(data, ApiUrl){
-    var loading = this.showLoading();
+    var loading = this.presentLoading();
     var Api = ApiUrl + '/api/SecurityApp/SaveSecurityAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -360,14 +375,14 @@ export class RestProvider {
     return new Promise(async (resolve, reject) => {
 
       if (this.isNotConnected()) {
-        (await loading).dismiss();
+        this.dismissLoading();
         return;
       }
 
       this.http.post(Api, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(async response => {
-        (await loading).dismiss();
+        this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
@@ -377,14 +392,14 @@ export class RestProvider {
         }
 
       }, async (err) => {
-        (await loading).dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
   }
 
   async SaveAckAppDeviceInfo(data, ApiUrl){
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var Api = ApiUrl + '/api/Vims/SaveAckAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -392,14 +407,14 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
-        loading.dismiss();
+        this.dismissLoading();
         return;
       }
 
       this.http.post(Api, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        loading.dismiss();
+        this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
@@ -409,21 +424,21 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
   }
 
   async GetAppDetails(data){
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppDetails');
     console.log("Params: "+ JSON.stringify(data));
 
     return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
-        loading.dismiss();
+        this.dismissLoading();
         return;
       }
 
@@ -433,7 +448,7 @@ export class RestProvider {
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppDetails', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        loading.dismiss();
+        this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(output.Table1 && output.Table1.length > 0){
@@ -442,7 +457,7 @@ export class RestProvider {
           reject(output);
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -450,7 +465,7 @@ export class RestProvider {
   }
 
   async SavePushNotificationId(data){
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SavePushNotificationId');
     console.log("Params: "+ JSON.stringify(data));
 
@@ -459,14 +474,14 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SavePushNotificationId', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
-        loading.dismiss();
+        this.dismissLoading();
         var output = JSON.parse(response[0].Data);
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
           resolve(output.Table[0]);
@@ -477,7 +492,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -486,7 +501,7 @@ export class RestProvider {
 
   async VimsAdminLogin(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAdminLogin');
     console.log("Params: "+ JSON.stringify(data));
 
@@ -495,14 +510,14 @@ export class RestProvider {
         reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAdminLogin', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
-        loading.dismiss();
+        this.dismissLoading();
         var output = JSON.parse(response[0].Data);
         if(this.validateUser(output)){
           return;
@@ -516,7 +531,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -524,7 +539,7 @@ export class RestProvider {
   }
 
   async GetValidateHost(data){
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetValidateHost');
     console.log("Params: "+ JSON.stringify(data));
 
@@ -533,7 +548,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetValidateHost', JSON.stringify(data), {
@@ -541,7 +556,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -564,7 +579,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -572,17 +587,18 @@ export class RestProvider {
   }
 
   setAuthorizedSecurityInfo(data){
+    var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+    var MAppDevSeqId = "";
+    if(ackData && JSON.parse(ackData)){
+      MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
+    }
     if(!this.platform.is('cordova')) {
       data.Authorize = {
         "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
-        "AuMAppDevSeqId": AppSettings.TEST_DATA.SAMPLE_SECURITY_SEQ_ID,
+        "AuMAppDevSeqId": MAppDevSeqId
       }
     }else{
-      var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
-      var MAppDevSeqId = "";
-      if(ackData && JSON.parse(ackData)){
-        MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
-      }
+
       data.Authorize = {
         "AuDeviceUID": this.device.uuid,
         "AuMAppDevSeqId": MAppDevSeqId
@@ -592,17 +608,18 @@ export class RestProvider {
   }
 
   setAuthorizedDisplayInfo(data){
-    if(!this.platform.is('cordova')) {
-      data.Authorize = {
-        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
-        "AuMAppDevSeqId": AppSettings.TEST_DATA.SAMPLE_DISPLAY_DEV_SEQ_ID
-      }
-    }else{
-      var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.DISPLAY_DETAILS);
+    var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.DISPLAY_DETAILS);
       var MAppDevSeqId = "";
       if(ackData && JSON.parse(ackData)){
         MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
       }
+    if(!this.platform.is('cordova')) {
+      data.Authorize = {
+        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
+        "AuMAppDevSeqId": MAppDevSeqId
+      }
+    }else{
+
       data.Authorize = {
         "AuDeviceUID": this.device.uuid,
         "AuMAppDevSeqId": MAppDevSeqId
@@ -612,17 +629,17 @@ export class RestProvider {
   }
 
   setAuthorizedAckInfo(data){
-    if(!this.platform.is('cordova')) {
-      data.Authorize = {
-        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
-        "AuMAppDevSeqId": AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID,
-      }
-    }else{
-      var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.ACK_DETAILS);
+    var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.ACK_DETAILS);
       var MAppDevSeqId = "";
       if(ackData && JSON.parse(ackData)){
         MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
       }
+    if(!this.platform.is('cordova')) {
+      data.Authorize = {
+        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
+        "AuMAppDevSeqId": MAppDevSeqId
+      }
+    }else{
       data.Authorize = {
         "AuDeviceUID": this.device.uuid,
         "AuMAppDevSeqId": MAppDevSeqId
@@ -669,7 +686,7 @@ export class RestProvider {
 
   DisplayApp_GetBookingSlots(data){
     data  = this.setAuthorizedDisplayInfo(data);
-    // var loading = this.showLoading();
+    // var loading = this.presentLoading();
     var ApiUrl = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/DisplayApp_GetBookingSlots';
     console.log("API: "+ ApiUrl);
     console.log("Params: "+ JSON.stringify(data));
@@ -679,7 +696,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       var body =  JSON.stringify(data);
@@ -713,10 +730,10 @@ export class RestProvider {
             reject(JSON.stringify({"message":"Error"}));
           }
         }
-        // loading.dismiss();
+        // this.dismissLoading();
       }, (err) => {
         reject(err);
-        // loading.dismiss();
+        // this.dismissLoading();
       });
     });
   }
@@ -727,7 +744,7 @@ export class RestProvider {
 
     data  = this.setAuthorizedInfo(data);
 
-    //var loading = this.showLoading();
+    //var loading = this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SearchHost';
 
     console.log("API: "+ url);
@@ -738,7 +755,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-         // loading.dismiss();
+         // this.dismissLoading();
           return;
       }
 
@@ -756,17 +773,17 @@ export class RestProvider {
         }else{
           reject(JSON.stringify(output));
         }
-        //loading.dismiss();
+        //this.dismissLoading();
       }, (err) => {
         reject(err);
-        //loading.dismiss();
+        //this.dismissLoading();
       });
     });
   }
 
   SearchExistVisitor(data){
     data  = this.setAuthorizedInfo(data);
-    //var loading = this.showLoading();
+    //var loading = this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SearchExistVisitor');
     console.log("Params: "+ JSON.stringify(data));
 
@@ -775,7 +792,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-         // loading.dismiss();
+         // this.dismissLoading();
           return;
       }
 
@@ -793,10 +810,10 @@ export class RestProvider {
         }else{
           reject(JSON.stringify(output));
         }
-        //loading.dismiss();
+        //this.dismissLoading();
       }, (err) => {
         reject(err);
-        //loading.dismiss();
+        //this.dismissLoading();
       });
     });
   }
@@ -805,7 +822,7 @@ export class RestProvider {
     data  = this.setAuthorizedInfo(data);
     var loading;
     if(showLoading){
-      loading = this.showLoading();
+      loading = this.presentLoading();
     }
     var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetVisitorsListByHost';
     console.log("API: "+ URL);
@@ -816,7 +833,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-         loading.dismiss();
+         this.dismissLoading();
           return;
       }
       this.http.post(URL, JSON.stringify(data), {
@@ -824,7 +841,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         if(showLoading && loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         var output = JSON.parse(response[0].Data);
         if(this.validateUser(output)){
@@ -838,7 +855,7 @@ export class RestProvider {
 
       }, (err) => {
         if(showLoading && loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         reject(err);
       });
@@ -854,7 +871,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetMasterDetails', data, {
@@ -870,10 +887,43 @@ export class RestProvider {
         }else{
           reject(output);
         }
-        //loading.dismiss();
+        //this.dismissLoading();
       }, (err) => {
         reject(err);
-        //loading.dismiss();
+        //this.dismissLoading();
+      });
+    });
+  }
+
+  GetAddVisitorSettings(data){
+    data  = this.setAuthorizedInfo(data);
+    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAddVisitorSettings');
+    console.log("Params: "+ JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          // this.dismissLoading();
+          return;
+      }
+      this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAddVisitorSettings', data, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined){
+          resolve(output);
+        }else{
+          reject(output);
+        }
+        //this.dismissLoading();
+      }, (err) => {
+        reject(err);
+        //this.dismissLoading();
       });
     });
   }
@@ -888,7 +938,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       this.http.post(url, data, {
@@ -904,10 +954,10 @@ export class RestProvider {
         }else{
           reject(output);
         }
-        //loading.dismiss();
+        //this.dismissLoading();
       }, (err) => {
         reject(err);
-        //loading.dismiss();
+        //this.dismissLoading();
       });
     });
   }
@@ -922,7 +972,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       this.http.post(url, {}, {
@@ -938,10 +988,10 @@ export class RestProvider {
         }else{
           reject(output);
         }
-        //loading.dismiss();
+        //this.dismissLoading();
       }, (err) => {
         reject(err);
-        //loading.dismiss();
+        //this.dismissLoading();
       });
     });
   }
@@ -949,7 +999,7 @@ export class RestProvider {
 
 
   GetVisitorCompany(data){
-    //var loading = this.showLoading();
+    //var loading = this.presentLoading();
     data  = this.setAuthorizedInfoCommon(data);
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetVisitorCompany');
     console.log("Params: "+ JSON.stringify(data));
@@ -959,7 +1009,7 @@ export class RestProvider {
         reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
 
@@ -977,17 +1027,17 @@ export class RestProvider {
         }else{
           reject(JSON.stringify(output));
         }
-        //loading.dismiss();
+        //this.dismissLoading();
       }, (err) => {
         reject(err);
-        //loading.dismiss();
+        //this.dismissLoading();
       });
     });
   }
 
   async AddVisitor(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddVisitor');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
@@ -995,7 +1045,7 @@ export class RestProvider {
         reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -1005,7 +1055,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1025,7 +1075,7 @@ export class RestProvider {
 
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1035,7 +1085,7 @@ export class RestProvider {
 
   async UpdateVisitor(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateVisitor');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
@@ -1043,7 +1093,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -1052,7 +1102,7 @@ export class RestProvider {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
-        loading.dismiss();
+        this.dismissLoading();
         var output = JSON.parse(response[0].Data);
         if(this.validateUser(output)){
           return;
@@ -1073,7 +1123,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1083,7 +1133,7 @@ export class RestProvider {
 
   async CreateQuickPassVisitor(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/CreateQuickPassVisitor';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -1092,7 +1142,7 @@ export class RestProvider {
         reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
      this.http.post(url, JSON.stringify(data), {
@@ -1100,7 +1150,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1120,7 +1170,7 @@ export class RestProvider {
 
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1129,7 +1179,7 @@ export class RestProvider {
 
   async addVisitorCompany(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/addVisitorCompany');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
@@ -1137,7 +1187,7 @@ export class RestProvider {
         reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -1146,7 +1196,7 @@ export class RestProvider {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
-        loading.dismiss();
+        this.dismissLoading();
         var output = JSON.parse(response[0].Data);
         if(this.validateUser(output)){
           return;
@@ -1157,7 +1207,7 @@ export class RestProvider {
           reject(JSON.stringify(output));
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1167,7 +1217,7 @@ export class RestProvider {
 
   async AddAppointment(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddAppointment');
     console.log("Params: "+ JSON.stringify(data));
@@ -1177,7 +1227,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -1187,7 +1237,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1205,7 +1255,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1214,7 +1264,7 @@ export class RestProvider {
 
   async RemindAppointment(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemindAppointment');
     console.log("Params: "+ JSON.stringify(data));
@@ -1224,7 +1274,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -1234,7 +1284,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1252,7 +1302,7 @@ export class RestProvider {
           }
         }
     }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1270,7 +1320,7 @@ export class RestProvider {
     data.IsMobile = true;
     var loading ;
     if(showLoading){
-      loading = this.showLoading();
+      loading = this.presentLoading();
     }
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/syncAppointment');
@@ -1283,18 +1333,19 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          if(loading){
-            loading.dismiss();
+          if(showLoading){
+            loading.onDidDismiss();
           }
           return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/syncAppointment', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
-      }).subscribe(response => {
+      }).subscribe(async response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(loading){
-          loading.dismiss();
+          await this.dismissLoading();
+
         }
         if(this.validateUser(output)){
           return;
@@ -1319,7 +1370,7 @@ export class RestProvider {
         }
       }, (err) => {
         if(loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         reject(err);
 
@@ -1332,7 +1383,7 @@ export class RestProvider {
     data.IsMobile = true;
     var loading ;
     if(showLoading){
-      loading = this.showLoading();
+      loading = this.presentLoading();
     }
     var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AppointmentApprovalList';
     console.log("API: "+ URL);
@@ -1344,7 +1395,7 @@ export class RestProvider {
             "message":"No Internet"
           });
           if(loading){
-            loading.dismiss();
+            this.dismissLoading();
           }
           return;
       }
@@ -1354,7 +1405,7 @@ export class RestProvider {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         if(this.validateUser(output)){
           return;
@@ -1374,7 +1425,7 @@ export class RestProvider {
         }
       }, (err) => {
         if(loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         reject(err);
 
@@ -1386,7 +1437,7 @@ export class RestProvider {
     data  = this.setAuthorizedInfo(data);
     var loading = null
     if(showLoading){
-      loading = this.showLoading();
+      loading = this.presentLoading();
     }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/GetAllQuickPassVisitorsHistory';
 
@@ -1399,7 +1450,7 @@ export class RestProvider {
             "message":"No Internet"
           });
           if(loading){
-            loading.dismiss();
+            this.dismissLoading();
           }
 
           return;
@@ -1410,7 +1461,7 @@ export class RestProvider {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
 
         if(output){
@@ -1428,7 +1479,7 @@ export class RestProvider {
         }
       }, (err) => {
         if(loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         reject(err);
 
@@ -1441,7 +1492,7 @@ export class RestProvider {
     data.IsMobile = true;
     var loading = null
     if(showLoading){
-      loading = this.showLoading();
+      loading = this.presentLoading();
     }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/GetQuickPassVisitorList';
 
@@ -1456,7 +1507,7 @@ export class RestProvider {
             "message":"No Internet"
           });
           if(loading){
-            loading.dismiss();
+            this.dismissLoading();
           }
 
           return;
@@ -1467,7 +1518,7 @@ export class RestProvider {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         if(this.validateUser(output)){
           return;
@@ -1487,7 +1538,7 @@ export class RestProvider {
         }
       }, (err) => {
         if(loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         reject(err);
 
@@ -1501,7 +1552,7 @@ export class RestProvider {
     data.IsMobile = true;
     var loading = null
     if(showLoading){
-      loading = this.showLoading();
+      loading = this.presentLoading();
     }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetCheckInVisitorList';
 
@@ -1516,7 +1567,7 @@ export class RestProvider {
             "message":"No Internet"
           });
           if(loading){
-            loading.dismiss();
+            this.dismissLoading();
           }
 
           return;
@@ -1527,7 +1578,7 @@ export class RestProvider {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         if(this.validateUser(output)){
           return;
@@ -1547,7 +1598,7 @@ export class RestProvider {
         }
       }, (err) => {
         if(loading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         reject(err);
 
@@ -1560,7 +1611,7 @@ export class RestProvider {
     data.IsMobile = true;
     var loading = null;
     if(showLoading){
-      loading = this.showLoading();
+      loading = this.presentLoading();
     }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetSecurityStatsDetail';
 
@@ -1573,7 +1624,7 @@ export class RestProvider {
             "message":"No Internet"
           });
           if(showLoading){
-            loading.dismiss();
+            this.dismissLoading();
           }
           return;
       }
@@ -1583,7 +1634,7 @@ export class RestProvider {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(showLoading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         if(this.validateUser(output)){
           return;
@@ -1603,7 +1654,7 @@ export class RestProvider {
         }
       }, (err) => {
         if(showLoading){
-          loading.dismiss();
+          this.dismissLoading();
         }
 
         reject(err);
@@ -1614,7 +1665,7 @@ export class RestProvider {
   async VimsAppUpdateVisitorCheckOut(data){
     data  = this.setAuthorizedSecurityInfo(data);
     data.IsMobile = true;
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppUpdateVisitorCheckOut';
 
     console.log("API: "+ url);
@@ -1627,7 +1678,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
@@ -1635,7 +1686,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1653,7 +1704,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1663,7 +1714,7 @@ export class RestProvider {
   async DeleteQuickPassVisitor(data){
     data  = this.setAuthorizedInfo(data);
     data.IsMobile = true;
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/DeleteQuickPassVisitor';
 
     console.log("API: "+ url);
@@ -1674,7 +1725,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
@@ -1682,7 +1733,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1700,7 +1751,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -1709,7 +1760,7 @@ export class RestProvider {
   async GetQuickPassVisitorDetail(data){
     data  = this.setAuthorizedInfoCommon(data);
     data.IsMobile = true;
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/GetQuickPassVisitorDetail';
 
     console.log("API: "+ url);
@@ -1720,7 +1771,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
@@ -1728,7 +1779,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1746,7 +1797,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -1755,7 +1806,7 @@ export class RestProvider {
   async UpdateQPVisitorCheckOutTime(data){
     data  = this.setAuthorizedInfoCommon(data);
     data.IsMobile = true;
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/UpdateQPVisitorCheckOutTime';
 
     console.log("API: "+ url);
@@ -1766,7 +1817,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
@@ -1774,7 +1825,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1792,7 +1843,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -1801,7 +1852,7 @@ export class RestProvider {
   async VimsAppUpdateVisitorQRCheckOut(data){
     data  = this.setAuthorizedInfoCommon(data);
     data.IsMobile = true;
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppUpdateVisitorQRCheckOut';
 
     console.log("API: "+ url);
@@ -1812,7 +1863,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
@@ -1820,7 +1871,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1838,7 +1889,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -1847,7 +1898,7 @@ export class RestProvider {
   async UpdateQPVisitorCheckInTime(data){
     data  = this.setAuthorizedSecurityInfo(data);
     data.IsMobile = true;
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/UpdateQPVisitorCheckInTime';
 
     console.log("API: "+ url);
@@ -1858,7 +1909,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
@@ -1866,7 +1917,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1884,7 +1935,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -1893,7 +1944,7 @@ export class RestProvider {
   VimsAppGetSecurityStats(data){
     data  = this.setAuthorizedSecurityInfo(data);
     data.IsMobile = true;
-    // var loading = this.showLoading();
+    // var loading = this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetSecurityStats';
 
     console.log("API: "+ url);
@@ -1906,7 +1957,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
@@ -1914,7 +1965,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        // loading.dismiss();
+        // this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1933,16 +1984,16 @@ export class RestProvider {
         }
       }, (err) => {
         reject(err);
-        // loading.dismiss();
+        // this.dismissLoading();
       });
     });
   }
 
-  async ChangeAppointmentStatus(data){
+  async AppointmentApprovalByVisitor(data) {
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
-    var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeAppointmentStatus';
+    var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AppointmentApprovalByVisitor';
     console.log("API: "+ URL);
     console.log("Params: "+ JSON.stringify(data));
 
@@ -1951,7 +2002,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(URL, JSON.stringify(data), {
@@ -1959,7 +2010,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1968,7 +2019,7 @@ export class RestProvider {
               resolve(JSON.stringify(output.Table));
           }else{
             reject(JSON.stringify({
-              "message": output.Table1[0].Description
+              "message": (output.Table1 && output.Table1.length > 0) ? output.Table1[0].Description: output.Table2[0].description
             }));
           }
         }else{
@@ -1979,7 +2030,54 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
+        reject(err);
+      });
+    });
+  }
+
+  async ChangeAppointmentStatus(data){
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.presentLoading();
+
+    var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeAppointmentStatus';
+    console.log("API: "+ URL);
+    console.log("Params: "+ JSON.stringify(data));
+
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          reject({
+            "message":"No Internet"
+          });
+          this.dismissLoading();
+          return;
+      }
+      this.http.post(URL, JSON.stringify(data), {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        this.dismissLoading();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output){
+          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
+              resolve(JSON.stringify(output.Table));
+          }else{
+            reject(JSON.stringify({
+              "message": (output.Table1 && output.Table1.length > 0) ? output.Table1[0].Description: output.Table2[0].description
+            }));
+          }
+        }else{
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
+        }
+      }, (err) => {
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -1987,7 +2085,7 @@ export class RestProvider {
 
   async ChangeApppointmentApprovalSettings(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeApppointmentApprovalSettings');
     console.log("Params: "+ JSON.stringify(data));
@@ -1999,7 +2097,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeApppointmentApprovalSettings', JSON.stringify(data), {
@@ -2007,7 +2105,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2027,7 +2125,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -2035,7 +2133,7 @@ export class RestProvider {
 
   async getHostNotification(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/getHostNotification');
     console.log("Params: "+ JSON.stringify(data));
@@ -2047,7 +2145,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/getHostNotification', JSON.stringify(data), {
@@ -2055,7 +2153,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2074,7 +2172,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -2082,7 +2180,7 @@ export class RestProvider {
 
   async UpdateReadNotificationStatus(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateReadNotificationStatus';
     console.log("API: "+ url);
@@ -2095,7 +2193,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
@@ -2103,7 +2201,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2122,7 +2220,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -2130,7 +2228,7 @@ export class RestProvider {
 
   async DeleteNotification(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemovePushNotification';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -2140,7 +2238,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
@@ -2148,7 +2246,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2168,7 +2266,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
       });
     });
@@ -2176,7 +2274,7 @@ export class RestProvider {
 
 
   GetPreAppointmentSettings(data){
-   // var loading = this.showLoading();
+   // var loading = this.presentLoading();
     data  = this.setAuthorizedInfo(data);
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetPreAppointmentSettings');
     console.log("Params: "+ JSON.stringify(data));
@@ -2187,7 +2285,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-         // loading.dismiss();
+         // this.dismissLoading();
           return;
       }
 
@@ -2213,10 +2311,10 @@ export class RestProvider {
             reject(JSON.stringify({"message":"Error"}));
           }
         }
-       // loading.dismiss();
+       // this.dismissLoading();
       }, (err) => {
         reject(err);
-        // loading.dismiss();
+        // this.dismissLoading();
       });
     });
   }
@@ -2225,7 +2323,7 @@ export class RestProvider {
   async GetAppointmentByGroupId(data){
     data  = this.setAuthorizedInfo(data);
     data.IsMobile = true;
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppointmentByGroupId');
     console.log("Params: "+ JSON.stringify(data));
@@ -2236,7 +2334,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2246,7 +2344,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2264,7 +2362,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2274,7 +2372,7 @@ export class RestProvider {
   async VimsAppGetAppointmentByHexCode(data){
     data  = this.setAuthorizedSecurityInfo(data);
     data.IsMobile = true;
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetAppointmentByHexCode';
 
     console.log("API: "+ url);
@@ -2286,7 +2384,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2295,7 +2393,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2313,7 +2411,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2322,7 +2420,7 @@ export class RestProvider {
 
   async EditAppointment(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/EditAppointment');
     console.log("Params: "+ JSON.stringify(data));
@@ -2333,7 +2431,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2343,7 +2441,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2361,7 +2459,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2370,7 +2468,7 @@ export class RestProvider {
 
   async UpdateHostInfo(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateHostInfo');
     console.log("Params: "+ JSON.stringify(data));
@@ -2381,7 +2479,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2391,7 +2489,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2410,7 +2508,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2419,7 +2517,7 @@ export class RestProvider {
 
   async RemoveAppointment(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemoveAppointment');
     console.log("Params: "+ JSON.stringify(data));
@@ -2430,7 +2528,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2440,7 +2538,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table));
@@ -2457,7 +2555,7 @@ export class RestProvider {
 
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2467,7 +2565,7 @@ export class RestProvider {
 
   async FBBookingEndSession(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/FBBookingEndSession';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -2478,7 +2576,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2488,7 +2586,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2508,7 +2606,7 @@ export class RestProvider {
 
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2517,7 +2615,7 @@ export class RestProvider {
 
   async FBDisplayEndSession(data){
     data  = this.setAuthorizedDisplayInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/FBDisplayEndSession';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -2528,7 +2626,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2538,7 +2636,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2558,7 +2656,7 @@ export class RestProvider {
 
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2567,7 +2665,7 @@ export class RestProvider {
 
   async VimsAppFBBookingCancel(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFBBookingCancel';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -2578,7 +2676,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2588,7 +2686,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2608,7 +2706,7 @@ export class RestProvider {
 
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2617,7 +2715,7 @@ export class RestProvider {
 
   async VimsAppUpdateFacilityBookings(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppUpdateFacilityBookings';
 
     console.log("API: "+ url);
@@ -2629,7 +2727,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2639,7 +2737,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2658,7 +2756,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2667,7 +2765,7 @@ export class RestProvider {
 
   async VimsAppDeleteFBFacilityBooking(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppDeleteFBFacilityBooking');
     console.log("Params: "+ JSON.stringify(data));
@@ -2678,7 +2776,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -2688,7 +2786,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2708,7 +2806,7 @@ export class RestProvider {
 
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2724,7 +2822,7 @@ export class RestProvider {
     console.log("params: "+ params);
     return new Promise((resolve, reject) => {
       if (this.isNotConnected()) {
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       this.http.post(url, params, {
@@ -2740,10 +2838,10 @@ export class RestProvider {
         }else{
           reject(output);
         }
-        //loading.dismiss();
+        //this.dismissLoading();
       }, (err) => {
         reject(err);
-        //loading.dismiss();
+        //this.dismissLoading();
       });
     });
   }
@@ -2751,7 +2849,7 @@ export class RestProvider {
   async VimsAppFacilityMasterList(data, edit){
     data  = this.setAuthorizedInfo(data);
     if(edit){
-      var loading = await this.showLoading();
+      var loading = await this.presentLoading();
     }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityMasterList';
     console.log("API: "+ url);
@@ -2760,7 +2858,7 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
       if (this.isNotConnected()) {
         if(edit){
-          loading.dismiss();
+          this.dismissLoading();
         }
         return;
       }
@@ -2770,7 +2868,7 @@ export class RestProvider {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(edit){
-          loading.dismiss();
+          this.dismissLoading();
         }
         if(this.validateUser(output)){
           return;
@@ -2783,7 +2881,7 @@ export class RestProvider {
 
       }, (err) => {
         if(edit){
-          loading.dismiss();
+          this.dismissLoading();
         }
         reject(err);
 
@@ -2799,7 +2897,7 @@ export class RestProvider {
     console.log("params: "+ params);
     return new Promise((resolve, reject) => {
       if (this.isNotConnected()) {
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       this.http.post(url, params, {
@@ -2815,24 +2913,24 @@ export class RestProvider {
         }else{
           reject(output);
         }
-        //loading.dismiss();
+        //this.dismissLoading();
       }, (err) => {
         reject(err);
-        //loading.dismiss();
+        //this.dismissLoading();
       });
     });
   }
 
   async VimsAppGetBookingSlot(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetBookingSlot';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
     console.log("params: "+ params);
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, params, {
@@ -2840,7 +2938,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2851,7 +2949,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2860,14 +2958,14 @@ export class RestProvider {
 
   async VimsAppFacilityBookingSave(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityBookingSave';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
     console.log("params: "+ params);
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, params, {
@@ -2875,7 +2973,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2886,7 +2984,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2897,7 +2995,7 @@ export class RestProvider {
     data  = this.setAuthorizedInfo(data);
     var loading;
     if(showLoaading){
-      loading = this.showLoading();
+      loading = this.presentLoading();
     }
 
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetHostFacilityBookingList';
@@ -2907,7 +3005,7 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
       if (this.isNotConnected()) {
         if(showLoaading){
-          loading.dismiss();
+          this.dismissLoading();
         }
 
           return;
@@ -2926,11 +3024,11 @@ export class RestProvider {
           reject(JSON.stringify(output));
         }
         if(showLoaading){
-          loading.dismiss();
+          this.dismissLoading();
         }
       }, (err) => {
         if(showLoaading){
-          loading.dismiss();
+          this.dismissLoading();
         }
         reject(err);
 
@@ -2940,14 +3038,14 @@ export class RestProvider {
 
   async VimsAppGetFacilityBookingDetails(data){
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetFacilityBookingDetails';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
     console.log("params: "+ params);
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(url, params, {
@@ -2955,7 +3053,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -2966,7 +3064,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -2984,7 +3082,7 @@ export class RestProvider {
 
     }
 
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var ApiUrl = JSON.parse(address).ApiUrl+ '/api/Vims/GetLocatorName';
     console.log("API: "+ ApiUrl);
     console.log("Params: {}");
@@ -2996,13 +3094,13 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
       this.http.post(ApiUrl, {}, {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        loading.dismiss();
+        this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(output){
@@ -3020,7 +3118,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -3029,7 +3127,7 @@ export class RestProvider {
 
   GetVisitorDataById(data){
     data  = this.setAuthorizedAckInfo(data);
-    // var loading = this.showLoading();
+    // var loading = this.presentLoading();
     var qr = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     var ApiUrl = JSON.parse(qr).ApiUrl + '/api/Vims/GetVisitorDataById';
     console.log("API: "+ ApiUrl);
@@ -3040,7 +3138,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       var body =  JSON.stringify(data);
@@ -3074,17 +3172,17 @@ export class RestProvider {
             reject(JSON.stringify({"message":"Error"}));
           }
         }
-        // loading.dismiss();
+        // this.dismissLoading();
       }, (err) => {
         reject(err);
-        // loading.dismiss();
+        // this.dismissLoading();
       });
     });
   }
 
   getVisitorAcknowledgeSetting(data){
     data  = this.setAuthorizedAckInfo(data);
-    // var loading = this.showLoading();
+    // var loading = this.presentLoading();
     var qr = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     var ApiUrl = JSON.parse(qr).ApiUrl + '/api/Vims/getVisitorAcknowledgeSetting';
     console.log("API: "+ ApiUrl);
@@ -3095,7 +3193,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       var body =  JSON.stringify(data);
@@ -3131,17 +3229,17 @@ export class RestProvider {
             reject(JSON.stringify({"message":"Error"}));
           }
         }
-        // loading.dismiss();
+        // this.dismissLoading();
       }, (err) => {
         reject(err);
-        // loading.dismiss();
+        // this.dismissLoading();
       });
     });
   }
 
   GetSecurityAppSettings(data){
     data  = this.setAuthorizedSecurityInfo(data);
-    // var loading = this.showLoading();
+    // var loading = this.presentLoading();
     var qr = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     var ApiUrl = JSON.parse(qr).ApiUrl + '/api/SecurityApp/GetSecurityAppSettings';
     console.log("API: "+ ApiUrl);
@@ -3152,7 +3250,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       var body =  JSON.stringify(data);
@@ -3186,10 +3284,10 @@ export class RestProvider {
             reject(JSON.stringify({"message":"Error"}));
           }
         }
-        // loading.dismiss();
+        // this.dismissLoading();
       }, (err) => {
         reject(err);
-        // loading.dismiss();
+        // this.dismissLoading();
       });
     });
   }
@@ -3197,7 +3295,7 @@ export class RestProvider {
 
   GetVisitorInfoFromLocator(data){
     data  = this.setAuthorizedAckInfo(data);
-    // var loading = this.showLoading();
+    // var loading = this.presentLoading();
     var QRCode = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if(!QRCode){
       return;
@@ -3214,7 +3312,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          // loading.dismiss();
+          // this.dismissLoading();
           return;
       }
       this.http.post(ApiUrl, JSON.stringify(data), {
@@ -3238,17 +3336,17 @@ export class RestProvider {
             reject(JSON.stringify({"message":"Error"}));
           }
         }
-        // loading.dismiss();
+        // this.dismissLoading();
       }, (err) => {
         reject(err);
-        // loading.dismiss();
+        // this.dismissLoading();
       });
     });
   }
 
   async SaveVisitorCheckinInfo(data){
     data  = this.setAuthorizedAckInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SaveVisitorCheckinInfo';
     console.log("API: "+ api);
     console.log("Params: "+ JSON.stringify(data));
@@ -3259,7 +3357,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -3268,7 +3366,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -3291,7 +3389,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -3300,7 +3398,7 @@ export class RestProvider {
 
   async VimsAppSecurityCheckIn(data){
     data  = this.setAuthorizedSecurityInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppSecurityCheckIn';
     console.log("API: "+ api);
     console.log("Params: "+ JSON.stringify(data));
@@ -3311,7 +3409,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -3320,7 +3418,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -3339,7 +3437,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -3348,7 +3446,7 @@ export class RestProvider {
 
   async VimsAppUpdateVisitorVideoBriefStatus(data){
     data  = this.setAuthorizedAckInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppUpdateVisitorVideoBriefStatus';
     console.log("API: "+ api);
     console.log("Params: "+ JSON.stringify(data));
@@ -3359,7 +3457,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -3368,7 +3466,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -3389,7 +3487,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });
@@ -3398,7 +3496,7 @@ export class RestProvider {
 
   async GetSafetyBriefStatus(data){
     data  = this.setAuthorizedAckInfo(data);
-    var loading = await this.showLoading();
+    var loading = await this.presentLoading();
     var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetSafetyBriefStatus';
     console.log("API: "+ api);
     console.log("Params: "+ JSON.stringify(data));
@@ -3409,7 +3507,7 @@ export class RestProvider {
           reject({
             "message":"No Internet"
           });
-          loading.dismiss();
+          this.dismissLoading();
           return;
       }
 
@@ -3418,7 +3516,7 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        loading.dismiss();
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -3437,7 +3535,7 @@ export class RestProvider {
         }
 
       }, (err) => {
-        loading.dismiss();
+        this.dismissLoading();
         reject(err);
 
       });

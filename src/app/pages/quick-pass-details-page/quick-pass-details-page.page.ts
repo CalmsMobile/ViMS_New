@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { NavController, ToastController, Platform, ActionSheetController, AlertController, LoadingController, NavParams } from '@ionic/angular';
+import { NavController, ToastController, Platform, ActionSheetController, AlertController, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -48,8 +48,7 @@ export class QuickPassDetailsPagePage implements OnInit {
     private androidPermissions : AndroidPermissions,
     private loadingCtrl : LoadingController,
     private route: ActivatedRoute,
-    private translate:TranslateService,
-    public navParams: NavParams) {
+    private translate:TranslateService) {
       this.translate.get(['ACC_MAPPING.INVALID_QR', 'ACC_MAPPING.INVALID_ORG_TITLE',
       'ACC_MAPPING.INVALID_FCM_TITLE',
       'ACC_MAPPING.FCM_TITLE', 'ALERT_TEXT.QRSHARE_SUCCESS',
@@ -89,7 +88,7 @@ export class QuickPassDetailsPagePage implements OnInit {
           var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
           if(settings && JSON.parse(settings)){
               try{
-                  var hostSettings = JSON.parse(settings).Table2[0];
+                  var hostSettings = JSON.parse(settings).Table1[0];
                   var QPData = JSON.parse(hostSettings.QuickPassSettings);
                   if(QPData){
                     this.securitySettings.QuickPass = {
@@ -129,7 +128,7 @@ export class QuickPassDetailsPagePage implements OnInit {
         }
         this.events.publishDataCompany({
           action: "page",
-          title: "HomeView1",
+          title: "home-view1",
           message: ''
         });
       }
@@ -193,11 +192,17 @@ export class QuickPassDetailsPagePage implements OnInit {
     }
   }
 
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
+
+
   ionViewWillLeave(){
     if(this.fromCreate){
       this.events.publishDataCompany({
         action: 'page',
-        title: 'QuickPassDashBoardPage',
+        title: 'quick-pass-dash-board-page',
         message: ''
       });
     }
@@ -233,6 +238,7 @@ private async presentToast(text) {
   let toast = await this.toastCtrl.create({
     message: text,
     duration: 3000,
+    color: 'primary',
     position: 'bottom'
   });
   toast.present();
@@ -380,6 +386,7 @@ private async presentToast(text) {
                       let toast = await this.toastCtrl.create({
                         message: 'Error',
                         duration: 3000,
+                        color: 'primary',
                         position: 'bottom'
                       });
                       toast.present();
@@ -391,6 +398,7 @@ private async presentToast(text) {
                     let toast = await this.toastCtrl.create({
                       message: 'Download Error',
                       duration: 3000,
+                      color: 'primary',
                       position: 'bottom'
                     });
                     toast.present();

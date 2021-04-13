@@ -1,35 +1,28 @@
 <ion-header>
-  <ion-toolbar>
-    <button ion-button menuToggle start>
-      <ion-icon class="siva-icon-menu-1"></ion-icon>
-    </button>
+  <ion-toolbar color="danger">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
-    <ion-buttons end >
-      <ion-fab style="position: inherit;">
-        <button ion-button round icon-only style="
-        background-color: white;
-    " (click)="goToAddVisitorProfile()">
-          <ion-icon color="danger" name="add"></ion-icon>
-        </button>
-        </ion-fab>
+    <ion-buttons slot="end" >
+      <ion-fab-button color="danger" shape="round" slot="icon-only" (click)="goToAddVisitorProfile()">
+          <ion-icon  name="person-add-outline"></ion-icon>
+        </ion-fab-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar color="favorite">
-    <ion-searchbar [(ngModel)]="VM.queryText"
-    placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch(true, null)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
+  <ion-toolbar color="danger">
+    <ion-searchbar mode="ios" placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch($event.target.value, true, null)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
         <!-- (ionChange)="updateSchedule()" -->
     </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
     <ion-list #visitorsList>
-      <ion-item style="margin: 50% auto;
+      <div style="margin: 50% auto;
       text-align: center;" *ngIf="VM.visitors == undefined || VM.visitors == null || VM.visitors.length == 0">
           {{'MANG_VISITORS.NO_VISITORS_AVAILABLE' | translate}}
-      </ion-item>
+      </div>
       <ion-item-group *ngFor="let group of VM.visitors">
         <ion-item-divider sticky>
           <ion-label>
@@ -37,9 +30,9 @@
           </ion-label>
         </ion-item-divider>
         <ion-item-sliding #slideDOM *ngFor="let item of group.contacts">
-            <ion-item sp-visitor-item no-lines  style="border: 1px solid #dedede;">
+            <ion-item sp-visitor-item lines="none"  style="border: 1px solid #dedede;">
 
-                <ion-avatar item-left (click)="editVisitor(item)">
+                <ion-avatar slot="start" (click)="editVisitor(item)">
                     <img onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType + newImage"(click)="editVisitor(item)" style="background-color: darkgrey;
                     padding: 2px;">
                 </ion-avatar>
@@ -50,16 +43,16 @@
                   <p *ngIf="false">{{item.TELEPHONE_NO}}</p>
                 </ion-label>
 
-                <ion-checkbox red item-right [(ngModel)]="item.checked" checked = "item.checked" (click)= "visitorSelected(item)">
+                <ion-checkbox mode="ios" red slot="end" [(ngModel)]="item.isChecked" [checked]="item.isChecked" (ionChange)="visitorSelected(item)">
                 </ion-checkbox>
             </ion-item>
-            <ion-item-options side="right">
-                <!-- <button ion-button icon-only color="danger" outline no-border (click)="editVisitors(slideDOM, 'delete', item)">
+            <ion-item-options side="end">
+                <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM, 'delete', item)">
                 <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
-              </button> -->
-              <button ion-button icon-only no-padding color="primary" outline no-border (click)="editVisitors(slideDOM, 'edit', item)">
+              </ion-button> -->
+              <ion-button slot="icon-only" no-padding color="primary" fill="outline" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                   <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>
-              </button>
+              </ion-button>
               </ion-item-options>
         </ion-item-sliding>
       </ion-item-group>
@@ -69,11 +62,11 @@
 <ion-footer >
   <ion-toolbar *ngIf="isAnyoneSelected" (click)="addVisitors()">
     <!-- <ion-title>{{'MANG_VISITORS.DONE' | translate}}</ion-title> -->
-    <ion-buttons end>
-        <button ion-button>
+    <ion-buttons slot="end">
+        <ion-button>
             {{'MANG_VISITORS.DONE' | translate}}
           <!-- <ion-icon name="checkmark"></ion-icon> -->
-        </button>
+        </ion-button>
       </ion-buttons>
   </ion-toolbar>
 </ion-footer>

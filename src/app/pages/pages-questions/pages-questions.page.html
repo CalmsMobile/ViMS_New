@@ -4,7 +4,7 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<!-- <ion-content padding [ngStyle]="{'background': 'linear-gradient(' + customStyle.DetailsPage.backgroundcolor1 + ', ' + customStyle.DetailsPage.backgroundcolor2 + ') no-repeat center'}">
+<!-- <ion-content class="ion-padding" [ngStyle]="{'background': 'linear-gradient(' + customStyle.DetailsPage.backgroundcolor1 + ', ' + customStyle.DetailsPage.backgroundcolor2 + ') no-repeat center'}">
   <div class="centerDiv">
       <ion-row>
         <img class="questionImg" src="../../assets/images/qa.png">
@@ -13,22 +13,24 @@
         <h2 class="questionClass">Have you visited oversease recently?</h2>
       </ion-row>
       <ion-row class="yesNoRow">
-        <button ion-button round color="primary" class="noBtn">No</button>
-        <button ion-button round color="primary" class="yesBtn">Yes</button>
+        <ion-button shape="round" color="primary" class="noBtn">No</ion-button>
+        <ion-button shape="round" color="primary" class="yesBtn">Yes</ion-button>
       </ion-row>
   </div>
 </ion-content> -->
-<ion-content class="tutorial-page" [ngStyle]="{'background': 'linear-gradient(' + customStyle.DetailsPage.backgroundcolor1 + ', ' + customStyle.DetailsPage.backgroundcolor2 + ') no-repeat center'}">
+<ion-content fullscreen="true" class="tutorial-page" [style.background]="'linear-gradient(' + customStyle.DetailsPage.backgroundcolor1 + ', ' + customStyle.DetailsPage.backgroundcolor2 + ') no-repeat center'"
+[style.background-size]="'cover'"
+[style.background-repeat]="'no-repeat'">
 
   <!-- <ion-slides pager>
     <ion-slide> -->
       <!-- <ion-toolbar transparent>
       </ion-toolbar> -->
       <!-- <img src="../../assets/images/question (1).png" class="slide-image"/> -->
-      <!-- <div text-center class="animated fadeInUp delay-1s" style="height:100% !important">
+      <!-- <div class="ion-text-center" class="animated fadeInUp delay-1s" style="height:100% !important">
         <div class="slide-title" *ngIf="appSettings.Questions && appSettings.Questions[currentQuestionPos]" [innerHTML]="appSettings.Questions[currentQuestionPos].Description.trim()"></div>
       </div> -->
-      <ion-grid style="height: 100%">
+      <ion-grid style="height: 100%;" [ngStyle]="{'background': 'linear-gradient(' + customStyle.DetailsPage.backgroundcolor1 + ', ' + customStyle.DetailsPage.backgroundcolor2 + ') no-repeat center'}">
         <ion-row justify-content-center align-items-center style="height: 100%;">
           <div class="animated fadeInUp delay-1s">
             <div class="slide-title" *ngIf="appSettings.Questions && appSettings.Questions[currentQuestionPos]" [innerHTML]="appSettings.Questions[currentQuestionPos].Description.trim()"></div>
@@ -36,7 +38,7 @@
           </ion-row>
         </ion-grid>
       <!-- <ion-row>
-        <ion-col text-center>
+        <ion-col class="ion-text-center">
           <a href="#">My centered text</a>
         </ion-col>
       </ion-row> -->
@@ -44,12 +46,12 @@
 
 <ion-footer transparent style="padding: 7px">
   <ion-row class="yesNoRow">
-    <button ion-button round color="favorite" class="noBtn" (click)= "pressAnswerBtn(currentQuestionPos, false)">No</button>
-    <button ion-button round color="favorite" class="yesBtn" (click)= "pressAnswerBtn(currentQuestionPos, true)">Yes</button>
+    <ion-button shape="round" fill="outline" color="danger" class="noBtn" (click)= "pressAnswerBtn(currentQuestionPos, false)">No</ion-button>
+    <ion-button shape="round" color="danger" class="yesBtn" (click)= "pressAnswerBtn(currentQuestionPos, true)">Yes</ion-button>
   </ion-row>
-  <button ion-button round color="favorite" (click)="proceedToBackStep()" class="backBtn">
+  <ion-button shape="round" color="danger" (click)="proceedToBackStep()" class="backBtn">
     <ion-icon class="icon siva-icon-left-open"></ion-icon>
     {{'ACC_MAPPING.GO_BACK' | translate}}
-  </button>
+  </ion-button>
 
 </ion-footer>

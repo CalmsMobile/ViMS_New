@@ -1,6 +1,8 @@
 .para {
   // color:red;
   font-size: 32px;
+  margin: 0px;
+  padding-bottom: 4px;
 }
 .card1 {
   margin: 0px;
@@ -53,7 +55,7 @@
 
 .myDivider {
   min-height: 0px !important;
-  height: 15px;
+  height: 1px;
 }
 
 .myCol {
@@ -83,4 +85,19 @@
 
 .scroll-content {
   margin-top: 0px !important;
+}
+ion-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: contain;
+  background-size: 18px;
+  padding: 5px;
+  &[ng-reflect-name="customicon"] {
+    background-image: url("../../../assets/images/x-icon/admin.png");
+    &[ng-reflect-is-active="true"] {
+      background-image: url("../../../assets/images/x-icon/admin.png");
+    }
+    width: 2.4rem;
+    height: 2.4rem;
+  }
 }

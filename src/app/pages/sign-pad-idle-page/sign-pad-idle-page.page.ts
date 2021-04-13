@@ -4,7 +4,7 @@ import { BarcodeScannerOptions, BarcodeScanner } from '@ionic-native/barcode-sca
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
-import { NavController, AlertController, ModalController, Platform, NavParams, MenuController } from '@ionic/angular';
+import { NavController, AlertController, ModalController, Platform, MenuController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -26,8 +26,8 @@ export class SignPadIdlePagePage implements OnInit {
   listItems=[];
   ackSeettings : any = {};
   selectedLocator : any;
-  AppointmentSync_Interval : any = 5000;
-  SettingsSync_Interval : any = 10000;
+  AppointmentSync_Interval : any = 5;
+  SettingsSync_Interval : any = 10;
   _currentClass : any = this;
   companyData = {
     HomeTitle : "Calms Tecnologies Sdn Bhd",
@@ -82,7 +82,7 @@ export class SignPadIdlePagePage implements OnInit {
     private toastCtrl : ToastService,
     public statusBar: StatusBar,
     private screenOrientation: ScreenOrientation,
-    public navParams: NavParams, public menuCtrl: MenuController) {
+     public menuCtrl: MenuController) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL','ACC_MAPPING.PROCEED','ADD_VISITORS.LAB_USER_IC',
     'ACC_MAPPING.INVALID_QR', 'COMMON.OK', 'COMMON.SCAN', 'COMMON.MANUAL', 'ALERT_TEXT.UPDATE_BRIEF_STATUS', 'ALERT_TEXT.THANK_YOU_WATCH_VIDEO',
@@ -196,15 +196,15 @@ export class SignPadIdlePagePage implements OnInit {
                   }
 
                   if(result.AppointmentSync_Interval){
-                    _currentClass.AppointmentSync_Interval = result.AppointmentSync_Interval*1000;
+                    _currentClass.AppointmentSync_Interval = result.AppointmentSync_Interval;
                   }else{
-                    _currentClass.AppointmentSync_Interval = 5000;
+                    _currentClass.AppointmentSync_Interval = 5;
                   }
 
                   if(result.SettingsSync_Interval){
-                    _currentClass.SettingsSync_Interval = result.SettingsSync_Interval*1000;
+                    _currentClass.SettingsSync_Interval = result.SettingsSync_Interval;
                   }else{
-                    _currentClass.SettingsSync_Interval = 10000;
+                    _currentClass.SettingsSync_Interval = 10;
                   }
 
                   if(result.customStyle && JSON.parse(result.customStyle)){
@@ -254,7 +254,7 @@ export class SignPadIdlePagePage implements OnInit {
 
                     _currentClass.getAckSettings(false, _currentClass);
                   }
-                  if(!_currentClass.isMovedToDetailPage || result.AppointmentSync_Interval && _currentClass.AppointmentSync_Interval != (result.AppointmentSync_Interval * 1000)){
+                  if(result.AppointmentSync_Interval && _currentClass.AppointmentSync_Interval !== result.AppointmentSync_Interval){
                     if(_currentClass.timeoutInterval){
                       clearInterval(_currentClass.timeoutInterval);
                     }
@@ -266,13 +266,13 @@ export class SignPadIdlePagePage implements OnInit {
               },
               (err) => {
                 _currentClass.isFetchingSettings = false;
-                if(_currentClass.timeoutIntervalSettings){
-                  clearInterval(_currentClass.timeoutIntervalSettings);
-                }
+                // if(_currentClass.timeoutIntervalSettings){
+                //   clearInterval(_currentClass.timeoutIntervalSettings);
+                // }
               }
             );
           }
-      },_currentClass.SettingsSync_Interval);
+      },_currentClass.SettingsSync_Interval * 1000);
       _currentClass.timeoutIntervalSettings = timeoutInterval;
   }
   }
@@ -303,15 +303,15 @@ export class SignPadIdlePagePage implements OnInit {
        }
 
        if(result.AppointmentSync_Interval){
-        this.AppointmentSync_Interval = result.AppointmentSync_Interval*1000;
+        this.AppointmentSync_Interval = result.AppointmentSync_Interval;
        }else{
-        this.AppointmentSync_Interval = 5000;
+        this.AppointmentSync_Interval = 5;
        }
 
        if(result.SettingsSync_Interval){
-        this.SettingsSync_Interval = result.SettingsSync_Interval*1000;
+        this.SettingsSync_Interval = result.SettingsSync_Interval;
       }else{
-        this.SettingsSync_Interval = 10000;
+        this.SettingsSync_Interval = 10;
       }
 
        if(result.customStyle && JSON.parse(result.customStyle)){
@@ -354,7 +354,7 @@ export class SignPadIdlePagePage implements OnInit {
     this.getAckSettings(false,this._currentClass);
 
     if(this.QRData.Location){
-     this.listenVisitorDetails(this.QRData.Location, this._currentClass);
+     this.listenVisitorDetails(this.QRData.Location);
     }
   }
 
@@ -363,7 +363,7 @@ export class SignPadIdlePagePage implements OnInit {
      'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
     ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
       let loginConfirm = await this.alertCtrl.create({
-        header: "<span class='failed'>" + t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'] + '</span>',
+        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
         message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
         cssClass: 'alert-warning',
         buttons: [
@@ -400,7 +400,7 @@ export class SignPadIdlePagePage implements OnInit {
             handler: () => {
               // var location = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SIGN_PAD);
               if (this.QRData.Location) {
-                this.listenVisitorDetails(this.QRData.Location, this._currentClass);
+                this.listenVisitorDetails(this.QRData.Location);
               }
             }
           }
@@ -451,30 +451,30 @@ export class SignPadIdlePagePage implements OnInit {
     console.log('ionViewWillLeave Idle Sign Pad');
   }
 
-  listenVisitorDetails(data, _currentClass){
+  listenVisitorDetails(data){
 
-    if(_currentClass.QRData.type == AppSettings.ACK_APP.TYPE2){
+    if(this.QRData.type == AppSettings.ACK_APP.TYPE2){
       return;
     }
 
-    if(_currentClass.isListeningAppointment){
+    if(this.isListeningAppointment){
       console.log("Dont try its fetching VisitorDetails");
-    }else if(_currentClass.isMovedToDetailPage) {
+    }else if(this.isMovedToDetailPage) {
       console.log("Dont try its showing VisitorDetails");
     }else{
       // if(_currentClass.timeoutInterval){
       //   clearInterval(_currentClass.timeoutInterval);
       // }
-    var timeoutInterval = setInterval(function(){
-      _currentClass.isListeningAppointment  = true;
+
+    const timeoutInterval = setTimeout(() => {
+      this.isListeningAppointment  = true;
       // _currentClass._zone.run(() => {
         var params = {
           "LocatorName": data
         }
         var QRCode = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
         if(!QRCode){
-          _currentClass.isListeningAppointment  = false;
-
+          this.isListeningAppointment  = false;
           return;
         }
         var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.ACK_DETAILS);
@@ -485,23 +485,29 @@ export class SignPadIdlePagePage implements OnInit {
           if(!MAppDevSeqId){
             return;
           }
-        _currentClass.apiProvider.GetVisitorInfoFromLocator(params).then(
+          this.apiProvider.GetVisitorInfoFromLocator(params).then(
           (val) => {
-            _currentClass.isListeningAppointment  = false;
+            this.isListeningAppointment  = false;
+            this.listenVisitorDetails(data);
             if(val){
               if(val && JSON.parse(val+"") && JSON.parse(val+"").length == 0 ){//
                 console.log("SignPadVisitorDetailsPage open by 1");
-                // _currentClass.isMovedToDetailPage = true;
-                //   const data = [
-                //     {
-                //       VisitorSeqId: '123',
-                //       VisitorCompName: 'CALMS',
-                //       VisitorName: 'TEST'
-                //     }
-                //   ]
-                //   _currentClass.navCtrl.push("SignPadVisitorDetailsPage", {
-                //     "visitorDetails": JSON.stringify(data)
-                //   });
+                // this.isMovedToDetailPage = true;
+                  // const data = [
+                  //   {
+                  //     VisitorSeqId: '123',
+                  //     VisitorCompName: 'CALMS',
+                  //     VisitorName: 'TEST'
+                  //   }
+                  // ]
+                  // const navigationExtras: NavigationExtras = {
+                  //   state: {
+                  //     passData: {
+                  //       "visitorDetails": JSON.stringify(data)
+                  //     }
+                  //   }
+                  // };
+                  // this.router.navigate(['sign-pad-visitor-details-page'], navigationExtras);
                 return;
               }
 
@@ -509,20 +515,25 @@ export class SignPadIdlePagePage implements OnInit {
               var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS);
               var vDetails = JSON.parse(val+"")[0];
               if(settings){
-                _currentClass.ackSeettings = JSON.parse(settings+"");
-                _currentClass.isListeningAppointment = false;
+                this.ackSeettings = JSON.parse(settings+"");
+                this.isListeningAppointment = false;
                 clearInterval(timeoutInterval);
                 // clearInterval(listenT);
-                if(_currentClass.isMovedToDetailPage || !vDetails.VisitorName) {
+                if(this.isMovedToDetailPage || !vDetails.VisitorName) {
                   console.log("Dont try its showing VisitorDetails 1");
                   return;
                 }
-                // _currentClass._zone.run(() => {
+                // this._zone.run(() => {
                   console.log("SignPadVisitorDetailsPage open by 1");
-                  _currentClass.isMovedToDetailPage = true;
-                  _currentClass.navCtrl.push("SignPadVisitorDetailsPage", {
-                    "visitorDetails": val+""
-                  });
+                  this.isMovedToDetailPage = true;
+                  const navigationExtras: NavigationExtras = {
+                    state: {
+                      passData: {
+                        "visitorDetails": val+""
+                      }
+                    }
+                  };
+                  this.router.navigate(['sign-pad-visitor-details-page'], navigationExtras);
                 // });
 
               }else{
@@ -532,27 +543,31 @@ export class SignPadIdlePagePage implements OnInit {
                   "RefBranchSeqId": "",
                   "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
                   "LocatorName": data,
-                  "MAppDevSeqId": _currentClass.QRData.MAppDevSeqId
+                  "MAppDevSeqId": this.QRData.MAppDevSeqId
                 }
-                _currentClass.apiProvider.getVisitorAcknowledgeSetting(params).then(
+                this.apiProvider.getVisitorAcknowledgeSetting(params).then(
                   (val) => {
                     var result = JSON.parse(val+"");
                     if(result){
                      console.log(val+"");
                      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS,val+"");
-                     _currentClass.ackSeettings = result;
+                     this.ackSeettings = result;
                     //  this.navCtrl.push("PagesQuestionsPage", {"visitor": {} , "visitorImage" : this.HostImage});
-                     if(_currentClass.isMovedToDetailPage || !vDetails.VisitorName) {
+                     if(this.isMovedToDetailPage || !vDetails.VisitorName) {
                       console.log("Dont try its showing VisitorDetails 2");
                       return;
                     }
                     //  _currentClass._zone.run(() => {
                       console.log("SignPadVisitorDetailsPage open by 2");
-                      _currentClass.isMovedToDetailPage = true;
-                        _currentClass.navCtrl.push("SignPadVisitorDetailsPage", {
-                        "visitorDetails": apptData
-                      });
-                    // });
+                      this.isMovedToDetailPage = true;
+                      const navigationExtras: NavigationExtras = {
+                        state: {
+                          passData: {
+                            "visitorDetails": apptData
+                          }
+                        }
+                      };
+                      this.router.navigate(['sign-pad-visitor-details-page'], navigationExtras);
                     }
                   },
                   (err) => {
@@ -571,41 +586,41 @@ export class SignPadIdlePagePage implements OnInit {
               //   });
               //   alert.present();
             }
-            _currentClass.isListeningAppointment  = false;
+            this.isListeningAppointment  = false;
           },
-          (err) => {
-            _currentClass.isListeningAppointment  = false;
+          async (err) => {
+            this.isListeningAppointment  = false;
             clearInterval(timeoutInterval);
             if(err && err.message == "No Internet"){
               return;
             }
             var message = "";
             if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-              message = _currentClass.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+              message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
             } else if(err && JSON.parse(err) && JSON.parse(err).message){
               message =JSON.parse(err).message;
             }
-            if(message && !_currentClass.alertShowing){
-              _currentClass.alertShowing = true;
+            if(message && !this.alertShowing){
+              this.alertShowing = true;
               // message = " Unknown"
-              let alert = _currentClass.alertCtrl.create({
+              let alert = this.alertCtrl.create({
                 header: 'Error !',
                 message: message,
                 cssClass:'alert-danger',
                 buttons: ['Okay']
                 });
-                alert.present();
-                alert.onDidDismiss(() => {
-                  _currentClass.alertShowing = false;
+                (await alert).present();
+                (await alert).onDidDismiss().then(() => {
+                  this.alertShowing = false;
                 });
             }
           }
         );
 
       // });
-    }, _currentClass.AppointmentSync_Interval);
+    }, this.AppointmentSync_Interval * 1000);
 
-    _currentClass.timeoutInterval = timeoutInterval;
+    this.timeoutInterval = timeoutInterval;
   }
   }
 

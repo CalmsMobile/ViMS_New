@@ -1,5 +1,5 @@
 [my-set-list] {
-  // ion-icon[item-start]{
+  // ion-icon[slot="start"]{
   //     font-size: 2.2rem !important;
   // }
   ion-item.item .item-inner,
@@ -12,7 +12,7 @@ ion-icon {
   background-position: 50%;
   background-size: contain;
   background-size: 18px;
-
+  padding: 5px;
   &[ng-reflect-name="customicon"] {
     background-image: url("../../../assets/images/x-icon/admin.png");
     &[ng-reflect-is-active="true"] {

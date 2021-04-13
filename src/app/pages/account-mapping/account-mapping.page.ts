@@ -160,18 +160,19 @@ export class AccountMappingPage {
           if(invalidORG){
             this.STOPS = 'STOP2';
           } else {
-            // var  ApiUrl = "http://124.217.235.107:1022";
-            // var CompanyId = "1";
-            // var HostId = "nurul";
-            // var AppId = "1";
-           // var qrJsonString1 = "{\"ApiUrl\":\""+ApiUrl+ "\",\"CompanyId\":\"" + CompanyId + "\",\"HostId\":\"" + HostId + "\", \"AppId\":\"" + AppId + "\"}";
+            var  ApiUrl = "http://124.217.235.107:2001/";
+            var CompanyId = "2";
+            var HostId = "VijayCalms";
+            var AppId = "1";
+           var qrJsonString1 = "{\"ApiUrl\":\""+ApiUrl+ "\",\"CompanyId\":\"" + CompanyId + "\",\"HostId\":\""
+           + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT+ "\"}";
           // var qrJsonString1 = "{\"CompanyId\":\"1\",\"HostId\":\""+AppSettings.TEST_DATA.SAMPLE_HOST_IC+"\",\"AppId\":\"1\",\"ApiUrl\":\"http://124.217.235.107:2026\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP+ "\"}";
           // ACK
-          var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3066\", \"MAppId\":\""+ AppSettings.LOGINTYPES.ACKAPPT+ "\", \"Location\":\"ACKDemo\"}";
+          // var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3066\", \"MAppId\":\""+ AppSettings.LOGINTYPES.ACKAPPT+ "\", \"Location\":\"ACKDemo\"}";
           // SECURITY
           // var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_SECURITY_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:2026\", \"MAppId\":\""+ AppSettings.LOGINTYPES.SECURITYAPP+ "\"}";
           // DISPLAY
-            // var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DISPLAY_DEV_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3067\", \"MAppId\":\""+ AppSettings.LOGINTYPES.DISPLAYAPP+ "\"}";
+          //   var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DISPLAY_DEV_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3067\", \"MAppId\":\""+ AppSettings.LOGINTYPES.DISPLAYAPP+ "\"}";
 
           var key = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
           var iv = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
@@ -183,8 +184,13 @@ export class AccountMappingPage {
               mode: CryptoJS.mode.CBC,
               padding: CryptoJS.pad.Pkcs7
           });
-            var qrCodeString = "" + encrypted;
+            // var qrCodeString = "" + encrypted;
+            //HOST 1001
+            var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
+            //ACK
+            // var qrCodeString = 'qYNb75lXZms19Ri+u9GuOKEOnI+Bw2rOjRNRz3F3gK5yStsC7HV5d0FoZmKl97l5D/TzMTQCqKnahYPuTqZ6TrHijxnIJnXGCrbD93loR9n/96rUnC+77Vl8D/VZ3XTIwc3axSyZQ7DQC4g4NiQGJlH8pY7wGwxGkeDBwIRR7GA=';
 
+            // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohZjEU6Evg3rcMxk+/Ugdcex2hFM6P4LE2zMmCF/XoF6kbtLZRrN6d2wZtKDKw7wzf5ZU6E1Ud9RSlXHW9nXhMnWsmBp9G8mZXnsbxnVshwTw==';
             this.processJson(qrCodeString);
           }
         } else{
@@ -303,10 +309,10 @@ export class AccountMappingPage {
                       this.STOPS = 'STOP2';
                       break;
                     case AppSettings.LOGINTYPES.DISPLAYAPP:
-                      this.navCtrl.navigateRoot('FacilityKioskDisplayPage');
+                      this.navCtrl.navigateRoot('facility-kiosk-display');
                       break;
                     case AppSettings.LOGINTYPES.ACKAPPT:
-                      this.navCtrl.navigateRoot('SignPadIdlePage');
+                      this.navCtrl.navigateRoot('sign-pad-idle-page');
                       break;
                     default:
                       this.STOPS = 'STOP2';
@@ -481,7 +487,7 @@ export class AccountMappingPage {
     }
     window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
     var params = {"CompanyID":""+this.scannedJson.CompanyId};
-    this.VM.host_search_id = AppSettings.TEST_DATA.SAMPLE_HOST_IC;
+    this.VM.host_search_id = this.scannedJson.HostId;
     this.apiProvider.GetAppDetails(params).then(
       (val) => {
         this.companyInfo = val;
@@ -502,10 +508,10 @@ export class AccountMappingPage {
               this.STOPS = 'STOP2';
               break;
             case AppSettings.LOGINTYPES.DISPLAYAPP:
-              this.navCtrl.navigateRoot('FacilityKioskDisplayPage');
+              this.navCtrl.navigateRoot('facility-kiosk-display');
               break;
             case AppSettings.LOGINTYPES.ACKAPPT:
-              this.navCtrl.navigateRoot('SignPadIdlePage');
+              this.navCtrl.navigateRoot('sign-pad-idle-page');
               break;
           }
 
@@ -572,7 +578,7 @@ export class AccountMappingPage {
 
 
         let invalidORGConfirm = await this.alertCtrl.create({
-          header: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_ORG_TITLE'] + '</span>',
+          header: this.T_SVC['ACC_MAPPING.INVALID_ORG_TITLE'],
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVAYLID_ORG_DETAIL'] + '</span>',
           cssClass: 'alert-danger',
           buttons: [
@@ -701,7 +707,7 @@ export class AccountMappingPage {
 
 
         let invalidORGConfirm = await this.alertCtrl.create({
-          header: "<span class='failed'>" + "Error" + '</span>',
+          header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
           cssClass: 'alert-danger',
           buttons: [
@@ -824,7 +830,7 @@ export class AccountMappingPage {
 
 
         let invalidORGConfirm = await this.alertCtrl.create({
-          header: "<span class='failed'>" + "Error" + '</span>',
+          header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
           cssClass: 'alert-danger',
           buttons: [
@@ -946,7 +952,7 @@ export class AccountMappingPage {
 
 
         let invalidORGConfirm = await this.alertCtrl.create({
-          header: "<span class='failed'>" + "Error" + '</span>',
+          header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
           cssClass: 'alert-danger',
           buttons: [
@@ -1020,11 +1026,11 @@ export class AccountMappingPage {
           switch(this.scannedJson.MAppId){
             case AppSettings.LOGINTYPES.DISPLAYAPP:
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              this.navCtrl.navigateRoot('FacilityKioskDisplayPage');
+              this.navCtrl.navigateRoot('facility-kiosk-display');
               break;
             case AppSettings.LOGINTYPES.ACKAPPT:
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              this.navCtrl.navigateRoot('SignPadIdlePage');
+              this.navCtrl.navigateRoot('sign-pad-idle-page');
               break;
           }
 
@@ -1067,7 +1073,7 @@ export class AccountMappingPage {
 
 
         let invalidORGConfirm = await this.alertCtrl.create({
-          header: "<span class='failed'>" + "Error" + '</span>',
+          header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
           cssClass: 'alert-danger',
           buttons: [
@@ -1128,11 +1134,11 @@ export class AccountMappingPage {
             case AppSettings.LOGINTYPES.DISPLAYAPP:
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
               //this.STOPS = 'STOP3';
-              this.navCtrl.navigateRoot('FacilityKioskDisplayPage');
+              this.navCtrl.navigateRoot('facility-kiosk-display');
               break;
             case AppSettings.LOGINTYPES.ACKAPPT:
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              this.navCtrl.navigateRoot('SignPadIdlePage');
+              this.navCtrl.navigateRoot('sign-pad-idle-page');
               break;
             case AppSettings.LOGINTYPES.SECURITYAPP:
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
@@ -1179,7 +1185,7 @@ export class AccountMappingPage {
 
 
         let invalidORGConfirm = await this.alertCtrl.create({
-          header: "<span class='failed'>" + "Error" + '</span>',
+          header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
           cssClass: 'alert-danger',
           buttons: [
@@ -1239,13 +1245,13 @@ export class AccountMappingPage {
             case AppSettings.LOGINTYPES.DISPLAYAPP:
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
               //this.STOPS = 'STOP3';
-              this.navCtrl.navigateRoot('FacilityKioskDisplayPage');
+              this.navCtrl.navigateRoot('facility-kiosk-display');
               break;
             case AppSettings.LOGINTYPES.ACKAPPT:
               var jobj = JSON.parse(val+"");
               this.scannedJson.type = jobj.AppType;
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              this.navCtrl.navigateRoot('SignPadIdlePage');
+              this.navCtrl.navigateRoot('sign-pad-idle-page');
               break;
           }
 
@@ -1288,7 +1294,7 @@ export class AccountMappingPage {
 
 
         let invalidORGConfirm = await this.alertCtrl.create({
-          header: "<span class='failed'>" + "Error" + '</span>',
+          header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
           cssClass: 'alert-danger',
           buttons: [
@@ -1425,11 +1431,11 @@ export class AccountMappingPage {
                 this.navCtrl.navigateRoot('SecurityDashBoardPage');
                 break;
               default:
-                this.navCtrl.navigateRoot('HomeView');
+                this.navCtrl.navigateRoot('home-view');
                 break;
             }
           }else{
-            this.navCtrl.navigateRoot('HomeView');
+            this.navCtrl.navigateRoot('home-view');
           }
 
         },
@@ -1465,7 +1471,7 @@ export class AccountMappingPage {
               return;
           }
           let invalidORGConfirm = await this.alertCtrl.create({
-            header: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.FCM_TITLE'] + '</span>',
+            header: this.T_SVC['ACC_MAPPING.FCM_TITLE'],
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_FCM_TITLE'] + '</span>',
             cssClass: 'alert-danger',
             buttons: [
@@ -1575,7 +1581,7 @@ export class AccountMappingPage {
           }
 
           let invalidORGConfirm = await this.alertCtrl.create({
-            header: "<span class='failed'>" + "Error" + '</span>',
+            header: "Error",
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_HOST'] + '</span>',
             cssClass: 'alert-danger',
             buttons: [

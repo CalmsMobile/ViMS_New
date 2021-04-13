@@ -4,7 +4,7 @@ import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
-import { NavController, Platform, ToastController, ModalController, LoadingController, NavParams, AlertController } from '@ionic/angular';
+import { NavController, Platform, ToastController, ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CustomVisitorPopupComponent } from 'src/app/components/custom-visitor-popup/custom-visitor-popup';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
@@ -13,7 +13,7 @@ import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-
+import * as CryptoJS from 'crypto-js';
 @Component({
   selector: 'app-appointment-details',
   templateUrl: './appointment-details.page.html',
@@ -173,7 +173,7 @@ export class AppointmentDetailsPage implements OnInit {
     private dateformat : DateFormatPipe,
     private socialSharing: SocialSharing,
     private translate : TranslateService,
-    private localNotifications: LocalNotifications, public navParams: NavParams,private alertCtrl: AlertController) {
+    private localNotifications: LocalNotifications, private alertCtrl: AlertController) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'ALERT_TEXT.APPOINTMENT_EXPIRED',
@@ -247,6 +247,11 @@ export class AppointmentDetailsPage implements OnInit {
       }
     });
 
+  }
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
   }
 
   getQREncryptedValue(appointment){
@@ -347,6 +352,7 @@ export class AppointmentDetailsPage implements OnInit {
                   let toast = this.toastCtrl.create({
                     message: this.T_SVC['ALERT_TEXT.QRSHARE_SUCCESS'],
                     duration: 3000,
+                    color: 'primary',
                     position: 'bottom'
                   });
                   (await toast).present();
@@ -357,6 +363,7 @@ export class AppointmentDetailsPage implements OnInit {
                   let toast = this.toastCtrl.create({
                     message: 'Error',
                     duration: 3000,
+                    color: 'primary',
                     position: 'bottom'
                   });
                   (await toast).present();
@@ -604,6 +611,7 @@ export class AppointmentDetailsPage implements OnInit {
                   let toast = this.toastCtrl.create({
                     message: this.T_SVC['ALERT_TEXT.REMINDER_SUCCESS'],
                     duration: 3000,
+                    color: 'primary',
                     position: 'bottom'
                   });
                   (await toast).present();
@@ -754,7 +762,7 @@ export class AppointmentDetailsPage implements OnInit {
               hostId = JSON.parse(hostData).HOST_ID;
             }
             var bookingID= this.appointment[0].FacilityBookingID;
-            if(!bookingID){
+            if(!bookingID && bookingID !== '0'){
               bookingID = "";
             }
             var params = {}
@@ -781,6 +789,7 @@ export class AppointmentDetailsPage implements OnInit {
                     let toast = this.toastCtrl.create({
                       message: this.T_SVC['ALERT_TEXT.APPOINTMENT_DELETE_SUCCESS'],
                       duration: 3000,
+                    color: 'primary',
                       position: 'bottom'
                     });
                     (await toast).present();
@@ -837,6 +846,7 @@ export class AppointmentDetailsPage implements OnInit {
                     let toast = this.toastCtrl.create({
                       message: this.T_SVC['ALERT_TEXT.APPOINTMENT_DELETE_SUCCESS'],
                       duration: 3000,
+                    color: 'primary',
                       position: 'bottom'
                     });
                     (await toast).present();
@@ -1159,6 +1169,7 @@ export class AppointmentDetailsPage implements OnInit {
                   let toast = this.toastCtrl.create({
                     message: this.T_SVC['ALERT_TEXT.ENTER_SLOT_PIN'],
                     duration: 3000,
+                    color: 'primary',
                     position: 'bottom'
                   });
                   (await toast).present();
@@ -1217,6 +1228,7 @@ export class AppointmentDetailsPage implements OnInit {
                 let toast = this.toastCtrl.create({
                   message: this.T_SVC['ALERT_TEXT.ENTER_SLOT_PIN'],
                   duration: 3000,
+                  color: 'primary',
                   position: 'bottom'
                 });
                 (await toast).present();

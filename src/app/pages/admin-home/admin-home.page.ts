@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { NavController, NavParams, ToastController, AlertController, MenuController } from '@ionic/angular';
+import { NavController, ToastController, AlertController, MenuController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -24,7 +24,7 @@ export class AdminHomePage implements OnInit {
   T_SVC:any;
   showFab = true;
   loadingFinished = true;
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController,
     private toastCtrl:ToastController,
     private router: Router,
     private translate:TranslateService,
@@ -59,7 +59,7 @@ export class AdminHomePage implements OnInit {
   ionViewWillEnter() {
 		console.log('ionViewWillEnter AdminHomePage');
     this.OffSet = 0;
-    this.getPreAppointmentenableApprovalSettings();
+    // this.getPreAppointmentenableApprovalSettings();
 		this.getAppointmentHistory(null);
   }
 
@@ -134,7 +134,7 @@ export class AdminHomePage implements OnInit {
 	doRefresh(refresher) {
     // this.OffSet = this.OffSet + 20;
     this.getAppointmentHistory(refresher);
-    //setTimeout(()=>{refresher.complete();},2000)
+    //setTimeout(()=>{refresher.target.complete();},2000)
 	}
 
 	getAppointmentHistory(refresher){
@@ -145,7 +145,7 @@ export class AdminHomePage implements OnInit {
 			var params = {
       "hostID":hostId,
 			"OffSet": ""+ this.OffSet,
-      "Rows":"20",
+      "Rows":"500",
       "StatusType":"0"
     };
 
@@ -160,14 +160,11 @@ export class AdminHomePage implements OnInit {
           this.loadingFinished = true;
 					var aList = JSON.parse(val.toString());
 					if(refresher){
-            this.appointments = aList.concat(this.appointments);
-            // this.appointments = aList;
-						refresher.complete();
+            this.appointments = aList;
 					}else{
-						this.appointments = aList;
+            this.appointments = aList.concat(this.appointments);
+						refresher.target.complete();
 					}
-
-
           this.OffSet = this.OffSet + aList.length;
           if(this.selectedTap == 'approved'){
             this.approvedList = this.appointments;
@@ -190,7 +187,7 @@ export class AdminHomePage implements OnInit {
 				async (err) => {
           this.loadingFinished = true;
           if(refresher){
-            refresher.complete();
+            refresher.target.complete();
           }
           if(err && err.message == "No Internet"){
             return;
@@ -327,6 +324,12 @@ export class AdminHomePage implements OnInit {
         }
       }
     );
+  }
+
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
   }
 
   getPreAppointmentenableApprovalSettings(){
@@ -505,7 +508,7 @@ export class AdminHomePage implements OnInit {
      'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED', 'SETTINGS.ARE_U_SURE_ADMIN_LOGOUT'
     ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
       let loginConfirm = await this.alertCtrl.create({
-        header: "<span class='failed'>" + t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'] + '</span>',
+        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
         message: t['SETTINGS.ARE_U_SURE_ADMIN_LOGOUT'],
         cssClass: 'alert-warning',
         buttons: [
@@ -516,7 +519,7 @@ export class AdminHomePage implements OnInit {
               // this.toastCtrl.create(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.LOGIN_TYPE, "");
               this.menuCtrl.enable(true, 'myLeftMenu');
-              this.navCtrl.navigateRoot("HomeView");
+              this.navCtrl.navigateRoot("home-view");
 
             }
           }, {

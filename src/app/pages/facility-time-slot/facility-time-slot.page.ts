@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, AlertController, ToastController, NavParams } from '@ionic/angular';
+import { NavController, AlertController, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -42,8 +42,7 @@ export class FacilityTimeSlotPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toastCtrl : ToastController,
-    private translate : TranslateService,
-     public navParams: NavParams) {
+    private translate : TranslateService) {
       this.translate.get([
         'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
         'ALERT_TEXT.SESSION_EXPIRED',
@@ -80,12 +79,13 @@ export class FacilityTimeSlotPage implements OnInit {
         if(qrInfo && JSON.parse(qrInfo) && JSON.parse(qrInfo).MAppId){
           var QRObj = JSON.parse(qrInfo);
           if(QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-            if(JSON.parse(settings).Table3 && JSON.parse(settings).Table3.length > 0){
-              this.hostSettings = JSON.parse(settings).Table3[0];
+            if(JSON.parse(settings).Table1 && JSON.parse(settings).Table1.length > 0){
+              this.hostSettings = JSON.parse(settings).Table1[0];
             }else{
               let toast = await this.toastCtrl.create({
                 message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
                 duration: 3000,
+                color: 'primary',
                 position: 'bottom'
               });
               toast.present();
@@ -101,6 +101,7 @@ export class FacilityTimeSlotPage implements OnInit {
               let toast = await this.toastCtrl.create({
                 message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
                 duration: 3000,
+                color: 'primary',
                 position: 'bottom'
               });
               toast.present();
@@ -423,6 +424,11 @@ export class FacilityTimeSlotPage implements OnInit {
       }
     }
 
+  }
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
   }
 
   moveToNextStep(){

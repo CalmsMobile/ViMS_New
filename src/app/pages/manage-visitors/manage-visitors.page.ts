@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { AlertController, IonItemSliding, IonList, NavController, NavParams } from '@ionic/angular';
+import { AlertController, IonItemSliding, IonList, NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -34,7 +34,7 @@ export class ManageVisitorsPage implements OnInit {
 
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     private router: Router,
     private route: ActivatedRoute,
@@ -53,7 +53,7 @@ export class ManageVisitorsPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         const passData = this.router.getCurrentNavigation().extras.state.passData;
-        console.log('passData : ' + passData);
+        console.log('passData : ' + JSON.stringify(passData));
         this.visitors1 =  passData.data;
         // if(this.contactsArray != undefined && this.contactsArray && this.contactsArray.length != 0){
         //   this.VM.visitors = this.contactsArray;
@@ -95,7 +95,7 @@ export class ManageVisitorsPage implements OnInit {
               visitor1.VisitorCategory_ID=visitor.VisitorCategory_ID,
               visitor1.VISITOR_IMG=visitor.VISITOR_IMG,
               visitor1.PLATE_NUM=visitor.PLATE_NUM,
-              visitor1.checked = true,
+              visitor1.isChecked = true,
               visitor1.visitor_RemoveImg =visitor.visitor_RemoveImg,
               visitor1.visitor_id = visitor.VISITOR_IC,
               visitor1.ImageChanged = visitor.ImageChanged,
@@ -117,12 +117,17 @@ export class ManageVisitorsPage implements OnInit {
   ionViewWillEnter() {
   }
 
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
+
   goToAddVisitorProfile(){
 
     var visitorTemp = [];
     for(let contacts in this.VM.visitors){
       for(let visitors in this.VM.visitors[contacts].contacts){
-        if(this.VM.visitors[contacts].contacts[visitors]["checked"]){
+        if(this.VM.visitors[contacts].contacts[visitors]["isChecked"]){
           visitorTemp.push(this.VM.visitors[contacts].contacts[visitors]);
         }
       }
@@ -147,7 +152,8 @@ export class ManageVisitorsPage implements OnInit {
           data:visitorTemp1,
           changeMaster: false,
           fromAppointmentPage : false,
-          aData: this.VM.aData
+          aData: this.VM.aData,
+          addVisitorSettings: this.VM.aData
         }
       }
     };
@@ -158,7 +164,7 @@ export class ManageVisitorsPage implements OnInit {
     var visitorTemp = [];
     for(let contacts in this.VM.visitors){
       for(let visitors in this.VM.visitors[contacts].contacts){
-        if(this.VM.visitors[contacts].contacts[visitors]["checked"]){
+        if(this.VM.visitors[contacts].contacts[visitors]["isChecked"]){
           visitorTemp.push(this.VM.visitors[contacts].contacts[visitors]);
         }
       }
@@ -205,10 +211,12 @@ export class ManageVisitorsPage implements OnInit {
     this.VM.visitors = [];
   }
 
-  getVisitorsBySearch(typing, refresher){
+  getVisitorsBySearch(queryText, typing, refresher){
     if(typing){
       this.OffSet = 0;
+      this.VM.queryText = queryText;
     }
+
     // this.VM.host_search_id = "adam";
     if(this.VM.queryText.length >= 2){
       var params = {
@@ -218,11 +226,24 @@ export class ManageVisitorsPage implements OnInit {
      }
      this.apiProvider.SearchExistVisitor(params).then(
        (val) => {
-        this.VM.searchContactsArray= JSON.parse(val.toString());
+        const searchContactsArray= JSON.parse(val.toString());
+        let selectedCat = '';
+        try {
+          selectedCat = this.VM.aData['visitor_ctg'].visitor_ctg_id;
+        } catch (error) {
+          const item = JSON.parse(this.VM.aData + '');
+          selectedCat = item.visitor_ctg.visitor_ctg_id;
+        }
+        this.VM.searchContactsArray = [];
+        searchContactsArray.forEach(element => {
+          if (element.VisitorCategory && element.VisitorCategory === selectedCat) {
+            this.VM.searchContactsArray.push(element);
+          }
+        });
 
         //  for(let contacts in this.contactsArray){
         //   for(let visitors in this.contactsArray[contacts].contacts){
-        //     if(this.contactsArray[contacts].contacts[visitors]["checked"]){
+        //     if(this.contactsArray[contacts].contacts[visitors]["isChecked"]){
         //       this.tempContactArray.push(this.contactsArray[contacts].contacts[visitors]);
         //     }
         //   }
@@ -230,9 +251,10 @@ export class ManageVisitorsPage implements OnInit {
 
 
          for(let items in this.VM.searchContactsArray){
+          this.VM.searchContactsArray[0].isChecked = false
           for(let olditems in this.visitors1){
             if(this.visitors1[olditems].SEQ_ID == this.VM.searchContactsArray[items].SEQ_ID){
-              this.VM.searchContactsArray[items].checked = true;
+              this.VM.searchContactsArray[items].isChecked = true;
               break;
             }
           }
@@ -248,7 +270,7 @@ export class ManageVisitorsPage implements OnInit {
 
          if(refresher){
           this.VM.visitors = result.concat(this.VM.visitors);
-          refresher.complete();
+          refresher.target.complete();
          }else{
           this.VM.visitors = result;
          }
@@ -256,7 +278,7 @@ export class ManageVisitorsPage implements OnInit {
        },
        async (err) => {
          if(refresher){
-          refresher.complete();
+          refresher.target.complete();
          }else{
           this.VM.visitors = [];
          }
@@ -286,14 +308,14 @@ export class ManageVisitorsPage implements OnInit {
      );
     }else{
       if(refresher){
-        refresher.complete();
+        refresher.target.complete();
        }
     }
 
   }
 
   async visitorSelected(item){
-    console.log("Clicked:"+item);
+    console.log("Clicked:"+ JSON.stringify(item));
     if(this.appSettings && this.appSettings.EmailEnabled && this.appSettings.EmailRequired && !item.EMAIL){
       let alert = await this.alertCtrl.create({
         header: 'Error !',
@@ -303,20 +325,21 @@ export class ManageVisitorsPage implements OnInit {
           text: 'Okay',
           handler: () => {
             console.log('Cancel clicked');
-            item.checked = false;
+            item.isChecked = false;
           }
         }]
       });
         alert.present();
         alert.onDidDismiss().then(() => {
-          item.checked = false;
+          item.isChecked = false;
         });
       return;
     }
     this.isAnyoneSelected = false;
     for(let contacts in this.VM.visitors){
       for(let visitors in this.VM.visitors[contacts].contacts){
-        if(this.VM.visitors[contacts].contacts[visitors]["checked"]){
+        const selectedItem = this.VM.visitors[contacts].contacts[visitors];
+        if(selectedItem.isChecked){
           this.isAnyoneSelected = true;
           return;
         }
@@ -328,8 +351,8 @@ export class ManageVisitorsPage implements OnInit {
   doRefresh(refresher) {
 
     this.OffSet = this.VM.searchContactsArray.length;
-    this.getVisitorsBySearch(false, refresher);
-    //setTimeout(()=>{refresher.complete();},2000)
+    this.getVisitorsBySearch(null, false, refresher);
+    //setTimeout(()=>{refresher.target.complete();},2000)
   }
   editVisitors(slideDOM:IonItemSliding, type, visitor: any){
     slideDOM.close();
@@ -339,7 +362,8 @@ export class ManageVisitorsPage implements OnInit {
           passData: {
             changeMaster: true,
             fromAppointmentPage : false,
-            visitor:visitor
+            visitor:visitor,
+            addVisitorSettings: this.VM.aData
           }
         }
       };
@@ -353,7 +377,8 @@ export class ManageVisitorsPage implements OnInit {
         passData: {
           changeMaster: true,
           fromAppointmentPage : false,
-          visitor:visitor
+          visitor:visitor,
+          addVisitorSettings: this.VM.aData
         }
       }
     };

@@ -1,6 +1,6 @@
 <ion-header>
 
-  <ion-toolbar>
+  <ion-toolbar color="danger">
     <ion-title>Additional Details</ion-title>
   </ion-toolbar>
 
@@ -10,14 +10,14 @@
 <ion-content>
 
     <ion-row style="background: rgb(248, 248, 248);">
-        <ion-col col-6>
+        <ion-col size="6">
                 <h3 margin-top padding-horizontal theme-text-color>
                         {{'ADD_APPOIN.NUM_VISITORS' | translate}} ({{visitorList.length}}) </h3>
         </ion-col>
-        <ion-col col-6>
+        <ion-col size="6">
                 <ion-fab right style="    margin-top: 5px;">
-                        <button ion-fab icon-only style="background-color: #f53d3d;width: 40px;height: 40px;" (click)="goToAddManageVisitors()">
-                            <i class="icon siva-icon-user-add" style="font-size:2.0rem;"></i></button>
+                        <ion-fab-button ion-fab slot="icon-only" style="background-color: #f53d3d;width: 40px;height: 40px;" (click)="goToAddManageVisitors()">
+                            <i class="icon siva-icon-user-add" style="font-size:2.0rem;"></i></ion-fab-button>
                 </ion-fab>
         </ion-col>
     </ion-row>
@@ -26,10 +26,10 @@
 
        <ion-list #visitorsList style="margin: 0px;">
 
-            <ion-card mode = "ios" color="primary" class="myCard" no-padding no-border  *ngFor="let item of visitorList">
+            <ion-card mode="ios" color="primary" class="myCard" no-padding no-border  *ngFor="let item of visitorList">
             <ion-item-sliding #slideDOM >
                 <ion-item sp-visitor-item  class="myItem">
-                    <ion-avatar *ngIf="item.visitor_RemoveImg || (!item.VISITOR_IMG && item.SEQ_ID)" item-start style="margin: 0 auto;">
+                    <ion-avatar *ngIf="item.visitor_RemoveImg || (!item.VISITOR_IMG && item.SEQ_ID)" slot="start" style="margin: 0 auto;">
                         <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType" style="width: 52px;
                         height: 52px;
                         margin: 10px;
@@ -37,7 +37,7 @@
                         background-color: darkgrey;
                         padding: 2px;">
                     </ion-avatar>
-                    <ion-avatar *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && !item.SEQ_ID && !item.VisitorBookingSeqId" item-start style="margin: 0 auto;">
+                    <ion-avatar *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && !item.SEQ_ID && !item.VisitorBookingSeqId" slot="start" style="margin: 0 auto;">
                         <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType" style="width: 52px;
                         height: 52px;
                         margin: 10px;
@@ -45,7 +45,7 @@
                         background-color: darkgrey;
                         padding: 2px;">
                     </ion-avatar>
-                    <ion-avatar *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && item.VisitorBookingSeqId" item-start style="margin: 0 auto;">
+                    <ion-avatar *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && item.VisitorBookingSeqId" slot="start" style="margin: 0 auto;">
                             <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.VisitorBookingSeqId + imageURLTypeVPB" style="width: 52px;
                             height: 52px;
                             margin: 10px;
@@ -53,13 +53,13 @@
                             background-color: darkgrey;
                             padding: 2px;">
                     </ion-avatar>
-                    <ion-avatar item-start style="margin: 0 auto;" *ngIf="!item.MyKad && item.VISITOR_IMG">
+                    <ion-avatar slot="start" style="margin: 0 auto;" *ngIf="!item.MyKad && item.VISITOR_IMG">
                             <img onError="this.src='../../assets/images/user.png';" class="circle-pic" style="width: 52px;
                             height: 52px;
                             margin: 10px;
                             display: block;" [src]="'data:image/jpeg;base64,' + item.VISITOR_IMG" />
                     </ion-avatar>
-                     <ion-avatar item-start style="margin: 0 auto;" *ngIf="item.MyKad && item.VISITOR_IMG">
+                     <ion-avatar slot="start" style="margin: 0 auto;" *ngIf="item.MyKad && item.VISITOR_IMG">
                             <img onError="this.src='../../assets/images/user.png';" class="circle-pic" style="width: 52px;
                             height: 52px;
                             margin: 10px;
@@ -69,34 +69,34 @@
                     <h2 theme-text-color>{{item.VISITOR_NAME}}</h2>
                     <h3 *ngIf="item.EMAIL">{{item.EMAIL}}</h3>
                     <!-- <p *ngIf="item.TELEPHONE_NO">{{item.TELEPHONE_NO}}</p> -->
-                    <!-- <ion-note item-end>{{item.phone}}</ion-note> -->
-                    <button  item-end ion-button round outline icon-only color="danger" style="padding: 5px" (click)="removeVisitor(item)">
+                    <!-- <ion-note slot="end">{{item.phone}}</ion-note> -->
+                    <ion-button  slot="end" shape="round" fill="outline" slot="icon-only" color="danger" style="padding: 5px" (click)="removeVisitor(item)">
                         <ion-icon  name="close" style="    font-size: 18px;
                         text-align: center;
                         display: flex;"></ion-icon>
-                    </button>
+                    </ion-button>
 
-                    <!-- <ion-buttons item-end >
+                    <!-- <ion-buttons slot="end" >
                         <ion-icon name="trash" style="padding:8px" (click)="removeVisitor(item)"></ion-icon>
-                         <button ion-button icon-only (click)="removeVisitor(item)" ><ion-icon name="trash"></ion-icon></button>
+                         <ion-button slot="icon-only" (click)="removeVisitor(item)" ><ion-icon name="trash"></ion-icon></ion-button>
                     </ion-buttons> -->
                 </ion-item>
-                <ion-item-options side="right">
-                    <!-- <button ion-button icon-only color="danger" outline no-border (click)="editVisitors(slideDOM)">
+                <ion-item-options side="end">
+                    <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM)">
                     <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
-                </button> -->
-                <button ion-button icon-only no-padding color="primary" outline no-border (click)="editVisitors(slideDOM, 'edit', item)">
+                </ion-button> -->
+                <ion-button slot="icon-only" no-padding color="primary" fill="outline" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                     <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>
-                </button>
+                </ion-button>
                 </ion-item-options>
             </ion-item-sliding>
         </ion-card>
         <h4 class="SubHeaderTitle">Meeting Details</h4>
 
-        <form novalidate col-12 col-sm-12 col-md-12 [formGroup]="appointment" class="simple-form">
-            <ion-col no-padding col-12 col-sm-12 col-md-12 offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+        <form novalidate size="12" size-sm size-md [formGroup]="appointment" class="simple-form">
+            <ion-col no-padding size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
               <ion-label style="    font-size: 16px;    color: grey;" >{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label>
-              <ion-item no-lines no-padding transparent *ngIf="hostSettings && hostSettings.PurposeEnabled && hostSettings.PurposeRequired">
+              <ion-item lines="none" no-padding transparent *ngIf="hostSettings && hostSettings.PurposeEnabled && hostSettings.PurposeRequired">
 
                 <ion-select mode="ios" interface="action-sheet"  required formControlName="purpose" style="font-size: 16px;" mode="ios" [(ngModel)]="REASON" interface="action-sheet" placeholder="{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}">
                   <ion-label>{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}</ion-label>
@@ -105,7 +105,7 @@
                   </ion-select-option>
                 </ion-select>
               </ion-item>
-              <ion-item no-lines no-padding transparent *ngIf="hostSettings && hostSettings.PurposeEnabled && !hostSettings.PurposeRequired">
+              <ion-item lines="none" no-padding transparent *ngIf="hostSettings && hostSettings.PurposeEnabled && !hostSettings.PurposeRequired">
                 <!-- <ion-label style="    font-size: 16px;"  floating>{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label> -->
                 <ion-select mode="ios" interface="action-sheet"  formControlName="purpose" style="font-size: 16px;" [(ngModel)]="REASON" interface="action-sheet" placeholder="{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}">
                   <ion-label>{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}</ion-label>
@@ -114,7 +114,7 @@
                   </ion-select-option>
                 </ion-select>
               </ion-item>
-              <ion-item no-lines transparent no-lines *ngIf="hostSettings && (appointment.get('purpose').hasError('required') && appointment.get('purpose').touched)">
+              <ion-item lines="none" transparent no-lines *ngIf="hostSettings && (appointment.get('purpose').hasError('required') && appointment.get('purpose').touched)">
                 <div class="error" style="color:red" *ngIf="appointment.get('purpose').hasError('required') && appointment.get('purpose').touched">
                   {{'ADD_APPOIN.STEP2.REQUIRED_LAB_PURPOSE' | translate}}
                 </div>
@@ -127,16 +127,17 @@
               <ion-icon name="arrow-forward" item-right></ion-icon>
               <ion-label *ngIf="hostIc" style="margin-top: 30px;color: #000000!important;">{{host_name}} </ion-label>
             </ion-item> -->
-            <ion-item no-lines no-padding transparent >
+            <ion-item lines="none" no-padding transparent >
               <!-- <ion-label style="    font-size: 16px;"  floating>{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label> -->
-              <ion-select mode="ios" interface="action-sheet"  formControlName="host" style="    font-size: 16px;" [(ngModel)]="hostIc" interface="action-sheet" placeholder="{{'SECURITY_APP.HOST' | translate}}">
+              <ion-select mode="ios" interface="action-sheet"  formControlName="host" (ionChange)="onChangeHost($event.detail.value)"
+               style="    font-size: 16px;" [(ngModel)]="hostIc" interface="action-sheet" placeholder="{{'SECURITY_APP.HOST' | translate}}">
                 <ion-label>{{'SECURITY_APP.HOST' | translate}}</ion-label>
-                <ion-select-option text-left *ngFor="let hostData of HostList" [value]="hostData.HOSTIC" (ionSelect)="onChangeHost(hostData)">
+                <ion-select-option text-left *ngFor="let hostData of HostList" [value]="hostData.HOSTIC">
                   {{hostData.HOSTNAME}}
                 </ion-select-option>
               </ion-select>
             </ion-item>
-            <ion-item no-lines transparent no-lines *ngIf="hostSettings && (appointment.get('host').hasError('required') && appointment.get('host').touched)">
+            <ion-item lines="none" transparent no-lines *ngIf="hostSettings && (appointment.get('host').hasError('required') && appointment.get('host').touched)">
               <div class="error" style="color:red" *ngIf="appointment.get('host').hasError('required') && appointment.get('host').touched">
                 {{'SECURITY_APP.ERROR.REQUIRED_HOST' | translate}}
               </div>
@@ -145,16 +146,16 @@
           <ion-label *ngIf="hostSettings.additionalDocEnabled" style="font-size: 16px;    color: grey;" >{{'SECURITY_APP.SELECT_DOC' | translate}}</ion-label>
           <ion-grid *ngIf="hostSettings.additionalDocEnabled && hostSettings.additionalDocLimit > 0">
             <ion-row>
-              <ion-col col col-33 *ngIf="addDocs && addDocs[0]">
-                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" item-end [src]="'data:image/jpeg;base64,' +addDocs[0].doc"/>
+              <ion-col size="4" *ngIf="addDocs && addDocs[0]">
+                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" slot="end" [src]="'data:image/jpeg;base64,' +addDocs[0].doc"/>
               </ion-col>
-              <ion-col col col-33 *ngIf="addDocs && addDocs[1]">
-                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" item-end [src]="'data:image/jpeg;base64,' +addDocs[1].doc"/>
+              <ion-col size="4" *ngIf="addDocs && addDocs[1]">
+                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" slot="end" [src]="'data:image/jpeg;base64,' +addDocs[1].doc"/>
               </ion-col>
-              <ion-col col col-33 *ngIf="addDocs && addDocs[2]">
-                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" item-end [src]="'data:image/jpeg;base64,' +addDocs[2].doc"/>
+              <ion-col size="4" *ngIf="addDocs && addDocs[2]">
+                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" slot="end" [src]="'data:image/jpeg;base64,' +addDocs[2].doc"/>
               </ion-col>
-              <ion-col  col col-33 *ngIf="addDocs && addDocs.length < 3 && showAddDocOption" (click)="addDocuments()">
+              <ion-col size="4" *ngIf="addDocs && addDocs.length < 3 && showAddDocOption" (click)="addDocuments()">
                 <ion-card class="card2">
                   <ion-item class="ionItem">
                     <h1 class="headerPlus" style="margin:0 auto">+</h1>
@@ -164,16 +165,16 @@
 
             </ion-row>
             <ion-row *ngIf="addDocs && addDocs.length > 2">
-              <ion-col  col col-33  *ngIf="addDocs && addDocs[3]">
-                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" item-end [src]="'data:image/jpeg;base64,' + addDocs[3].doc"/>
+              <ion-col size="4"  *ngIf="addDocs && addDocs[3]">
+                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" slot="end" [src]="'data:image/jpeg;base64,' + addDocs[3].doc"/>
               </ion-col>
-              <ion-col  col col-33 *ngIf="addDocs && addDocs[4]">
-                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" item-end [src]="'data:image/jpeg;base64,' +addDocs[4].doc"/>
+              <ion-col size="4" *ngIf="addDocs && addDocs[4]">
+                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" slot="end" [src]="'data:image/jpeg;base64,' +addDocs[4].doc"/>
               </ion-col>
-              <ion-col  col col-33 *ngIf="addDocs && addDocs[5]">
-                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" item-end [src]="'data:image/jpeg;base64,' +addDocs[5].doc"/>
+              <ion-col size="4" *ngIf="addDocs && addDocs[5]">
+                <img onError="this.src='../../assets/images/user.png';" class="docImg" style="margin:0 auto" slot="end" [src]="'data:image/jpeg;base64,' +addDocs[5].doc"/>
               </ion-col>
-              <ion-col  col col-33 *ngIf="addDocs && addDocs.length < 6 && showAddDocOption" (click)="addDocuments()">
+              <ion-col size="4" *ngIf="addDocs && addDocs.length < 6 && showAddDocOption" (click)="addDocuments()">
                 <ion-card class="card2">
                   <ion-item class="ionItem">
                     <h1 class="headerPlus" style="margin:0 auto">+</h1>
@@ -193,8 +194,8 @@
 <ion-footer style="background: linear-gradient(to bottom, rgb(241, 140, 93) 0%, rgb(243, 75, 24) 100%);">
 
 
-        <ion-col  class="checkinBtn" col-12 text-center (click)="proceedNext()">
-            <button ion-button  style="color:white" clear>Check-In<ion-icon style="padding-left: 10px;color:white" item-end name="man" ></ion-icon></button>
+        <ion-col  class="checkinBtn" col-12 class="ion-text-center" (click)="proceedNext()">
+            <ion-button  style="color:white" clear>Check-In<ion-icon style="padding-left: 10px;color:white" slot="end" name="man" ></ion-icon></ion-button>
         </ion-col>
 
 

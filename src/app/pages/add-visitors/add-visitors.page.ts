@@ -1,17 +1,15 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Camera } from '@ionic-native/camera/ngx';
 import { Contacts } from '@ionic-native/contacts/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { NavController, NavParams, AlertController, ActionSheetController, ToastController, Platform, LoadingController } from '@ionic/angular';
+import { NavController, AlertController, ActionSheetController, ToastController, Platform, LoadingController, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { VisitorInfoModal } from 'src/app/model/visitorInfoModal';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
-import { ToastService } from 'src/app/services/util/Toast.service';
 declare var cordova: any;
 @Component({
   selector: 'app-add-visitors',
@@ -19,9 +17,9 @@ declare var cordova: any;
   styleUrls: ['./add-visitors.page.scss'],
 })
 export class AddVisitorsPage implements OnInit {
-
-  @ViewChild(Content) content: Content;
-  active: boolean;
+  countryList = [{name:"Afghanistan",code:"AF"},{name:"Åland Islands",code:"AX"},{name:"Albania",code:"AL"},{name:"Algeria",code:"DZ"},{name:"American Samoa",code:"AS"},{name:"AndorrA",code:"AD"},{name:"Angola",code:"AO"},{name:"Anguilla",code:"AI"},{name:"Antarctica",code:"AQ"},{name:"Antigua and Barbuda",code:"AG"},{name:"Argentina",code:"AR"},{name:"Armenia",code:"AM"},{name:"Aruba",code:"AW"},{name:"Australia",code:"AU"},{name:"Austria",code:"AT"},{name:"Azerbaijan",code:"AZ"},{name:"Bahamas",code:"BS"},{name:"Bahrain",code:"BH"},{name:"Bangladesh",code:"BD"},{name:"Barbados",code:"BB"},{name:"Belarus",code:"BY"},{name:"Belgium",code:"BE"},{name:"Belize",code:"BZ"},{name:"Benin",code:"BJ"},{name:"Bermuda",code:"BM"},{name:"Bhutan",code:"BT"},{name:"Bolivia",code:"BO"},{name:"Bosnia and Herzegovina",code:"BA"},{name:"Botswana",code:"BW"},{name:"Bouvet Island",code:"BV"},{name:"Brazil",code:"BR"},{name:"British Indian Ocean Territory",code:"IO"},{name:"Brunei Darussalam",code:"BN"},{name:"Bulgaria",code:"BG"},{name:"Burkina Faso",code:"BF"},{name:"Burundi",code:"BI"},{name:"Cambodia",code:"KH"},{name:"Cameroon",code:"CM"},{name:"Canada",code:"CA"},{name:"Cape Verde",code:"CV"},{name:"Cayman Islands",code:"KY"},{name:"Central African Republic",code:"CF"},{name:"Chad",code:"TD"},{name:"Chile",code:"CL"},{name:"China",code:"CN"},{name:"Christmas Island",code:"CX"},{name:"Cocos (Keeling) Islands",code:"CC"},{name:"Colombia",code:"CO"},{name:"Comoros",code:"KM"},{name:"Congo",code:"CG"},{name:"Congo, The Democratic Republic of the",code:"CD"},{name:"Cook Islands",code:"CK"},{name:"Costa Rica",code:"CR"},{name:"Cote D'Ivoire",code:"CI"},{name:"Croatia",code:"HR"},{name:"Cuba",code:"CU"},{name:"Cyprus",code:"CY"},{name:"Czech Republic",code:"CZ"},{name:"Denmark",code:"DK"},{name:"Djibouti",code:"DJ"},{name:"Dominica",code:"DM"},{name:"Dominican Republic",code:"DO"},{name:"Ecuador",code:"EC"},{name:"Egypt",code:"EG"},{name:"El Salvador",code:"SV"},{name:"Equatorial Guinea",code:"GQ"},{name:"Eritrea",code:"ER"},{name:"Estonia",code:"EE"},{name:"Ethiopia",code:"ET"},{name:"Falkland Islands (Malvinas)",code:"FK"},{name:"Faroe Islands",code:"FO"},{name:"Fiji",code:"FJ"},{name:"Finland",code:"FI"},{name:"France",code:"FR"},{name:"French Guiana",code:"GF"},{name:"French Polynesia",code:"PF"},{name:"French Southern Territories",code:"TF"},{name:"Gabon",code:"GA"},{name:"Gambia",code:"GM"},{name:"Georgia",code:"GE"},{name:"Germany",code:"DE"},{name:"Ghana",code:"GH"},{name:"Gibraltar",code:"GI"},{name:"Greece",code:"GR"},{name:"Greenland",code:"GL"},{name:"Grenada",code:"GD"},{name:"Guadeloupe",code:"GP"},{name:"Guam",code:"GU"},{name:"Guatemala",code:"GT"},{name:"Guernsey",code:"GG"},{name:"Guinea",code:"GN"},{name:"Guinea-Bissau",code:"GW"},{name:"Guyana",code:"GY"},{name:"Haiti",code:"HT"},{name:"Heard Island and Mcdonald Islands",code:"HM"},{name:"Holy See (Vatican City State)",code:"VA"},{name:"Honduras",code:"HN"},{name:"Hong Kong",code:"HK"},{name:"Hungary",code:"HU"},{name:"Iceland",code:"IS"},{name:"India",code:"IN"},{name:"Indonesia",code:"ID"},{name:"Iran, Islamic Republic Of",code:"IR"},{name:"Iraq",code:"IQ"},{name:"Ireland",code:"IE"},{name:"Isle of Man",code:"IM"},{name:"Israel",code:"IL"},{name:"Italy",code:"IT"},{name:"Jamaica",code:"JM"},{name:"Japan",code:"JP"},{name:"Jersey",code:"JE"},{name:"Jordan",code:"JO"},{name:"Kazakhstan",code:"KZ"},{name:"Kenya",code:"KE"},{name:"Kiribati",code:"KI"},{name:"Korea, Democratic People'S Republic of",code:"KP"},{name:"Korea, Republic of",code:"KR"},{name:"Kuwait",code:"KW"},{name:"Kyrgyzstan",code:"KG"},{name:"Lao People'S Democratic Republic",code:"LA"},{name:"Latvia",code:"LV"},{name:"Lebanon",code:"LB"},{name:"Lesotho",code:"LS"},{name:"Liberia",code:"LR"},{name:"Libyan Arab Jamahiriya",code:"LY"},{name:"Liechtenstein",code:"LI"},{name:"Lithuania",code:"LT"},{name:"Luxembourg",code:"LU"},{name:"Macao",code:"MO"},{name:"Macedonia, The Former Yugoslav Republic of",code:"MK"},{name:"Madagascar",code:"MG"},{name:"Malawi",code:"MW"},{name:"Malaysia",code:"MY"},{name:"Maldives",code:"MV"},{name:"Mali",code:"ML"},{name:"Malta",code:"MT"},{name:"Marshall Islands",code:"MH"},{name:"Martinique",code:"MQ"},{name:"Mauritania",code:"MR"},{name:"Mauritius",code:"MU"},{name:"Mayotte",code:"YT"},{name:"Mexico",code:"MX"},{name:"Micronesia, Federated States of",code:"FM"},{name:"Moldova, Republic of",code:"MD"},{name:"Monaco",code:"MC"},{name:"Mongolia",code:"MN"},{name:"Montserrat",code:"MS"},{name:"Morocco",code:"MA"},{name:"Mozambique",code:"MZ"},{name:"Myanmar",code:"MM"},{name:"Namibia",code:"NA"},{name:"Nauru",code:"NR"},{name:"Nepal",code:"NP"},{name:"Netherlands",code:"NL"},{name:"Netherlands Antilles",code:"AN"},{name:"New Caledonia",code:"NC"},{name:"New Zealand",code:"NZ"},{name:"Nicaragua",code:"NI"},{name:"Niger",code:"NE"},{name:"Nigeria",code:"NG"},{name:"Niue",code:"NU"},{name:"Norfolk Island",code:"NF"},{name:"Northern Mariana Islands",code:"MP"},{name:"Norway",code:"NO"},{name:"Oman",code:"OM"},{name:"Pakistan",code:"PK"},{name:"Palau",code:"PW"},{name:"Palestinian Territory, Occupied",code:"PS"},{name:"Panama",code:"PA"},{name:"Papua New Guinea",code:"PG"},{name:"Paraguay",code:"PY"},{name:"Peru",code:"PE"},{name:"Philippines",code:"PH"},{name:"Pitcairn",code:"PN"},{name:"Poland",code:"PL"},{name:"Portugal",code:"PT"},{name:"Puerto Rico",code:"PR"},{name:"Qatar",code:"QA"},{name:"Reunion",code:"RE"},{name:"Romania",code:"RO"},{name:"Russian Federation",code:"RU"},{name:"RWANDA",code:"RW"},{name:"Saint Helena",code:"SH"},{name:"Saint Kitts and Nevis",code:"KN"},{name:"Saint Lucia",code:"LC"},{name:"Saint Pierre and Miquelon",code:"PM"},{name:"Saint Vincent and the Grenadines",code:"VC"},{name:"Samoa",code:"WS"},{name:"San Marino",code:"SM"},{name:"Sao Tome and Principe",code:"ST"},{name:"Saudi Arabia",code:"SA"},{name:"Senegal",code:"SN"},{name:"Serbia and Montenegro",code:"CS"},{name:"Seychelles",code:"SC"},{name:"Sierra Leone",code:"SL"},{name:"Singapore",code:"SG"},{name:"Slovakia",code:"SK"},{name:"Slovenia",code:"SI"},{name:"Solomon Islands",code:"SB"},{name:"Somalia",code:"SO"},{name:"South Africa",code:"ZA"},{name:"South Georgia and the South Sandwich Islands",code:"GS"},{name:"Spain",code:"ES"},{name:"Sri Lanka",code:"LK"},{name:"Sudan",code:"SD"},{name:"Suriname",code:"SR"},{name:"Svalbard and Jan Mayen",code:"SJ"},{name:"Swaziland",code:"SZ"},{name:"Sweden",code:"SE"},{name:"Switzerland",code:"CH"},{name:"Syrian Arab Republic",code:"SY"},{name:"Taiwan, Province of China",code:"TW"},{name:"Tajikistan",code:"TJ"},{name:"Tanzania, United Republic of",code:"TZ"},{name:"Thailand",code:"TH"},{name:"Timor-Leste",code:"TL"},{name:"Togo",code:"TG"},{name:"Tokelau",code:"TK"},{name:"Tonga",code:"TO"},{name:"Trinidad and Tobago",code:"TT"},{name:"Tunisia",code:"TN"},{name:"Turkey",code:"TR"},{name:"Turkmenistan",code:"TM"},{name:"Turks and Caicos Islands",code:"TC"},{name:"Tuvalu",code:"TV"},{name:"Uganda",code:"UG"},{name:"Ukraine",code:"UA"},{name:"United Arab Emirates",code:"AE"},{name:"United Kingdom",code:"GB"},{name:"United States",code:"US"},{name:"United States Minor Outlying Islands",code:"UM"},{name:"Uruguay",code:"UY"},{name:"Uzbekistan",code:"UZ"},{name:"Vanuatu",code:"VU"},{name:"Venezuela",code:"VE"},{name:"Viet Nam",code:"VN"},{name:"Virgin Islands, British",code:"VG"},{name:"Virgin Islands, U.S.",code:"VI"},{name:"Wallis and Futuna",code:"WF"},{name:"Western Sahara",code:"EH"},{name:"Yemen",code:"YE"},{name:"Zambia",code:"ZM"},{name:"Zimbabwe",code:"ZW"}];
+  @ViewChild(IonContent) content: IonContent;
+  active: boolean = true;
   loaded = false;
   lastImage: string = null;
   loading:any;
@@ -43,21 +41,19 @@ export class AddVisitorsPage implements OnInit {
   visitorInfoModal = new VisitorInfoModal();
   public error: string;
   visitorProfile:FormGroup;
-  VISITOR_CATEGORY:any;
   translation:any = {};
   base64Image:any = "";
   hostSettings : any = {};
   visitor:any = {};
   visitorSEQID = "0";
   GenderList = [
+    {"name": "Female", "value": "0"},
   {"name": "Male", "value": "1"},
-  {"name": "Female", "value": "2"}
+  {"name": "Other", "value": "2"}
   ]
   T_SVC:any;
   constructor(public navCtrl: NavController,
-    public navParams: NavParams,
     private route: ActivatedRoute,
-    public toastService: ToastService,
     private translate:TranslateService,
     public apiProvider: RestProvider,
     private alertCtrl: AlertController,
@@ -88,6 +84,7 @@ export class AddVisitorsPage implements OnInit {
           this.fromAppointmentPage = passData.fromAppointmentPage;
 
           if(this.visitor){
+            console.log("visitor: "+ JSON.stringify(this.visitor));
             this.visitorInfoModal.visitor_id = this.visitor.visitor_id;
             if(this.visitor.visitor_id && !this.visitor.VISITOR_IC){
               this.visitor.visitor_ic = this.visitor.visitor_id;
@@ -128,15 +125,8 @@ export class AddVisitorsPage implements OnInit {
             this.VM.visitors = visitor_company;
             this.VM.aData = passData.aData;
           }
-
-          var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-          if(settings && JSON.parse(settings)){
-            try{
-              this.hostSettings = JSON.parse(settings).Table1[0];
-            }catch(e){
-
-            }
-
+          if(passData.addVisitorSettings){
+            this.hostSettings = JSON.parse(JSON.parse(passData.addVisitorSettings).addVisitorSettings);
           }
           let EMAILPATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
           this.visitorProfile = new FormGroup({
@@ -145,8 +135,9 @@ export class AddVisitorsPage implements OnInit {
             icPassport: new FormControl('', (this.hostSettings && this.hostSettings.IdProofEnabled && this.hostSettings.IdProofRequired) ? ([Validators.required]) : []),
             contact: new FormControl('', (this.hostSettings && this.hostSettings.ContactNumberEnabled && this.hostSettings.ContactNumberRequired) ? ([Validators.required]) : []),
             vechile: new FormControl('', (this.hostSettings && this.hostSettings.VehicleNumberEnabled && this.hostSettings.VehicleNumberRequired) ? ([Validators.required]) : []),
+            address: new FormControl('', (this.hostSettings && this.hostSettings.AddressEnabled && this.hostSettings.AddressRequired) ? ([Validators.required]) : []),
+            country: new FormControl('', (this.hostSettings && this.hostSettings.CountryEnabled && this.hostSettings.CountryRequired) ? ([Validators.required]) : []),
             gender: new FormControl('', (this.hostSettings && this.hostSettings.GenderEnabled && this.hostSettings.GenderRequired) ? ([Validators.required]) : []),
-            vistorCategory:new FormControl('', (this.hostSettings && this.hostSettings.CategoryEnabled && this.hostSettings.CategoryRequired) ? ([Validators.required]) : []),
             vistorCompany:new FormControl('', [])
             //country: new FormControl('', [Validators.pattern('[a-zA-Z0-9 ]*')]),
             //city: new FormControl('', [Validators.pattern('[a-zA-Z0-9 ]*')]),
@@ -154,7 +145,6 @@ export class AddVisitorsPage implements OnInit {
           this.translate.get(['ADD_VISITORS.SUCCESS.ADD_VISITOR_SUCCESS', 'USER_PROFILE.ERROR.SERVER_ERROR']).subscribe(t => {
             this.translation = t;
           });
-          this._prepareForNewVisitor();
 
           events.observeDataCompany().subscribe(async (data: any) => {
             const user = data.title;
@@ -208,7 +198,10 @@ export class AddVisitorsPage implements OnInit {
     }
    }
 
-
+   goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
   getPhoneBookContact(){
     var currentClass = this;
     currentClass.contacts.pickContact().then((contacts) => {
@@ -377,6 +370,7 @@ private copyFileToLocalDir(namePath, currentName, newFileName) {
 private async presentToast(text) {
   let toast = await this.toastCtrl.create({
     message: text,
+    color: 'primary',
     duration: 3000,
     position: 'top'
   });
@@ -394,8 +388,6 @@ UpdateVisitor(){
   if(!this.visitor.visitor_tel_no){
     this.visitor.visitor_tel_no = "";
   }
-
-
 
   if(this.visitor_RemoveImg){
     this.data.profile = "";
@@ -417,6 +409,8 @@ UpdateVisitor(){
     "visitor_tel_no": this.visitor.visitor_tel_no,
     "visitor_email": this.visitorInfoModal.visitor_email,
     "visitor_image":this.data.profile,
+    "Address": this.visitorInfoModal.visitor_address,
+    "Country": this.visitorInfoModal.visitor_country,
     "visitor_RemoveImg": this.visitor_RemoveImg
   }
   var ImageChanged = (this.visitor.ImageChanged ? this.visitor.ImageChanged : 0);
@@ -463,6 +457,7 @@ UpdateVisitor(){
           let toast = await this.toastCtrl.create({
             message: this.T_SVC['ALERT_TEXT.VISITOR_UPDATED'],
             duration: 3000,
+            color: 'primary',
             position: 'bottom'
           });
           toast.present();
@@ -479,6 +474,7 @@ UpdateVisitor(){
       let toast = await this.toastCtrl.create({
         message: 'Server Error',
         duration: 3000,
+        color: 'primary',
         position: 'bottom'
       });
       toast.present();
@@ -494,6 +490,7 @@ UpdateVisitor(){
           let toast = await this.toastCtrl.create({
             message: "Error :" + error,
             duration: 3000,
+            color: 'primary',
             position: 'bottom'
           });
           toast.present();
@@ -505,6 +502,7 @@ UpdateVisitor(){
         let toast = await this.toastCtrl.create({
           message: 'Error! ' + result["Table1"][0].Status,
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -520,6 +518,7 @@ UpdateVisitor(){
         let toast = await this.toastCtrl.create({
           message: 'Error!',
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -541,49 +540,7 @@ public pathForImage(img) {
 
 ionViewDidEnter() {
   }
-  _prepareForNewVisitor(){
-    this._getVisitorCategory();
-  }
 
-  onChangeCategory(category){
-    this.visitorInfoModal.visitor_ctg_id = category.visitor_ctg_id;
-    this.visitorInfoModal.visitor_ctg_name = category.visitor_ctg_desc;
-  }
-  _getVisitorCategory(){
-
-    var masterDetails = this.getCategory(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
-    if(masterDetails){
-      this.VISITOR_CATEGORY = JSON.parse(masterDetails).Table4;
-
-      if(this.visitor){
-        for(var i1 = 0 ; i1 < this.VISITOR_CATEGORY.length ; i1++){
-          if(this.VISITOR_CATEGORY[i1].visitor_ctg_desc == this.visitor.VisitorCategory){
-            this.visitorInfoModal.visitor_ctg_id = this.VISITOR_CATEGORY[i1].visitor_ctg_id;
-            this.visitorInfoModal.visitor_ctg_name = this.VISITOR_CATEGORY[i1].visitor_ctg_desc;
-            break;
-          }
-        }
-      }
-    }else{
-      this.apiProvider.GetMasterDetails().then(
-        (val) => {
-          var result = JSON.parse(JSON.stringify(val));
-          if(result){
-            //this.storage.set(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
-            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(val));
-            this.VISITOR_CATEGORY = result.Table4;
-          }
-        },
-        (err) => {
-        }
-      );
-    }
-  }
-
-  public getCategory(settingName){
-    //return this.storage.get(settingName);
-    return window.localStorage.getItem(settingName);
-  }
 
   async addVisitors(){
 
@@ -591,6 +548,7 @@ ionViewDidEnter() {
       let toast = await this.toastCtrl.create({
         message: this.T_SVC['ALERT_TEXT.SELECT_VISITOR_COMPANY'],
         duration: 3000,
+        color: 'primary',
         position: 'bottom'
       });
       toast.present();
@@ -605,6 +563,14 @@ ionViewDidEnter() {
 
     if(!this.visitorInfoModal.visitor_gender){
       this.visitorInfoModal.visitor_gender = "";
+    }
+
+    if(!this.visitorInfoModal.visitor_country){
+      this.visitorInfoModal.visitor_country = "";
+    }
+
+    if(!this.visitorInfoModal.visitor_address){
+      this.visitorInfoModal.visitor_address = "";
     }
 
     if(!this.visitorInfoModal.visitor_ctg_id){
@@ -629,13 +595,18 @@ ionViewDidEnter() {
       this.visitorInfoModal.vehicle_no = "";
     }
 
-
-
     if(this.visitor){
       this.UpdateVisitor();
       return;
     }
-
+    try {
+      this.visitorInfoModal.visitor_ctg_id = this.VM.aData['visitor_ctg'].visitor_ctg_id;
+      this.visitorInfoModal.visitor_ctg_name = this.VM.aData['visitor_ctg'].visitor_ctg_desc;
+    } catch (error) {
+      const item = JSON.parse(this.VM.aData + '');
+      this.visitorInfoModal.visitor_ctg_id = item.visitor_ctg.visitor_ctg_id;
+      this.visitorInfoModal.visitor_ctg_name = item.visitor_ctg.visitor_ctg_desc
+    }
     var params = {
       "visitor_id": this.visitorInfoModal["visitor_ic"],
       "SEQ_ID": "",
@@ -650,8 +621,10 @@ ionViewDidEnter() {
       "visitor_vehicle_no": this.visitorInfoModal["vehicle_no"],
       "visitor_mobile_no": this.visitorInfoModal["visitor_mobile_no"],
       "visitor_tel_no": "",
+      "visitor_address": this.visitorInfoModal["visitor_address"],
       "visitor_email": this.visitorInfoModal["visitor_email"],
-      "visitor_image":this.data.profile
+      "visitor_image":this.data.profile,
+      "Country":  this.visitorInfoModal["visitor_country"]
     }
     if(!params.visitor_id){
       params.visitor_id = ""+new Date().getTime();
@@ -670,6 +643,8 @@ ionViewDidEnter() {
         VisitorCategory:params.visitor_ctg_name,
         VisitorCategory_ID:params.visitor_ctg_id,
         VISITOR_IMG:this.data.profile,
+        Address: params.visitor_address,
+        Country: params.Country,
         PLATE_NUM:params.visitor_vehicle_no,
         checked : true,
         SEQ_ID: "",
@@ -696,6 +671,7 @@ ionViewDidEnter() {
             let toast = await this.toastCtrl.create({
               message: 'Add Visitor Done Successfully',
               duration: 3000,
+              color: 'primary',
               position: 'bottom'
             });
             params["checked"] = true;
@@ -718,6 +694,7 @@ ionViewDidEnter() {
         let toast = await this.toastCtrl.create({
           message: 'Server Error',
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -774,7 +751,7 @@ ionViewDidEnter() {
         }
       }
     };
-    this.router.navigate(['add-visitor-company'], navigationExtras);
+    this.router.navigate(['visitor-company-page'], navigationExtras);
   }
 
   getCompanyList(company){
@@ -847,6 +824,7 @@ ionViewDidEnter() {
             let toast = await this.toastCtrl.create({
               message: this.translation['ADD_VISITORS.SUCCESS.ADD_VISITOR_COMPANY_SUCCESS'],
               duration: 3000,
+              color: 'primary',
               position: 'bottom'
             });
             toast.present();
@@ -859,6 +837,7 @@ ionViewDidEnter() {
         let toast = await this.toastCtrl.create({
           message: this.translation['USER_PROFILE.ERROR.SERVER_ERROR'],
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -895,7 +874,7 @@ ionViewDidEnter() {
   subscribeToIonScroll() {
     if (this.content && this.content['ionScroll']) {
         this.content['ionScroll'].subscribe((d) => {
-            if (d && d.scrollTop < 80 ) {
+            if (d && d['scrollTop'] < 80 ) {
                 this.active = false;
                 return;
             }

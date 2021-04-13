@@ -24,10 +24,10 @@ ion-icon {
 }
 
 .apt-left {
-  background-color: theme-colors("mainColors", "primary");
+  background-color: #eb445a;
 }
 .text-white {
-  color: theme-colors("textColors", "primaryWhite");
+  color: white;
 }
 .booking-status {
   padding: 5px;
@@ -125,7 +125,7 @@ ion-icon {
   box-shadow: inset 1px 1px 12px rgba(0, 0, 0, 0.2);
 }
 .monthview-selected[_ngcontent-c1] {
-  background-color: theme-colors("mainColors", "primary");
+  background-color: #eb445a;
   //border: 1px solid theme-colors('mainColors', 'primary') !important;
   color: white;
   box-shadow: inset 1px 1px 12px rgba(0, 0, 0, 0.3);

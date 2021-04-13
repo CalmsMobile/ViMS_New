@@ -11,15 +11,16 @@ export class AddAppointmentModel
         "Message"= "";
         "Floor"= "";
         "Room"= "";
-        "FacilityCode": "";
-        "PurposeCode": "";
+        "FacilityCode":any = "";
+        "PurposeCode":any = "";
         "Remarks"= "";
         "RemarksforSecurity":any = {type: String};
         "Booked_By":any = {type: String};
         "bookedby_id":any = {type: String};
         "Location":any = {type: String};
-        "Category"= "";
-        "vehicle_no" = "";
+        "Category":any = "";
+        "visitor_ctg_id":any = "";
+        "vehicle_no":any = "";
 }
 
 //     "VISITOR_ARRAY":"123,123,123",
@@ -53,7 +54,7 @@ export class AddAppointmentModel
 //     "REASON":{type: String};
 //     "Floor":{type: String};
 //     "Room":{type: String};
-    
+
 //     "VECHILE_STATUS":{type: String};
 //     "PLATE_NUM":{type: String};
 //     "EscortStatus":{type: Boolean};

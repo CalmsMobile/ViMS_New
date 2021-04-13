@@ -17,6 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule.forChild()
   ],
   schemas : [NO_ERRORS_SCHEMA],
-  declarations: [SignaturePagePage]
+  declarations: [SignaturePagePage],
+  exports:[]
 })
 export class SignaturePagePageModule {}

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavController, AlertController, NavParams } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
-
+import * as CryptoJS from 'crypto-js';
 @Component({
   selector: 'app-admin-login',
   templateUrl: './admin-login.page.html',
@@ -23,8 +23,7 @@ export class AdminLoginPage implements OnInit {
     private alertCtrl : AlertController,
     private translate: TranslateService,
     private router: Router,
-    private events: EventsService,
-    public navParams: NavParams) {
+    private events: EventsService) {
 
       this.translate.get(['ADMIN_LOGIN.TITLE', 'ADMIN_LOGIN.USERNAME',
       'ADMIN_LOGIN.PASSWORD',
@@ -113,7 +112,7 @@ export class AdminLoginPage implements OnInit {
 
 
         let invalidORGConfirm = await this.alertCtrl.create({
-          header: "<span class='failed'>" + this.T_SVC['ADMIN_LOGIN.TITLE'] + '</span>',
+          header: this.T_SVC['ADMIN_LOGIN.TITLE'],
           cssClass: 'alert-danger',
           message: "<span class='failed'>" + this.T_SVC['ADMIN_LOGIN.INVALID_ADMIN_LOGIN'] + '</span>',
           buttons: [

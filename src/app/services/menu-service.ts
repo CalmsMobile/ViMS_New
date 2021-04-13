@@ -11,15 +11,15 @@ export class MenuService implements IService{
     getAllPages = (): Array<any> => {
         var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
         var menus = [
-            {"title":"Home","icon":"siva-icon-home-3", "component":"HomeView"},
-            {"title":"Appointment","icon":"siva-icon-calendar-check-o", "component":"", "subMenu":[
-                {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"AddAppointmentPage"},
-                {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"AppointmentHistoryPage"},
-                {"title":"My Visitors","icon":"siva-icon-group", "component":"MyVisitorsPage"}
+            {"title":"Home","icon":"home-outline", "component":"home-view"},
+            {"title":"Appointment","icon":"calendar-outline", "component":"", "subMenu":[
+                {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"add-appointment"},
+                {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"appointment-history"},
+                {"title":"My Visitors","icon":"siva-icon-group", "component":"my-visitors"}
             ]},
-            {"title":"Calendar View","icon":"siva-icon-calendar-7", "component":"ManageAppointmentPage"},
-            {"title":"Notification","icon":"siva-icon-bell-2", "component":"NotificationPage"},
-            {"title":"Settings","icon":"siva-icon-sliders", "component":"SettingsViewPage"}
+            {"title":"Calendar View","icon":"calendar-number-outline", "component":"manage-appointment"},
+            {"title":"Notification","icon":"notifications-outline", "component":"notifications"},
+            {"title":"Settings","icon":"settings-outline", "component":"settings-view-page"}
         ];
         if(!qrInfo){
             return menus;
@@ -32,7 +32,7 @@ export class MenuService implements IService{
                 var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
                 if(settings && JSON.parse(settings)){
                     try{
-                        var hostSettings = JSON.parse(settings).Table2[0];
+                        var hostSettings = JSON.parse(settings).Table1[0];
                         showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
                     }catch(e){
 
@@ -40,31 +40,31 @@ export class MenuService implements IService{
                 }
                 if(showQP){
                     menus = [
-                        {"title":"Home","icon":"siva-icon-home-3", "component":"HomeView"},
-                        {"title":"Appointment","icon":"siva-icon-calendar-check-o", "component":"", "subMenu":[
-                            {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"AddAppointmentPage"},
-                            {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"AppointmentHistoryPage"},
-                            {"title":"My Visitors","icon":"siva-icon-group", "component":"MyVisitorsPage"}
+                        {"title":"Home","icon":"home-outline", "component":"home-view"},
+                        {"title":"Appointment","icon":"calendar-outline", "component":"", "subMenu":[
+                            {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"add-appointment"},
+                            {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"appointment-history"},
+                            {"title":"My Visitors","icon":"siva-icon-group", "component":"my-visitors"}
                         ]},
-                        {"title":"Calendar View","icon":"siva-icon-calendar-7", "component":"ManageAppointmentPage"},
-                        {"title":"Quick Pass","icon":"siva-icon-qrcode", "component":"", "subMenu":[
-                            {"title":"Create Quick Pass","icon":"siva-icon-hand-lizard-o", "component":"CreateQuickPassPage"},
-                            {"title":"Quick Pass Dashboard","icon":"siva-icon-calendar-3", "component":"QuickPassDashBoardPage"}
+                        {"title":"Calendar View","icon":"calendar-number-outline", "component":"manage-appointment"},
+                        {"title":"Quick Pass","icon":"qr-code-outline", "component":"", "subMenu":[
+                            {"title":"Create Quick Pass","icon":"siva-icon-hand-lizard-o", "component":"create-quick-pass"},
+                            {"title":"Quick Pass Dashboard","icon":"siva-icon-calendar-3", "component":"quick-pass-dash-board-page"}
                         ]},
-                        {"title":"Notification","icon":"siva-icon-bell-2", "component":"NotificationPage"},
-                        {"title":"Settings","icon":"siva-icon-sliders", "component":"SettingsViewPage"}
+                        {"title":"Notification","icon":"notifications-outline", "component":"notifications"},
+                        {"title":"Settings","icon":"settings-outline", "component":"settings-view-page"}
                     ];
                 }else{
                     menus = [
-                        {"title":"Home","icon":"siva-icon-home-3", "component":"HomeView"},
-                        {"title":"Appointment","icon":"siva-icon-calendar-check-o", "component":"", "subMenu":[
-                            {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"AddAppointmentPage"},
-                            {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"AppointmentHistoryPage"},
-                            {"title":"My Visitors","icon":"siva-icon-group", "component":"MyVisitorsPage"}
+                        {"title":"Home","icon":"home-outline", "component":"home-view"},
+                        {"title":"Appointment","icon":"calendar-outline", "component":"", "subMenu":[
+                            {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"add-appointment"},
+                            {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"appointment-history"},
+                            {"title":"My Visitors","icon":"siva-icon-group", "component":"my-visitors"}
                         ]},
-                        {"title":"Calendar View","icon":"siva-icon-calendar-7", "component":"ManageAppointmentPage"},
-                        {"title":"Notification","icon":"siva-icon-bell-2", "component":"NotificationPage"},
-                        {"title":"Settings","icon":"siva-icon-sliders", "component":"SettingsViewPage"}
+                        {"title":"Calendar View","icon":"calendar-number-outline", "component":"manage-appointment"},
+                        {"title":"Notification","icon":"notifications-outline", "component":"notifications"},
+                        {"title":"Settings","icon":"settings-outline", "component":"settings-view-page"}
                     ];
                 }
 
@@ -74,7 +74,7 @@ export class MenuService implements IService{
                     settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
                     if(settings && JSON.parse(settings)){
                         try{
-                            hostSettings = JSON.parse(settings).Table2[0];
+                            hostSettings = JSON.parse(settings).Table1[0];
                             showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
                         }catch(e){
 
@@ -82,54 +82,54 @@ export class MenuService implements IService{
                     }
                     if(showQP){
                         menus = [
-                            {"title":"Home","icon":"siva-icon-home-3", "component":"HomeView"},
-                            {"title":"Appointment","icon":"siva-icon-calendar-check-o", "component":"", "subMenu":[
-                                {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"AddAppointmentPage"},
-                                {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"AppointmentHistoryPage"},
-                                {"title":"My Visitors","icon":"siva-icon-group", "component":"MyVisitorsPage"}
+                            {"title":"Home","icon":"home-outline", "component":"home-view"},
+                            {"title":"Appointment","icon":"calendar-outline", "component":"", "subMenu":[
+                                {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"add-appointment"},
+                                {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"appointment-history"},
+                                {"title":"My Visitors","icon":"siva-icon-group", "component":"my-visitors"}
                             ]},
-                            {"title":"Facility Booking","icon":"siva-icon-book-open-1", "component":"", "subMenu": [
-                                {"title":"Create Facility Booking","icon":"siva-icon-bookmark-2", "component":"FacilityBookingPage"},
-                                {"title":"Facility History","icon":"siva-icon-grid", "component":"FacilityBookingHistoryPage"}
+                            {"title":"Facility Booking","icon":"bookmark-outline", "component":"", "subMenu": [
+                                {"title":"Create Facility Booking","icon":"bookmark-outline", "component":"facility-booking"},
+                                {"title":"Facility History","icon":"siva-icon-grid", "component":"facility-booking-history"}
                             ]},
-                            {"title":"Calendar View","icon":"siva-icon-calendar-7", "component":"ManageAppointmentPage"},
-                            {"title":"Quick Pass","icon":"siva-icon-qrcode", "component":"", "subMenu":[
-                                {"title":"Create Quick Pass","icon":"siva-icon-hand-lizard-o", "component":"CreateQuickPassPage"},
-                                {"title":"Quick Pass Dashboard","icon":"siva-icon-calendar-3", "component":"QuickPassDashBoardPage"}
+                            {"title":"Calendar View","icon":"calendar-number-outline", "component":"manage-appointment"},
+                            {"title":"Quick Pass","icon":"qr-code-outline", "component":"", "subMenu":[
+                                {"title":"Create Quick Pass","icon":"siva-icon-hand-lizard-o", "component":"create-quick-pass"},
+                                {"title":"Quick Pass Dashboard","icon":"siva-icon-calendar-3", "component":"quick-pass-dash-board-page"}
                             ]},
-                            {"title":"Notification","icon":"siva-icon-bell-2", "component":"NotificationPage"},
+                            {"title":"Notification","icon":"notifications-outline", "component":"notifications"},
                             // {"title":"Profile","icon":"siva-icon-user-outline", "component":"UserProfilePage"},
-                            {"title":"Settings","icon":"siva-icon-sliders", "component":"SettingsViewPage"}
+                            {"title":"Settings","icon":"settings-outline", "component":"settings-view-page"}
                         ];
                     }else{
                         menus = [
-                            {"title":"Home","icon":"siva-icon-home-3", "component":"HomeView"},
-                            {"title":"Appointment","icon":"siva-icon-calendar-check-o", "component":"", "subMenu":[
-                                {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"AddAppointmentPage"},
-                                {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"AppointmentHistoryPage"},
-                                {"title":"My Visitors","icon":"siva-icon-group", "component":"MyVisitorsPage"}
+                            {"title":"Home","icon":"home-outline", "component":"home-view"},
+                            {"title":"Appointment","icon":"calendar-outline", "component":"", "subMenu":[
+                                {"title":"Create Appointment","icon":"siva-icon-calendar-plus-o", "component":"add-appointment"},
+                                {"title":"Appointment History","icon":"siva-icon-calendar-3", "component":"appointment-history"},
+                                {"title":"My Visitors","icon":"siva-icon-group", "component":"my-visitors"}
                             ]},
-                            {"title":"Facility Booking","icon":"siva-icon-book-open-1", "component":"", "subMenu": [
-                                {"title":"Create Facility Booking","icon":"siva-icon-bookmark-2", "component":"FacilityBookingPage"},
-                                {"title":"Facility History","icon":"siva-icon-grid", "component":"FacilityBookingHistoryPage"}
+                            {"title":"Facility Booking","icon":"bookmark-outline", "component":"", "subMenu": [
+                                {"title":"Create Facility Booking","icon":"bookmark-outline", "component":"facility-booking"},
+                                {"title":"Facility History","icon":"siva-icon-grid", "component":"facility-booking-history"}
                             ]},
-                            {"title":"Calendar View","icon":"siva-icon-calendar-7", "component":"ManageAppointmentPage"},
-                            {"title":"Notification","icon":"siva-icon-bell-2", "component":"NotificationPage"},
+                            {"title":"Calendar View","icon":"calendar-number-outline", "component":"manage-appointment"},
+                            {"title":"Notification","icon":"notifications-outline", "component":"notifications"},
                             // {"title":"Profile","icon":"siva-icon-user-outline", "component":"UserProfilePage"},
-                            {"title":"Settings","icon":"siva-icon-sliders", "component":"SettingsViewPage"}
+                            {"title":"Settings","icon":"settings-outline", "component":"settings-view-page"}
                         ];
                     }
                   break;
                 case AppSettings.LOGINTYPES.FACILITY:
                     menus = [
-                        {"title":"Home","icon":"siva-icon-home-3", "component":"FacilityUpcomingPage"},
-                        {"title":"Facility Booking","icon":"siva-icon-book-open-1", "component":"", "subMenu": [
-                            {"title":"Create Facility Booking","icon":"siva-icon-bookmark-2", "component":"FacilityBookingPage"},
-                            {"title":"Facility History","icon":"siva-icon-grid", "component":"FacilityBookingHistoryPage"}
+                        {"title":"Home","icon":"home-outline", "component":"facility-upcoming"},
+                        {"title":"Facility Booking","icon":"bookmark-outline", "component":"", "subMenu": [
+                            {"title":"Create Facility Booking","icon":"bookmark-outline", "component":"facility-booking"},
+                            {"title":"Facility History","icon":"siva-icon-grid", "component":"facility-booking-history"}
                         ]},
-                        {"title":"Calendar View","icon":"siva-icon-calendar-7", "component":"ManageAppointmentPage"},
-                        {"title":"Notification","icon":"siva-icon-bell-2", "component":"NotificationPage"},
-                        {"title":"Settings","icon":"siva-icon-sliders", "component":"SettingsViewPage"}
+                        {"title":"Calendar View","icon":"calendar-number-outline", "component":"manage-appointment"},
+                        {"title":"Notification","icon":"notifications-outline", "component":"notifications"},
+                        {"title":"Settings","icon":"settings-outline", "component":"settings-view-page"}
                     ];
                     break;
                 case AppSettings.LOGINTYPES.DISPLAYAPP:

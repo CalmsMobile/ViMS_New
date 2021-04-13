@@ -5,68 +5,75 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="danger">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>QuickPassDetails</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list no-lines="">
+  <ion-list lines="none">
 
     <ion-card style="background: #f7f7f7; border-radius: 10px;">
-        <ion-item no-lines style="background:transparent; margin:0 auto">
-
-          <ion-avatar item-start *ngIf = "base64Image && CheckIn"  text-center margin-bottom style="margin-top: 0px;    margin-bottom: 0px;">
+        <ion-item lines="none" style="background:transparent; margin:0 auto">
+          <ion-avatar slot="start" *ngIf = "base64Image && CheckIn"  class="ion-text-center" margin-bottom style="    width: 92px;
+          height: 92px;margin-top: 0px;    margin-bottom: 0px;">
               <img class="profile-imageTabLand" onError="this.src='../../assets/images/user.png';" [src]="base64Image" (click)= "presentActionSheet()"/>
           </ion-avatar>
-          <ion-avatar item-start *ngIf = "!base64Image" text-center margin-bottom style="margin-top: 0px;    margin-bottom: 0px;">
+          <ion-avatar slot="start" *ngIf = "!base64Image" class="ion-text-center" margin-bottom style="    width: 92px;
+          height: 92px;margin-top: 0px;    margin-bottom: 0px;">
               <img class="profile-imageTabLand" onError="this.src='../../assets/images/user.png';" [src]="data.logo+QPAppointment.HexCode+RefTypeVP" (click)= "presentActionSheet()"/>
               <ion-icon app-logo-img class="animated fadeInDown delay-1s" class="cameraImgTabLand" *ngIf = "CheckIn && securitySettings.QuickPass.ImageCaptureEnabled" (click)= "presentActionSheet()" name="camera"></ion-icon>
           </ion-avatar>
 
           <!-- <h4 [ngClass]="{'head1TabLand':!CheckIn, 'head1TabLand2': CheckIn}"><b>Name</b></h4> -->
+         <div>
           <p class="pTabLand3" *ngIf= "QPAppointment.VisitorName"><b>{{QPAppointment.VisitorName}}</b></p>
           <h4 class="head1TabLand1" *ngIf="securitySettings.QuickPass.ShowVisitorExpiryTime"><b>Expire :</b>{{QPAppointment.ExpiryTime ? (QPAppointment.ExpiryTime| date: "MMM dd, yyyy HH:mm a") : '--'}}</h4>
           <h4 class="head1TabLand1"><b>Check In :</b>{{QPAppointment.CheckInTime ? (QPAppointment.CheckInTime| date: "MMM dd, yyyy HH:mm a") : '--'}}</h4>
           <h4 class="head1TabLand1"><b>Check Out :</b>{{QPAppointment.CheckOutTime ? (QPAppointment.CheckOutTime| date: "MMM dd, yyyy HH:mm a") : '--'}}</h4>
+         </div>
         </ion-item>
         <ion-item style="background: transparent">
-            <ion-row *ngIf="securitySettings.QuickPass.ShowVehicleNo || securitySettings.QuickPass.ShowRemarks">
-              <ion-col col-6 style="margin: 0 auto;" *ngIf="securitySettings.QuickPass.ShowVehicleNo">
-                <h4 [ngClass]="{'head1TabLand':!CheckIn, 'head1TabLand2': CheckIn}"><b>Vehicle No</b></h4>
-                <p [ngClass]="{'pTabLand':!CheckIn, 'pTabLand2': CheckIn}" *ngIf= "QPAppointment.VehicleNo" ><b>{{QPAppointment.VehicleNo}}</b></p>
-                <p [ngClass]="{'pTabLand':!CheckIn, 'pTabLand2': CheckIn}" *ngIf= "!QPAppointment.VehicleNo" > -- </p>
+            <ion-row style="width: 100%;" *ngIf="securitySettings.QuickPass.ShowVehicleNo || securitySettings.QuickPass.ShowRemarks">
+              <ion-col size="6" style="margin: 0 auto; text-align: center;" *ngIf="securitySettings.QuickPass.ShowVehicleNo">
+                <div>
+                  <h4 [ngClass]="{'head1TabLand':!CheckIn, 'head1TabLand2': CheckIn}"><b>Vehicle No</b></h4>
+                  <p [ngClass]="{'pTabLand':!CheckIn, 'pTabLand2': CheckIn}" *ngIf= "QPAppointment.VehicleNo" ><b>{{QPAppointment.VehicleNo}}</b></p>
+                  <p [ngClass]="{'pTabLand':!CheckIn, 'pTabLand2': CheckIn}" *ngIf= "!QPAppointment.VehicleNo" > -- </p>
+                </div>
               </ion-col>
-              <ion-col col-6 style="margin: 0 auto;" *ngIf="securitySettings.QuickPass.ShowRemarks">
-                <h4 [ngClass]="{'head1TabLand':!CheckIn, 'head1TabLand2': CheckIn}"><b>Remarks</b></h4>
+              <ion-col size="6" style="margin: 0 auto; text-align: center" *ngIf="securitySettings.QuickPass.ShowRemarks">
+                <div>
+                  <h4 [ngClass]="{'head1TabLand':!CheckIn, 'head1TabLand2': CheckIn}"><b>Remarks</b></h4>
                 <p [ngClass]="{'pTabLand':!CheckIn, 'pTabLand2': CheckIn}" *ngIf= "QPAppointment.Purpose" ><b>{{QPAppointment.Purpose}}</b></p>
                 <p [ngClass]="{'pTabLand':!CheckIn, 'pTabLand2': CheckIn}" *ngIf= "!QPAppointment.Purpose" > -- </p>
+                </div>
               </ion-col>
             </ion-row>
         </ion-item>
         <ion-item *ngIf="!CheckIn" style="background-color: transparent;">
-                <img class="qrCodeImage" onError="this.src='../../assets/images/user.png';" [src]="qrCodeString"/>
+          <img class="qrCodeImage" onError="this.src='../../assets/images/user.png';" [src]="qrCodeString"/>
         </ion-item>
-        <ion-item style="background-color: transparent;">
-            <button ion-button  round color='favorite'
-                    style="    padding: 18px 18px 18px 18px;
-                    display: block;
+        <div style="background-color: transparent;">
+            <ion-button  shape="round" color='danger'
+                    style=" display: block;
                     margin: 0 auto;
                     margin-bottom: 10px;
                     min-width: 150px;"
                     (click)="UpdateQPVisitorCheckInTime()" >
                     {{CheckIn? ('SECURITY_APP.CHECK_IN' | translate) : ('SECURITY_APP.SHARE_QR' | translate)}}
-            </button>
-          </ion-item>
+            </ion-button>
+          </div>
     </ion-card>
 
               <!-- <ion-item>
-                  <button ion-button  round outline color='light'
+                  <ion-button  shape="round" fill="outline" color='light'
                       style="padding: 14px 7px 14px 18px;    display: block;
                       margin: 0 auto;min-width: 150px;"
                       (click)="dismiss()" >
                       Cancel
-                  </button>
+                  </ion-button>
           </ion-item> -->
     </ion-list>
 </ion-content>

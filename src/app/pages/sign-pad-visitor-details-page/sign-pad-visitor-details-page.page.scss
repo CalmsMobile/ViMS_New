@@ -9,6 +9,7 @@
   padding: 10px;
   background: #06dfef;
   width: 100%;
+  color: white;
   /* margin-left: -20px; */
   /* position: relative; */
   margin-bottom: 15px;
@@ -46,7 +47,7 @@ ion-button,
   padding: 5px;
   // padding-bottom: 8px;
   text-align: left;
-  border-bottom: 1px solid #eeeeee;
+  // border-bottom: 1px solid #eeeeee;
   display: flex;
 }
 .pNormalLand {
@@ -55,7 +56,7 @@ ion-button,
   padding: 5px;
   // padding-bottom: 8px;
   text-align: left;
-  border-bottom: 1px solid #eeeeee;
+  // border-bottom: 1px solid #eeeeee;
   display: flex;
 }
 p {
@@ -64,7 +65,7 @@ p {
   padding: 5px;
   padding-bottom: 8px;
   text-align: left;
-  border-bottom: 1px solid #eeeeee;
+  // border-bottom: 1px solid #eeeeee;
   display: flex;
 }
 
@@ -234,9 +235,9 @@ p {
   // padding: 50px;
   // width: 400px;
   border-radius: 30px;
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important;
-  border: none !important;
+  // -webkit-box-shadow: none !important;
+  // box-shadow: none !important;
+  // border: none !important;
   // padding: 10px;
   background: white !important;
   // padding: 20px;
@@ -388,24 +389,24 @@ hr {
 }
 
 .buttonProceedLand {
-  padding: 21px 15px 27px 30px;
+  // padding: 21px 15px 27px 30px;
   font-size: 20px;
   margin-left: auto;
   margin-right: 20px;
   margin-bottom: 10px;
-  display: block;
+  // display: block;
   border-color: #ffffff;
   color: #ffffff;
 }
 
 .buttonNormal {
-  padding: 16px 12px 20px 28px;
+  // padding: 16px 12px 20px 28px;
   /* font-size: 20px; */
   /* height: 40px; */
   margin-left: auto;
   margin-right: 20px;
   /* margin-bottom: 10px; */
-  display: block;
+  // display: block;
   color: white;
   border-color: white;
 }

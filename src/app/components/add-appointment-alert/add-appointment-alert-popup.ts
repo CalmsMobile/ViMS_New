@@ -27,7 +27,7 @@ export class AddAppointmentAlertPopupComponent {
     // private platform: Platform,
     public socialSharing: SocialSharing,
     public navParams: NavParams) {
-      this.reaponseArray = navParams.get("data");
+      this.reaponseArray = navParams.data.data;
 
 
   }

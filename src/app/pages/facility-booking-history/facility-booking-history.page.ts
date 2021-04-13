@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { NavController, AlertController, NavParams } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -24,7 +24,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 		private  translate : TranslateService,
     private router: Router,
 		private events : EventsService,
-		private alertCtrl: AlertController, public apiProvider: RestProvider, public navParams: NavParams) {
+		private alertCtrl: AlertController, public apiProvider: RestProvider) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
         this.T_SVC = t;
@@ -37,19 +37,24 @@ export class FacilityBookingHistoryPage implements OnInit {
 		if(MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
 			this.events.publishDataCompany({
         action: "page",
-        title: "FacilityBookingHistoryPage",
+        title: "facility-booking-history",
         message: ''
       });
 		}
 
 	}
 
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
+
 	ionViewWillLeave(){
 		var MAppId = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
 		if(MAppId == AppSettings.LOGINTYPES.FACILITY){
 			this.events.publishDataCompany({
         action: "page",
-        title: "HomeView1",
+        title: "home-view1",
         message: ''
       });
 		}
@@ -60,7 +65,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 		if(MAppId == AppSettings.LOGINTYPES.FACILITY){
 			this.events.publishDataCompany({
         action: "page",
-        title: "HomeView",
+        title: "home-view",
         message: ''
       });
 		}
@@ -83,7 +88,7 @@ export class FacilityBookingHistoryPage implements OnInit {
     // this.OffSet = this.OffSet + 20;
 
     this.getAppointmentHistory(refresher);
-    //setTimeout(()=>{refresher.complete();},2000)
+    //setTimeout(()=>{refresher.target.complete();},2000)
 	}
 
 	getAppointmentHistory(refresher){
@@ -119,7 +124,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 
 					if(refresher){
 						this.appointments = aList.concat(this.appointments);
-						refresher.complete();
+						refresher.target.complete();
 					}else{
 						this.appointments = aList;
 					}
@@ -132,7 +137,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 				async (err) => {
 					this.loadingFinished = true;
 					if(refresher){
-						refresher.complete();
+						refresher.target.complete();
 					}
 					if(err && err.message == "No Internet"){
 						return;

@@ -6,10 +6,10 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
+  // { path: '', redirectTo: 'home-view', pathMatch: 'full' },
   {
     path: '',
-    redirectTo: 'account-mapping',
-    pathMatch: 'full'
+    loadChildren: () => import('./pages/home-view/home-view.module').then( m => m.HomeViewPageModule)
   },
   {
     path: 'account-mapping',
@@ -48,10 +48,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/appointment-details/appointment-details.module').then( m => m.AppointmentDetailsPageModule)
   },
   {
-    path: 'appointment-history',
-    loadChildren: () => import('./pages/appointment-history/appointment-history.module').then( m => m.AppointmentHistoryPageModule)
-  },
-  {
     path: 'create-quick-pass',
     loadChildren: () => import('./pages/create-quick-pass/create-quick-pass.module').then( m => m.CreateQuickPassPageModule)
   },
@@ -86,10 +82,6 @@ const routes: Routes = [
   {
     path: 'facility-upcoming',
     loadChildren: () => import('./pages/facility-upcoming/facility-upcoming.module').then( m => m.FacilityUpcomingPageModule)
-  },
-  {
-    path: 'home-view',
-    loadChildren: () => import('./pages/home-view/home-view.module').then( m => m.HomeViewPageModule)
   },
   {
     path: 'intro-page',
@@ -180,10 +172,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/signature-page/signature-page.module').then( m => m.SignaturePagePageModule)
   },
   {
-    path: 'upcoming-appointment-page',
-    loadChildren: () => import('./pages/upcoming-appointment-page/upcoming-appointment-page.module').then( m => m.UpcomingAppointmentPagePageModule)
-  },
-  {
     path: 'user-profile-page',
     loadChildren: () => import('./pages/user-profile-page/user-profile-page.module').then( m => m.UserProfilePagePageModule)
   },
@@ -194,7 +182,7 @@ const routes: Routes = [
   {
     path: 'admin-login',
     loadChildren: () => import('./pages/admin-login/admin-login.module').then( m => m.AdminLoginPageModule)
-  },
+  }
 ];
 
 @NgModule({

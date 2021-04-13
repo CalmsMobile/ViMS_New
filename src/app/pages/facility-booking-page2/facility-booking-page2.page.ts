@@ -1,9 +1,7 @@
-import { Route } from '@angular/compiler/src/core';
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NavController, NavParams, AlertController, ToastController } from '@ionic/angular';
+import { NavController, AlertController, ToastController, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AddAppointmentModel } from 'src/app/model/addAppointmentModel';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
@@ -18,7 +16,7 @@ import { EventsService } from 'src/app/services/EventsService';
 })
 export class FacilityBookingPage2Page implements OnInit {
 
-  @ViewChild(Content) content:Content;
+  @ViewChild(IonContent) content:IonContent;
   facilitySlots = [];
   addAppointmentModel = new AddAppointmentModel();
   START_TIME = "PM";
@@ -51,7 +49,7 @@ export class FacilityBookingPage2Page implements OnInit {
   //   toDate: new Date(),
   //   fromTime:"02:02",
   //   toTime:"02:02"
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
     private dateformat : DateFormatPipe,
@@ -84,8 +82,8 @@ export class FacilityBookingPage2Page implements OnInit {
           if(this.QRObj && this.QRObj.MAppId){
 
             if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-              if(JSON.parse(settings).Table3 && JSON.parse(settings).Table3.length > 0){
-                this.hostSettings = JSON.parse(settings).Table3[0];
+              if(JSON.parse(settings).Table1 && JSON.parse(settings).Table1.length > 0){
+                this.hostSettings = JSON.parse(settings).Table1[0];
               }else{
                 this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
               }
@@ -195,6 +193,7 @@ export class FacilityBookingPage2Page implements OnInit {
     let toast = await this.toastCtrl.create({
       message: message1,
       duration: 3000,
+      color: 'primary',
       position: 'bottom'
     });
     toast.present();
@@ -223,7 +222,7 @@ export class FacilityBookingPage2Page implements OnInit {
             console.log(JSON.stringify(val));
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS,JSON.stringify(val));
             if(MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-              this.hostSettings = result.Table3[0];
+              this.hostSettings = result.Table1[0];
             }else{
               this.hostSettings = result.Table1[0];
             }
@@ -264,18 +263,23 @@ export class FacilityBookingPage2Page implements OnInit {
     );
   }
 
-  onChangePurpose(purposeItem){
-    console.log(""+ purposeItem);
-    this.PurposeCode = purposeItem.PurposeCode;
+  onChangePurpose(PurposeCode){
+    console.log(""+ PurposeCode);
+    this.PurposeCode = PurposeCode;
 
   }
 
-  onChangeFacility(facilityItem){
-    console.log(""+ facilityItem);
-    this.FacilityCode = facilityItem.FacilityCode;
+  onChangeFacility(FacilityCode){
+    console.log(""+ FacilityCode);
+    this.VM.FACILITYMASTERLIST.forEach(element => {
+      if (element.FacilityCode === FacilityCode) {
+
+      }
+    });
+    this.FacilityCode = FacilityCode;
     const navigationExtras: NavigationExtras = {
       state: {
-        passData: { "FacilityCode": facilityItem.FacilityCode,
+        passData: { "FacilityCode": FacilityCode,
         "START_DATE":this.addAppointmentModel.START_DATE,
         "END_DATE":this.addAppointmentModel.END_DATE,
         "facility": this.VM.facility,
@@ -438,6 +442,7 @@ export class FacilityBookingPage2Page implements OnInit {
             let toast = await this.toastCtrl.create({
               message: this.T_SVC['ALERT_TEXT.FACILITY_UPDATE_SUCCESS'],
               duration: 3000,
+              color: 'primary',
               position: 'bottom'
             });
             toast.present();
@@ -525,15 +530,15 @@ export class FacilityBookingPage2Page implements OnInit {
     );
   }
 
-  async proceedToNextStep(){
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+  }
+
+  proceedToNextStep(){
 
     if(this.hostSettings.PurposeEnabled && this.hostSettings.PurposeRequired && !this.PurposeCode){
-      let toast = await this.toastCtrl.create({
-        message: this.T_SVC['ALERT_TEXT.SELECT_PURPOSE'],
-        duration: 3000,
-        position: 'bottom'
-      });
-      toast.present();
+      this.showToast(this.T_SVC['ALERT_TEXT.SELECT_PURPOSE']);
       return;
     }else if((!this.hostSettings.PurposeEnabled || !this.hostSettings.PurposeRequired) && !this.PurposeCode){
       this.PurposeCode = 0;
@@ -622,6 +627,7 @@ export class FacilityBookingPage2Page implements OnInit {
         let toast = await this.toastCtrl.create({
           message: this.T_SVC['FACILITY_BOOKING.ADD_APPOINTMENT_DONE_SUCCESS'],
           duration: 3000,
+          color: 'primary',
           position: 'bottom'
         });
         toast.present();
@@ -635,7 +641,7 @@ export class FacilityBookingPage2Page implements OnInit {
             this.router.navigateByUrl("facility-booking-history");
           }else{
             var page = {
-              component :"HomeView"
+              component : "home-view"
             }
             this.events.publishDataCompany({
               action: 'ChangeTab',
@@ -678,6 +684,7 @@ export class FacilityBookingPage2Page implements OnInit {
       let toast = await this.toastCtrl.create({
         message: 'Server Error',
         duration: 3000,
+        color: 'primary',
         position: 'bottom'
       });
       toast.present();
