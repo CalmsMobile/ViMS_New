@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-label class="ion-padding" style="font-weight: 800;">{{type === 'doc'? 'Verification Documents': 'Self Declaration'}}</ion-label>
+    <ion-icon slot="end" style="font-size: 26px;" name="close-circle-outline" (click)="dismiss()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+
+  <div *ngIf="type !== 'doc'">
+    <ion-label color="primary" >Following questions are self declared by this Visitor</ion-label>
+    <div *ngFor="let ques of result">
+      <ion-card mode="ios" style="padding: 5px">
+        <div>
+          <ion-label style="font-weight: bold; font-size: 18px;">{{ques.Description}}</ion-label>
+          <ion-radio-group value="{{ques.Answer}}" style="    display: flex;">
+            <ion-item>
+              <ion-label>Yes</ion-label>
+              <ion-radio [disabled]="ques.Answer === 0 || ques.Answer === '0'" mode="ios" slot="end" value="1"></ion-radio>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>No</ion-label>
+              <ion-radio [disabled]="ques.Answer === 1 || ques.Answer === '1'" mode="ios" slot="end" value="0"></ion-radio>
+            </ion-item>
+            </ion-radio-group>
+        </div>
+      </ion-card>
+    </div>
+  </div>
+  <div *ngIf="type === 'doc'">
+    <div *ngFor="let doc of result">
+      <ion-card mode="ios" style="padding: 7px; margin: 3px;">
+        <ion-item lines="none">
+          <ion-icon slot="start" name="document-outline" style="font-size: 24px;"></ion-icon>
+          <ion-text>{{doc.Caption}}</ion-text>
+          <ion-icon slot="end" color="primary" name="cloud-download-outline" style="font-size: 24px;" (click)="downloadFile(doc)"></ion-icon>
+        </ion-item>
+      </ion-card>
+    </div>
+  </div>
+
+
+</ion-content>

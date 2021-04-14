@@ -50,13 +50,15 @@ import { UtilPopupWizardComponent } from './components/util-popup-wizard/util-po
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { IonicGestureConfig } from './services/util/IonicGestureConfig';
+import { QuestionDocPopupComponent } from './components/question-doc-popup/question-doc-popup.component';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
 
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent,
-    CustomVisitorPopupComponent, UtilPopupWizardComponent,
+    CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent],
   entryComponents: [],
-  exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent,
+  exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent, QuestionDocPopupComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [ BrowserModule,
@@ -98,6 +100,7 @@ import { IonicGestureConfig } from './services/util/IonicGestureConfig';
     Device,
     RestProvider,
     LocalNotifications,
+    FileOpener,
     FileTransfer,
     Camera,
     ScreenOrientation,

@@ -28,6 +28,7 @@
     "@ionic-native/date-picker": "^5.0.0",
     "@ionic-native/device": "^5.0.0",
     "@ionic-native/file": "^5.1.0",
+    "@ionic-native/file-opener": "^5.32.0",
     "@ionic-native/file-path": "^5.1.0",
     "@ionic-native/file-transfer": "^5.1.0",
     "@ionic-native/firebase": "^5.0.0",
@@ -52,13 +53,16 @@
     "animate.css": "^4.1.1",
     "animejs": "^3.2.1",
     "com-badrit-base64": "^0.2.0",
+    "cordova-android": "^7.1.4",
     "cordova-plugin-advanced-http": "^3.1.0",
     "cordova-plugin-android-permissions": "^1.1.2",
+    "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-contacts": "^3.0.1",
     "cordova-plugin-datepicker": "^0.9.3",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-file": "^6.0.2",
+    "cordova-plugin-file-opener2": "^3.0.5",
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-filepath": "^1.6.0",
     "cordova-plugin-firebase": "^2.0.5",
@@ -74,6 +78,7 @@
     "cordova-wheel-selector-plugin": "^1.1.7",
     "cordova.plugins.myKadReader": "file:plugins_src/MyKadReader",
     "crypto-js": "^4.0.0",
+    "es6-promise-plugin": "^4.2.2",
     "hammerjs": "^2.0.8",
     "ionic-long-press": "^2.0.3",
     "ionic2-calendar": "^0.6.7",
@@ -136,7 +141,8 @@
       "cordova-plugin-screen-orientation": {},
       "cordova-plugin-android-permissions": {},
       "com-badrit-base64": {},
-      "cordova.plugins.myKadReader": {}
+      "cordova.plugins.myKadReader": {},
+      "cordova-plugin-file-opener2": {}
     }
   }
 }

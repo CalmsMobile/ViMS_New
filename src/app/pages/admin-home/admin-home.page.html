@@ -80,8 +80,6 @@
                             font-size: 16px;"><b>{{list.value[0].VISITOR_NAME}}</b></ion-label>
                             <ion-icon *ngIf= "list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" slot="end" style="margin: 0px;
                             margin-right: -5px;" slot="end" color="danger" name="star-outline"></ion-icon>
-                            <!-- <ion-button slot="end" clear color="danger" style="padding: 5px;font-size: 14px;" *ngIf= "list.value[0].FacilityBookingID">
-                            </ion-button> -->
                         </ion-item>
                         <ion-item style="margin-top: -8px;
                         --padding-start: 5px;">
@@ -114,54 +112,48 @@
 
             <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;" *ngIf="approvedList.length == 0">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
             <ion-list class="no-margin" *ngFor="let list of approvedList | groupBy:'appointment_group_id'">
-              <ion-card style="width: 100%;margin: 0px;margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;" no-padding no-border (click)="viewBooking(list.value)">
-                  <div class="row no-padding">
-                      <div class="col apt-left" style="max-width:100px;padding:5px 0px 0px 0px;text-align: center;;">
-                          <div class="row text-white no-padding" style="display:flex">
-                              <div class="col no-padding" style="display:contents"><h2 class="text-white" style="font-size: 25px;display: flex">{{list.value[0].START_DATE | date : 'dd'}}</h2></div>
-                              <div class="col">
-                                  <h3 class="text-white" style="font-size: 15px;">{{getDayofDate(list.value[0].START_DATE)}}</h3>
-                                  <h3 class="text-white" style="font-size: 12px;">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
-                              </div>
-                          </div>
-                          <div class="row" style="background:rgba(0,0,0,0.1);    ">
-                              <div class="col" style="padding: 8px;"><h3 class="text-white" style="font-size: 15px;">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} - {{list.value[0].START_DATE | date : 'yyyy'}}</h3></div>
-                          </div>
-                      </div>
-                      <div class="col padding" style="border-bottom: 2px solid rgba(0,0,0,0.05);">
-                          <ion-item style="padding: 0px;
-                              margin: 0px;
-                              height: 25px;
-                              min-height: 25px;
-                             ">
-                              <h2 slot="start" style="padding: 0px;
-                              margin-left: 0px;
-                              height: 20px;
-                              width: 100px;
-                              text-overflow: ellipsis; overflow: hidden;
-                              display: -webkit-box; -webkit-line-clamp: 2; line-height: 16px; max-height: 16px; -webkit-box-orient: vertical;
-                              text-align: left;
-                              font-size: 16px;"><b>{{list.value[0].VISITOR_NAME}}</b></h2>
-                              <div slot="end">
-                                  <ion-button slot="icon-only" clear color="danger" style="padding: 5px;font-size: 14px;" *ngIf= "list.value[0].FacilityBookingID">
-                                      <ion-icon name="star-outline"></ion-icon>
-                                  </ion-button>
-                                  <!-- <ion-button color="danger" shape="round" style="font-size: 14px;">
 
-                                          {{list.value.length}}
-                                  </ion-button> -->
-                              </div>
-                          </ion-item>
-                          <!-- <p style="font-size: 14px;">{{list.value[0].REASON}}</p> -->
-                          <p *ngIf="list.value[0].REASON" style="font-size: 14px;">{{list.value[0].REASON}}</p>
-                          <p *ngIf="!list.value[0].REASON" style="font-size: 14px;padding-top: 5px;">--</p>
+              <ion-card style="margin: 0px;margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;" no-padding no-border >
+                <ion-row class="row no-padding">
+                    <ion-col size="4" class="col apt-left" style="max-width:100px;padding-bottom: 0px;text-align: center;" (click)="viewBooking(list.value)">
+                        <div class="row text-white no-padding" style="display:flex">
+                            <div class="col no-padding" style="display:contents"><h2 class="text-white" style="font-size: 25px;display: flex">{{list.value[0].START_DATE | date : 'dd'}}</h2></div>
+                            <div class="col">
+                                <h3 class="text-white" style="font-size: 15px;">{{getDayofDate(list.value[0].START_DATE)}}</h3>
+                                <h3 class="text-white" style="font-size: 12px;">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
+                            </div>
+                        </div>
+                        <div class="row" style="background:rgba(0,0,0,0.1);">
+                            <div class="col" style="padding: 8px;"><h3 class="text-white" style="font-size: 15px;    margin: 7px;">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} - {{list.value[0].START_DATE | date : 'yyyy'}}</h3></div>
+                        </div>
+                    </ion-col>
+                    <ion-col size="8" class="col padding" style="padding-bottom: 0px;">
+                        <div>
+                          <ion-item (click)="viewBooking(list.value)" lines="none" style="margin-top: -8px;
+                          --padding-start: 5px;">
+                            <ion-label slot="start" style="
+                            font-size: 16px;"><b>{{list.value[0].VISITOR_NAME}}</b></ion-label>
+                            <ion-icon *ngIf= "list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" slot="end" style="margin: 0px;
+                            margin-right: -5px;" slot="end" color="danger" name="star-outline"></ion-icon>
+                        </ion-item>
+                        <ion-item style="margin-top: -8px;
+                        --padding-start: 5px;">
+                          <div>
+                            <p *ngIf="list.value[0].REASON" (click)="viewBooking(list.value)" style="font-size: 14px;">{{list.value[0].REASON}}</p>
+                            <p *ngIf="!list.value[0].REASON" (click)="viewBooking(list.value)" style="font-size: 14px;padding-top: 5px;">--</p>
+                          </div>
+                          <ion-checkbox slot="end" style="margin: 0px;margin-right: 5px" [(ngModel)]="list.value[0].isChecked" (ionChange)="checkSelectAll()"></ion-checkbox>
+                        </ion-item>
 
-                          <div text-right class="booking-status"
+                        <div text-right class="booking-status"
                           [ngClass]="{'approved':true}">
                           Approved</div>
-                      </div>
-                  </div>
-              </ion-card>
+                        </div>
+                    </ion-col>
+                </ion-row>
+            </ion-card>
+
+
             </ion-list>
       </ion-col>
     </ion-row>
@@ -170,53 +162,44 @@
 
             <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;" *ngIf="cancelledList.length == 0">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
             <ion-list class="no-margin" *ngFor="let list of cancelledList | groupBy:'appointment_group_id'">
-              <ion-card style="width: 100%;margin: 0px;margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;" no-padding no-border (click)="viewBooking(list.value)">
-                  <div class="row no-padding">
-                      <div class="col apt-left" style="max-width:100px;padding:5px 0px 0px 0px;text-align: center;;">
-                          <div class="row text-white no-padding" style="display:flex">
-                              <div class="col no-padding" style="display:contents"><h2 class="text-white" style="font-size: 25px;display: flex">{{list.value[0].START_DATE | date : 'dd'}}</h2></div>
-                              <div class="col">
-                                  <h3 class="text-white" style="font-size: 15px;">{{getDayofDate(list.value[0].START_DATE)}}</h3>
-                                  <h3 class="text-white" style="font-size: 12px;">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
-                              </div>
+              <ion-card style="margin: 0px;margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;" no-padding no-border >
+                <ion-row class="row no-padding">
+                    <ion-col size="4" class="col apt-left" style="max-width:100px;padding-bottom: 0px;text-align: center;" (click)="viewBooking(list.value)">
+                        <div class="row text-white no-padding" style="display:flex">
+                            <div class="col no-padding" style="display:contents"><h2 class="text-white" style="font-size: 25px;display: flex">{{list.value[0].START_DATE | date : 'dd'}}</h2></div>
+                            <div class="col">
+                                <h3 class="text-white" style="font-size: 15px;">{{getDayofDate(list.value[0].START_DATE)}}</h3>
+                                <h3 class="text-white" style="font-size: 12px;">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
+                            </div>
+                        </div>
+                        <div class="row" style="background:rgba(0,0,0,0.1);">
+                            <div class="col" style="padding: 8px;"><h3 class="text-white" style="font-size: 15px;    margin: 7px;">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} - {{list.value[0].START_DATE | date : 'yyyy'}}</h3></div>
+                        </div>
+                    </ion-col>
+                    <ion-col size="8" class="col padding" style="padding-bottom: 0px;">
+                        <div>
+                          <ion-item (click)="viewBooking(list.value)" lines="none" style="margin-top: -8px;
+                          --padding-start: 5px;">
+                            <ion-label slot="start" style="
+                            font-size: 16px;"><b>{{list.value[0].VISITOR_NAME}}</b></ion-label>
+                            <ion-icon *ngIf= "list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" slot="end" style="margin: 0px;
+                            margin-right: -5px;" slot="end" color="danger" name="star-outline"></ion-icon>
+                        </ion-item>
+                        <ion-item style="margin-top: -8px;
+                        --padding-start: 5px;">
+                          <div>
+                            <p *ngIf="list.value[0].REASON" (click)="viewBooking(list.value)" style="font-size: 14px;">{{list.value[0].REASON}}</p>
+                            <p *ngIf="!list.value[0].REASON" (click)="viewBooking(list.value)" style="font-size: 14px;padding-top: 5px;">--</p>
                           </div>
-                          <div class="row" style="background:rgba(0,0,0,0.1);">
-                              <div class="col" style="padding: 8px;"><h3 class="text-white" style="font-size: 15px;">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} - {{list.value[0].START_DATE | date : 'yyyy'}}</h3></div>
-                          </div>
-                      </div>
-                      <div class="col padding" style="border-bottom: 2px solid rgba(0,0,0,0.05);">
-                          <ion-item style="padding: 0px;
-                              margin: 0px;
-                              height: 25px;
-                              min-height: 25px;
-                             ">
-                              <h2 slot="start" style="padding: 0px;
-                              margin-left: 0px;
-                              height: 20px;
-                              width: 100px;
-                              text-overflow: ellipsis; overflow: hidden;
-                              display: -webkit-box; -webkit-line-clamp: 2; line-height: 16px; max-height: 16px; -webkit-box-orient: vertical;
-                              text-align: left;
-                              font-size: 16px;"><b>{{list.value[0].VISITOR_NAME}}</b></h2>
-                              <div slot="end">
-                                  <ion-button slot="icon-only" clear color="danger" style="padding: 5px;font-size: 14px;" *ngIf= "list.value[0].FacilityBookingID">
-                                      <ion-icon name="star-outline"></ion-icon>
-                                  </ion-button>
-                                  <!-- <ion-button color="danger" shape="round" style="font-size: 14px;">
+                          <ion-checkbox slot="end" style="margin: 0px;margin-right: 5px" [(ngModel)]="list.value[0].isChecked" (ionChange)="checkSelectAll()"></ion-checkbox>
+                        </ion-item>
 
-                                         {{list.value.length}}
-                                  </ion-button> -->
-                              </div>
-                              </ion-item>
-                          <!-- <p style="font-size: 14px;">{{list.value[0].REASON}}</p> -->
-                          <p *ngIf="list.value[0].REASON" style="font-size: 14px;">{{list.value[0].REASON}}</p>
-                          <p *ngIf="!list.value[0].REASON" style="font-size: 14px;padding-top: 5px;">--</p>
-                          <!-- <h5>{{list.value[0].Category}}</h5> -->
+                        <div text-right class="booking-status" [ngClass]="{'approved':true}">Cancelled</div>
+                        </div>
+                    </ion-col>
+                </ion-row>
+            </ion-card>
 
-                          <div text-right class="booking-status" [ngClass]="{'approved':true}">Cancelled</div>
-                      </div>
-                  </div>
-              </ion-card>
             </ion-list>
       </ion-col>
     </ion-row>

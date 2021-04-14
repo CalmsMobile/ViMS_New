@@ -25,16 +25,10 @@
             </ion-avatar>
             <ion-label (click)="openVisitorDetails(visitors)">{{visitors.Name}}</ion-label>
             <ion-label (click)="openVisitorDetails(visitors)">{{visitors.Email}}</ion-label>
-            <!-- <p (click)="openVisitorDetails(visitors)">{{visitors.VISITOR_COMPANY}}</p> -->
-            <!-- <img slot="end" style="width: 50px;height: 50px;" [src]="getQREncryptedValue(visitors)" (click) = "shareQR(visitors)"> -->
-            <img slot="end" *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)" (click) = "shareQR(visitors)" src="assets/images/qrcode.png">
-            <i *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)" slot="end" style="font-size:35px;color: gray" (click) = "shareQR(visitors)">
-                    <ion-icon name="share-outline" style="
-                    font-size: 25px;
-                    margin: 0 auto;
-                    display: block;
-                "></ion-icon></i>
-
+            <div slot="end" *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)" style="margin: 0px;">
+              <ion-icon color="secondary" class="iconiconClass" name="qr-code-outline" (click)="openVisitorDetails(visitors)" ></ion-icon>
+              <ion-icon color="success" class="iconiconClass" name="share-outline" (click)="shareQR(visitors)"></ion-icon>
+            </div>
         </ion-item>
     </ion-card>
     <ion-card mode="ios" no-margin style="width:100%;margin-top:14px !important;border: 1px solid #dedede;" *ngIf= "appointment && appointment[0] && !appointment[0].isFacilityAlone">
@@ -52,19 +46,14 @@
                   <ion-label (click)="openVisitorDetails(visitors)">{{visitors.VISITOR_NAME}}</ion-label>
                   <ion-label (click)="openVisitorDetails(visitors)">{{visitors.EMAIL}}</ion-label>
                 </div>
-                <!-- <p (click)="openVisitorDetails(visitors)">{{visitors.VISITOR_COMPANY}}</p> -->
-                <!-- <img slot="end" style="width: 50px;height: 50px;" [src]="getQREncryptedValue(visitors)" (click) = "shareQR(visitors)"> -->
-                <img slot="end" (click) = "shareQR(visitors)" src="assets/images/qrcode.png">
-                <i *ngIf="true" slot="end" style="font-size:35px;color: gray" (click) = "shareQR(visitors)">
-                        <ion-icon name="share-outline" style="
-                        font-size: 25px;
-                        margin: 0 auto;
-                        display: block;
-                    "></ion-icon></i>
+                <div slot="end" *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)" style="margin: 0px;">
+                  <ion-icon color="secondary" class="iconiconClass" name="qr-code-outline" (click)="openVisitorDetails(visitors)" ></ion-icon>
+                  <ion-icon color="success" class="iconiconClass" name="share-outline" (click)="shareQR(visitors)"></ion-icon>
+                </div>
 
             </ion-item>
     </ion-card>
-    <ion-card no-margin style="width:100%;margin-top:10px !important;border: 1px solid silver;" class="padding pending-info" *ngIf="!facilityBooking || facilityBooking.length == 0">
+    <ion-card no-margin mode="ios" style="width:100%;margin-top:10px !important;border: 1px solid silver;" class="padding pending-info" *ngIf="!facilityBooking || facilityBooking.length == 0">
         <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;" >
@@ -204,7 +193,7 @@
         </ion-grid>
 </ion-item-divider>
     </ion-card>
-    <ion-card no-margin style="width:100%;margin-top:5px !important;border: 1px solid #dedede;" class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.length > 0">
+    <ion-card no-margin mode="ios" style="width:100%;margin-top:5px !important;border: 1px solid #dedede;" class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.length > 0">
         <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;">
@@ -314,7 +303,7 @@
 </ion-item-divider>
     </ion-card>
 
-    <ion-card no-margin style="width:100%;border: 1px solid #dedede;margin: 0px !important;padding: 0px;
+    <ion-card no-margin mode="ios" style="width:100%;border: 1px solid #dedede;margin: 0px !important;padding: 0px;
     margin-top: 15px !important;" class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.length > 0 && FACILITYSLOTLIST && FACILITYSLOTLIST.length > 0">
         <h2 style="color: white;padding: 10px;width: 100%;background: #ff515a;"><b>Booking Slot</b></h2>
         <h3 *ngIf="Editable || hostSettings.AllowHostsToEndSession" style="color: red;padding: 5px;text-align: center;padding-left: 10px;"><b>PIN Number : </b> {{FACILITYSLOTLIST[0].value[0].PinNumber}}</h3>
@@ -330,7 +319,7 @@
             </ion-row>
         </div>
     </ion-card>
-    <ion-card no-margin style="width:100%;    padding: 0px;margin-top:14px !important;border: 1px solid #dedede;" (click) = "selectNotifyAppointment()">
+    <ion-card no-margin mode="ios" style="width:100%;    padding: 0px;margin-top:14px !important;border: 1px solid #dedede;" (click) = "selectNotifyAppointment()">
         <ion-item lines="none" style="padding: 10px; --padding-start: 0px">
             <i slot="start" theme-text-color class="siva-icon-clock" style="font-size: 35px;margin: 0px;"></i>
             <div>

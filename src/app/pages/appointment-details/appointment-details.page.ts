@@ -762,7 +762,7 @@ export class AppointmentDetailsPage implements OnInit {
               hostId = JSON.parse(hostData).HOST_ID;
             }
             var bookingID= this.appointment[0].FacilityBookingID;
-            if(!bookingID && bookingID !== '0'){
+            if(!bookingID || bookingID === '0'){
               bookingID = "";
             }
             var params = {}
@@ -908,7 +908,7 @@ export class AppointmentDetailsPage implements OnInit {
   }
 
   VimsAppGetFacilityBookingDetails(){
-    if(!this.appointment[0].FacilityBookingID){
+    if(!this.appointment[0].FacilityBookingID || this.appointment[0].FacilityBookingID === '0'){
       this.setNotifyTime();
       return;
     }

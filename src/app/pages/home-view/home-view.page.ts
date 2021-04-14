@@ -148,6 +148,10 @@ export class HomeViewPage implements OnInit {
 
   updateSettings(){
     var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (!qrInfo) {
+      this.navCtrl.navigateRoot('account-mapping');
+      return;
+    }
     this.QRObj = JSON.parse(qrInfo);
     if(this.QRObj && this.QRObj.MAppId){
       this.appType = this.QRObj.MAppId;

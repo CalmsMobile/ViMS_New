@@ -17,7 +17,7 @@
       <ion-grid *ngIf="showUI" no-padding class="animated fadeInUp delay-1s" style="height: 100%; width: 100%; justify-content: center;">
         <h1 *ngIf="STOPS == 'STOP1'" class="accountHead"><b>{{'COMMON.WELCOME' | translate}}</b></h1>
         <p *ngIf="STOPS == 'STOP1'" class="accountPara"><b>{{'ACC_MAPPING.SELECT_TYPE_OF_LOGIN' | translate}}</b></p>
-        <div *ngIf="STOPS == 'STOP1'">
+        <ion-list transparent *ngIf="STOPS == 'STOP1'">
 
             <ion-grid>
                 <ion-row style="margin: 0 auto; display: block; text-align:center">
@@ -40,9 +40,9 @@
                 </ion-row >
               </ion-grid>
               <p style="width: 100%;font-weight: 400;color: red;padding: 0px;margin: 20px;margin-top: 0px;text-align: center !important" class="ion-text-center">{{'ACC_MAPPING.SCAN_ACCOUNT_QR' | translate}}</p>
-        </div>
+        </ion-list>
 
-        <div *ngIf="STOPS == 'STOP2'" class="animated fadeInUp delay-1s" style="    margin-top: -20px;">
+        <ion-list transparent *ngIf="STOPS == 'STOP2'" class="animated fadeInUp delay-1s" style="    margin-top: -20px;">
           <!-- <h3 padding-horizontal ion-text color="danger" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
           <h3 padding-horizontal ion-text color="danger" no-margin>{{'ACC_MAPPING.ACC_HOLD_ORG_DETAILS' | translate}}</h3>
           <div     style=" margin-top: 5px;width: -webkit-fill-available;">
@@ -96,8 +96,8 @@
                   </ion-col>
                 </ion-row>
             </div>
-        </div>
-        <div *ngIf="STOPS == 'STOP3'" class="ion-padding animated fadeInUp delay-1s" [ngStyle]="{'margin-top' : VM.if_already_mapped || VM.if_already_registered_same_device ? '50px' : '40px'}">
+        </ion-list>
+        <ion-list transparent *ngIf="STOPS == 'STOP3'" class="ion-padding animated fadeInUp delay-1s" [ngStyle]="{'margin-top' : VM.if_already_mapped || VM.if_already_registered_same_device ? '250px' : '40px'}">
           <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="danger" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
           <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="danger" no-margin><b>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</b></h3> -->
           <div style="margin-top: 5px">
@@ -179,16 +179,16 @@
             </div>
 
             <div  margin-vertical>
-              <div style="padding: 0px 7px;margin-top: 40px;">
+              <div style="margin-top: 40px;">
                   <ion-row>
-                    <ion-col>
+                    <ion-col size="6">
                       <ion-button  icon-left float-left shape="round" fill="outline" color='danger'
                        (click)="takeActionForGoBack('STOP2')">
                       <ion-icon color='danger' class="icon siva-icon-left-open"></ion-icon>
                       <span color='danger'>{{'ACC_MAPPING.GO_BACK' | translate}}</span>
                       </ion-button>
                     </ion-col>
-                    <ion-col>
+                    <ion-col size="6">
                       <ion-button  icon-right float-right shape="round" color='danger'
 
                       [disabled]="(!VM.user_yes_chk_box &&!VM.if_already_mapped && !VM.if_already_registered_same_device) || (!VM.user_alreadymapremove_yes_chk_box && (VM.if_already_mapped || VM.if_already_registered_same_device))"
@@ -200,11 +200,11 @@
                   </ion-row>
               </div>
             </div>
-        </div>
+        </ion-list>
 
         <!-- Ack -->
 
-        <div *ngIf="STOPS == 'STOP4'" class="ion-padding animated fadeInUp delay-1s" style="margin-top: -20px">
+        <ion-list transparent *ngIf="STOPS == 'STOP4'" class="ion-padding animated fadeInUp delay-1s" style="margin-top: -20px">
             <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="danger" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
             <!-- <h3 *ngIf="STOPS == 'STOP4'" padding-horizontal ion-text color="danger" no-margin><b>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</b></h3> -->
             <div style="margin-top: 5px">
@@ -279,7 +279,7 @@
                       </ion-button>
                 </div>
               </div>
-          </div>
+        </ion-list>
 
       </ion-grid>
     </div>

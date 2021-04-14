@@ -14,6 +14,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { FileTransferObject,  FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
+import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
 @Component({
   selector: 'app-admin-appointment-details',
   templateUrl: './admin-appointment-details.page.html',
@@ -817,7 +818,108 @@ export class AdminAppointmentDetailsPage implements OnInit {
     }
   }
 
+  async openCustomDialog(action) {
+    let api = '/api/Vims/GetVisitorQuestionariesByAppointmentId';
+    if (action === 'doc') {
+      api = '/api/Vims/GetVisitorDocsBySeqId';
+    }
+
+    var params = {
+      "SEQ_ID": this.appointment[0].VisitorBookingSeqId,
+      "STAFF_IC": this.appointment[0].STAFF_IC
+  };
+  // this.VM.host_search_id = "adam";
+  this.apiProvider.requestApi(params, api).then(
+    async (val) => {
+      var result = JSON.parse(val.toString());
+      if (result.Table && result.Table.length > 0) {
+        const presentModel = await this.modalCtrl.create({
+          component: QuestionDocPopupComponent,
+          componentProps: {
+            data: {
+              seqId: this.appointment[0].VisitorBookingSeqId,
+              result: result.Table,
+              type: action
+            }
+          },
+          showBackdrop: true,
+          mode: 'ios',
+          cssClass: 'visitorPopupModal'
+        });
+        presentModel.onWillDismiss().then((data) => {
+        });
+        return await presentModel.present();
+
+      }
+      },
+    async (err) => {
+
+      if(err && err.message == "No Internet"){
+        return;
+      }
+      var message = "";
+      if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+        message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+      } else if(err && JSON.parse(err) && JSON.parse(err).message){
+        message =JSON.parse(err).message;
+      }
+      if(message){
+        // message = " Unknown"
+        let alert = this.alertCtrl.create({
+          header: 'Error !',
+          message: message,
+          cssClass:'alert-danger',
+          buttons: ['Okay']
+          });
+          (await alert).present();
+      }
+    }
+  );
+  }
+
+  GetAppointmentDetailBySeqId(seqId) {
+    var params = {
+      "SEQ_ID": seqId,
+      "STAFF_IC": this.appointment[0].STAFF_IC
+  };
+  // this.VM.host_search_id = "adam";
+  this.apiProvider.GetAppointmentDetailBySeqId(params).then(
+    (val) => {
+      var result = JSON.parse(val.toString());
+      if (result.Table1 && result.Table1.length > 0) {
+        this.appointment[0].Address = result.Table1[0].Address;
+        this.appointment[0].Country = result.Table1[0].Country;
+      }
+      },
+    async (err) => {
+
+      if(err && err.message == "No Internet"){
+        return;
+      }
+      var message = "";
+      if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+        message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+      } else if(err && JSON.parse(err) && JSON.parse(err).message){
+        message =JSON.parse(err).message;
+      }
+      if(message){
+        // message = " Unknown"
+        let alert = this.alertCtrl.create({
+          header: 'Error !',
+          message: message,
+          cssClass:'alert-danger',
+          buttons: ['Okay']
+          });
+          (await alert).present();
+      }
+    }
+  );
+  }
+
   VimsAppGetFacilityBookingDetails(){
+    if (this.appointment[0].VisitorBookingSeqId) {
+      this.GetAppointmentDetailBySeqId(this.appointment[0].VisitorBookingSeqId);
+    }
     if(!this.appointment[0].FacilityBookingID || this.appointment[0].FacilityBookingID === '0'){
       this.setNotifyTime();
       return;

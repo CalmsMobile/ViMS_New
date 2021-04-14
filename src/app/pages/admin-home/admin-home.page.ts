@@ -161,9 +161,9 @@ export class AdminHomePage implements OnInit {
 					var aList = JSON.parse(val.toString());
 					if(refresher){
             this.appointments = aList;
+            refresher.target.complete();
 					}else{
             this.appointments = aList.concat(this.appointments);
-						refresher.target.complete();
 					}
           this.OffSet = this.OffSet + aList.length;
           if(this.selectedTap == 'approved'){

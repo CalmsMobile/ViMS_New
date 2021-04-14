@@ -104,8 +104,10 @@ export class RestProvider {
   }
 
   async dismissLoading() {
-    this.isLoading = false;
-    return await this.loadingCtrl.dismiss().then(() => console.log('dismissed'));
+    setTimeout(async () => {
+      this.isLoading = false;
+      return await this.loadingCtrl.dismiss().then(() => console.log('dismissed'));
+    }, 1000);
   }
 
   validateUser(data){
@@ -1326,7 +1328,7 @@ export class RestProvider {
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/syncAppointment');
     console.log("Params: "+ JSON.stringify(data));
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
@@ -1334,7 +1336,7 @@ export class RestProvider {
             "message":"No Internet"
           });
           if(showLoading){
-            loading.onDidDismiss();
+            await this.dismissLoading();
           }
           return;
       }
@@ -1343,7 +1345,7 @@ export class RestProvider {
       }).subscribe(async response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(loading){
+        if(showLoading){
           await this.dismissLoading();
 
         }
@@ -3030,6 +3032,76 @@ export class RestProvider {
         if(showLoaading){
           this.dismissLoading();
         }
+        reject(err);
+
+      });
+    });
+  }
+
+  async GetAppointmentDetailBySeqId(data) {
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.presentLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppointmentDetailBySeqId';
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          this.dismissLoading();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        this.dismissLoading();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        this.dismissLoading();
+        reject(err);
+
+      });
+    });
+  }
+
+  async requestApi(data, API) {
+    data  = this.setAuthorizedInfo(data);
+    var loading = await this.presentLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + API;
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          this.dismissLoading();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        this.dismissLoading();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table && output.Table[0]){
+          resolve(JSON.stringify(output));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        this.dismissLoading();
         reject(err);
 
       });

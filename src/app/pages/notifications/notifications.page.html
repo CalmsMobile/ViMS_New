@@ -46,7 +46,7 @@
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-      <!-- <ion-card no-margin style="width:100%;margin-top:14px !important; ">  -->
+      <!-- <ion-card no-margin mode="ios" style="width:100%;margin-top:14px !important; ">  -->
         <ion-list *ngIf= "(selectedTap == 'general')">
           <ion-card [ngClass]="{'readCard': (notification.IsRead == true || notification.IsRead == 'true'), 'unReadCard':(notification.IsRead == false || notification.IsRead == 'false')}" *ngFor="let notification of VM.searchGeneralNotificationList">
             <ion-item-sliding #slideDOM class="mySlidingItem"  (ionDrag)="ondrag($event, slideDOM, notification)">

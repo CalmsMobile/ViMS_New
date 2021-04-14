@@ -421,13 +421,6 @@ export class ManageAppointmentPage implements OnInit {
 
   }
 
-  hideLoading(currentClass){
-    if(currentClass.loading){
-      currentClass.loading.dismiss();
-      currentClass = null;
-    }
-  }
-
   syncFromGoogleCalender(){
       var success = function(result) {
         console.log(result);
