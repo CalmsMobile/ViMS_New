@@ -52,6 +52,7 @@ import { SignaturePadModule } from 'angular2-signaturepad';
 import { IonicGestureConfig } from './services/util/IonicGestureConfig';
 import { QuestionDocPopupComponent } from './components/question-doc-popup/question-doc-popup.component';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { PreviewAnyFile } from '@ionic-native/preview-any-file/ngx';
 
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent,
@@ -109,6 +110,7 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
     NetworkProvider,
     Network,
     WheelSelector,
+    PreviewAnyFile,
     Firebase,
     DatePicker,
     DatePipe,

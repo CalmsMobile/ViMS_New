@@ -204,7 +204,7 @@
 
         <!-- Ack -->
 
-        <ion-list transparent *ngIf="STOPS == 'STOP4'" class="ion-padding animated fadeInUp delay-1s" style="margin-top: -20px">
+        <ion-list transparent *ngIf="STOPS == 'STOP4'" class="ion-padding animated fadeInUp delay-1s" [ngStyle]="{'margin-top' : VM.if_already_mapped || VM.if_already_registered_same_device ? '125px' : '40px'}">
             <!-- <h3 *ngIf="STOPS == 'STOP3'" padding-horizontal ion-text color="danger" no-margin>{{'ACC_MAPPING.ACC_CONNECTY' | translate}}</h3> -->
             <!-- <h3 *ngIf="STOPS == 'STOP4'" padding-horizontal ion-text color="danger" no-margin><b>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</b></h3> -->
             <div style="margin-top: 5px">
@@ -263,9 +263,9 @@
               </div>
 
               <div margin-vertical style="    margin-top: 40px;">
-                <div style="margin-top: 20px;">
+                <div style="margin-top: 20px; display: flex;">
 
-                    <ion-button color="danger" shape="round" fill="outline" style="    margin-right: 20px;"
+                    <ion-button color="danger" shape="round" fill="outline"
                      (click)="takeActionForGoBack('STOP1')">
                         <ion-icon color='danger' class="icon siva-icon-left-open"></ion-icon>
                         <span color='danger'>{{'ACC_MAPPING.GO_BACK' | translate}}</span>

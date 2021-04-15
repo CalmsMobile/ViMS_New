@@ -4,6 +4,7 @@ import { NavController, ToastController, AlertController, MenuController } from 
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
+import { EventsService } from 'src/app/services/EventsService';
 
 @Component({
   selector: 'app-admin-home',
@@ -27,6 +28,7 @@ export class AdminHomePage implements OnInit {
   constructor(public navCtrl: NavController,
     private toastCtrl:ToastController,
     private router: Router,
+    private eventService: EventsService,
     private translate:TranslateService,
     private alertCtrl: AlertController, public apiProvider: RestProvider, private menuCtrl: MenuController) {
 
@@ -40,7 +42,13 @@ export class AdminHomePage implements OnInit {
         this.T_SVC = t;
     });
     // this.menuCtrl.enable(false, 'myLeftMenu');
-
+    eventService.observeDataCompany().subscribe(async (data: any) => {
+      if (data.action === 'refreshApproveList') {
+        this.OffSet = 0;
+        this.appointments = [];
+        this.getAppointmentHistory(null);
+      }
+    });
   }
 
   ionViewDidEnter() {
@@ -163,7 +171,12 @@ export class AdminHomePage implements OnInit {
             this.appointments = aList;
             refresher.target.complete();
 					}else{
-            this.appointments = aList.concat(this.appointments);
+            if (this.appointments.length === 0) {
+              this.appointments = aList;
+            } else {
+              this.appointments = aList.concat(this.appointments);
+            }
+
 					}
           this.OffSet = this.OffSet + aList.length;
           if(this.selectedTap == 'approved'){

@@ -5,6 +5,7 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
 import { File } from '@ionic-native/file/ngx';
 import { LoadingController, ModalController, NavParams, ToastController } from '@ionic/angular';
 import { AppSettings } from 'src/app/services/app-settings';
+import { PreviewAnyFile } from '@ionic-native/preview-any-file/ngx';
 
 @Component({
   selector: 'app-question-doc-popup',
@@ -21,6 +22,7 @@ export class QuestionDocPopupComponent implements OnInit {
     private transfer: FileTransfer, private file: File,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
+    private previewAnyFile: PreviewAnyFile,
     private modalCntrl: ModalController) {
       this.result = navParams.data.data.result;
       this.type = navParams.data.data.type;
@@ -42,7 +44,7 @@ export class QuestionDocPopupComponent implements OnInit {
     if(!path){
       path = (this.file.externalDataDirectory || this.file.dataDirectory);
     }
-    var targetPath = path + 'Pictures/' + doc.DocPath;
+    var targetPath = path + 'Pictures/' + doc.DocPath.substr(doc.DocPath.lastIndexOf('\\') + 1);;
 
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
       result =>{
@@ -57,18 +59,19 @@ export class QuestionDocPopupComponent implements OnInit {
               console.log('Has permission?',result.hasPermission);
               fileTransfer.download(url, targetPath).then((entry) => {
                 loading.dismiss();
-                this.fileOpener.showOpenWithDialog('path/to/file.pdf', 'application/pdf')
-              .then(() => console.log('File is opened'))
-              .catch(async e => {
-                console.log('Error opening file', e);
-                let toast = await this.toastCtrl.create({
-                  message: 'Error',
-                  duration: 3000,
-                  color: 'primary',
-                  position: 'bottom',
+
+                this.previewAnyFile.preview(targetPath)
+                .then((res: any) => console.log(res))
+                .catch(async e => {
+                  console.log('Error opening file', e);
+                  let toast = await this.toastCtrl.create({
+                    message: 'Error',
+                    duration: 3000,
+                    color: 'primary',
+                    position: 'bottom',
+                  });
+                  toast.present();
                 });
-                toast.present();
-              });
               }, async (error) => {
                 // handle error
                 loading.dismiss();

@@ -210,7 +210,7 @@ export class AccountMappingPage {
           });
           invalidQRConfirm.present();
         }
-    }else{
+    }else {
       this.options = {
         prompt : "Scan your QR Code ",
         preferFrontCamera : false, // iOS and Android
@@ -232,6 +232,9 @@ export class AccountMappingPage {
         if(scanData == ""){
           invalidQRCode = true;
           this.scannedJson = null;
+          // var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
+          // this.processJson(qrCodeString);
+          // return;
         } else{
           try{
             this.scannedJson = JSON.parse(scanData);
@@ -400,7 +403,7 @@ export class AccountMappingPage {
               }
             );
           }
-        } else{
+        } else {
           console.log("Error occured : " + JSON.stringify(this.scannedJson));
           let invalidQRConfirm = await this.alertCtrl.create({
             header: 'Error !',

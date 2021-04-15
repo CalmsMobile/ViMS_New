@@ -776,6 +776,11 @@ export class AdminAppointmentDetailsPage implements OnInit {
 
     this.apiProvider.AppointmentApprovalByVisitor(params).then(
       (val) => {
+        this.events.publishDataCompany({
+          action: 'refreshApproveList',
+          title: 'refreshApproveList',
+          message: 'refreshApproveList'
+        })
         this.navCtrl.pop();
       },
       async (err) => {

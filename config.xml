@@ -121,7 +121,10 @@
     <plugin name="com-badrit-base64" spec="^0.2.0" />
     <plugin name="cordova-plugin-file" spec="^6.0.2" />
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
-    <plugin name="phonegap-plugin-barcodescanner" spec="^8.1.0" />
     <plugin name="cordova.plugins.myKadReader" spec="plugins_src/MyKadReader" />
     <plugin name="cordova-plugin-file-opener2" spec="^3.0.5" />
+    <plugin name="phonegap-plugin-barcodescanner" spec="^8.1.0">
+        <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
+    </plugin>
+    <plugin name="cordova-plugin-preview-any-file" spec="^0.2.4" />
 </widget>
