@@ -88,7 +88,7 @@
                         </ion-grid> -->
                         <!-- <ion-card-title class="ion-margin-bottom">23 Apr 2021</ion-card-title>
                         <ion-card-title class="ion-margin-bottom">11.15 AM</ion-card-title> -->
-                        <ion-card-subtitle class="ion-text-right">Appointment From Date</ion-card-subtitle>
+                        <ion-card-subtitle class="ion-text-right">From Date</ion-card-subtitle>
                         <!-- <ion-progress-bar value="0.5" color="custom"></ion-progress-bar> -->
                     </ion-card-content>
                 </ion-card>
@@ -117,7 +117,7 @@
                             </ion-button>
                             <ion-label>10.15 AM</ion-label>
                         </ion-item>
-                        <ion-card-subtitle class="ion-text-right">Appointment To Date</ion-card-subtitle>
+                        <ion-card-subtitle class="ion-text-right">To Date</ion-card-subtitle>
                         <!-- <ion-progress-bar value="0.5" color="custom"></ion-progress-bar> -->
                     </ion-card-content>
                 </ion-card>
@@ -143,7 +143,7 @@
         </div> -->
 
         <!-- Start Category Selection-->
-        <h2>Visitors Category</h2>
+        <h5>Visitors Category</h5>
         <div class="category_selection">
             <ion-select class="categorySelect" [(ngModel)]="addAppointmentModel.visitor_ctg_id"
                 (ionChange)="onChangeCategory($event.detail.value, true)" interface="action-sheet"
@@ -159,13 +159,13 @@
 
 
         <!-- Start Visitors List-->
-        <ion-row>
-            <ion-col size="10">
-                <h2>Visitors <ion-badge color="primary">11</ion-badge>
-                </h2>
+        <ion-row >
+            <ion-col size="10" style="padding: 0px !important;">
+                <h5>Visitors <ion-badge color="primary">11</ion-badge>
+                </h5>
             </ion-col>
             <ion-col size="2">
-                <ion-icon name="person-add-outline" style="font-size: 30px;padding-top: 10px;"></ion-icon>
+                <ion-icon name="person-add-outline" style="font-size: 25px;padding-top: 10px;"></ion-icon>
                 <ion-buttons slot="start">
                     <ion-button class="bordered" fill="solid" color="light">
                         <ion-icon name="person-add-outline"></ion-icon>
@@ -326,13 +326,14 @@
               </ion-col>
           </ion-row> -->
 
-        <ion-buttons slot="end">
+        <!-- <ion-buttons slot="end">
             <ion-button class="bordered" fill="solid" color="custom">
-                <!-- <ion-icon color="custom" name="notifications"></ion-icon> -->
                 <ion-icon color="light" name="chevron-forward-circle-outline"></ion-icon>
             </ion-button>
-        </ion-buttons>
+        </ion-buttons> -->
 
+        <ion-button expand="block" color="custom" fill="solid" style="opacity: 0.5;">Proceed</ion-button>
+        <!-- Opacity applies based on visitors count. If visitors count is 0. Button should be showing disable-->
 
     </ion-toolbar>
 </ion-footer>

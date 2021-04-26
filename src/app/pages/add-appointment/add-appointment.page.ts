@@ -20,23 +20,23 @@ export class AddAppointmentPage implements OnInit {
   @ViewChild('visitorsList') visitorsList: any;
   // @ViewChild(Navbar) navBar: Navbar;
   @ViewChild(IonContent) content: IonContent;
-  imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
+  imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/ImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
-  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
-  imageURLTypeHOST = '&RefType=HP&Refresh='+ new Date().getTime();
-  imageURLTypeVPB = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VP&Refresh=' + new Date().getTime();
+  imageURLTypeHOST = '&RefType=HP&Refresh=' + new Date().getTime();
+  imageURLTypeVPB = '&RefType=VPB&Refresh=' + new Date().getTime();
   newImage = "&tes='test'";
   addAppointmentModel = new AddAppointmentModel();
-  T_SVC:any;
+  T_SVC: any;
   VM = {
-    "visitors":[],
-    facility : [],
+    "visitors": [],
+    facility: [],
     fromDate: new Date(),
     toDate: new Date(),
-    fromTime:"02:02",
-    toTime:"02:02",
-    fromTimeSession:"AM",
-    toTimeSession:"AM",
+    fromTime: "02:02",
+    toTime: "02:02",
+    fromTimeSession: "AM",
+    toTimeSession: "AM",
     appointment: {},
     addVisitorSettings: '',
     visitor_ctg: {
@@ -45,77 +45,77 @@ export class AddAppointmentPage implements OnInit {
     }
   }
   FACILITYMASTERLIST = [];
-  contactsarray:any = [];
-  VISITOR_CATEGORY:any = [];
-  hostSettings : any = {};
+  contactsarray: any = [];
+  VISITOR_CATEGORY: any = [];
+  hostSettings: any = {};
   minDate: any = "";
   edit = false;
-  hostData : any = {};
-  QRObj : any = {};
+  hostData: any = {};
+  QRObj: any = {};
   showFacility = true;
-  passData: any ={};
+  passData: any = {};
   constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     public events: EventsService,
-    private toastCtrl:ToastController,
+    private toastCtrl: ToastController,
     private datePicker: DatePicker,
     private router: Router,
     private route: ActivatedRoute,
-    private modalCtrl : ModalController,
+    private modalCtrl: ModalController,
     public apiProvider: RestProvider,
-    private dateformat : DateFormatPipe,
+    private dateformat: DateFormatPipe,
     private actionsheetCtrl: ActionSheetController,
-    private translate:TranslateService) {
-      this.translate.get([
-        'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
-        'ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS',
-        'ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS',
-        'ALERT_TEXT.SLOT_OCCUPIED',
-        'ALERT_TEXT.DUPLICATE_BOOKING',
-        'ALERT_TEXT.SLOT_EXPIRED',
-        'ALERT_TEXT.MEMBER_NOT_FOUND',
-        'ALERT_TEXT.REMOVE_VISITOR',
-        'ALERT_TEXT.SETTINGS_NOT_FOUND']).subscribe(t => {
-          this.T_SVC = t;
+    private translate: TranslateService) {
+    this.translate.get([
+      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
+      'ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS',
+      'ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS',
+      'ALERT_TEXT.SLOT_OCCUPIED',
+      'ALERT_TEXT.DUPLICATE_BOOKING',
+      'ALERT_TEXT.SLOT_EXPIRED',
+      'ALERT_TEXT.MEMBER_NOT_FOUND',
+      'ALERT_TEXT.REMOVE_VISITOR',
+      'ALERT_TEXT.SETTINGS_NOT_FOUND']).subscribe(t => {
+        this.T_SVC = t;
       });
 
 
 
-      var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-      this.QRObj = JSON.parse(qrInfo);
-      var today = new Date();
-      var hostDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-      if(hostDetails){
-        this.hostData = JSON.parse(hostDetails);
-      }
+    var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    this.QRObj = JSON.parse(qrInfo);
+    var today = new Date();
+    var hostDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if (hostDetails) {
+      this.hostData = JSON.parse(hostDetails);
+    }
 
 
-      if(this.QRObj && this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
-        this.showFacility = false;
-      }
+    if (this.QRObj && this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT) {
+      this.showFacility = false;
+    }
 
-      var hours = today.getHours();
-      var min = today.getMinutes();
-      var minutes = ""+min;
-      var ampm = hours >= 12 ? 'PM' : 'AM';
-      minutes = min < 10 ? '0'+minutes : minutes;
+    var hours = today.getHours();
+    var min = today.getMinutes();
+    var minutes = "" + min;
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    minutes = min < 10 ? '0' + minutes : minutes;
 
-      var strTime = hours + ':' + minutes;
-      this.VM.fromTime = strTime;
-      this.VM.fromTimeSession = ampm;
+    var strTime = hours + ':' + minutes;
+    this.VM.fromTime = strTime;
+    this.VM.fromTimeSession = ampm;
 
-      var dd = today.getDate();
-      var mm = today.getMonth()+1; //January is 0!
-      var ddd = ""+dd;
-      var mmm = ""+mm;
-      var yyyy = today.getFullYear();
-      if(dd<10){
-        ddd='0'+dd;
-      }
-      if(mm<10){
-        mmm='0'+mm;
-      }
-    this.minDate = yyyy+'-'+mmm+"-" + ddd;
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var ddd = "" + dd;
+    var mmm = "" + mm;
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+      ddd = '0' + dd;
+    }
+    if (mm < 10) {
+      mmm = '0' + mm;
+    }
+    this.minDate = yyyy + '-' + mmm + "-" + ddd;
 
     this.VM.fromDate = new Date();
     this.VM.toDate = new Date();
@@ -123,49 +123,49 @@ export class AddAppointmentPage implements OnInit {
 
     hours = this.VM.toDate.getHours();
     min = this.VM.toDate.getMinutes();
-    minutes = ""+min;
+    minutes = "" + min;
     ampm = hours >= 12 ? 'PM' : 'AM';
-    minutes = min < 10 ? '0'+minutes : minutes;
+    minutes = min < 10 ? '0' + minutes : minutes;
     var ToTime = hours + ':' + minutes;
     this.VM.toTime = ToTime;
     this.VM.toTimeSession = ampm;
 
 
-      this.route.queryParams.subscribe(params => {
-        if (this.router.getCurrentNavigation().extras.state) {
-          this.passData = this.router.getCurrentNavigation().extras.state.passData;
-          console.log('passData : ' + this.passData);
-          this.edit = this.passData.edit;
-      if(this.edit){
-        this.VM.appointment = this.passData.appointment;
-        this.VM.facility = this.passData.facility;
-        var sdate = this.VM.appointment[0].START_DATE.split(" ")[0];
-        var stime = this.VM.appointment[0].START_DATE.split("T")[1]
+    this.route.queryParams.subscribe(params => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.passData = this.router.getCurrentNavigation().extras.state.passData;
+        console.log('passData : ' + this.passData);
+        this.edit = this.passData.edit;
+        if (this.edit) {
+          this.VM.appointment = this.passData.appointment;
+          this.VM.facility = this.passData.facility;
+          var sdate = this.VM.appointment[0].START_DATE.split(" ")[0];
+          var stime = this.VM.appointment[0].START_DATE.split("T")[1]
 
-        var edate = this.VM.appointment[0].END_DATE.split(" ")[0];
-        var etime = this.VM.appointment[0].END_DATE.split("T")[1]
-        this.VM.fromDate = this.VM.appointment[0].START_DATE;
-        this.VM.fromTime = stime.split(":")[0]+":"+stime.split(":")[1];
-        this.VM.toDate = this.VM.appointment[0].END_DATE;
-        this.VM.toTime =  etime.split(":")[0]+":"+etime.split(":")[1];
+          var edate = this.VM.appointment[0].END_DATE.split(" ")[0];
+          var etime = this.VM.appointment[0].END_DATE.split("T")[1]
+          this.VM.fromDate = this.VM.appointment[0].START_DATE;
+          this.VM.fromTime = stime.split(":")[0] + ":" + stime.split(":")[1];
+          this.VM.toDate = this.VM.appointment[0].END_DATE;
+          this.VM.toTime = etime.split(":")[0] + ":" + etime.split(":")[1];
 
-        // this.VM.visitor_ctg = VisitorCategory;
-        this.addAppointmentModel.visitor_ctg_id = this.VM.appointment[0].VisitorCategory;
-        if(stime.split(":")[0] > 11){
-          this.VM.fromTimeSession = "PM";
-        }
+          // this.VM.visitor_ctg = VisitorCategory;
+          this.addAppointmentModel.visitor_ctg_id = this.VM.appointment[0].VisitorCategory;
+          if (stime.split(":")[0] > 11) {
+            this.VM.fromTimeSession = "PM";
+          }
 
-        if(etime.split(":")[0] > 11){
-          this.VM.toTimeSession = "PM";
-        }
-        var visitorsLocal1 = [];
-          for(let visitor in this.VM.appointment){
+          if (etime.split(":")[0] > 11) {
+            this.VM.toTimeSession = "PM";
+          }
+          var visitorsLocal1 = [];
+          for (let visitor in this.VM.appointment) {
             var item = this.VM.appointment[visitor];
             var addVisitor = {
               checked: true,
               visitor_id: item.VISITOR_IC,
               VISITOR_IC: item.VISITOR_IC,
-              VisitorDesignation:"",
+              VisitorDesignation: "",
               VisitorCategory: item.VisitorCategory,
               VISITOR_COMPANY_ID: item.VISITOR_COMPANY_ID,
               VISITOR_COMPANY: item.VISITOR_COMPANY,
@@ -175,152 +175,152 @@ export class AddAppointmentPage implements OnInit {
               EMAIL: item.EMAIL,
               VISITOR_NAME: item.VISITOR_NAME ? item.VISITOR_NAME : "",
               SEQ_ID: "",
-              VisitorBookingSeqId : item.VisitorBookingSeqId,
+              VisitorBookingSeqId: item.VisitorBookingSeqId,
               VISITOR_IMG: item.VISITOR_IMG ? item.VISITOR_IMG : "",
-              ImageChanged : item.ImageChanged,
+              ImageChanged: item.ImageChanged,
 
             }
             visitorsLocal1.push(addVisitor);
           }
 
 
-        this.VM.visitors = visitorsLocal1;
-        setTimeout(() => {
-          this.onChangeCategory(this.addAppointmentModel.visitor_ctg_id, false);
-        }, 1000);
-      }else{
-        this.contactsarray = this.passData.data;
-        if(this.passData.aData){
-          this.VM = JSON.parse(this.passData.aData);
-        }
-        if(this.contactsarray){
-          this.VM.visitors = this.contactsarray;
-        }
-      }
-    }
-    events.observeDataCompany().subscribe(async (data1: any) => {
-
-      switch (data1.action) {
-        case 'AddVisitorNew':
-          const data = data1.title;
-          const aData = data1.message;
-          this.contactsarray = data;
-          if(aData){
-            this.VM = JSON.parse(aData);
+          this.VM.visitors = visitorsLocal1;
+          setTimeout(() => {
+            this.onChangeCategory(this.addAppointmentModel.visitor_ctg_id, false);
+          }, 1000);
+        } else {
+          this.contactsarray = this.passData.data;
+          if (this.passData.aData) {
+            this.VM = JSON.parse(this.passData.aData);
           }
-          if(this.contactsarray){
+          if (this.contactsarray) {
             this.VM.visitors = this.contactsarray;
           }
-          break;
-        case 'addAppointmentSuccess1':
-          const showAlert = data1.title;
-          const data2 = data1.message;
-          this.VM = {
-            "visitors":[],
-            facility: [],
-            fromDate: new Date(),
-            toDate: new Date(),
-            fromTime:"02:02",
-            toTime:"02:02",
-            fromTimeSession:"AM",
-            toTimeSession:"AM",
-            appointment: {},
-            addVisitorSettings: '',
-            visitor_ctg: {
-              visitor_ctg_id: '',
-              visitor_ctg_desc: ''
+        }
+      }
+      events.observeDataCompany().subscribe(async (data1: any) => {
+
+        switch (data1.action) {
+          case 'AddVisitorNew':
+            const data = data1.title;
+            const aData = data1.message;
+            this.contactsarray = data;
+            if (aData) {
+              this.VM = JSON.parse(aData);
             }
-          }
-          var today = new Date();
+            if (this.contactsarray) {
+              this.VM.visitors = this.contactsarray;
+            }
+            break;
+          case 'addAppointmentSuccess1':
+            const showAlert = data1.title;
+            const data2 = data1.message;
+            this.VM = {
+              "visitors": [],
+              facility: [],
+              fromDate: new Date(),
+              toDate: new Date(),
+              fromTime: "02:02",
+              toTime: "02:02",
+              fromTimeSession: "AM",
+              toTimeSession: "AM",
+              appointment: {},
+              addVisitorSettings: '',
+              visitor_ctg: {
+                visitor_ctg_id: '',
+                visitor_ctg_desc: ''
+              }
+            }
+            var today = new Date();
 
-          var hours = today.getHours();
-          var min = today.getMinutes();
-          var minutes = ""+min;
-          var ampm = hours >= 12 ? 'PM' : 'AM';
-          // hours = hours % 12;
-          // hours = hours ? hours : 12;
-          minutes = min < 10 ? '0'+minutes : minutes;
+            var hours = today.getHours();
+            var min = today.getMinutes();
+            var minutes = "" + min;
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            // hours = hours % 12;
+            // hours = hours ? hours : 12;
+            minutes = min < 10 ? '0' + minutes : minutes;
 
-          var strTime = hours + ':' + minutes;
-          this.VM.fromTime = strTime;
-          this.VM.toTime = strTime;
-          this.VM.fromTimeSession = ampm;
-          this.VM.toTimeSession = ampm;
+            var strTime = hours + ':' + minutes;
+            this.VM.fromTime = strTime;
+            this.VM.toTime = strTime;
+            this.VM.fromTimeSession = ampm;
+            this.VM.toTimeSession = ampm;
 
-          if(showAlert){
+            if (showAlert) {
 
-            const presentModel = await this.modalCtrl.create({
-              component: AddAppointmentAlertPopupComponent,
-              componentProps: {
-                data: data2
-              },
-              showBackdrop: true,
-              mode: 'ios',
-              cssClass: 'appointmentModel'
-            });
-            presentModel.onWillDismiss().then((data) => {
-            });
-            return await presentModel.present();
-          }
+              const presentModel = await this.modalCtrl.create({
+                component: AddAppointmentAlertPopupComponent,
+                componentProps: {
+                  data: data2
+                },
+                showBackdrop: true,
+                mode: 'ios',
+                cssClass: 'appointmentModel'
+              });
+              presentModel.onWillDismiss().then((data) => {
+              });
+              return await presentModel.present();
+            }
 
-          break;
+            break;
           case 'user:created':
             const user = data1.title;
             const dataObj = data1.message;
-            if(user == "ManageVisitor"){
+            if (user == "ManageVisitor") {
               this.contactsarray = dataObj.data;
-              if(this.passData.aData){
+              if (this.passData.aData) {
                 this.VM = JSON.parse(dataObj.aData);
               }
-              if(this.contactsarray){
+              if (this.contactsarray) {
                 this.VM.visitors = this.contactsarray;
               }
-            }else if(user == "editVisitorNotChangeMaster"){
+            } else if (user == "editVisitorNotChangeMaster") {
               var visitor = dataObj;
-              for(var i = 0; i<this.VM.visitors.length ; i++){
+              for (var i = 0; i < this.VM.visitors.length; i++) {
                 var visitorCats = this.VM.visitors[i];
                 // for(let visitors in visitorCats){
-                  // var visitor1 = visitorCats[visitors];
-                  if(visitorCats.EMAIL == visitor.EMAIL || visitorCats.VISITOR_NAME == visitor.VISITOR_NAME || (visitorCats.SEQ_ID && visitorCats.SEQ_ID == visitor.SEQ_ID)){
-                    //alert("Changed");
-                    visitorCats.VISITOR_IC =visitor.VISITOR_IC,
-                    visitorCats.VISITOR_NAME=visitor.VISITOR_NAME,
-                    visitorCats.VISITOR_COMPANY=visitor.VISITOR_COMPANY,
-                    visitorCats.VISITOR_COMPANY_ID=visitor.VISITOR_COMPANY_ID,
-                    visitorCats.EMAIL=visitor.EMAIL,
-                    visitorCats.TELEPHONE_NO=visitor.TELEPHONE_NO,
-                    visitorCats.VISITOR_GENDER=visitor.VISITOR_GENDER,
-                    visitorCats.VisitorDesignation= "",
-                    visitorCats.VisitorCategory=visitor.VisitorCategory,
-                    visitorCats.VisitorCategory_ID=visitor.VisitorCategory_ID,
-                    visitorCats.VISITOR_IMG=visitor.VISITOR_IMG,
-                    visitorCats.PLATE_NUM=visitor.PLATE_NUM,
+                // var visitor1 = visitorCats[visitors];
+                if (visitorCats.EMAIL == visitor.EMAIL || visitorCats.VISITOR_NAME == visitor.VISITOR_NAME || (visitorCats.SEQ_ID && visitorCats.SEQ_ID == visitor.SEQ_ID)) {
+                  //alert("Changed");
+                  visitorCats.VISITOR_IC = visitor.VISITOR_IC,
+                    visitorCats.VISITOR_NAME = visitor.VISITOR_NAME,
+                    visitorCats.VISITOR_COMPANY = visitor.VISITOR_COMPANY,
+                    visitorCats.VISITOR_COMPANY_ID = visitor.VISITOR_COMPANY_ID,
+                    visitorCats.EMAIL = visitor.EMAIL,
+                    visitorCats.TELEPHONE_NO = visitor.TELEPHONE_NO,
+                    visitorCats.VISITOR_GENDER = visitor.VISITOR_GENDER,
+                    visitorCats.VisitorDesignation = "",
+                    visitorCats.VisitorCategory = visitor.VisitorCategory,
+                    visitorCats.VisitorCategory_ID = visitor.VisitorCategory_ID,
+                    visitorCats.VISITOR_IMG = visitor.VISITOR_IMG,
+                    visitorCats.PLATE_NUM = visitor.PLATE_NUM,
                     visitorCats.isChecked = true,
-                    visitorCats.visitor_RemoveImg =visitor.visitor_RemoveImg,
+                    visitorCats.visitor_RemoveImg = visitor.visitor_RemoveImg,
                     visitorCats.ImageChanged = visitor.ImageChanged,
-                    this.newImage = this.newImage +"_"+ new Date().getTime();
-                    break;
-                  }
+                    this.newImage = this.newImage + "_" + new Date().getTime();
+                  break;
+                }
                 // }
               }
             }
             break;
-        default:
-          break;
-      }
-    })
-  });
+          default:
+            break;
+        }
+      })
+    });
   }
 
   slidesOptions = {
-    slidesPerView: 1.3
+    slidesPerView: 1.5
   }
 
-  ionViewWillLeave(){
+  ionViewWillLeave() {
 
-    if(this.VM.visitors && this.VM.visitors.length > 0 && !this.edit){
+    if (this.VM.visitors && this.VM.visitors.length > 0 && !this.edit) {
       window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, JSON.stringify(this.VM));
-    }else{
+    } else {
       window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
     }
     // this.events.unsubscribe("addAppointmentSuccess1");
@@ -328,56 +328,56 @@ export class AddAppointmentPage implements OnInit {
     // this.events.unsubscribe("user:created");
   }
 
-  openCalendar(from){
-    if(!this.edit || (!this.VM.facility || this.VM.facility.length == 0) || !this.showFacility){
+  openCalendar(from) {
+    if (!this.edit || (!this.VM.facility || this.VM.facility.length == 0) || !this.showFacility) {
       var showDate = new Date();
-      if(from){
+      if (from) {
         showDate = new Date(this.VM.fromDate);
-      }else{
+      } else {
         showDate = new Date(this.VM.toDate);
       }
-      console.log("OpenCalender:Start:"+ this.VM.fromDate);
-      console.log("OpenCalender:End:"+ this.VM.toDate);
-      console.log("OpenCalender:"+ showDate);
+      console.log("OpenCalender:Start:" + this.VM.fromDate);
+      console.log("OpenCalender:End:" + this.VM.toDate);
+      console.log("OpenCalender:" + showDate);
       this.datePicker.show({
         date: showDate,
         mode: 'datetime',
-        minDate : showDate,
-        popoverArrowDirection :  "down" ,
+        minDate: showDate,
+        popoverArrowDirection: "down",
         // androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
         androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
       }).then(
         date => {
-         // alert(date)
+          // alert(date)
           var hours = date.getHours();
           var min = date.getMinutes();
-          var minutes = ""+min;
+          var minutes = "" + min;
           var ampm = hours >= 12 ? 'PM' : 'AM';
           // hours = hours % 12;
           // hours = hours ? hours : 12;
-          minutes = min < 10 ? '0'+minutes : minutes;
+          minutes = min < 10 ? '0' + minutes : minutes;
 
           // var sdate = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
           // var smonthh = (date.getMonth()+1) < 10 ? '0'+ (date.getMonth()+1) : (date.getMonth()+1);
 
           var strTime = hours + ':' + minutes;
           // var selectedDate =sdate +':'+smonthh+':'+date.getFullYear()+" "+""+strTime+" "+ ampm;
-          var ftDate = this.dateformat.transform(date+"", "yyyy-MM-ddTHH:mm:ss");
-          if(from){
+          var ftDate = this.dateformat.transform(date + "", "yyyy-MM-ddTHH:mm:ss");
+          if (from) {
             this.VM.fromDate = new Date(date.getTime());
             this.VM.fromTime = strTime;
             this.VM.fromTimeSession = ampm;
 
             var sTime = new Date(ftDate).getTime() + (AppSettings.APPOINTMENT_BufferTime * 60 * 1000);
             //alert(this.VM.fromDate)
-            if(sTime >= new Date(this.VM.toDate).getTime()){
-              this.VM.toDate = new Date(new Date(ftDate).getTime()+ (AppSettings.APPOINTMENT_BufferTime * 60 * 1000));
+            if (sTime >= new Date(this.VM.toDate).getTime()) {
+              this.VM.toDate = new Date(new Date(ftDate).getTime() + (AppSettings.APPOINTMENT_BufferTime * 60 * 1000));
 
               hours = this.VM.toDate.getHours();
               min = this.VM.toDate.getMinutes();
-              minutes = ""+min;
+              minutes = "" + min;
               ampm = hours >= 12 ? 'PM' : 'AM';
-              minutes = min < 10 ? '0'+minutes : minutes;
+              minutes = min < 10 ? '0' + minutes : minutes;
               strTime = hours + ':' + minutes;
 
               this.VM.toTime = strTime;
@@ -385,7 +385,7 @@ export class AddAppointmentPage implements OnInit {
             }
 
 
-          }else{
+          } else {
             this.VM.toDate = new Date(date.getTime());
             this.VM.toTime = strTime;
             this.VM.toTimeSession = ampm;
@@ -403,7 +403,7 @@ export class AddAppointmentPage implements OnInit {
   }
 
 
-  async removeVisitor(item){
+  async removeVisitor(item) {
 
     let alert = await this.alertCtrl.create({
       header: 'Confirmation',
@@ -435,35 +435,35 @@ export class AddAppointmentPage implements OnInit {
 
 
   ionViewDidEnter() {
-    this.newImage = this.newImage +"_"+ new Date().getTime();
+    this.newImage = this.newImage + "_" + new Date().getTime();
     console.log('ionViewDidEnter AddAppointmentPage');
     this.events.publishDataCompany({
-      action : "page",
+      action: "page",
       title: "add-appointment",
       message: ''
     });
     var appntmntData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA);
-    if(appntmntData && !this.edit && (!this.VM.visitors || this.VM.visitors.length == 0)){
-      this.VM.visitors =  JSON.parse(appntmntData).visitors;
+    if (appntmntData && !this.edit && (!this.VM.visitors || this.VM.visitors.length == 0)) {
+      this.VM.visitors = JSON.parse(appntmntData).visitors;
       this.VM.addVisitorSettings = JSON.parse(appntmntData).addVisitorSettings;
       this.VM.visitor_ctg = JSON.parse(appntmntData).visitor_ctg;
       this.addAppointmentModel.visitor_ctg_id = this.VM.visitor_ctg.visitor_ctg_id;
     }
-    if(this.showFacility){
+    if (this.showFacility) {
       this.loadVimsAppFacilityMasterList();
     }
 
   }
 
-  editVisitors(slideDOM:IonItemSliding, type, visitor: any){
+  editVisitors(slideDOM: IonItemSliding, type, visitor: any) {
     slideDOM.close();
-    if(type == 'edit'){
+    if (type == 'edit') {
       const navigationExtras: NavigationExtras = {
         state: {
           passData: {
             changeMaster: visitor.SEQ_ID ? true : false,
-            fromAppointmentPage : true,
-            visitor:visitor
+            fromAppointmentPage: true,
+            visitor: visitor
           }
         }
       };
@@ -471,44 +471,44 @@ export class AddAppointmentPage implements OnInit {
     }
   }
 
-  ionViewWillEnter(){
-    if(this.content){
+  ionViewWillEnter() {
+    if (this.content) {
       // this.content.scrollToTop();
     }
 
   }
 
-  changeEvent(pickerName){
+  changeEvent(pickerName) {
     console.log(pickerName + " --- " + (this.VM[pickerName]));
-    if(pickerName == "fromTime"){
-      if(this.VM[pickerName].replace(":",".") < 12){
+    if (pickerName == "fromTime") {
+      if (this.VM[pickerName].replace(":", ".") < 12) {
         this.VM.fromTimeSession = "AM";
-      }else{
+      } else {
         this.VM.fromTimeSession = "PM";
       }
-    }else if(pickerName == "toTime"){
-      if(this.VM[pickerName].replace(":",".") < 12){
+    } else if (pickerName == "toTime") {
+      if (this.VM[pickerName].replace(":", ".") < 12) {
         this.VM.toTimeSession = "AM";
-      }else{
+      } else {
         this.VM.toTimeSession = "PM";
       }
-    }else if(pickerName == "fromDate"){
-      if(this.VM[pickerName].split("T")[1].split(":")[0]<12){
+    } else if (pickerName == "fromDate") {
+      if (this.VM[pickerName].split("T")[1].split(":")[0] < 12) {
         this.VM.fromTimeSession = "AM";
-      }else{
+      } else {
         this.VM.fromTimeSession = "PM";
       }
-      this.VM.fromTime = this.VM[pickerName].split("T")[1].split(":")[0] +":"+this.VM[pickerName].split("T")[1].split(":")[1];
-    }else if(pickerName == "toDate"){
-      if(this.VM[pickerName].split("T")[1].split(":")[0]<12){
+      this.VM.fromTime = this.VM[pickerName].split("T")[1].split(":")[0] + ":" + this.VM[pickerName].split("T")[1].split(":")[1];
+    } else if (pickerName == "toDate") {
+      if (this.VM[pickerName].split("T")[1].split(":")[0] < 12) {
         this.VM.toTimeSession = "AM";
-      }else{
+      } else {
         this.VM.toTimeSession = "PM";
       }
-      this.VM.toTime = this.VM[pickerName].split("T")[1].split(":")[0] +":"+this.VM[pickerName].split("T")[1].split(":")[1];
+      this.VM.toTime = this.VM[pickerName].split("T")[1].split(":")[0] + ":" + this.VM[pickerName].split("T")[1].split(":")[1];
     }
   }
-  goToAddManageVisitors(){
+  goToAddManageVisitors() {
     const navigationExtras: NavigationExtras = {
       state: {
         passData: {
@@ -520,31 +520,31 @@ export class AddAppointmentPage implements OnInit {
     this.router.navigate(['manage-visitors'], navigationExtras);
   }
 
-  async proceedToNextStep(){
+  async proceedToNextStep() {
 
 
 
     var type = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
     var allow = true;
 
-    if(type == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-      if(this.hostSettings && this.hostSettings.available){
+    if (type == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP) {
+      if (this.hostSettings && this.hostSettings.available) {
         allow = true;
-      }else{
+      } else {
         allow = false;
       }
-    }else if(type == AppSettings.LOGINTYPES.FACILITY){
+    } else if (type == AppSettings.LOGINTYPES.FACILITY) {
       allow = true;
-    }else if(this.hostSettings && !this.hostSettings.PurposeEnabled && !this.hostSettings.FloorEnabled && !this.hostSettings.VehicleNumberEnabled && !this.hostSettings.RemarksEnabled && !this.hostSettings.RoomEnabled){
+    } else if (this.hostSettings && !this.hostSettings.PurposeEnabled && !this.hostSettings.FloorEnabled && !this.hostSettings.VehicleNumberEnabled && !this.hostSettings.RemarksEnabled && !this.hostSettings.RoomEnabled) {
       allow = false;
     }
 
-    for(var i = 0 ; i < this.VM.visitors.length ; i++){
+    for (var i = 0; i < this.VM.visitors.length; i++) {
       var vObj = this.VM.visitors[i];
       vObj.VISITOR_COMPANY = vObj.VISITOR_COMPANY_ID
     }
 
-    if(allow){
+    if (allow) {
       const navigationExtras: NavigationExtras = {
         state: {
           passData: {
@@ -556,7 +556,7 @@ export class AddAppointmentPage implements OnInit {
       return;
     }
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-    if(hostData){
+    if (hostData) {
       this.addAppointmentModel.STAFF_IC = JSON.parse(hostData).HOSTIC;
       this.addAppointmentModel.Booked_By = "Host";
       this.addAppointmentModel.bookedby_id = JSON.parse(hostData).HOST_ID;
@@ -566,36 +566,36 @@ export class AddAppointmentPage implements OnInit {
       this.addAppointmentModel.Location = "";
       this.addAppointmentModel.Category = "";
     }
-    var START_DATE = this.dateformat.transform(this.VM.fromDate+"", "yyyy-MM-ddTHH:mm:ss");
-    if(START_DATE.split("T").length>0){
+    var START_DATE = this.dateformat.transform(this.VM.fromDate + "", "yyyy-MM-ddTHH:mm:ss");
+    if (START_DATE.split("T").length > 0) {
       this.addAppointmentModel.START_DATE = START_DATE.split("T")[0];
       this.addAppointmentModel.START_TIME = START_DATE.split("T")[1];
     }
 
-    var END_DATE = this.dateformat.transform(this.VM.fromDate+"", "yyyy-MM-ddTHH:mm:ss");
-    if(END_DATE.split("T").length>0){
+    var END_DATE = this.dateformat.transform(this.VM.fromDate + "", "yyyy-MM-ddTHH:mm:ss");
+    if (END_DATE.split("T").length > 0) {
       this.addAppointmentModel.END_DATE = END_DATE.split("T")[0];
       this.addAppointmentModel.END_TIME = END_DATE.split("T")[1];
     }
 
-    if(!this.addAppointmentModel.vehicle_no){
+    if (!this.addAppointmentModel.vehicle_no) {
       this.addAppointmentModel.vehicle_no = "";
     }
 
-    if(!this.addAppointmentModel.vehicle_no){
+    if (!this.addAppointmentModel.vehicle_no) {
       this.addAppointmentModel.vehicle_no = "";
     }
 
     var DateSelect = "";
 
-    var endDate = this.addAppointmentModel.END_DATE+ " "+this.addAppointmentModel.END_TIME;
-    var startDate = this.addAppointmentModel.START_DATE + " "+ this.addAppointmentModel.START_TIME;
+    var endDate = this.addAppointmentModel.END_DATE + " " + this.addAppointmentModel.END_TIME;
+    var startDate = this.addAppointmentModel.START_DATE + " " + this.addAppointmentModel.START_TIME;
 
     var params = {
       "STAFF_IC": this.addAppointmentModel.STAFF_IC,
       "SEQID": JSON.parse(hostData).SEQID,
       "VISITOR_ARRAY": JSON.stringify(this.VM.visitors),//this.addAppointmentModel.VISITOR_ARRAY,
-      "REASON":this.addAppointmentModel.REASON,
+      "REASON": this.addAppointmentModel.REASON,
       "START_DATE": startDate,
       "END_DATE": endDate,
       "START_TIME": this.addAppointmentModel.START_TIME,
@@ -605,13 +605,13 @@ export class AddAppointmentPage implements OnInit {
       "Floor": this.addAppointmentModel.Floor,
       "Room": this.addAppointmentModel.Room,
       "Remarks": this.addAppointmentModel.Remarks,
-      "RemarksforSecurity":this.addAppointmentModel.RemarksforSecurity,
+      "RemarksforSecurity": this.addAppointmentModel.RemarksforSecurity,
       "Booked_By": this.addAppointmentModel.Booked_By,
       "bookedby_id": this.addAppointmentModel.bookedby_id,
       "Location": this.addAppointmentModel.Location,
       "Category": this.addAppointmentModel.Category,
-      "PLATE_NUM":this.addAppointmentModel.vehicle_no,
-      "FacilityBooking":{
+      "PLATE_NUM": this.addAppointmentModel.vehicle_no,
+      "FacilityBooking": {
         "RefSchoolSeqId": "",
         "RefBranchSeqId": "",
         "StaffSeqId": JSON.parse(hostData).HOSTIC,
@@ -624,28 +624,28 @@ export class AddAppointmentPage implements OnInit {
         "ParentPortalRegKey": AppSettings.API_DATABASE_NAME
       }
 
-};
+    };
 
-  if(this.edit){
+    if (this.edit) {
 
-    if(!this.VM.appointment || !this.VM.appointment[0]){
-      this.addAppointmentModel.vehicle_no = "";
-    }else if(!this.VM.appointment[0].vehicle_no){
-      // this.VM.appointment = [];
-      this.VM.appointment[0].vehicle_no = "";
-      this.addAppointmentModel.vehicle_no = "";
-    }
+      if (!this.VM.appointment || !this.VM.appointment[0]) {
+        this.addAppointmentModel.vehicle_no = "";
+      } else if (!this.VM.appointment[0].vehicle_no) {
+        // this.VM.appointment = [];
+        this.VM.appointment[0].vehicle_no = "";
+        this.addAppointmentModel.vehicle_no = "";
+      }
 
       var BookingID = "";
-      if(this.VM.appointment && this.VM.appointment[0]){
+      if (this.VM.appointment && this.VM.appointment[0]) {
         BookingID = this.VM.appointment[0].FacilityBookingID;
       }
       var params1 = {
         "STAFF_IC": this.addAppointmentModel.STAFF_IC,
         "VISITOR_ARRAY": JSON.stringify(this.VM.visitors),//this.addAppointmentModel.VISITOR_ARRAY,
-        "REASON":this.addAppointmentModel.REASON,
-        "START_DATE": this.addAppointmentModel.START_DATE + " "+ this.addAppointmentModel.START_TIME,
-        "END_DATE": this.addAppointmentModel.END_DATE+ " "+this.addAppointmentModel.END_TIME,
+        "REASON": this.addAppointmentModel.REASON,
+        "START_DATE": this.addAppointmentModel.START_DATE + " " + this.addAppointmentModel.START_TIME,
+        "END_DATE": this.addAppointmentModel.END_DATE + " " + this.addAppointmentModel.END_TIME,
         "START_TIME": this.addAppointmentModel.START_TIME,
         "END_TIME": this.addAppointmentModel.END_TIME,
         "CC": this.addAppointmentModel.CC,
@@ -653,13 +653,13 @@ export class AddAppointmentPage implements OnInit {
         "Floor": this.addAppointmentModel.Floor,
         "Room": this.addAppointmentModel.Room,
         "Remarks": this.addAppointmentModel.Remarks,
-        "RemarksforSecurity":this.addAppointmentModel.RemarksforSecurity,
+        "RemarksforSecurity": this.addAppointmentModel.RemarksforSecurity,
         "Booked_By": this.addAppointmentModel.Booked_By,
         "bookedby_id": this.addAppointmentModel.bookedby_id,
         "Location": this.addAppointmentModel.Location,
         "Category": this.addAppointmentModel.Category,
         "appointment_group_id": this.VM.appointment[0].appointment_group_id,
-        "PLATE_NUM":this.VM.appointment[0].vehicle_no,
+        "PLATE_NUM": this.VM.appointment[0].vehicle_no,
         "FacilityBooking": {
           "RefSchoolSeqId": "",
           "RefBranchSeqId": "",
@@ -676,20 +676,20 @@ export class AddAppointmentPage implements OnInit {
       this.apiProvider.EditAppointment(params1).then(
         async (val) => {
           var result = JSON.parse(val.toString());
-          if(result.Table && result.Table[0].Code == 10){
+          if (result.Table && result.Table[0].Code == 10) {
             var showAlert = false;
             var messageArray = [];
-            if(result.Table1){
-              for(var i = 0 ; i < result.Table1.length ; i++){
+            if (result.Table1) {
+              for (var i = 0; i < result.Table1.length; i++) {
                 var item = result.Table1[i];
-                if(!item.UploadStatus && item.UploadDesc){
+                if (!item.UploadStatus && item.UploadDesc) {
                   showAlert = true;
                   messageArray[messageArray.length] = item;
                 }
               }
             }
 
-            if(showAlert){
+            if (showAlert) {
               const presentModel = await this.modalCtrl.create({
                 component: AddAppointmentAlertPopupComponent,
                 componentProps: {
@@ -717,35 +717,35 @@ export class AddAppointmentPage implements OnInit {
 
             return;
 
-        }
-        let alert = await this.alertCtrl.create({
-          header: 'Error !',
-          message: '',
-          cssClass: 'alert-danger',
-          buttons: ['Okay']
-        });
-        alert.present();
+          }
+          let alert = await this.alertCtrl.create({
+            header: 'Error !',
+            message: '',
+            cssClass: 'alert-danger',
+            buttons: ['Okay']
+          });
+          alert.present();
 
         },
         async (err) => {
 
-          if(err && err.message == "No Internet"){
+          if (err && err.message == "No Internet") {
             return;
           }
           var message = "";
-          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          if (err && err.message == "Http failure response for (unknown url): 0 Unknown Error") {
             message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
           } else {
-              var result = JSON.parse(err.toString());
-              if(result && result["Table2"] && result["Table2"][0]){
-                message = result["Table2"][0].description;
-              } else if(result && result["Table1"] && result["Table1"][0]){
-                message = result["Table1"][0].description;
-              } else if(result.message){
-                message = result.message;
-              } else{
-                message = " Unknown";
-              }
+            var result = JSON.parse(err.toString());
+            if (result && result["Table2"] && result["Table2"][0]) {
+              message = result["Table2"][0].description;
+            } else if (result && result["Table1"] && result["Table1"][0]) {
+              message = result["Table1"][0].description;
+            } else if (result.message) {
+              message = result.message;
+            } else {
+              message = " Unknown";
+            }
           }
           let alert = await this.alertCtrl.create({
             header: 'Error !',
@@ -756,77 +756,78 @@ export class AddAppointmentPage implements OnInit {
           alert.present();
         }
       );
-  }else{
-    this.apiProvider.AddAppointment(params).then(
-      async (val) => {
-        var result = JSON.parse(val.toString());
-        if(result.Table && result.Table[0].Code == 10){
-          var showAlert = false;
-          var messageArray = [];
-          if(result.Table1){
-            for(var i = 0 ; i < result.Table1.length ; i++){
-              var item = result.Table1[i];
-              if(item.UploadStatus && item.UploadDesc){
-                showAlert = true;
-                messageArray[messageArray.length] = item;
+    } else {
+      this.apiProvider.AddAppointment(params).then(
+        async (val) => {
+          var result = JSON.parse(val.toString());
+          if (result.Table && result.Table[0].Code == 10) {
+            var showAlert = false;
+            var messageArray = [];
+            if (result.Table1) {
+              for (var i = 0; i < result.Table1.length; i++) {
+                var item = result.Table1[i];
+                if (item.UploadStatus && item.UploadDesc) {
+                  showAlert = true;
+                  messageArray[messageArray.length] = item;
+                }
               }
             }
+
+
+            let toast = await this.toastCtrl.create({
+              message: this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS'],
+              duration: 3000,
+              color: 'primary',
+              cssClass: 'alert-danger',
+              position: 'bottom'
+            });
+            toast.present();
+            this.events.publishDataCompany({
+              action: 'addAppointmentSuccess1',
+              title: showAlert,
+              message: messageArray
+            });
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
+            this.navCtrl.navigateRoot('home-view').then((data) => {
+              var page = {
+                component: "facility-booking-history"
+              }
+              this.events.publishDataCompany({
+                action: 'ChangeTab',
+                title: page,
+                message: 0
+              });
+
+            });
+
+            return;
           }
-
-
           let toast = await this.toastCtrl.create({
-            message: this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS'],
+            message: 'Server Error',
             duration: 3000,
             color: 'primary',
             cssClass: 'alert-danger',
             position: 'bottom'
           });
           toast.present();
-          this.events.publishDataCompany({
-            action : 'addAppointmentSuccess1',
-            title: showAlert,
-            message: messageArray
-          });
-          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-          this.navCtrl.navigateRoot('home-view').then((data)=>{
-            var page = {
-              component :"facility-booking-history"
-            }
-            this.events.publishDataCompany({action : 'ChangeTab',
-            title: page,
-            message:0
-          });
+        },
+        async (err) => {
 
-          });
-
-          return;
-      }
-      let toast = await this.toastCtrl.create({
-        message: 'Server Error',
-        duration: 3000,
-        color: 'primary',
-        cssClass: 'alert-danger',
-        position: 'bottom'
-      });
-      toast.present();
-      },
-      async (err) => {
-
-        if(err && err.message == "No Internet"){
-          return;
-        }
-        var message = "";
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-          message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-        } else {
+          if (err && err.message == "No Internet") {
+            return;
+          }
+          var message = "";
+          if (err && err.message == "Http failure response for (unknown url): 0 Unknown Error") {
+            message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+          } else {
             var result = JSON.parse(err.toString());
-            if(result && result["Table2"] && result["Table2"][0]){
+            if (result && result["Table2"] && result["Table2"][0]) {
               message = result["Table2"][0].description;
-            }else if(result && result["Table1"] && result["Table1"][0]){
+            } else if (result && result["Table1"] && result["Table1"][0]) {
               message = result["Table1"][0].description;
-            }else if(result && result.Table && result.Table[0]){
+            } else if (result && result.Table && result.Table[0]) {
               var output = result.Table[0];
-              if(output && output.Status == 0){
+              if (output && output.Status == 0) {
                 let alert = await this.alertCtrl.create({
                   header: 'Failed !',
                   message: this.T_SVC['ALERT_TEXT.SLOT_OCCUPIED'],
@@ -835,7 +836,7 @@ export class AddAppointmentPage implements OnInit {
                 });
                 alert.present();
                 return;
-              }else if(output && output.Status == 2){
+              } else if (output && output.Status == 2) {
                 let alert = await this.alertCtrl.create({
                   header: 'Failed !',
                   message: this.T_SVC['ALERT_TEXT.DUPLICATE_BOOKING'],
@@ -844,7 +845,7 @@ export class AddAppointmentPage implements OnInit {
                 });
                 alert.present();
                 return;
-              }else if(output && output.Status == 3){
+              } else if (output && output.Status == 3) {
                 let alert = await this.alertCtrl.create({
                   header: 'Failed !',
                   cssClass: 'alert-danger',
@@ -853,7 +854,7 @@ export class AddAppointmentPage implements OnInit {
                 });
                 alert.present();
                 return;
-              } else if(output && output.Status == 4){
+              } else if (output && output.Status == 4) {
                 let alert = await this.alertCtrl.create({
                   header: 'Error !',
                   message: this.T_SVC['ALERT_TEXT.MEMBER_NOT_FOUND'],
@@ -864,53 +865,56 @@ export class AddAppointmentPage implements OnInit {
                 return;
               }
 
-            }else if(result && result[0] && result[0].Code == 20){
+            } else if (result && result[0] && result[0].Code == 20) {
               message = result[0].Description;
-            } else if(result.message){
+            } else if (result.message) {
               message = result.message;
-            } else{
+            } else {
               message = " Unknown";
             }
+          }
+          let alert = await this.alertCtrl.create({
+            header: 'Error !',
+            message: message,
+            cssClass: 'alert-danger',
+            buttons: ['Okay']
+          });
+          alert.present();
         }
-        let alert = await this.alertCtrl.create({
-          header: 'Error !',
-          message: message,
-          cssClass: 'alert-danger',
-          buttons: ['Okay']
-        });
-        alert.present();
-      }
-    );
-  }
+      );
+    }
   }
 
-  onChangeFacility(facilityItem){
+  onChangeFacility(facilityItem) {
     var str = JSON.stringify(this.VM);
     var data = JSON.parse(str);
-    console.log(""+ facilityItem);
+    console.log("" + facilityItem);
     const navigationExtras: NavigationExtras = {
       state: {
-        passData: { "FacilityCode": facilityItem.FacilityCode,
-        "START_DATE":data.fromDate,
-        "END_DATE":data.toDate,
-        "facility": facilityItem.FacilityCode,
-        "edit":this.edit,
-        "availability": true
-      }
+        passData: {
+          "FacilityCode": facilityItem.FacilityCode,
+          "START_DATE": data.fromDate,
+          "END_DATE": data.toDate,
+          "facility": facilityItem.FacilityCode,
+          "edit": this.edit,
+          "availability": true
+        }
       }
     };
     this.router.navigate(['facility-time-slot'], navigationExtras);
   }
 
-  loadVimsAppFacilityMasterList(){
-    var params = { "RefSchoolSeqId": "",
-     "RefBranchSeqId": "",
-     "ParentPortalRegKey": AppSettings.API_DATABASE_NAME }
+  loadVimsAppFacilityMasterList() {
+    var params = {
+      "RefSchoolSeqId": "",
+      "RefBranchSeqId": "",
+      "ParentPortalRegKey": AppSettings.API_DATABASE_NAME
+    }
     this.apiProvider.VimsAppFacilityMasterList(params, true).then(
       (val) => {
         var result = JSON.parse(JSON.stringify(val));
-        if(result){
-         this.FACILITYMASTERLIST = result;
+        if (result) {
+          this.FACILITYMASTERLIST = result;
         }
       },
       (err) => {
@@ -924,15 +928,15 @@ export class AddAppointmentPage implements OnInit {
     console.log('goBack ');
   }
 
-  async checkFacilityAvailability(){
+  async checkFacilityAvailability() {
     var btns = [];
-    for(let item of this.FACILITYMASTERLIST){
+    for (let item of this.FACILITYMASTERLIST) {
       var btn = {
-          text: item.FacilityName,
-          handler: (data) => {
-            console.log('setting icon ' + item.FacilityName);
-            this.onChangeFacility(item);
-          }
+        text: item.FacilityName,
+        handler: (data) => {
+          console.log('setting icon ' + item.FacilityName);
+          this.onChangeFacility(item);
+        }
       }
       btns[btns.length] = btn;
     }
@@ -953,11 +957,11 @@ export class AddAppointmentPage implements OnInit {
     actionSheet.present();
   }
 
-  _prepareForNewVisitor(){
+  _prepareForNewVisitor() {
     this._getVisitorCategory();
   }
 
-  onChangeCategory(visitor_ctg_id, allowCheck){
+  onChangeCategory(visitor_ctg_id, allowCheck) {
 
     if (allowCheck && visitor_ctg_id !== this.VM.visitor_ctg.visitor_ctg_id) {
       this.VM.visitors = [];
@@ -972,12 +976,12 @@ export class AddAppointmentPage implements OnInit {
 
     this.addAppointmentModel.visitor_ctg_id = visitor_ctg_id;
     this.addAppointmentModel.Category = this.VM.visitor_ctg.visitor_ctg_desc;
-    console.log(visitor_ctg_id + "///"  + this.addAppointmentModel.Category);
+    console.log(visitor_ctg_id + "///" + this.addAppointmentModel.Category);
 
-    this.apiProvider.GetAddVisitorSettings({"RefVisitorCateg": visitor_ctg_id}).then(
+    this.apiProvider.GetAddVisitorSettings({ "RefVisitorCateg": visitor_ctg_id }).then(
       (val) => {
         var result = JSON.parse(JSON.stringify(val));
-        if(result){
+        if (result) {
           if (result.Table.length > 0) {
             if (result.Table[0].Code === 10) {
               this.VM.addVisitorSettings = result.Table1[0].HostSettingDetail;
@@ -994,28 +998,28 @@ export class AddAppointmentPage implements OnInit {
       }
     );
   }
-  _getVisitorCategory(){
+  _getVisitorCategory() {
 
     var masterDetails = this.getCategory(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
-    if(masterDetails){
+    if (masterDetails) {
       this.VISITOR_CATEGORY = JSON.parse(masterDetails).Table4;
 
-      if(this.addAppointmentModel.visitor_ctg_id){
-        for(var i1 = 0 ; i1 < this.VISITOR_CATEGORY.length ; i1++){
-          if(this.VISITOR_CATEGORY[i1].visitor_ctg_desc == this.addAppointmentModel.visitor_ctg_id){
+      if (this.addAppointmentModel.visitor_ctg_id) {
+        for (var i1 = 0; i1 < this.VISITOR_CATEGORY.length; i1++) {
+          if (this.VISITOR_CATEGORY[i1].visitor_ctg_desc == this.addAppointmentModel.visitor_ctg_id) {
             this.addAppointmentModel.visitor_ctg_id = this.VISITOR_CATEGORY[i1].visitor_ctg_id;
             this.addAppointmentModel.Category = this.VISITOR_CATEGORY[i1].visitor_ctg_desc;
             break;
           }
         }
       }
-    }else{
+    } else {
       this.apiProvider.GetMasterDetails().then(
         (val) => {
           var result = JSON.parse(JSON.stringify(val));
-          if(result){
+          if (result) {
             //this.storage.set(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
-            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(val));
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS, JSON.stringify(val));
             this.VISITOR_CATEGORY = result.Table4;
           }
         },
@@ -1025,7 +1029,7 @@ export class AddAppointmentPage implements OnInit {
     }
   }
 
-  public getCategory(settingName){
+  public getCategory(settingName) {
     //return this.storage.get(settingName);
     return window.localStorage.getItem(settingName);
   }
@@ -1033,32 +1037,32 @@ export class AddAppointmentPage implements OnInit {
   ngOnInit() {
     var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
 
-    if(settings && JSON.parse(settings)){
-      try{
+    if (settings && JSON.parse(settings)) {
+      try {
 
-        if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
+        if (this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP) {
           var sett = JSON.parse(settings).Table1;
-          if(sett && sett.length > 0){
+          if (sett && sett.length > 0) {
             this.hostSettings = sett[0];
             this.hostSettings.available = true;
             this.hostSettings.isFacility = true;
-          }else{
+          } else {
             this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
           }
 
-        }else{
+        } else {
           sett = JSON.parse(settings).Table1;
-          if(sett && sett.length > 0){
+          if (sett && sett.length > 0) {
             this.hostSettings = sett[0];
             this.hostSettings.available = true;
             this.hostSettings.isFacility = false;
-          }else{
+          } else {
             this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
           }
 
         }
 
-      }catch(e){
+      } catch (e) {
 
       }
     }
