@@ -8,21 +8,21 @@
     <ion-item-divider color="accent">
       <span>Basic Information</span>
     </ion-item-divider>
-    <ion-button ion-item>
+    <ion-item>
       <ion-icon class='siva-icon-mobile' slot="start" color="danger"></ion-icon>
       <ion-label color="gray">Device ID</ion-label>
       <ion-note slot="end">{{deviceId}}</ion-note>
-   </ion-button>
+   </ion-item>
    <!-- <ion-button ion-item>
       <ion-icon class='siva-icon-connectdevelop' slot="start" color="danger"></ion-icon>
       <ion-label color="gray">Mapping ID</ion-label>
       <ion-note slot="end"></ion-note>
    </ion-button> -->
-   <ion-button ion-item>
+   <ion-item>
       <ion-icon class='siva-icon-info-circled-1' slot="start" color="danger"></ion-icon>
     <ion-label color="gray">App Version</ion-label>
     <ion-note slot="end">{{'APP_VERSION' | translate}}</ion-note>
-  </ion-button>
+   </ion-item>
     <ion-item-divider color="accent">
       <span>Controls</span>
     </ion-item-divider>
@@ -47,10 +47,10 @@
         <ion-icon class='siva-icon-plug' slot="start" color="danger"></ion-icon>
         <ion-label color="gray">Disconnect this device</ion-label>
       </ion-button> -->
-    <ion-button ion-item (click)="logoutMe()">
+    <ion-item (click)="logoutMe()">
         <ion-icon class='siva-icon-logout-2' slot="start" color="danger"></ion-icon>
         <ion-label color="danger">Exit from account</ion-label>
-      </ion-button>
+    </ion-item>
       <!-- <ion-item >
           <ion-icon class='siva-icon-adjust' slot="start" color="danger"></ion-icon>
           <ion-label>Enable Option 1</ion-label>

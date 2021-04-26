@@ -22,7 +22,6 @@ export class SecurityCheckOutPagePage implements OnInit {
   T_SVC:any;
   Type : any = 0;
   title = "Visitor Check-Out";
-  queryText = "";
   options :BarcodeScannerOptions;
   constructor(public navCtrl: NavController,
     private translate: TranslateService,
@@ -70,6 +69,11 @@ export class SecurityCheckOutPagePage implements OnInit {
   ionViewDidEnter() {
     console.log('ionViewDidEnter SecurityCheckOutPage');
   }
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+   }
 
   ionViewWillEnter() {
 		console.log('ionViewWillEnter SecurityCheckOutPage');

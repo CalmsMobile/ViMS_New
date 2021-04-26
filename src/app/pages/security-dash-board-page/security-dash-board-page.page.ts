@@ -356,6 +356,19 @@ export class SecurityDashBoardPagePage implements OnInit {
     }
   }
 
+  released(){
+    // alert("Released");
+  }
+
+  pressed(){
+    this.logoutMe();
+
+  }
+
+  active(){
+    // alert("Active");
+  }
+
   enableMyKad(){
     if(this.MyKad_Enabled && this.platform.is('cordova')) {
       var currentClass = this;
@@ -788,7 +801,7 @@ export class SecurityDashBoardPagePage implements OnInit {
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "9EA927C8";
+      var data = "6578425602";
       var params = {"HexCode":""+ data};
       this.apiProvider.GetQuickPassVisitorDetail(params).then(
         async (val) => {
@@ -1090,9 +1103,10 @@ export class SecurityDashBoardPagePage implements OnInit {
 
   }
 
-  async gotoCountClickSettings(){
+  gotoCountClickSettings(){
     let numOfClicks = 5;
     this.GO_SETTINGS_COUNT++;
+    console.log("Click count:  "+ this.GO_SETTINGS_COUNT);
     if(this.GO_SETTINGS_TIMER != null){
       clearTimeout(this.GO_SETTINGS_TIMER);
     }
@@ -1106,13 +1120,17 @@ export class SecurityDashBoardPagePage implements OnInit {
       this.logoutMe();
     }
     if(this.GO_SETTINGS_COUNT > 5 && this.GO_SETTINGS_COUNT < numOfClicks){
-       (await this.toastCtrl.create(
-        {
-          message: "Need " + (numOfClicks - this.GO_SETTINGS_COUNT) + " more clicks go to Settings",
-          duration: 2000,
-          position: 'top'
-        })).present();
+       this.showToast("Need " + (numOfClicks - this.GO_SETTINGS_COUNT) + " more clicks go to Settings");
     }
+  }
+
+  async showToast(msg){
+   (await this.toastCtrl.create(
+      {
+        message: msg,
+        duration: 2000,
+        position: 'top'
+      })).present();
   }
 
   logoutMe(){

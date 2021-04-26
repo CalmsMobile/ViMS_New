@@ -191,6 +191,12 @@ export class AccountMappingPage {
             // var qrCodeString = 'qYNb75lXZms19Ri+u9GuOKEOnI+Bw2rOjRNRz3F3gK5yStsC7HV5d0FoZmKl97l5D/TzMTQCqKnahYPuTqZ6TrHijxnIJnXGCrbD93loR9n/96rUnC+77Vl8D/VZ3XTIwc3axSyZQ7DQC4g4NiQGJlH8pY7wGwxGkeDBwIRR7GA=';
 
             // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohZjEU6Evg3rcMxk+/Ugdcex2hFM6P4LE2zMmCF/XoF6kbtLZRrN6d2wZtKDKw7wzf5ZU6E1Ud9RSlXHW9nXhMnWsmBp9G8mZXnsbxnVshwTw==';
+
+            //Facility Display App 1001
+            // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmvsXGxqidWW1oDwCCbeG7M0xYw+SnR7J6F5RAATHeqKnA==';
+
+            //SeCurity
+            // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWA2FWpesNBQIHXTksM5p7Ic7CzOKYKHk4ldqHgNySH0+Zu438uZb0nPrSF3ezTkSN2TkCtUVFGpCmKnBV2TiW9DWO4iQYIQ6zS7+ADOKM5q2w==';
             this.processJson(qrCodeString);
           }
         } else{
@@ -1145,7 +1151,7 @@ export class AccountMappingPage {
               break;
             case AppSettings.LOGINTYPES.SECURITYAPP:
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              this.navCtrl.navigateRoot('SecurityDashBoardPage');
+              this.navCtrl.navigateRoot('security-dash-board-page');
               break;
           }
 
@@ -1431,7 +1437,7 @@ export class AccountMappingPage {
           if(this.scannedJson.MAppId){
             switch(this.scannedJson.MAppId){
               case AppSettings.LOGINTYPES.SECURITYAPP:
-                this.navCtrl.navigateRoot('SecurityDashBoardPage');
+                this.navCtrl.navigateRoot('security-dash-board-page');
                 break;
               default:
                 this.navCtrl.navigateRoot('home-view');

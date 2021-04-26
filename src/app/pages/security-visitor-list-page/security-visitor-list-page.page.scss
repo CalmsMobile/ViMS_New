@@ -21,15 +21,19 @@ ion-app.md [padding] .scroll-content {
   box-shadow: none;
   margin-bottom: 0px;
   margin-top: 0px;
-  background-color: #d6d8dc !important;
-  border-radius: 0px;
   border-bottom: 0px;
 }
 
 .myItem {
-  border-bottom: 1px solid #161515;
+  border-bottom: 1px solid #b6afaf;
   padding: 0px;
   border-radius: 0px;
+}
+
+ion-item {
+  --padding-start: 10px;
+  --padding-top: 15px;
+  margin-bottom: 20px;
 }
 
 .item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus):not(.item-input-has-focus)

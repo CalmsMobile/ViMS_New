@@ -1,6 +1,7 @@
 <ion-header>
 
   <ion-toolbar color="danger">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>Additional Details</ion-title>
   </ion-toolbar>
 
@@ -26,55 +27,44 @@
 
        <ion-list #visitorsList style="margin: 0px;">
 
-            <ion-card mode="ios" color="primary" class="myCard" no-padding no-border  *ngFor="let item of visitorList">
+            <ion-card mode="ios" class="myCard" no-padding no-border  *ngFor="let item of visitorList">
             <ion-item-sliding #slideDOM >
-                <ion-item sp-visitor-item  class="myItem">
-                    <ion-avatar *ngIf="item.visitor_RemoveImg || (!item.VISITOR_IMG && item.SEQ_ID)" slot="start" style="margin: 0 auto;">
-                        <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType" style="width: 52px;
+                <ion-item sp-visitor-item  class="myItem" lines="none">
+
+                        <img *ngIf="item.visitor_RemoveImg || (!item.VISITOR_IMG && item.SEQ_ID)" slot="start" onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType" style="width: 52px;margin: 0 auto;
                         height: 52px;
                         margin: 10px;
                         display: block;
-                        background-color: darkgrey;
                         padding: 2px;">
-                    </ion-avatar>
-                    <ion-avatar *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && !item.SEQ_ID && !item.VisitorBookingSeqId" slot="start" style="margin: 0 auto;">
-                        <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType" style="width: 52px;
+
+                        <img *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && !item.SEQ_ID && !item.VisitorBookingSeqId" slot="start" onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQ_ID+ imageURLType" style="width: 52px;margin: 0 auto;
                         height: 52px;
                         margin: 10px;
                         display: block;
-                        background-color: darkgrey;
                         padding: 2px;">
-                    </ion-avatar>
-                    <ion-avatar *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && item.VisitorBookingSeqId" slot="start" style="margin: 0 auto;">
-                            <img onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.VisitorBookingSeqId + imageURLTypeVPB" style="width: 52px;
+                            <img *ngIf="!item.visitor_RemoveImg && !item.VISITOR_IMG && item.VisitorBookingSeqId" slot="start" onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.VisitorBookingSeqId + imageURLTypeVPB" style="width: 52px;margin: 0 auto;
                             height: 52px;
                             margin: 10px;
                             display: block;
-                            background-color: darkgrey;
                             padding: 2px;">
-                    </ion-avatar>
-                    <ion-avatar slot="start" style="margin: 0 auto;" *ngIf="!item.MyKad && item.VISITOR_IMG">
-                            <img onError="this.src='../../assets/images/user.png';" class="circle-pic" style="width: 52px;
+
+                            <img slot="start" style="margin: 0 auto;" *ngIf="!item.MyKad && item.VISITOR_IMG" onError="this.src='../../assets/images/user.png';" class="circle-pic" style="width: 52px;
                             height: 52px;
                             margin: 10px;
                             display: block;" [src]="'data:image/jpeg;base64,' + item.VISITOR_IMG" />
-                    </ion-avatar>
-                     <ion-avatar slot="start" style="margin: 0 auto;" *ngIf="item.MyKad && item.VISITOR_IMG">
-                            <img onError="this.src='../../assets/images/user.png';" class="circle-pic" style="width: 52px;
+
+                            <img slot="start" *ngIf="item.MyKad && item.VISITOR_IMG" onError="this.src='../../assets/images/user.png';" class="circle-pic" style="width: 52px;margin: 0 auto;
                             height: 52px;
                             margin: 10px;
                             display: block;" [src]="sanitizer.bypassSecurityTrustUrl('data:image/png;base64, '+ item.VISITOR_IMG)" />
-                    </ion-avatar>
 
-                    <h2 theme-text-color>{{item.VISITOR_NAME}}</h2>
-                    <h3 *ngIf="item.EMAIL">{{item.EMAIL}}</h3>
-                    <!-- <p *ngIf="item.TELEPHONE_NO">{{item.TELEPHONE_NO}}</p> -->
-                    <!-- <ion-note slot="end">{{item.phone}}</ion-note> -->
-                    <ion-button  slot="end" shape="round" fill="outline" slot="icon-only" color="danger" style="padding: 5px" (click)="removeVisitor(item)">
-                        <ion-icon  name="close" style="    font-size: 18px;
-                        text-align: center;
-                        display: flex;"></ion-icon>
-                    </ion-button>
+
+                    <div>
+                      <ion-label theme-text-color>{{item.VISITOR_NAME}}</ion-label>
+                      <ion-label *ngIf="item.VISITOR_IC">{{item.VISITOR_IC}}</ion-label>
+                    </div>
+
+                        <ion-icon  name="close-circle-outline" slot="end" color="primary" (click)="removeVisitor(item)" style="font-size: 30px;text-align: center;"></ion-icon>
 
                     <!-- <ion-buttons slot="end" >
                         <ion-icon name="trash" style="padding:8px" (click)="removeVisitor(item)"></ion-icon>
@@ -85,7 +75,7 @@
                     <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM)">
                     <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
                 </ion-button> -->
-                <ion-button slot="icon-only" no-padding color="primary" fill="outline" no-border (click)="editVisitors(slideDOM, 'edit', item)">
+                <ion-button slot="icon-only" style="align-self: center;" no-padding color="primary" fill="clear" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                     <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>
                 </ion-button>
                 </ion-item-options>
@@ -95,53 +85,40 @@
 
         <form novalidate size="12" size-sm size-md [formGroup]="appointment" class="simple-form">
             <ion-col no-padding size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
-              <ion-label style="    font-size: 16px;    color: grey;" >{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label>
+              <ion-label color="primary" style="    font-size: 16px;" position="stacked" *ngIf="hostSettings && hostSettings.PurposeEnabled && hostSettings.PurposeRequired">{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label>
               <ion-item lines="none" no-padding transparent *ngIf="hostSettings && hostSettings.PurposeEnabled && hostSettings.PurposeRequired">
-
-                <ion-select mode="ios" interface="action-sheet"  required formControlName="purpose" style="font-size: 16px;" mode="ios" [(ngModel)]="REASON" interface="action-sheet" placeholder="{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}">
+                <ion-select mode="ios" interface="action-sheet"  required formControlName="purpose" style="font-size: 16px;"
+                [ngStyle]="{'border': hostSettings.PurposeRequired ? '3px solid #cf3c4f': '3px solid #eee'}" [(ngModel)]="REASON" interface="action-sheet" placeholder="{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}">
                   <ion-label>{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}</ion-label>
                   <ion-select-option text-left *ngFor="let avl_reason of AVAIL_REASONS" [value]="avl_reason.visitpurpose_id">
                     {{avl_reason.visitpurpose_desc}}
                   </ion-select-option>
                 </ion-select>
               </ion-item>
+              <ion-label style="font-size: 16px;"  position="stacked" *ngIf="hostSettings && hostSettings.PurposeEnabled && !hostSettings.PurposeRequired">{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label>
               <ion-item lines="none" no-padding transparent *ngIf="hostSettings && hostSettings.PurposeEnabled && !hostSettings.PurposeRequired">
-                <!-- <ion-label style="    font-size: 16px;"  floating>{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label> -->
-                <ion-select mode="ios" interface="action-sheet"  formControlName="purpose" style="font-size: 16px;" [(ngModel)]="REASON" interface="action-sheet" placeholder="{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}">
+                <ion-select mode="ios" interface="action-sheet"  formControlName="purpose" style="font-size: 16px;"
+                [ngStyle]="{'border': hostSettings.PurposeRequired ? '3px solid #cf3c4f': '3px solid #eee'}"
+                [(ngModel)]="REASON" interface="action-sheet" placeholder="{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}">
                   <ion-label>{{'ADD_APPOIN.STEP2.SELECT_LAB_PURPOSE' | translate}}</ion-label>
                   <ion-select-option text-left *ngFor="let avl_reason of AVAIL_REASONS" [value]="avl_reason.visitpurpose_id">
                     {{avl_reason.visitpurpose_desc}}
                   </ion-select-option>
                 </ion-select>
               </ion-item>
-              <ion-item lines="none" transparent no-lines *ngIf="hostSettings && (appointment.get('purpose').hasError('required') && appointment.get('purpose').touched)">
-                <div class="error" style="color:red" *ngIf="appointment.get('purpose').hasError('required') && appointment.get('purpose').touched">
-                  {{'ADD_APPOIN.STEP2.REQUIRED_LAB_PURPOSE' | translate}}
-                </div>
-            </ion-item>
             <!-- ------------------------------------ -->
-            <ion-label style="    font-size: 16px;    color: grey;" >{{'SECURITY_APP.SELECT_HOST' | translate}}</ion-label>
-            <!-- <ion-item class= "box_round_corner" no-lines no-padding transparent (click)="selectHost()">
-              <ion-label style="margin-top: -20px;
-              color: #8e8e93 !important;" floating>{{'SECURITY_APP.SELECT_HOST' | translate}}</ion-label>
-              <ion-icon name="arrow-forward" item-right></ion-icon>
-              <ion-label *ngIf="hostIc" style="margin-top: 30px;color: #000000!important;">{{host_name}} </ion-label>
-            </ion-item> -->
+            <ion-label color="primary" style="    font-size: 16px; " >{{'SECURITY_APP.SELECT_HOST' | translate}}</ion-label>
             <ion-item lines="none" no-padding transparent >
-              <!-- <ion-label style="    font-size: 16px;"  floating>{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label> -->
               <ion-select mode="ios" interface="action-sheet"  formControlName="host" (ionChange)="onChangeHost($event.detail.value)"
-               style="    font-size: 16px;" [(ngModel)]="hostIc" interface="action-sheet" placeholder="{{'SECURITY_APP.HOST' | translate}}">
+               style="    font-size: 16px;"
+               [ngStyle]="{'border': '3px solid #cf3c4f'}"
+                [(ngModel)]="hostIc" interface="action-sheet" placeholder="{{'SECURITY_APP.HOST' | translate}}">
                 <ion-label>{{'SECURITY_APP.HOST' | translate}}</ion-label>
                 <ion-select-option text-left *ngFor="let hostData of HostList" [value]="hostData.HOSTIC">
                   {{hostData.HOSTNAME}}
                 </ion-select-option>
               </ion-select>
             </ion-item>
-            <ion-item lines="none" transparent no-lines *ngIf="hostSettings && (appointment.get('host').hasError('required') && appointment.get('host').touched)">
-              <div class="error" style="color:red" *ngIf="appointment.get('host').hasError('required') && appointment.get('host').touched">
-                {{'SECURITY_APP.ERROR.REQUIRED_HOST' | translate}}
-              </div>
-          </ion-item>
           <!-- --------------------------------------- -->
           <ion-label *ngIf="hostSettings.additionalDocEnabled" style="font-size: 16px;    color: grey;" >{{'SECURITY_APP.SELECT_DOC' | translate}}</ion-label>
           <ion-grid *ngIf="hostSettings.additionalDocEnabled && hostSettings.additionalDocLimit > 0">
@@ -191,12 +168,8 @@
 
 
 </ion-content>
-<ion-footer style="background: linear-gradient(to bottom, rgb(241, 140, 93) 0%, rgb(243, 75, 24) 100%);">
-
-
-        <ion-col  class="checkinBtn" col-12 class="ion-text-center" (click)="proceedNext()">
-            <ion-button  style="color:white" clear>Check-In<ion-icon style="padding-left: 10px;color:white" slot="end" name="man" ></ion-icon></ion-button>
-        </ion-col>
-
-
+<ion-footer color="primary">
+<div style="text-align: end;">
+  <ion-button shape="round" style="color:white; margin:15px"  (click)="proceedNext()">Check-In<ion-icon style="padding-left: 10px;color:white" slot="end" name="man" ></ion-icon></ion-button>
+</div>
   </ion-footer>

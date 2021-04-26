@@ -7,16 +7,22 @@
 <ion-content>
 
   <div class="ion-padding" profile-bg [ngStyle]="{'background-image': ''}" style="height:200px">
-      <ion-button class="versionP" (click)="gotoCountClickSettings()">V{{'APP_VERSION' | translate}}</ion-button>
+      <!-- <div transparent class="versionP" (click)="gotoCountClickSettings()">V{{'APP_VERSION' | translate}}</div> -->
+      <button ion-button ion-long-press transparent interval="400"  style="width:100%;height:90px;background:transparent;    color: white;
+      font-weight: bold;
+      text-align: end;
+      vertical-align: text-bottom;font-size: 18px;
+    padding: 15px;
+      display: grid;" (pressed)="pressed()" (longPressed)="active()" (pressEnded)="released()">V{{'APP_VERSION' | translate}}</button>
     <!-- <h1 slot="end" no-border style="text-align: center;background: linear-gradient(to bottom, #d82e2e 0%, #d82e2e 100%);margin: 0px;" (click)= "openSettings()">sfdg</h1> -->
     <!-- <p class="versionP">{{'APP_NAME' | translate}} V{{'APP_VERSION' | translate}}</p> -->
       <!-- <ion-thumbnail *ngIf="data && data.logo" class="ion-text-center" margin-top>
         <img class="circle-pic" [src]="data.logo+visitorSEQID + imageType">
       </ion-thumbnail> -->
-      <ion-avatar class="ion-text-center">
+      <div class="ion-text-center" style="margin-top: -60px;">
           <img *ngIf="companyData.LogoImgUrl && companyData.StorageURL" class="circle-pic" onError="this.src='../../assets/images/logo/2.png';" [src]="companyData.StorageURL + companyData.LogoImgUrl">
           <img *ngIf="!companyData.LogoImgUrl || !companyData.StorageURL"  class="circle-pic" src="../../assets/images/logo/2.png"/>
-      </ion-avatar>
+      </div>
 
       <h3 class="title" [style.font-size]="customStyle.WelcomePage.Title.fontSize + 'px'" [style.font-family] = "customStyle.WelcomePage.Title.fontFamily" text-wrap>{{companyData.HomeTitle}}</h3>
       <h3 class="desc" [style.font-size]="customStyle.WelcomePage.WelcomeDescription.fontSize + 'px'" [style.font-family] = "customStyle.WelcomePage.WelcomeDescription.fontFamily" text-wrap>{{companyData.HomeContent}}</h3>
@@ -26,21 +32,31 @@
 
       <ion-col size="6">
         <ion-card class="card1" (click)= "statesClicked('10')">
-            <ion-item>
+            <ion-item lines="none">
               <!-- <img style="width: 35px;margin:0 auto" slot="end" src="../../assets/images/checkin.png"/> -->
-              <ion-icon slot="end" name="man" color="danger"></ion-icon>
-              <h3 text-wrap class="itemText">Today Check-In</h3>
-              <p class="para">{{TotalVisitorsIn}}</p>
+              <ion-icon slot="end" name="man" color="danger" style="padding: 4px;
+              margin: 0px;
+              border: 1px solid #eb445a;
+              border-radius: 50%;"></ion-icon>
+              <div>
+                <h3 text-wrap class="itemText">Today Check-In</h3>
+                <p class="para">{{TotalVisitorsIn}}</p>
+              </div>
             </ion-item>
           </ion-card>
       </ion-col>
       <ion-col size="6">
           <ion-card class="card1" (click)= "statesClicked('20')">
-            <ion-item>
+            <ion-item lines="none">
               <!-- <img style="width: 35px;margin:0 auto" slot="end" src="../../assets/images/overstay.png"/> -->
-              <ion-icon slot="end" name="walk" color="danger"></ion-icon>
-              <h3 text-wrap class="itemText">Today Check-Out</h3>
-              <p class="para">{{TotalVisitorsOut}}</p>
+              <ion-icon slot="end" name="walk" color="danger" style="padding: 4px;
+              margin: 0px;
+              border: 1px solid #eb445a;
+              border-radius: 50%;"></ion-icon>
+              <div>
+                <h3 text-wrap class="itemText">Today Check-Out</h3>
+                <p class="para">{{TotalVisitorsOut}}</p>
+              </div>
             </ion-item>
           </ion-card>
         </ion-col>
@@ -48,21 +64,25 @@
     <ion-row>
         <ion-col size="6">
           <ion-card class="card1" (click)= "statesClicked('40')">
-            <ion-item>
+            <ion-item lines="none">
               <img style="width: 35px;margin:0 auto" slot="end" src="../../assets/images/overstay.png"/>
               <!-- <ion-icon slot="end" name="walk" color="danger"></ion-icon> -->
-              <h3 text-wrap class="itemText">Today Overstay</h3>
-              <p class="para">{{OverstayVisitor}}</p>
+              <div>
+                <h3 text-wrap class="itemText">Today Overstay</h3>
+                <p class="para">{{OverstayVisitor}}</p>
+              </div>
             </ion-item>
           </ion-card>
         </ion-col>
         <ion-col size="6">
             <ion-card class="card1" (click)= "statesClicked('30')">
-              <ion-item>
+              <ion-item lines="none">
                 <img style="width: 35px;margin:0 auto" slot="end" src="../../assets/images/checkin.png"/>
                 <!-- <ion-icon slot="end" name="man" color="danger"></ion-icon> -->
-                <h3 text-wrap class="itemText">Currently Check-In</h3>
-                <p class="para">{{VisitorsInside}}</p>
+                <div>
+                  <h3 text-wrap class="itemText">Currently Check-In</h3>
+                  <p class="para">{{VisitorsInside}}</p>
+                </div>
               </ion-item>
             </ion-card>
           </ion-col>
@@ -70,9 +90,54 @@
       </ion-row>
   </ion-grid>
 
+  <!-- <ion-tabs color="primary" mode="ios">
+    <ion-tab-bar slot="bottom" mode="ios" color="primary">
+
+    </ion-tab-bar>
+  </ion-tabs> -->
+
+
   </ion-content>
 
-  <ion-footer no-lines no-border>
+  <ion-footer lines="lines" no-border transparent>
+   <ion-toolbar color="primary">
+    <ion-row transparent style="padding: 5px;    justify-content: center;">
+      <ion-tab-button color="primary" [ngStyle]="{'color': (tabSelected === 'QUICK_PASS')?'white': 'lightgray'}"
+    (click)="proceedNext('QUICK_PASS')" mode="ios" selected="{{tabSelected === 'QUICK_PASS'? 'true': 'false'}}">
+     <div>
+       <ion-icon class="tabIcon" name="qr-code-outline"></ion-icon>
+       <ion-icon class="tabIcon" name="man"></ion-icon>
+     </div>
+     <ion-label style="font-size: 12px; text-transform: none;">Quick Pass In</ion-label>
+   </ion-tab-button>
+
+   <ion-tab-button [ngStyle]="{'color': (tabSelected === 'QUICK_PASS_OUT')?'white': 'lightgray'}"
+   (click)="proceedNext('QUICK_PASS_OUT')" mode="ios" selected="{{tabSelected === 'QUICK_PASS_OUT'? 'true': 'false'}}">
+     <div>
+       <ion-icon class="tabIcon" name="qr-code-outline"></ion-icon>
+       <ion-icon class="tabIcon" name="walk"></ion-icon>
+     </div>
+     <ion-label style="font-size: 12px; text-transform: none;">Quick Pass Out</ion-label>
+   </ion-tab-button>
+
+   <ion-tab-button [ngStyle]="{'color': (tabSelected === 'IN')?'white': 'lightgray'}"
+   (click)="proceedNext('IN')" mode="ios" selected="{{tabSelected === 'IN'? 'true': 'false'}}">
+     <div>
+       <ion-icon class="tabIcon" name="man"></ion-icon>
+     </div>
+     <ion-label style="font-size: 12px; text-transform: none;">Check-In</ion-label>
+   </ion-tab-button>
+
+   <ion-tab-button [ngStyle]="{'color': (tabSelected === 'OUT')?'white': 'lightgray'}"
+   (click)="proceedNext('OUT')" mode="ios" selected="{{tabSelected === 'OUT'? 'true': 'false'}}">
+     <div>
+       <ion-icon class="tabIcon" name="walk"></ion-icon>
+     </div>
+     <ion-label style="font-size: 12px; text-transform: none;">Check-Out</ion-label>
+   </ion-tab-button>
+    </ion-row>
+   </ion-toolbar>
+  </ion-footer>
 
      <!--<ion-grid class="ion-text-center" no-padding>
       <ion-row *ngIf="(!showQuickPass && !showPreAppointment) || (!showQuickPass && showPreAppointment) || (showQuickPass && !showPreAppointment)">
@@ -116,53 +181,52 @@
     </ion-grid>-->
 
 
-      <ion-grid no-padding>
-        <ion-row align-items-center>
-            <ion-col size="3" class="ion-text-center">
-                <ion-button expand="full" color="danger" slot="icon-only" (click)="proceedNext('QUICK_PASS')"
-                [ngClass]= "{'selected': tabSelected == 'QUICK_PASS','unselected': tabSelected != 'QUICK_PASS'}">
+      <!-- <ion-toolbar transparent>
+        <ion-grid no-padding>
+          <ion-row align-items-center>
+              <ion-col size="3" class="ion-text-center">
+                  <ion-button expand="full" color="danger" (click)="proceedNext('QUICK_PASS')"
+                  [ngClass]= "{'selected': tabSelected == 'QUICK_PASS','unselected': tabSelected != 'QUICK_PASS'}">
 
+                  <ion-icon style="padding: 0px;padding-bottom: 7px;margin: 0px;" slot="top" name="qr-code-outline"></ion-icon>
+                  <ion-icon style="padding: 0px;margin: 0px;font-size: 16px;text-align: center;" slot="top" name="man" color="light"></ion-icon>
+                  <ion-label style="font-size: 12px; text-transform: none;">Quick Pass In</ion-label>
+                  </ion-button>
+              </ion-col>
+              <ion-col size="3" class="ion-text-center">
+                  <ion-button expand="full" color="danger" (click)="proceedNext('QUICK_PASS_OUT')"
+                  [ngClass]= "{'selected': tabSelected == 'QUICK_PASS_OUT','unselected': tabSelected != 'QUICK_PASS_OUT'}">
+                    <div>
+                        <ion-icon style="padding: 0px;padding-bottom: 7px;margin: 0px;" name="qr-code-outline" slot="top" color="light"></ion-icon>
+                        <ion-icon style="padding: 0px;margin: 0px;font-size: 16px;text-align: center;" slot="top" name="walk" color="light"></ion-icon>
+                        <br>
+                        <span style="font-size: 12px; text-transform: none;">Quick Pass Out</span>
+                    </div>
+                  </ion-button>
+              </ion-col>
+              <ion-col size="3" class="ion-text-center">
+                  <ion-button expand="full" color="danger" (click)="proceedNext('IN')"
+                  [ngClass]= "{'selected': tabSelected == 'IN','unselected': tabSelected != 'IN'}">
                   <div>
-                      <ion-icon style="padding: 0px;padding-bottom: 7px;margin: 0px;" item-top class="icon siva-icon-qrcode"></ion-icon>
-                      <ion-icon style="padding: 0px;margin: 0px;font-size: 16px;text-align: center;" item-top name="man" color="light"></ion-icon>
+                      <ion-icon style="padding-bottom: 7px;" slot="top" name="man" color="light"></ion-icon>
                       <br>
-                      <span style="font-size: 12px; text-transform: none;">Quick Pass In</span>
+                      <span style="font-size: 12px; text-transform: none;">Check-In</span>
                   </div>
-                </ion-button>
-            </ion-col>
-            <ion-col size="3" class="ion-text-center">
-                <ion-button expand="full" color="danger" slot="icon-only" (click)="proceedNext('QUICK_PASS_OUT')"
-                [ngClass]= "{'selected': tabSelected == 'QUICK_PASS_OUT','unselected': tabSelected != 'QUICK_PASS_OUT'}">
+
+                  </ion-button>
+              </ion-col>
+              <ion-col size="3" class="ion-text-center">
+                  <ion-button slot="icon-only" color="danger" (click)="proceedNext('OUT')"
+                  [ngClass]= "{'selected': tabSelected == 'OUT','unselected': tabSelected != 'OUT'}">
                   <div>
-                      <ion-icon style="padding: 0px;padding-bottom: 7px;margin: 0px;" class="icon siva-icon-qrcode" color="light"></ion-icon>
-                      <ion-icon style="padding: 0px;margin: 0px;font-size: 16px;text-align: center;" slot="end" name="walk" color="light"></ion-icon>
+                      <ion-icon style="padding-bottom: 7px;" slot="end" name="walk" color="light"></ion-icon>
                       <br>
-                      <span style="font-size: 12px; text-transform: none;">Quick Pass Out</span>
+                      <span style="font-size: 12px; text-transform: none;">Check-Out</span>
                   </div>
-                </ion-button>
-            </ion-col>
-            <ion-col size="3" class="ion-text-center">
-                <ion-button expand="full" color="danger" slot="icon-only" (click)="proceedNext('IN')"
-                [ngClass]= "{'selected': tabSelected == 'IN','unselected': tabSelected != 'IN'}">
-                <div>
-                    <ion-icon style="padding-bottom: 7px;" item-top name="man" color="light"></ion-icon>
-                    <br>
-                    <span style="font-size: 12px; text-transform: none;">Check-In</span>
-                </div>
+                  </ion-button>
+              </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-toolbar> -->
 
-                </ion-button>
-            </ion-col>
-            <ion-col size="3" class="ion-text-center">
-                <ion-button slot="icon-only" color="danger" (click)="proceedNext('OUT')"
-                [ngClass]= "{'selected': tabSelected == 'OUT','unselected': tabSelected != 'OUT'}">
-                <div>
-                    <ion-icon style="padding-bottom: 7px;" slot="end" name="walk" color="light"></ion-icon>
-                    <br>
-                    <span style="font-size: 12px; text-transform: none;">Check-Out</span>
-                </div>
-                </ion-button>
-            </ion-col>
-        </ion-row>
-      </ion-grid>
-
-  </ion-footer>
+  <!-- </ion-footer> -->

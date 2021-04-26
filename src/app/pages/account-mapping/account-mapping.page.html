@@ -145,8 +145,10 @@
                   padding-right: 10px;
                   padding-bottom: 22px;">
                   </ion-icon>
-                  <h2 class="sticky" style="margin-top:0px">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
-                  <p>{{VM.DeviceDetails['model']}}</p>
+                  <div>
+                    <h2 class="sticky">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
+                    <p>{{VM.DeviceDetails['model']}}</p>
+                  </div>
                 </ion-item>
               </ion-card>
             </div>
@@ -228,8 +230,10 @@
                     <ion-icon *ngIf= "VM.DevicePlatform != 'Android'" slot="start" color='danger' class="icon siva-icon-apple" style="font-size: 3.5rem;"></ion-icon>
                     <ion-icon *ngIf= "VM.DevicePlatform == 'Android'" slot="start" color='danger' class="icon siva-icon-android" style="font-size: 3.5rem;">
                     </ion-icon>
-                    <h2 class="sticky" style="margin-top:0px">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
-                    <p>{{VM.DeviceDetails['model']}}</p>
+                    <div>
+                      <h2 class="sticky">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
+                      <p>{{VM.DeviceDetails['model']}}</p>
+                    </div>
                   </ion-item>
                 </ion-card>
               </div>

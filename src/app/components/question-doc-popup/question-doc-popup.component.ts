@@ -15,6 +15,7 @@ import { PreviewAnyFile } from '@ionic-native/preview-any-file/ngx';
 export class QuestionDocPopupComponent implements OnInit {
   result: any = [];
   type = '';
+  title = '';
   constructor(
     public navParams: NavParams,
     private androidPermissions: AndroidPermissions,
@@ -27,6 +28,13 @@ export class QuestionDocPopupComponent implements OnInit {
       this.result = navParams.data.data.result;
       this.type = navParams.data.data.type;
       console.log("Passdata: " + JSON.stringify(this.result));
+      if (this.type === 'doc') {
+        this.title = 'Verification Documents';
+      } else if (this.type === 'declaration'){
+        this.title = 'Item Checklist';
+      } else {
+        this.title = 'Self Declaration';
+      }
      }
 
      dismiss() {

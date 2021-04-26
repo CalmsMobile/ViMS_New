@@ -3094,7 +3094,7 @@ export class RestProvider {
         if(this.validateUser(output)){
           return;
         }
-        if(output != undefined && output.Table && output.Table[0]){
+        if(output != undefined && output.Table){
           resolve(JSON.stringify(output));
         }else{
           reject(JSON.stringify(output));

@@ -129,6 +129,11 @@ export class SecurityVisitorListPagePage implements OnInit {
     }
   }
 
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+   }
+
   addDocuments(){
     var currClass = this;
    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
@@ -418,7 +423,7 @@ export class SecurityVisitorListPagePage implements OnInit {
             position: 'bottom'
           });
           toast.present();
-          this.navCtrl.pop();
+          this.navCtrl.navigateRoot('security-dash-board-page');
           return;
         }
         let toast = await this.toastCtrl.create({

@@ -827,6 +827,8 @@ export class AdminAppointmentDetailsPage implements OnInit {
     let api = '/api/Vims/GetVisitorQuestionariesByAppointmentId';
     if (action === 'doc') {
       api = '/api/Vims/GetVisitorDocsBySeqId';
+    } else if (action === 'declaration'){
+      api = '/vims/GetVisitorItemChecklistBySeqId';
     }
 
     var params = {
@@ -855,6 +857,12 @@ export class AdminAppointmentDetailsPage implements OnInit {
         });
         return await presentModel.present();
 
+      } else {
+        let msg = 'Questionaries not added.';
+        if (action === 'doc') {
+          msg = 'Verification document not added.';
+        }
+        this.showAlert(msg);
       }
       },
     async (err) => {
@@ -863,7 +871,9 @@ export class AdminAppointmentDetailsPage implements OnInit {
         return;
       }
       var message = "";
-      if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+      if (err.status) {
+        message = 'Api Not Found';
+      } else if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
         message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
       } else if(err && JSON.parse(err) && JSON.parse(err).message){
         message =JSON.parse(err).message;
@@ -880,6 +890,16 @@ export class AdminAppointmentDetailsPage implements OnInit {
       }
     }
   );
+  }
+
+  async showAlert(msg) {
+    let alert = this.alertCtrl.create({
+      header: 'Notification',
+      message: msg,
+      cssClass:'alert-danger',
+      buttons: ['Okay']
+      });
+      (await alert).present();
   }
 
   GetAppointmentDetailBySeqId(seqId) {

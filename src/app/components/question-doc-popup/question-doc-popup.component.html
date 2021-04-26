@@ -1,12 +1,12 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-label class="ion-padding" style="font-weight: 800;">{{type === 'doc'? 'Verification Documents': 'Self Declaration'}}</ion-label>
+    <ion-label class="ion-padding" style="font-weight: 800;">{{ title }}</ion-label>
     <ion-icon slot="end" style="font-size: 26px;" name="close-circle-outline" (click)="dismiss()"></ion-icon>
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
 
-  <div *ngIf="type !== 'doc'">
+  <div *ngIf="type === 'question'">
     <ion-label color="primary" >Following questions are self declared by this Visitor</ion-label>
     <div *ngFor="let ques of result">
       <ion-card mode="ios" style="padding: 5px">
@@ -38,6 +38,16 @@
       </ion-card>
     </div>
   </div>
-
+  <div *ngIf="type === 'declaration'">
+    <div>
+      <ion-label color="primary">Visitor Declared Items</ion-label>
+      <ion-card mode="ios" style="padding: 7px; margin: 3px;">
+        <ion-item lines="none" *ngFor="let declaration of result">
+          <ion-icon slot="start" name="checkmark-done-outline" style="font-size: 24px;"></ion-icon>
+          <ion-text>{{declaration.MaterialDesc}}</ion-text>
+        </ion-item>
+      </ion-card>
+    </div>
+  </div>
 
 </ion-content>

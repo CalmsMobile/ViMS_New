@@ -114,6 +114,8 @@ ion-header.transparent-header::after {
   height: 30px;
   width: 100%;
   font-size: 12px;
+  justify-content: end;
+  display: grid;
 }
 
 .footerButton-22 {
@@ -144,10 +146,16 @@ ion-header.transparent-header::after {
   margin-top: 10px;
 }
 .card1 {
-  margin-left: 10px;
-  /* margin-right: 10px; */
-  padding: 5px;
+  margin: 0px;
   border-radius: 5%;
-  border: 1px solid #dedede;
+  border: 1px solid #faeded;
   height: 120px;
+}
+
+.itemText {
+  font-size: 16px;
+}
+
+.tabIcon {
+  font-size: 20px;
 }

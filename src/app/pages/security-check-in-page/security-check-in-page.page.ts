@@ -22,7 +22,7 @@ export class SecurityCheckInPagePage implements OnInit {
 
 
   @ViewChild(IonContent) content: IonContent;
-  active: boolean;
+  active = true;
 
   lastImage: string = null;
   loading: any;
@@ -51,7 +51,7 @@ export class SecurityCheckInPagePage implements OnInit {
   translation:any = {};
   base64Image:any = "";
   hostSettings : any = {};
-  visitor:any = {};
+  visitor:any = '';
   position = 0;
   // visitorSEQID = "0";
   // visitorHexCode = "";
@@ -121,7 +121,7 @@ export class SecurityCheckInPagePage implements OnInit {
 
       let EMAILPATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
       this.visitorProfile = new FormGroup({
-        username: new FormControl('', (this.hostSettings && this.hostSettings.NameEnabled && this.hostSettings.NameRequired) ? ([Validators.required, Validators.minLength(4), Validators.maxLength(100)]): []),
+        username: new FormControl('', (this.hostSettings && this.hostSettings.NameEnabled && this.hostSettings.NameRequired) ? ([Validators.required, Validators.minLength(2), Validators.maxLength(100)]): []),
         email: new FormControl('', (this.hostSettings && this.hostSettings.EmailEnabled && this.hostSettings.EmailRequired) ? ([Validators.required, Validators.pattern(EMAILPATTERN)]) : []),
         icPassport: new FormControl('', (this.hostSettings && this.hostSettings.IdProofEnabled && this.hostSettings.IdProofRequired) ? ([Validators.required]) : []),
         contact: new FormControl('', (this.hostSettings && this.hostSettings.ContactNumberEnabled && this.hostSettings.ContactNumberRequired) ? ([Validators.required]) : []),
@@ -259,6 +259,11 @@ export class SecurityCheckInPagePage implements OnInit {
   scanQrCode(){
 
   }
+
+  goBack() {
+    this.navCtrl.pop();
+    console.log('goBack ');
+   }
 
   scanPreAppointmentQR(){
     let invalidQRCode = false;

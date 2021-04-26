@@ -11,24 +11,19 @@
 
       <h5 theme-text-color *ngIf= "!appointment[0].isFacilityAlone">Visitor's Details</h5>
       <ion-card no-margin mode="ios" style="width:100%;margin-top:14px !important;border: 1px solid #dedede;" *ngIf= "!appointment[0].isFacilityAlone">
-        <ion-item *ngFor="let visitors of appointment" style="
-        margin-left: 0px;--padding-start: 0px;
-        padding: 0px;">
-            <ion-avatar slot="start" style="
-            margin: 3px;width: 62px;
-height: 62px;
-            padding: 3px;" (click)="openVisitorDetails(visitors)">
+        <ion-item lines="none" *ngFor="let visitors of appointment" style="margin-left: 0px;--padding-start: 0px;padding: 0px;">
+            <ion-avatar slot="start" style="margin: 3px;width: 62px;height: 62px;padding: 3px;">
                 <img class="animated fadeInDown delay-1s" style="    background-color: darkgrey;
                 padding: 2px;" onError="this.src='../../assets/images/user.png';" [src]="data.logo+visitors.VisitorBookingSeqId + imageURLType">
             </ion-avatar>
             <div>
-              <ion-label (click)="openVisitorDetails(visitors)">{{visitors.VISITOR_NAME}}</ion-label>
-              <ion-label (click)="openVisitorDetails(visitors)">{{visitors.EMAIL}}</ion-label>
+              <ion-label>{{visitors.VISITOR_NAME}}</ion-label>
+              <ion-label>{{visitors.EMAIL}}</ion-label>
             </div>
             <!-- <p (click)="openVisitorDetails(visitors)">{{visitors.VISITOR_COMPANY}}</p> -->
             <!-- <img slot="end" style="width: 50px;height: 50px;" [src]="getQREncryptedValue(visitors)" (click) = "shareQR(visitors)"> -->
             <div slot="end" style="margin: 0px;">
-              <ion-icon color="secondary" class="iconiconClass" name="share-outline" (click) = "shareQR(visitors)" ></ion-icon>
+              <!-- <ion-icon color="secondary" class="iconiconClass" name="share-outline" (click) = "shareQR(visitors)" ></ion-icon> -->
               <ion-icon color="success" class="iconiconClass" name="thumbs-up-outline"
               (click)="showChangeAppointmentStatusAlert('Approved', '', visitors.VisitorBookingSeqId)"></ion-icon>
               <ion-icon color="danger" class="iconiconClass" name="thumbs-down-outline" (click)="showChangeAppointmentStatusAlert('Canceled', '', visitors.VisitorBookingSeqId)"></ion-icon>
@@ -317,7 +312,6 @@ height: 62px;
     </ion-card>
 
     <ion-card no-margin mode="ios" style="margin-top: 15px !important;
-    margin-bottom: 15px !important;
     padding: 10px;
     padding-left: 0px;" (click)="openCustomDialog('question')">
       <ion-item lines="none">
@@ -328,11 +322,20 @@ height: 62px;
     </ion-card>
 
 
-    <ion-card no-margin mode="ios" style="padding: 10px;
+    <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
     padding-left: 0px;" (click)="openCustomDialog('doc')">
       <ion-item lines="none">
         <ion-icon color="primary" slot="start" name="document-attach-outline"></ion-icon>
         <ion-label>Verification Documents</ion-label>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+    </ion-card>
+
+    <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+    padding-left: 0px;" (click)="openCustomDialog('declaration')">
+      <ion-item lines="none">
+        <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+        <ion-label>Item Checklist</ion-label>
         <ion-icon name="chevron-forward-outline"></ion-icon>
       </ion-item>
     </ion-card>
@@ -367,7 +370,7 @@ height: 62px;
       <ion-row *ngIf="autoApproval == '1' && showOption && (!facilityBooking || facilityBooking.length == 0)" style="margin: 20px;padding: 0px;">
         <ion-col style="margin: 0px;padding: 0px;">
             <ion-button fill="outline" color="danger" style="margin: 0 auto;
-            display: block;font-size: 12px;max-width: 80px;text-transform: capitalize;" (click)="showChangeAppointmentStatusAlert('Canceled', appointment[0].appointment_group_id, '')">Cancel<ion-icon style="    margin-left: 5px;" name="close"></ion-icon></ion-button>
+            display: block;font-size: 12px;max-width: 80px;text-transform: capitalize;" (click)="showChangeAppointmentStatusAlert('Canceled', appointment[0].appointment_group_id, '')">Cancel<ion-icon style="    margin-left: 5px;" name="close-circle-outline"></ion-icon></ion-button>
           </ion-col>
       <ion-col style="margin: 0px;padding: 0px;">
         <ion-button fill="outline" color="secondary" style="margin: 0 auto;
