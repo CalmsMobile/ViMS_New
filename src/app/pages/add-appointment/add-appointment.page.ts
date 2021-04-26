@@ -312,6 +312,10 @@ export class AddAppointmentPage implements OnInit {
   });
   }
 
+  slidesOptions = {
+    slidesPerView: 1.3
+  }
+
   ionViewWillLeave(){
 
     if(this.VM.visitors && this.VM.visitors.length > 0 && !this.edit){
