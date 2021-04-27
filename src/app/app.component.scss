@@ -1,3 +1,34 @@
 .custom-menu-item.item {
   pointer-events: auto !important;
 }
+h3 {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: bold;
+}
+h5 {
+  padding: 3px 0;
+  color: #ffffff;
+}
+
+.myColor {
+  --background: #eb445a;
+  text-align: right;
+  justify-content: right;
+  padding-right: 5px;
+  align-items: right;
+  color: white;
+  ion-toolbar {
+    ion-title {
+      text-align: right !important;
+    }
+  }
+}
+
+ion-content {
+  ion-menu-toggle {
+    ion-item {
+      font-size: 15px !important;
+    }
+  }
+}
