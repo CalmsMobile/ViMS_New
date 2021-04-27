@@ -36,6 +36,10 @@ export class UpcomingAppointmentPagePage implements OnInit {
       if (data1.action === "NotificationReceived") {
         console.log("Notification Received: " + data1.title);
         this.showNotificationCount();
+      } else if (data1.action === 'refreshApproveList') {
+        this.OffSet = 0;
+        this.appointments = [];
+        this.getAppointmentHistory(null);
       }
     });
 
@@ -171,7 +175,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
 			"Rows":"100"
 		};
 			// this.VM.host_search_id = "adam";
-			this.apiProvider.syncAppointment(params, true,true).then(
+			this.apiProvider.syncAppointment(params, true, false).then(
 				(val) => {
           this.loadingFinished = true;
 					var aList = JSON.parse(val.toString());

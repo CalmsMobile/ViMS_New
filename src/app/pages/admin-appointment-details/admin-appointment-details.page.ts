@@ -776,12 +776,14 @@ export class AdminAppointmentDetailsPage implements OnInit {
 
     this.apiProvider.AppointmentApprovalByVisitor(params).then(
       (val) => {
+
+        // this.navCtrl.pop();
+        this.navCtrl.navigateRoot('home-view');
         this.events.publishDataCompany({
           action: 'refreshApproveList',
           title: 'refreshApproveList',
           message: 'refreshApproveList'
         })
-        this.navCtrl.pop();
       },
       async (err) => {
         if(err && err.message == "No Internet"){

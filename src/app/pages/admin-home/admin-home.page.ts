@@ -43,11 +43,11 @@ export class AdminHomePage implements OnInit {
     });
     // this.menuCtrl.enable(false, 'myLeftMenu');
     eventService.observeDataCompany().subscribe(async (data: any) => {
-      if (data.action === 'refreshApproveList') {
-        this.OffSet = 0;
-        this.appointments = [];
-        this.getAppointmentHistory(null);
-      }
+      // if (data.action === 'refreshApproveList') {
+      //   this.OffSet = 0;
+      //   this.appointments = [];
+      //   this.getAppointmentHistory(null);
+      // }
     });
   }
 
@@ -314,6 +314,12 @@ export class AdminHomePage implements OnInit {
         this.cancelledList = [];
         this.OffSet = 0;
         this.getAppointmentHistory(null);
+        this.navCtrl.navigateRoot('home-view');
+        this.eventService.publishDataCompany({
+          action: 'refreshApproveList',
+          title: 'refreshApproveList',
+          message: 'refreshApproveList'
+        });
       },
       async (err) => {
         if(err && err.message == "No Internet"){
