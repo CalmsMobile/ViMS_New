@@ -16,9 +16,9 @@
     padding: 0px;
     border-bottom: 0px !important;
   }
-  ion-label {
-    margin: 0px;
-  }
+  // ion-label {
+  //   margin: 0px;
+  // }
 
   button {
     ion-badge {
@@ -64,6 +64,8 @@ ion-icon {
   background-size: contain;
   background-size: 18px;
   padding: 5px;
+  font-size: 18px;
+  color: #eb445a;
   &[ng-reflect-name="customicon"] {
     background-image: url("../../../assets/images/x-icon/admin.png");
     &[ng-reflect-is-active="true"] {
@@ -77,4 +79,52 @@ ion-toolbar {
   ion-title {
     text-align: left;
   }
+}
+
+.item-native {
+  padding: 0px !important;
+}
+
+#outer-circle {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid red;
+  height: 40px;
+  width: 40px;
+  margin-bottom: 3px;
+}
+#inner-circle {
+  position: absolute;
+  background: #eb445a;
+  border-radius: 50%;
+  right: 5px;
+  left: 5px;
+  top: 5px;
+  bottom: 5px;
+  padding-top: 5px;
+  text-align: center;
+  color: #ffffff;
+}
+
+#outer-circle1 {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid #17be17;
+  height: 40px;
+  width: 40px;
+  margin-bottom: 3px;
+}
+#inner-circle1 {
+  position: absolute;
+  background: #17be17;
+  border-radius: 50%;
+  right: 5px;
+  left: 5px;
+  top: 5px;
+  bottom: 5px;
+  padding-top: 5px;
+  text-align: center;
+  color: #ffffff;
 }
