@@ -53,13 +53,14 @@ import { IonicGestureConfig } from './services/util/IonicGestureConfig';
 import { QuestionDocPopupComponent } from './components/question-doc-popup/question-doc-popup.component';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { PreviewAnyFile } from '@ionic-native/preview-any-file/ngx';
+import { HostAccessComponent } from './components/host-access/host-access.component';
 
 @NgModule({
-  declarations: [AppComponent, AddAppointmentAlertPopupComponent,
+  declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent,
     CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent],
   entryComponents: [],
-  exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent, QuestionDocPopupComponent,
+  exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent, QuestionDocPopupComponent,HostAccessComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [ BrowserModule,

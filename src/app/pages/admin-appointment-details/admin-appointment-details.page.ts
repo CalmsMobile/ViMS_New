@@ -830,7 +830,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     if (action === 'doc') {
       api = '/api/Vims/GetVisitorDocsBySeqId';
     } else if (action === 'declaration'){
-      api = '/vims/GetVisitorItemChecklistBySeqId';
+      api = '/api/vims/GetVisitorItemChecklistBySeqId';
     }
 
     var params = {
@@ -838,7 +838,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
       "STAFF_IC": this.appointment[0].STAFF_IC
   };
   // this.VM.host_search_id = "adam";
-  this.apiProvider.requestApi(params, api).then(
+  this.apiProvider.requestApi(params, api, true).then(
     async (val) => {
       var result = JSON.parse(val.toString());
       if (result.Table && result.Table.length > 0) {
