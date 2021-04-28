@@ -1171,7 +1171,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 [header-background-image] {
-  height: 200px;
+  height: 170px;
   background-size: cover;
   background-position: center;
   // background-color: transparent !important;
@@ -1185,6 +1185,12 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   }
   p {
     color: #ffffff;
+  }
+}
+
+ion-toolbar {
+  ion-title {
+    text-align: left !important;
   }
 }
 
