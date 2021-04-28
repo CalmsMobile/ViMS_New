@@ -3073,9 +3073,11 @@ export class RestProvider {
     });
   }
 
-  async requestApi(data, API) {
+  requestApi(data, API, loading) {
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.presentLoading();
+    if (loading) {
+      this.presentLoading();
+    }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + API;
     console.log("API: "+ url);
     var params = JSON.stringify(data);

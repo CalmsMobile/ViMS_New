@@ -3,7 +3,8 @@ import { NavigationExtras, Router } from '@angular/router';
 import { Firebase } from '@ionic-native/firebase/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { NavController, Platform, MenuController, IonTabs } from '@ionic/angular';
+import { NavController, Platform, MenuController, IonTabs, ModalController } from '@ionic/angular';
+import { HostAccessComponent } from 'src/app/components/host-access/host-access.component';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
@@ -48,11 +49,14 @@ export class HomeViewPage implements OnInit {
   showFab = true;
   QRObj : any = {};
   isNotificationClicked = false;
+  isHostAccessEnable = false;
   showQP = false;
+  HOST_ACCESS_INTERVAL: any;
   constructor(public navCtrl: NavController,
     private localNotifications: LocalNotifications,
     private firebase: Firebase,
     private platform : Platform,
+    private modalCtrl: ModalController,
     private _zone : NgZone,
     public menu: MenuController,
     private router: Router,
@@ -184,6 +188,7 @@ export class HomeViewPage implements OnInit {
             break;
       }
       // this.myTabs.select(this.tab1Root);
+      this.GetHostAccessSettings();
     }
   }
 
@@ -388,6 +393,72 @@ subscribeToPushNotifications() {
       }
     });
   }
+
+
+  async openHostAccess() {
+    console.log("Host access clicked");
+    const presentModel = await this.modalCtrl.create({
+      component: HostAccessComponent,
+      componentProps: {
+        data: {
+        }
+      },
+      showBackdrop: true,
+      mode: 'ios',
+      cssClass: 'hostAccessModal'
+    });
+    presentModel.onWillDismiss().then((data) => {
+    });
+    return await presentModel.present();
+  }
+
+  GetHostAccessSettings(){
+    var params  = {
+      "MAppId": this.appType,
+      "HostIc":""
+    }
+
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    console.log("calling GetHostAppSettings Home Page: "+ hostData);
+    if(!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID){
+      return;
+    }
+    params.HostIc = JSON.parse(hostData).HOSTIC;
+
+    this.apiProvider.requestApi(params, '/api/vims/GetHostAccessSettings', false).then(
+      (val) => {
+        try{
+          var result = JSON.parse(JSON.stringify(val));
+          if(result){
+           const hostAccessSettings = JSON.parse(result).Table1[0];
+           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_SETTINGS,JSON.stringify(hostAccessSettings));
+           try{
+              this.isHostAccessEnable = hostAccessSettings.IsDynamicQRCodeEnabled;
+              if (this.isHostAccessEnable && hostAccessSettings.QRCodeValidity && hostAccessSettings.QRCodeValidity > 0) {
+                this.refreshHostAccess(hostAccessSettings.QRCodeValidity);
+              }
+            }catch(e){
+            }
+          }
+        }catch(e){
+        }
+
+      },
+      (err) => {
+      }
+    );
+}
+
+refreshHostAccess(QRCodeValidity) {
+  if (this.HOST_ACCESS_INTERVAL) {
+    clearInterval(this.HOST_ACCESS_INTERVAL);
+  }
+  this.HOST_ACCESS_INTERVAL = setTimeout(() => {
+    console.log("refresh host access");
+    this.GetHostAccessSettings();
+  }, QRCodeValidity * 1000);
+
+}
 
   GetHostAppSettings(MAppId){
       var params  = {
