@@ -537,6 +537,7 @@
 		"UPDATE_BRIEF_STATUS": "Please scan or enter your IC to complete the safety brief",
 		"UPDATE_BRIEF_STATUS_GROUP": "Scan or enter your IC to complete.",
 		"VISITOR_ALREADY_SCANNED": "Visitor has already scanned.",
-		"VISITOR_NOT_FOUND": "Visitor not found."
+		"VISITOR_NOT_FOUND": "Visitor not found.",
+    "HOST_ACCESS_TITLE": "Your Access"
 	}
 }

@@ -236,9 +236,8 @@ export class ManageVisitorsPage implements OnInit {
         }
         this.VM.searchContactsArray = [];
         searchContactsArray.forEach(element => {
-          if (element.VisitorCategory && element.VisitorCategory === selectedCat) {
-            this.VM.searchContactsArray.push(element);
-          }
+          element.VisitorCategory = selectedCat;
+          this.VM.searchContactsArray.push(element);
         });
 
         //  for(let contacts in this.contactsArray){
