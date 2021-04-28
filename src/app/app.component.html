@@ -46,7 +46,7 @@
                 <ion-menu-toggle auto-hide="true" no-margin *ngFor="let p of pages" class="custom-menu-item">
                     <ion-item item-title main-menu lines="none" (click)="openPage(p)" class="no-padding"
                         style="pointer-events: auto !important;">
-                        <ion-icon slot="start" [name]="p.icon" color="danger"></ion-icon>
+                        <ion-icon slot="start" [name]="p.icon" color="danger" style="margin-right: 3px;"></ion-icon>
                         <span style="color:#eb445a;">
                             {{p.title}}
                         </span>
@@ -57,7 +57,8 @@
                   <i class="icon {{subMenu.icon}}"></i>
                   </ion-icon> -->
                         <!-- <p item-left class="bullet"></p> -->
-                        <ion-icon slot="start" [name]="subMenu.icon" style="padding-left: 0;margin-left: 0;"></ion-icon>
+                        <ion-icon slot="start" [name]="subMenu.icon"
+                            style="padding-left: 0;margin-left: 0;margin-right: 3px;"></ion-icon>
                         <span style="margin-left: 0px;">{{subMenu.title}}</span>
                     </ion-item>
                 </ion-menu-toggle>

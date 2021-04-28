@@ -15,7 +15,7 @@ import { EventsService } from 'src/app/services/EventsService';
 export class QuickPassDashBoardPagePage implements OnInit {
 
   title = "QuickPass";
-  title1 = "QuickPass Dashboard";
+  sub_title = "QuickPass Dashboard";
   TotalGuestInside = 0;
   TotalUnusedExpiredPass = 0;
   TotalUsedPass = 0;
