@@ -14,9 +14,9 @@ export class MenuService implements IService {
             { "title": "Home", "icon": "home-outline", "component": "home-view" },
             {
                 "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
-                    { "title": "Create Appointment", "icon": "siva-icon-calendar-plus-o", "component": "add-appointment" },
-                    { "title": "Appointment History", "icon": "siva-icon-calendar-3", "component": "appointment-history" },
-                    { "title": "My Visitors", "icon": "siva-icon-group", "component": "my-visitors" }
+                    { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
+                    { "title": "Appointment History", "icon": "list-circle-outline", "component": "appointment-history" },
+                    { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
                 ]
             },
             { "title": "Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" },
@@ -93,9 +93,9 @@ export class MenuService implements IService {
                             { "title": "Home", "icon": "home-outline", "component": "home-view" },
                             {
                                 "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
-                                    { "title": "Create Appointment", "icon": "siva-icon-calendar-plus-o", "component": "add-appointment" },
-                                    { "title": "Appointment History", "icon": "siva-icon-calendar-3", "component": "appointment-history" },
-                                    { "title": "My Visitors", "icon": "siva-icon-group", "component": "my-visitors" }
+                                    { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
+                                    { "title": "Appointment History", "icon": "list-circle-outline", "component": "appointment-history" },
+                                    { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
                                 ]
                             },
                             {

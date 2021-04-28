@@ -28,7 +28,8 @@ h5 {
 ion-content {
   ion-menu-toggle {
     ion-item {
-      font-size: 15px !important;
+      font-size: 13px !important;
+      --padding-start: 5px !important;
     }
   }
 }

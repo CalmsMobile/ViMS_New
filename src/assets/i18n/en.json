@@ -374,6 +374,7 @@
 		"COUNTRY"      : "Where are you from?",
 		"CITY"       : "Your home town",
 		"LAB_USER_NAME"   : "User Name",
+		"LAB_MY_NAME" : "My Name",
 		"LAB_PASSWORD"   : "Password",
 		"LAB_E_MAIL"   : "E-Mail",
 		"LAB_COUNTRY"   : "Country",
@@ -383,6 +384,7 @@
 		"EMAIL_ALERT": "E-Mail Alert",
 		"ID" : "Enter Staff ID",
 		"LAB_USER_IC"   : "IC / Passport Number",
+		"LAB_YOUR_ID": "Your ID",
 		"USER_IC"      : "Enter IC/Passport number",
 		"SUCCESS":{
 			"REGISTER_TITLE": "Your profile has been updated successfully!",
@@ -395,6 +397,7 @@
 			"CHANGE_PASS_ERROR": "Oops.. Change password request failed!",
 
 			"USERNAME_REQUIRED":" * User name required",
+			"MYNAME_REQUIRED":" * My Name required",
 			"USERNAME_MIN4":" * Minimum 4 characters",
 			"USERNAME_MAX20":" * Maximum 20 characters",
 			"USERNAME_ALPHA":" * Just use alphabet and number character",
