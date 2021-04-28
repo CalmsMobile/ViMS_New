@@ -548,6 +548,18 @@ ion-icon {
   padding: 0 !important;
 }
 
+[primary] {
+  background: #eb445a;
+}
+
+[full-width] {
+  width: 100%;
+}
+
+[slide-right-width] {
+  width: 25% !important;
+}
+
 .visitorPopupModal {
   @media (min-width: 300px) and (min-height: 80%) {
     ion-backdrop {

@@ -33,103 +33,93 @@
           <i class="icon siva-icon-calendar-3" style="padding-right:10px;"></i>Today Appointments
         </h5>
         <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;" *ngIf="(todayAppointments.length == 0)">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
-        <ion-list class="no-margin" style="padding: 0px;">
-          <ion-card style="margin: 3px; margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;padding: 0px;"
+        <ion-list no-padding no-margin>
+          <ion-card class="card_appointment"
             no-padding no-border>
-            <div class="row no-padding" style="padding: 0px;">
-              <ion-row lines="none" style="padding: 0px;">
-                <!-- Below codes are sliding purpose code-->
-                <!-- <ion-item-sliding style="padding: 0px;">
-                  <ion-item-options side="start">
-                    <ion-item-option color="danger" expandable>
-                      <ion-icon name="trash-outline" color="light"></ion-icon>
-                    </ion-item-option>
-                  </ion-item-options>
-                  <ion-item style="padding: 0px;"> -->
-                <!-- Code here-->
-                <ion-col size="4" class="col apt-left"
-                  style="max-width:100px;padding:0px;text-align: center;">
-                  <div style="width: -webkit-fill-available;padding-top: 5px;">
-                    <h2 class="text-white" style="margin: 0px;font-size: 18px;">26 MON</h2>
-                  </div>
-                  <div class="row text-white no-padding" style="display:flex; padding: 5px;justify-content: center;">
-                    <h3 class="text-white" style="font-size: 15px;padding: 0px;margin-bottom: 0px;
-                      margin-top: 3px;">APR - 2021</h3>
-                  </div>
-                  <div class="row" style="background:rgba(0,0,0,0.1);">
-                    <div class="col">
-                      <h3 class="text-white" style="font-size: 15px;padding: 6px;margin: 0px;margin-top: 5px;">4:15 PM
-                      </h3>
+            <ion-item-sliding #slideDOM >
+              <ion-item mode="ios" no-padding class="apt-item">
+                <ion-row lines="none" no-padding full-width>
+                  <ion-col size="4" class="col apt-left">
+                    <div class="div-date">
+                      <h2 class="text-white" no-margin style="font-size: 18px;">26 MON</h2>
                     </div>
-                  </div>
-                </ion-col>
-                <ion-col size="6" style="    padding-bottom: 0px;">
-                  <div class="" style="display: flex;padding-bottom: 3px;">
-                    <ion-icon slot="start" color="danger" name="person-outline" style="font-size: 16px;padding: 0px;padding-right: 3px;"></ion-icon>
-                    <p style="margin: 0px;font-size: 14px;font-weight: 600;margin-top: 3px;">Karthi</p>
-                  </div>
-
-                  <div class="" style="display: flex;padding-bottom: 3px;">
-                    <ion-icon slot="start" color="danger" name="reader-outline" style="font-size: 16px;padding: 0px;padding-right: 3px;"></ion-icon>
-                    <p style="margin: 0px;font-size: 12px;margin-top: 1px;margin-bottom: 1px;">Purpose</p>
-                  </div>
-
-                  <div class="" style="display: flex;padding-bottom: 3px;">
-                    <ion-icon slot="start" color="danger" name="call-outline" style="font-size: 16px;padding: 0px;padding-right: 3px;"></ion-icon>
-                    <p style="margin: 0px;font-size: 12px;margin-top: 1px;margin-bottom: 1px;">9641365265</p>
-                  </div>
-
-                  <div class="" style="display: flex;">
-                    <ion-icon slot="start" color="danger" name="mail-outline" style="font-size: 16px;padding: 0px;padding-right: 3px;"></ion-icon>
-                    <p style="margin-top: 1px;margin-bottom: 1px;font-size: 12px;">test@gmail.com</p>
-                  </div>
-                </ion-col>
-
-                <ion-col size="2" style="    padding-bottom: 0px;">
-
-                  <div class="">
-                    <!-- <ion-badge color="danger">3</ion-badge> -->
-                    <div id="outer-circle">
-                      <div id="inner-circle">
-                        <span id="inside-content">2</span>
+                    <div class="row text-white div-left-middle">
+                      <h3 class="text-white div-left-middle-text">APR - 2021</h3>
+                    </div>
+                    <div class="row" style="background:rgba(0,0,0,0.1);">
+                      <div class="col">
+                        <h3 class="text-white div-left-bottom-text">4:15 PM
+                        </h3>
                       </div>
                     </div>
-                  </div>
-                  <div class="">
-                    <div id="outer-circle">
-                      <div id="inner-circle">
-                        <span id="inside-content">
-                          <ion-icon slot="icon-only" name="calendar-outline"
-                            style="font-size: 13px;    padding: 1px;;color: #FFFFFF;padding-top: 0px;"></ion-icon>
-                        </span>
+                  </ion-col>
+                  <ion-col size="6" style="padding-bottom: 0px;">
+                    <div class="div-apt-center">
+                      <ion-icon slot="start" color="danger" name="person-outline" class="apt-text-icons"></ion-icon>
+                      <p class="apt-center-title">Karthi</p>
+                    </div>
+
+                    <div class="div-apt-center">
+                      <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
+                      <p class="apt-center-subtitle">Purpose</p>
+                    </div>
+
+                    <div class="div-apt-center">
+                      <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
+                      <p class="apt-center-subtitle">9641365265</p>
+                    </div>
+
+                    <div class="div-apt-center">
+                      <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
+                      <p class="apt-center-subtitle">test@gmail.com</p>
+                    </div>
+                  </ion-col>
+
+                  <ion-col size="2" class="colIcons">
+
+                    <div>
+                      <!-- <ion-badge color="danger">3</ion-badge> -->
+                      <div id="outer-circle">
+                        <div id="inner-circle">
+                          <span id="inside-content">2</span>
+                        </div>
                       </div>
                     </div>
-                    <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
-                  </div>
-                  <div class="">
-                    <div id="outer-circle1">
-                      <div id="inner-circle1">
-                        <span id="inside-content">
-                          A
-                        </span>
+                    <div>
+                      <div id="outer-circle">
+                        <div id="inner-circle">
+                          <span id="inside-content">
+                            <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
+                          </span>
+                        </div>
+                      </div>
+                      <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
+                    </div>
+                    <div class="">
+                      <div id="outer-circle1">
+                        <div id="inner-circle1">
+                          <span id="inside-content">
+                            A
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </ion-col>
-                <!-- </ion-item>
-                  <ion-item-options side="end">
-                    <ion-item-option color="tertiary" expandable>
-                      Archive
-                    </ion-item-option>
-                  </ion-item-options>
-                </ion-item-sliding> -->
-
-
-
-              </ion-row>
-
-              <!--  -->
-            </div>
+                  </ion-col>
+                </ion-row>
+              </ion-item>
+              <ion-item-options side="end" primary slide-right-width>
+                <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="light"
+                fill="clear" no-border (click)="editVisitors(slideDOM)">
+                  <ion-icon color="light" class="siva-icon-trash-empty slideIcons"></ion-icon>
+                </ion-button>
+            </ion-item-options>
+              <ion-item-options side="start" primary slide-right-width>
+                <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="light"
+                fill="clear" shape="round" no-border (click)="editVisitors(slideDOM, 'edit', item)">
+                    <ion-icon color="light" class="siva-icon-pencil-2 slideIcons"></ion-icon>
+                </ion-button>
+              </ion-item-options>
+            </ion-item-sliding>
           </ion-card>
         </ion-list>
 
