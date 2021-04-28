@@ -19,22 +19,22 @@
   border-radius: 5px;
 }
 
-.myText {
-  font-size: 16px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  // margin: 0px;
-  // padding-left: 5px;
-  padding-bottom: 0px;
-  padding-top: 0px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-height: 16px;
-  -webkit-box-orient: vertical;
-  max-height: 38px;
-  // margin: 10px;
-  color: #8a9095;
-}
+// .myText {
+//   font-size: 16px;
+//   text-overflow: ellipsis;
+//   overflow: hidden;
+//   // margin: 0px;
+//   // padding-left: 5px;
+//   padding-bottom: 0px;
+//   padding-top: 0px;
+//   display: -webkit-box;
+//   -webkit-line-clamp: 2;
+//   line-height: 16px;
+//   -webkit-box-orient: vertical;
+//   max-height: 38px;
+//   // margin: 10px;
+//   color: #8a9095;
+// }
 
 ion-card img {
   width: 40px;
@@ -42,21 +42,44 @@ ion-card img {
   margin-right: 5px !important;
 }
 
+ion-item {
+  .read_message {
+    opacity: 0.5;
+    font-weight: 300;
+    .myText {
+      font-weight: 300;
+    }
+    p {
+      font-weight: 300;
+    }
+  }
+  .unread_message {
+    font-weight: 600;
+    .unReadText {
+      font-weight: 600;
+    }
+    p {
+      font-weight: 600;
+    }
+  }
+}
+
 .readCard {
-  background: #ffffff;
+  //background: #ffffff;
   // margin: 5px;
   padding: 15px;
   margin-left: 10px;
   // margin-right: 10px;
   // margin-bottom: 10px;
-  border: 0.3px solid lightgrey;
+  border-bottom: 0.3px solid lightgrey;
   border-bottom-width: 0px;
   border-radius: 0px;
   width: auto;
   border-bottom-left-radius: 0px;
+  font-weight: 600;
 }
 .unReadCard {
-  background: #f4f4f4;
+  //background: #f4f4f4;
   /* margin: 5px; */
   padding: 15px;
   margin-left: 10px;
@@ -67,6 +90,7 @@ ion-card img {
   /* border-radius: 5px; */
   width: auto;
   border-bottom-left-radius: 0px;
+  font-weight: 300;
 }
 .myItem {
   margin: 0px;
@@ -104,4 +128,11 @@ ion-card img {
 
 ion-content.has-refresher > .scroll-content {
   border-top: none;
+}
+
+.read-notify {
+  background-color: #ff496138;
+  ion-icon {
+    color: #ed576b;
+  }
 }

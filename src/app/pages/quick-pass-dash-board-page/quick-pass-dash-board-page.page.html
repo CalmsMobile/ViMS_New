@@ -34,7 +34,7 @@
 
 <ion-grid style="height: 100%; width: 100%; display: flex; justify-content: center;">
   <div>
-    <h1 class="myHomeTitle">{{title1}}</h1>
+    <h1 class="myHomeTitle">{{sub_title}}</h1>
     <ion-row class="myRow">
       <ion-col size="6" class="myCol">
           <ion-card class="card1" (click)= "statesClicked('TotalGuestInside')">
@@ -90,7 +90,7 @@
 
           <ion-col size="6" class="myCol">
             <ion-card class="card1" (click)= "statesClicked('TotalFinishedOverstayPass')">
-              <h3 text-wrap class="itemTextOverstay"><b>Finished OverStay Pass</b></h3>
+              <h3 text-wrap class="itemTextOverstay"><b>OverStayed Exited Pass</b></h3>
               <ion-item-divider class="myDivider"></ion-item-divider>
               <ion-item lines="none">
                 <img style="width: 30px;margin:0 auto" slot="end" src="../../assets/images/overstay1.png"/>
@@ -102,7 +102,7 @@
           </ion-col>
           <ion-col size="6" class="myCol">
               <ion-card class="card1" (click)= "statesClicked('TotalCurrentOverStayPass')">
-                <h3 text-wrap class="itemCheckOut"><b>Ongoing OverStay Pass</b></h3>
+                <h3 text-wrap class="itemCheckOut"><b>OverStayed Pass Inside</b></h3>
                 <ion-item-divider class="myDivider"></ion-item-divider>
                 <ion-item lines="none">
                   <!-- <img style="width: 30px;margin:0 auto" slot="end" src="../../assets/images/unused.png"/> -->
