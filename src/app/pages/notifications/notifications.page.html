@@ -15,61 +15,39 @@
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
-  <!-- <ion-toolbar >
-
-    <ion-searchbar [(ngModel)]="queryText" (ionInput)="filterTechnologies($event.target.value)" placeholder="Search">
-
-    </ion-searchbar>
-  </ion-toolbar> -->
 </ion-header>
 
 <ion-content>
 
   <ion-searchbar mode="ios" *ngIf="(selectedTap == 'general')" (ionChange)="filterTechnologies($event.target.value)"
     color="light" placeholder="  Search" animated>
-    <!-- (ionChange)="updateSchedule()" -->
   </ion-searchbar>
 
 
   <ion-searchbar mode="ios" *ngIf="(selectedTap == 'in')" (ionChange)="filterTechnologies($event.target.value)"
     color="light" placeholder="  Search" animated>
-    <!-- (ionChange)="updateSchedule()" -->
   </ion-searchbar>
 
-  <!-- <div style="margin: 0 auto;display: block;height: 100%;"> -->
-  <!-- <h5 style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="true">{{'NOTIFICATION.NO_NOTIFICATION' | translate}}</h5> -->
-  <!-- <ion-list *ngIf="false">
-        <ion-item>
-        </ion-item>
-      </ion-list> -->
   <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
   <!-- <ion-card no-margin mode="ios" style="width:100%;margin-top:14px !important; ">  -->
   <ion-list *ngIf="(selectedTap == 'general')">
-    <ion-card
-      [ngClass]="{'readCard': (notification.IsRead == true || notification.IsRead == 'true'), 'unReadCard':(notification.IsRead == false || notification.IsRead == 'false')}"
-      *ngFor="let notification of VM.searchGeneralNotificationList">
-      <ion-item-sliding #slideDOM class="mySlidingItem" (ionDrag)="ondrag($event, slideDOM, notification)">
-
+    <ion-card style="margin-top: 0px;">
+      <ion-item-sliding #slideDOM *ngFor="let notification of VM.searchGeneralNotificationList" (ionDrag)="ondrag($event, slideDOM, notification)">
         <!-- <ion-item-divider style="padding:0px"> -->
-        <ion-item lines="none"
-          [ngClass]="{'myItemRead': (notification.IsRead === true || notification.IsRead === 'true'), 'myItem':(notification.IsRead === false || notification.IsRead === 'false')}"
+        <ion-item lines="full"
+        [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
-          <!-- <ion-item-divider> -->
-          <!-- <ion-avatar slot="start"> -->
-          <img slot="start" class="animated fadeInDown delay-1s" onError="this.src='../../assets/images/user.png';"
-            [src]="(notification.IsRead == true || notification.IsRead == 'true') ? '../../assets/images/read.png' : '../../assets/images/unread.png'">
-          <!-- </ion-avatar> -->
-          <div item-text-wrap [innerHTML]="notification.HtmlContent.trim()" text-wrap class="myText"></div>
-          <div slot="end" style="margin: 0px;">
-            <p style="
-                    font-size: 14px;"><b>{{notification.CreatedOn | date : 'dd'}} {{notification.CreatedOn | date :
-                'MMM'}}</b></p>
-            <p style="
-                    font-size: 12px;    margin: 0 auto;">{{notification.CreatedOn| date : 'hh:mm a'}}</p>
-          </div>
+          <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
+
+          <ion-label text-wrap [innerHTML]="notification.HtmlContent.trim()">
+
+
+            <p class="text-muted">{{(notification.CreatedOn| date : 'MMM dd') + ' at ' +
+              (notification.CreatedOn| date : 'hh:mm a')}} April 28 at 3:23 PM</p>
+          </ion-label>
 
         </ion-item>
         <ion-item-options no-border no-lines side="end">
@@ -83,96 +61,23 @@
 
   <!-- Start Static Code-->
 
-  <ion-list>
-    <ion-card>
-
-      <!-- Start Read Notification-->
-      <ion-item-sliding #slideDOM class="mySlidingItem" (ionDrag)="ondrag($event, slideDOM, notification)">
-
-
-
-        <ion-item lines="full" class="read-notify">
-          <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
-
-          <ion-label text-wrap>
-            Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
-
-            <p class="text-muted">April 28 at 3:23 PM</p>
-          </ion-label>
-
-        </ion-item>
-
-        <ion-item lines="full" class="unread-notify">
-          <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
-
-          <ion-label text-wrap>
-            Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
-
-            <p class="text-muted">April 28 at 3:23 PM</p>
-          </ion-label>
-
-        </ion-item>
-
-        <!-- <ion-item lines="full" class="read_message" style="opacity: 0.5;">
-          <img slot="start" class="animated fadeInDown delay-1s" onError="this.src='../../assets/images/user.png';"
-            src="../../assets/images/read.png">
-          <div item-text-wrap text-wrap class="myText">Test Data</div>
-          <div slot="end" style="margin: 0px;">
-            <p style="font-size: 14px;">28 APR</p>
-            <p style="font-size: 12px;margin: 0 auto;">4:15 PM</p>
-          </div>
-
-        </ion-item>
-        <ion-item-options side="end">
-          
-        </ion-item-options>
-      </ion-item-sliding> -->
-        <!-- End Read Notification-->
-
-        <!-- Start Un-Read Notification-->
-        <!-- <ion-item-sliding #slideDOM class="mySlidingItem" (ionDrag)="ondrag($event, slideDOM, notification)">
-
-        <ion-item lines="full" class="unread_message">
-          <img slot="start" class="animated fadeInDown delay-1s" onError="this.src='../../assets/images/user.png';"
-            src="../../assets/images/read.png">
-          <div item-text-wrap text-wrap class="unReadText">Test Data</div>
-          <div slot="end" style="margin: 0px;">
-            <p style="font-size: 14px;">28 APR</p>
-            <p style="font-size: 12px;    margin: 0 auto;">4:15 PM</p>
-          </div>
-
-        </ion-item>
-        <ion-item-options side="end">
-          
-        </ion-item-options> -->
-      </ion-item-sliding>
-      <!-- End Read Notification-->
-
-    </ion-card>
-  </ion-list>
 
   <!-- End Static Code-->
 
   <ion-list *ngIf="(selectedTap == 'in')">
-    <ion-card
-      [ngClass]="{'readCard': (notification.IsRead == true || notification.IsRead == 'true'), 'unReadCard':(notification.IsRead == false || notification.IsRead == 'false')}"
-      *ngFor="let notification of VM.searchInNotificationList">
-      <ion-item-sliding #slideDOM class="mySlidingItem" (ionDrag)="ondrag($event, slideDOM, notification)">
-
-        <ion-item lines="none"
-          [ngClass]="{'myItemRead': (notification.IsRead === true || notification.IsRead === 'true'), 'myItem':(notification.IsRead === false || notification.IsRead === 'false')}"
+    <ion-card style="margin-top: 0px;">
+      <ion-item-sliding *ngFor="let notification of VM.searchInNotificationList" #slideDOM  (ionDrag)="ondrag($event, slideDOM, notification)">
+        <ion-item lines="full"
+        [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
-          <!-- <ion-item-divider> -->
-          <img slot="start" class="animated fadeInDown delay-1s" onError="this.src='../../assets/images/user.png';"
-            [src]="(notification.IsRead == true || notification.IsRead == 'true') ? '../../assets/images/read.png' : '../../assets/images/unread.png'">
-          <div item-text-wrap [innerHTML]="notification.HtmlContent.trim()" text-wrap class="myText"></div>
-          <div slot="end" style="margin: 0px;">
-            <p style="
-                  font-size: 14px;"><b>{{notification.CreatedOn | date : 'dd'}} {{notification.CreatedOn | date :
-                'MMM'}}</b></p>
-            <p style="
-                  font-size: 12px;    margin: 0 auto;">{{notification.CreatedOn| date : 'hh:mm a'}}</p>
-          </div>
+          <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
+
+          <ion-label text-wrap [innerHTML]="notification.HtmlContent.trim()">
+
+
+            <p class="text-muted">{{(notification.CreatedOn| date : 'MMM dd') + ' at ' +
+              (notification.CreatedOn| date : 'hh:mm a')}} April 28 at 3:23 PM</p>
+          </ion-label>
 
         </ion-item>
         <ion-item-options side="end">
