@@ -435,7 +435,10 @@ subscribeToPushNotifications() {
            try{
               this.isHostAccessEnable = hostAccessSettings.IsDynamicQRCodeEnabled;
               if (this.isHostAccessEnable && hostAccessSettings.QRCodeValidity && hostAccessSettings.QRCodeValidity > 0) {
+                clearInterval(this.HOST_ACCESS_INTERVAL);
                 this.refreshHostAccess(hostAccessSettings.QRCodeValidity);
+              } else {
+                clearInterval(this.HOST_ACCESS_INTERVAL);
               }
             }catch(e){
             }
@@ -453,10 +456,17 @@ refreshHostAccess(QRCodeValidity) {
   if (this.HOST_ACCESS_INTERVAL) {
     clearInterval(this.HOST_ACCESS_INTERVAL);
   }
-  this.HOST_ACCESS_INTERVAL = setTimeout(() => {
+  let timeout = QRCodeValidity;
+  localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_TIMEOUT, timeout);
+  this.HOST_ACCESS_INTERVAL = setInterval(() => {
     console.log("refresh host access");
-    this.GetHostAccessSettings();
-  }, QRCodeValidity * 1000);
+    timeout = timeout - 1;
+    localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_TIMEOUT, timeout);
+    if (timeout === 0) {
+      clearInterval(this.HOST_ACCESS_INTERVAL);
+      this.GetHostAccessSettings();
+    }
+  }, 1000);
 
 }
 
