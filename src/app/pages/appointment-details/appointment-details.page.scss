@@ -150,3 +150,21 @@ img {
   padding-right: 10px;
   text-align: center;
 }
+
+.header_text {
+  margin-top: -9px !important;
+  margin-bottom: -9px !important;
+}
+.visitorDesc {
+  font-weight: normal !important;
+    font-size: 14px !important;
+}
+
+ion-grid {
+  ion-icon {
+    color: #eb445a !important;
+  }
+  p {
+    font-size: 14px !important;
+  }
+}

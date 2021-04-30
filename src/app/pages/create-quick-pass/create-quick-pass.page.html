@@ -4,9 +4,9 @@
     <ion-title>&nbsp;&nbsp;&nbsp;{{"CREATE_QUICK_PASS.TITLE" | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" style="--padding-top: 0px;">
 
-<ion-grid style="    margin-top: 10px">
+<ion-grid style="padding-top: 0px;">
   <ion-row align-items-start>
     <form novalidate size="12" size-sm size-md (ngSubmit)="addVisitors()"
     [formGroup]="visitorProfile" class="simple-form">
@@ -14,44 +14,70 @@
 
           <!---Input field username-->
           <ion-item lines="none" no-padding transparent style="--padding-start: 0px;">
-              <ion-label color="danger" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
+              <!-- <ion-label color="danger" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
               <ion-input lines="none" placeholder="{{'ADD_VISITORS.LAB_USER_NAME' | translate}}" required [ngStyle]="{'border': '3px solid #cf3c4f'}" type="text" [(ngModel)]="visitorInfoModal.visitor_name"
               formControlName="username"
-              ></ion-input>
+              ></ion-input> -->
+              <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}} <span style="color: #cf3c4f;">*</span></ion-label>
+              <ion-input  formControlName="username" placeholder="{{'ADD_VISITORS.LAB_USER_NAME' | translate}}" required type="text" [(ngModel)]="visitorInfoModal.visitor_name"></ion-input>
+
           </ion-item>
 
-          <ion-item *ngIf="hostSettings.VisitorExpiryTimeEnabled" [ngStyle]="{'border': '3px solid #cf3c4f'}" style="--padding-start: 0px;" class="box_round_corner" lines="none" no-padding transparent (click)="openCalendar()">
-            <ion-label *ngIf="expiryTime" style="font-size: 16px;color:black" stacked>{{'CREATE_QUICK_PASS.EXPIRY_TIME' | translate}}</ion-label>
-            <ion-label *ngIf="!expiryTime" style="color:black;min-width: auto;border: 0px;border-left: 0px">{{'CREATE_QUICK_PASS.SELECT_EXPIRY_TIME' | translate}}</ion-label>
-            <ion-label  *ngIf="expiryTime" style="color:black;min-width: auto;border: 0px;border-left: 0px">{{expiryTime| date : 'dd MMM yyyy hh:mm a'}}</ion-label>
+          <!-- <ion-item lines="inset" no-padding transparent style="--padding-start: 0px;"> -->
+            <!-- <ion-label color="danger" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
+            <ion-input lines="none" placeholder="{{'ADD_VISITORS.LAB_USER_NAME' | translate}}" required [ngStyle]="{'border': '3px solid #cf3c4f'}" type="text" [(ngModel)]="visitorInfoModal.visitor_name"
+            formControlName="username"
+            ></ion-input> -->
+            <!-- <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}} <span style="color: #cf3c4f;">*</span></ion-label>
+            <ion-input  formControlName="username" placeholder="{{'ADD_VISITORS.LAB_USER_NAME' | translate}}" required type="text" [(ngModel)]="visitorInfoModal.visitor_name"></ion-input> -->
+
+        <!-- </ion-item> -->
+
+          <ion-item *ngIf="hostSettings.VisitorExpiryTimeEnabled" style="--padding-start: 0px;" class="box_round_corner" lines="none" no-padding transparent (click)="openCalendar()">
+            <ion-row >
+              <ion-col size="4" >
+                <ion-label *ngIf="expiryTime" style="font-size: 15px;color:black" text-wrap>{{'CREATE_QUICK_PASS.EXPIRY_TIME' | translate}}</ion-label>
+                <ion-label *ngIf="!expiryTime" style="color:black;min-width: auto;border: 0px;border-left: 0px" text-wrap>{{'CREATE_QUICK_PASS.SELECT_EXPIRY_TIME' | translate}}</ion-label>
+              </ion-col>
+              <ion-col size="8">
+                <ion-label  *ngIf="expiryTime" style="color:black;min-width: auto;border: 0px;border-left: 0px;padding-top: 5px;" text-wrap>{{expiryTime| date : 'dd MMM yyyy hh:mm a'}}</ion-label>
+              </ion-col>
+            </ion-row>
         </ion-item>
 
+        <!-- <ion-item lines="none" no-padding transparent style="--padding-start: 0px;">
+          
+          <ion-label position="stacked">{{'ADD_VISITORS.STEP2.VECHILE_NO' | translate}}<span style="color: #cf3c4f;">*</span></ion-label>
+          <ion-input  formControlName="vechile" placeholder="{{'ADD_VISITORS.STEP2.VECHILE_NO' | translate}}" required type="text" [(ngModel)]="visitorInfoModal.vehicle_no"></ion-input>
+
+      </ion-item> -->
+
           <ion-item lines="none" no-padding transparent style="--padding-start: 0px;" *ngIf= "hostSettings && hostSettings.VehicleNoEnabled && hostSettings.VehicleNoRequired">
-            <ion-label color="danger" position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
+            <ion-label position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
             <ion-input type="text" placeholder="{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}" required [ngStyle]="{'border': hostSettings.VehicleNoRequired ? '3px solid #cf3c4f': '3px solid #eee'}" formControlName="vechile" [(ngModel)]="visitorInfoModal.vehicle_no"
             ></ion-input>
           </ion-item>
           <ion-item lines="none" no-padding transparent style="--padding-start: 0px;" *ngIf= "hostSettings && hostSettings.VehicleNoEnabled && !hostSettings.VehicleNoRequired">
-              <ion-label color="danger" position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
+              <ion-label position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
               <ion-input type="text" placeholder="{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}" formControlName="vechile" [ngStyle]="{'border': hostSettings.VehicleNoRequired ? '3px solid #cf3c4f': '3px solid #eee'}" [(ngModel)]="visitorInfoModal.vehicle_no"
               ></ion-input>
           </ion-item>
 
        <ion-item lines="none" no-padding transparent style="--padding-start: 0px;" *ngIf= "hostSettings && hostSettings.RemarksEnabled && hostSettings.RemarksRequired">
-          <ion-label color="danger" position="stacked">{{'CREATE_QUICK_PASS.NOTES' | translate}}</ion-label>
+          <ion-label position="stacked">{{'CREATE_QUICK_PASS.NOTES' | translate}}</ion-label>
           <ion-input type="text" placeholder="{{'CREATE_QUICK_PASS.NOTES' | translate}}" required formControlName="notes" [ngStyle]="{'border': hostSettings.RemarksRequired ? '3px solid #cf3c4f': '3px solid #eee'}" [(ngModel)]="visitorInfoModal.notes"
           ></ion-input>
         </ion-item>
         <ion-item lines="none" no-padding transparent style="--padding-start: 0px;" *ngIf= "hostSettings && hostSettings.RemarksEnabled && !hostSettings.RemarksRequired">
-            <ion-label color="danger" position="stacked">{{'CREATE_QUICK_PASS.NOTES' | translate}}</ion-label>
+            <ion-label position="stacked">{{'CREATE_QUICK_PASS.NOTES' | translate}}</ion-label>
             <ion-input type="text" placeholder="{{'CREATE_QUICK_PASS.NOTES' | translate}}" formControlName="notes" [ngStyle]="{'border': hostSettings.RemarksRequired ? '3px solid #cf3c4f': '3px solid #eee'}"  [(ngModel)]="visitorInfoModal.notes"
             ></ion-input>
           </ion-item>
 
-       <ion-button bottom right icon-right align-items-end shape="round" fill="outline" color="danger"
-        style="margin-left: auto;margin-top:15px; display: block;"
+       <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="danger"
+        style="margin-left: auto;margin-top:0px; display: block;"
         type="submit" [disabled]="visitorProfile.invalid">
-        <i start class="icon siva-icon-plus"> </i>{{'ACC_MAPPING.PROCEED' | translate}}</ion-button>
+        {{'ACC_MAPPING.CREATE' | translate}}</ion-button>
       </ion-col>
 
       <!-- <ion-col align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6> -->
