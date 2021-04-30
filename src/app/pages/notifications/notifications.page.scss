@@ -136,3 +136,11 @@ ion-content.has-refresher > .scroll-content {
     color: #ed576b;
   }
 }
+ion-toolbar {
+  ion-segment {
+    ion-segment-button {
+      padding: 5px 30px;
+    }
+    
+  }
+}

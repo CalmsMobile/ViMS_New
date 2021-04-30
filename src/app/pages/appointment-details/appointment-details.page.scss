@@ -176,3 +176,11 @@ ion-grid {
     font-size: 14px !important;
   }
 }
+
+ion-avatar {
+  img {
+    margin-top: 7px;
+    background-color: transparent;
+    border: 1px solid grey;
+  }
+}

@@ -4,7 +4,6 @@
     <ion-title>&nbsp;&nbsp;&nbsp;{{'NOTIFICATION.TITLE' | translate}}</ion-title>
   </ion-toolbar>
 
-
   <ion-toolbar color="danger" mode="ios">
     <ion-segment [(ngModel)]="selectedTap" mode="ios">
       <ion-segment-button value="general" (click)="showNotification('general')">
@@ -35,10 +34,11 @@
   <!-- <ion-card no-margin mode="ios" style="width:100%;margin-top:14px !important; ">  -->
   <ion-list *ngIf="(selectedTap == 'general')">
     <ion-card style="margin-top: 0px;">
-      <ion-item-sliding #slideDOM *ngFor="let notification of VM.searchGeneralNotificationList" (ionDrag)="ondrag($event, slideDOM, notification)">
+      <ion-item-sliding #slideDOM *ngFor="let notification of VM.searchGeneralNotificationList"
+        (ionDrag)="ondrag($event, slideDOM, notification)">
         <!-- <ion-item-divider style="padding:0px"> -->
         <ion-item lines="full"
-        [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
+          [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
           <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
 
@@ -66,9 +66,10 @@
 
   <ion-list *ngIf="(selectedTap == 'in')">
     <ion-card style="margin-top: 0px;">
-      <ion-item-sliding *ngFor="let notification of VM.searchInNotificationList" #slideDOM  (ionDrag)="ondrag($event, slideDOM, notification)">
+      <ion-item-sliding *ngFor="let notification of VM.searchInNotificationList" #slideDOM
+        (ionDrag)="ondrag($event, slideDOM, notification)">
         <ion-item lines="full"
-        [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
+          [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
           <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
 
