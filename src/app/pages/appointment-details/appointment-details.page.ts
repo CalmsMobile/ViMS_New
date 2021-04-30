@@ -397,6 +397,8 @@ export class AppointmentDetailsPage implements OnInit {
   }
 
   async openVisitorDetails(visitor) {
+    console.log("VISITOR DETAILS");
+    console.log(visitor)
     var title  = '';
     if(this.facilityBooking && this.facilityBooking.length > 0){
       title = this.facilityBooking[0].BookingID;
