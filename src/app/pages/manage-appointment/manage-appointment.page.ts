@@ -250,7 +250,7 @@ export class ManageAppointmentPage implements OnInit {
           }
         }
       };
-      this.router.navigate(['admin-appointment-details'], navigationExtras);
+      this.router.navigate(['appointment-details'], navigationExtras);
       return;
     }
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);

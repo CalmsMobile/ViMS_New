@@ -863,6 +863,8 @@ export class AdminAppointmentDetailsPage implements OnInit {
         let msg = 'Questionaries not added.';
         if (action === 'doc') {
           msg = 'Verification document not added.';
+        } else if (action === 'declaration'){
+          msg = 'Declaration not added.';
         }
         this.showAlert(msg);
       }

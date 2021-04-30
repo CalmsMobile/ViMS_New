@@ -57,19 +57,14 @@ img {
 
 .ColslotSelected {
   padding: 0px;
-  padding-bottom: 3px;
+  padding-bottom: 0px;
   padding-right: 3px;
-  background: rgb(12, 158, 97);
   border-radius: 5px;
-
   position: relative;
-  /* width: 100%; */
   margin: 0;
   margin-right: 3px;
-  margin-bottom: 3px;
+  margin-bottom: 0px;
   min-height: 1px;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
   flex-basis: 0;
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
@@ -78,15 +73,15 @@ img {
 
 .ColSessionEnd {
   padding: 0px;
-  padding-bottom: 3px;
+  padding-bottom: 0px;
   padding-right: 3px;
-  background: rgb(26, 122, 151);
+  // background: rgb(26, 122, 151);
   border-radius: 5px;
   position: relative;
   /* width: 100%; */
   margin: 0;
   margin-right: 3px;
-  margin-bottom: 3px;
+  margin-bottom: 0px;
   min-height: 1px;
   -webkit-flex-basis: 0;
   -ms-flex-preferred-size: 0;
@@ -98,15 +93,15 @@ img {
 
 .ColslotExpired {
   padding: 0px;
-  padding-bottom: 3px;
+  padding-bottom: 0px;
   padding-right: 3px;
-  background: #f06060;
+  // background: #f06060;
   border-radius: 5px;
   position: relative;
   /* width: 100%; */
   margin: 0;
   margin-right: 3px;
-  margin-bottom: 3px;
+  margin-bottom: 0px;
   min-height: 1px;
   -webkit-flex-basis: 0;
   -ms-flex-preferred-size: 0;
@@ -117,7 +112,7 @@ img {
 }
 
 .slotSelected {
-  border: 1px solid rgb(12, 158, 97);
+  border: 4px solid rgb(12, 158, 97);
   border-radius: 5px;
   background: #ffffff;
   color: rgb(12, 158, 97);
@@ -126,10 +121,20 @@ img {
   padding-left: 10px;
   padding-right: 10px;
   text-align: center;
+  margin-top: 5px;
+  margin-bottom: 2px;
+}
+
+.iconiconClass {
+  border: 3px solid darkgray;
+  border-radius: 50%;
+  padding: 5px;
+  margin-right: 4px;
+  font-size: 22px;
 }
 
 .SessionEnd {
-  border: 1px solid rgb(26, 122, 151);
+  border: 4px solid rgb(26, 122, 151);
   border-radius: 5px;
   background: #ffffff;
   color: rgb(26, 122, 151);
@@ -138,10 +143,12 @@ img {
   padding-left: 10px;
   padding-right: 10px;
   text-align: center;
+  margin-top: 5px;
+  margin-bottom: 2px;
 }
 
 .slotExpired {
-  border: 1px solid #f50e0e;
+  border: 4px solid #f50e0e;
   border-radius: 5px;
   background: #ffffff;
   color: #f50e0e;
@@ -150,4 +157,39 @@ img {
   padding-left: 10px;
   padding-right: 10px;
   text-align: center;
+  margin-top: 5px;
+  margin-bottom: 2px;
+}
+
+.header_text {
+  margin-top: -9px !important;
+  margin-bottom: -9px !important;
+  font-size: 16px;
+  font-weight: 600;
+}
+.visitorDesc {
+  font-weight: normal !important;
+  font-size: 14px !important;
+}
+
+.cardHeader {
+  padding: 8px;
+  font-weight: 600;
+}
+
+ion-grid {
+  ion-icon {
+    color: #eb445a !important;
+  }
+  p {
+    font-size: 14px !important;
+  }
+}
+
+ion-avatar {
+  img {
+    margin-top: 7px;
+    background-color: transparent;
+    border: 1px solid grey;
+  }
 }

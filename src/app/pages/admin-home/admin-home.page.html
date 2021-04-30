@@ -89,15 +89,6 @@
                   </ion-col>
 
                   <ion-col size="2" class="colIcons">
-                    <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'">
-                      <div class="outer-circle2">
-                        <div class="inner-circle2">
-                          <span id="inside-content">
-                            <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
                     <div class="">
                       <ion-checkbox slot="end" style="margin:0 auto;margin-right: 5px" [(ngModel)]="list.value[0].isChecked" (ionChange)="checkSelectAll()"></ion-checkbox>
                     </div>
