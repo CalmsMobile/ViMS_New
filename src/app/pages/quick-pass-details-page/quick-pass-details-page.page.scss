@@ -1,6 +1,6 @@
 .qrCodeImage {
-  width: 125px !important;
-  height: 125px !important;
+  width: 100px !important;
+  height: 100px !important;
   margin: 0 auto;
   display: block;
   border-radius: 20px;
@@ -8,10 +8,10 @@
 
 .profile-imageTabLand {
   border-radius: 50%;
-  width: 92px !important;
+  width: 60px !important;
   margin: 0 auto !important;
   display: block;
-  height: 92px !important;
+  height: 60px !important;
   box-shadow: 0px 11px 20px -3px rgba(142, 136, 146, 0.75);
 }
 .cameraImgTabLand {
@@ -64,4 +64,10 @@
   font-size: 18px !important;
   text-transform: capitalize;
   margin-top: 5px;
+}
+.overall_list_view {
+  padding: 5px;
+    border: 1px solid #928a8a;
+    margin: 10px;
+    border-radius: 5px;
 }
