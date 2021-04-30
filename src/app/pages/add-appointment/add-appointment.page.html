@@ -93,8 +93,8 @@
     </div>
 
     <div>
-       <ion-item lines="none" no-padding transparent>
-          <h3 theme-text-color position="floating">{{'ADD_VISITORS.LAB_USER_CATE' | translate}}</h3>
+       <ion-item lines="none" no-padding transparent style="--padding-start: 12px;">
+          <ion-label theme-text-color position="floating" style="font-size: 19px;">{{'ADD_VISITORS.LAB_USER_CATE' | translate}}</ion-label>
           <ion-select class="categorySelect" mode="ios" [(ngModel)]="addAppointmentModel.visitor_ctg_id" (ionChange)="onChangeCategory($event.detail.value, true)" interface="action-sheet" placeholder="{{'ADD_VISITORS.LAB_USER_CATE' | translate}}">
           <ion-label position="floating">{{'ADD_VISITORS.LAB_USER_CATE' | translate}}</ion-label>
             <ion-select-option text-left *ngFor="let vis_cat of VISITOR_CATEGORY"
@@ -105,13 +105,14 @@
         </ion-item>
     </div>
     <ion-row style="background: rgb(248, 248, 248);    margin-top: 10px;" *ngIf="VM.addVisitorSettings">
-        <ion-col size="8">
-                <h3 margin-top padding-horizontal theme-text-color>
-                        {{'ADD_APPOIN.NUM_VISITORS' | translate}} ({{VM.visitors.length}}) </h3>
+        <ion-col size="8" style="padding: 0px;align-self: center;">
+                <ion-label margin-top padding-horizontal theme-text-color>
+                        {{'ADD_APPOIN.NUM_VISITORS' | translate}} ({{VM.visitors.length}}) </ion-label>
         </ion-col>
-        <ion-col size="4" style="text-align: end;">
-          <ion-fab-button color="primary" (click)="goToAddManageVisitors()" style="    display: inline-block;
-          margin-right: 10px;"><ion-icon name="person-add-outline" style="font-size:2.0rem;" ></ion-icon></ion-fab-button>
+        <ion-col size="4" style="text-align: end;padding: 0px;">
+          <ion-fab-button color="primary" (click)="goToAddManageVisitors()" style="    display: inline-block;width: 35px;
+          height: 35px;
+          margin-right: 10px;"><ion-icon name="person-add-outline" style="font-size:1.3rem;" ></ion-icon></ion-fab-button>
         </ion-col>
     </ion-row>
 
