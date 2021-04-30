@@ -48,19 +48,14 @@ img {
 
 .ColslotSelected {
   padding: 0px;
-  padding-bottom: 3px;
+  padding-bottom: 0px;
   padding-right: 3px;
-  // background: rgb(12, 158, 97);
   border-radius: 5px;
-
   position: relative;
-  /* width: 100%; */
   margin: 0;
   margin-right: 3px;
-  margin-bottom: 3px;
+  margin-bottom: 0px;
   min-height: 1px;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
   flex-basis: 0;
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
@@ -69,7 +64,7 @@ img {
 
 .ColSessionEnd {
   padding: 0px;
-  padding-bottom: 3px;
+  padding-bottom: 0px;
   padding-right: 3px;
   // background: rgb(26, 122, 151);
   border-radius: 5px;
@@ -77,7 +72,7 @@ img {
   /* width: 100%; */
   margin: 0;
   margin-right: 3px;
-  margin-bottom: 3px;
+  margin-bottom: 0px;
   min-height: 1px;
   -webkit-flex-basis: 0;
   -ms-flex-preferred-size: 0;
@@ -89,7 +84,7 @@ img {
 
 .ColslotExpired {
   padding: 0px;
-  padding-bottom: 3px;
+  padding-bottom: 0px;
   padding-right: 3px;
   // background: #f06060;
   border-radius: 5px;
@@ -97,7 +92,7 @@ img {
   /* width: 100%; */
   margin: 0;
   margin-right: 3px;
-  margin-bottom: 3px;
+  margin-bottom: 0px;
   min-height: 1px;
   -webkit-flex-basis: 0;
   -ms-flex-preferred-size: 0;
@@ -117,6 +112,8 @@ img {
   padding-left: 10px;
   padding-right: 10px;
   text-align: center;
+  margin-top: 5px;
+  margin-bottom: 2px;
 }
 
 .iconiconClass {
@@ -137,6 +134,8 @@ img {
   padding-left: 10px;
   padding-right: 10px;
   text-align: center;
+  margin-top: 5px;
+  margin-bottom: 2px;
 }
 
 .slotExpired {
@@ -149,15 +148,24 @@ img {
   padding-left: 10px;
   padding-right: 10px;
   text-align: center;
+  margin-top: 5px;
+  margin-bottom: 2px;
 }
 
 .header_text {
   margin-top: -9px !important;
   margin-bottom: -9px !important;
+  font-size: 16px;
+  font-weight: 600;
 }
 .visitorDesc {
   font-weight: normal !important;
-    font-size: 14px !important;
+  font-size: 14px !important;
+}
+
+.cardHeader {
+  padding: 8px;
+  font-weight: 600;
 }
 
 ion-grid {

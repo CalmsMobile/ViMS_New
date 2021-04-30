@@ -151,7 +151,7 @@ export class ManageHostsPage implements OnInit {
       var params = {
         "SearchString":this.VM.queryText,
         "OffSet":this.OffSet+"",
-        "Rows":"10"
+        "Rows":"20000"
      }
      this.apiProvider.SearchHost(params).then(
        (val) => {

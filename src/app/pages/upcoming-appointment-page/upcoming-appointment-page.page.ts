@@ -172,7 +172,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
 			var params = {"hostID":hostId,
 			"lastSyncDate":"",
 			"OffSet": ""+ this.OffSet,
-			"Rows":"100"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.syncAppointment(params, true, false).then(

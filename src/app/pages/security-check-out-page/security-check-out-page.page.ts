@@ -183,7 +183,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 			var params = {
       "MAppDevSeqId":MAppDevSeqId,
 			"OffSet": ""+ this.OffSet,
-			"Rows":"10"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.GetQuickPassVisitorList(params, showLoading).then(
@@ -238,7 +238,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 			var params = {
       "MAppDevSeqId":MAppDevSeqId,
 			"OffSet": ""+ this.OffSet,
-			"Rows":"10"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.VimsAppGetCheckInVisitorList(params, showLoading).then(
@@ -296,7 +296,7 @@ export class SecurityCheckOutPagePage implements OnInit {
         "Type": Type,
         "MAppDevSeqId":MAppDevSeqId,
         "OffSet": ""+ this.OffSet,
-        "Rows":"10"
+        "Rows":"20000"
       };
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.VimsAppGetSecurityStatsDetail(params, showLoading).then(

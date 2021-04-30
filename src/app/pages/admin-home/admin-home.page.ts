@@ -153,7 +153,7 @@ export class AdminHomePage implements OnInit {
 			var params = {
       "hostID":hostId,
 			"OffSet": ""+ this.OffSet,
-      "Rows":"500",
+      "Rows":"20000",
       "StatusType":"0"
     };
 

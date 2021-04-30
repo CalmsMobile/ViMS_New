@@ -176,7 +176,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
       var params = {
       "HostIC": HOST_ID,
       "OffSet": ""+ this.OffSet,
-      "Rows":"1000"
+      "Rows":"20000"
     };
       // this.VM.host_search_id = "adam";
       this.apiProvider.GetAllQuickPassVisitorsHistory(params, showLoading).then(

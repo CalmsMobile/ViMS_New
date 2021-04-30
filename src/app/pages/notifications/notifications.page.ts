@@ -239,7 +239,7 @@ export class NotificationsPage implements OnInit {
 			var params = {"HostIC":HostIC,
 			"lastSyncDate":"",
 			"OffSet": ""+ this.OffSet,
-			"Rows":"100"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.getHostNotification(params).then(

@@ -78,6 +78,10 @@ export class FacilityBookingHistoryPage implements OnInit {
     }
 	}
 
+  editVisitors(slideDOM, action, item){
+
+  }
+
 	getDayofDate(dateString){
 		let dateObject = new Date(dateString);
 		let weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -114,7 +118,7 @@ export class FacilityBookingHistoryPage implements OnInit {
       "StaffSeqId": hostId,
       "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
 			"OffSet": ""+ this.OffSet,
-			"Rows":"100"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.VimsAppGetHostFacilityBookingList(params, true).then(

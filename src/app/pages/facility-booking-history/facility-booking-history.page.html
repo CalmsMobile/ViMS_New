@@ -36,54 +36,96 @@
                 <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'FACILITY_HISTORY.NO_LIST' | translate}}</h5>
         </ion-col>
   </ion-row>
-  <!-- <h5 style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">{{'FACILITY_HISTORY.NO_LIST' | translate}}</h5> -->
-  <ion-list   class="no-margin" style="width: 100%;" *ngFor="let list of appointments | groupBy:'BookingID'">
-    <ion-card style="margin: 3px; margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;" no-padding no-border (click)="viewBooking(list.value)">
-      <div class="row no-padding">
-          <ion-row lines="none">
-            <ion-col size="4" class="col apt-left" style="max-width:100px;padding:5px 0px 0px 0px;text-align: center;;">
-              <div class="row text-white no-padding" style="display:flex; padding: 5px;">
-                  <div class="col no-padding" style="width: -webkit-fill-available;"><h2 class="text-white" style="margin: 0px;font-size: 25px;">{{list.value[0].StartDateTime | date : 'dd'}}</h2></div>
-                  <div class="col" style="    padding: 5px;width: -webkit-fill-available;padding-bottom: 0px;">
-                      <h3 class="text-white" style="font-size: 15px;padding: 0px;
-                      margin: 0px;">{{getDayofDate(list.value[0].StartDateTime)}}</h3>
-                      <h3 class="text-white" style="font-size: 12px;padding: 0px;margin-bottom: 0px;
-                      margin-top: 3px;">{{list.value[0].StartDateTime | date:'h:mm a'}}</h3>
-                  </div>
+
+  <ion-list no-padding no-margin *ngFor="let list of appointments | groupBy:'BookingID'">
+    <ion-card class="card_appointment" (click)="viewBooking(list.value)"
+      no-padding no-border >
+      <ion-item-sliding #slideDOM >
+        <ion-item lines="none"  mode="ios" no-padding class="apt-item">
+          <ion-row lines="none" no-padding full-width>
+            <ion-col size="4" class="col apt-left" no-padding>
+              <div class="div-date">
+                <h2 class="text-white" no-margin style="font-size: 18px;">{{list.value[0].StartDateTime | date :'dd'}} {{getDayofDate(list.value[0].StartDateTime)}}</h2>
+              </div>
+              <div class="row text-white div-left-middle">
+                <h3 class="text-white div-left-middle-text">{{list.value[0].StartDateTime | date : 'MMM' | uppercase}} -
+                  {{list.value[0].StartDateTime | date : 'yyyy'}}</h3>
               </div>
               <div class="row" style="background:rgba(0,0,0,0.1);">
-                  <div class="col"><h3 class="text-white" style="font-size: 15px;padding: 6px;
-                    margin: 0px;">{{list.value[0].StartDateTime | date : 'MMM' | uppercase}} - {{list.value[0].StartDateTime | date : 'yyyy'}}</h3></div>
+                <div class="col">
+                  <h3 class="text-white div-left-bottom-text">{{list.value[0].StartDateTime | date:'h:mm a'}}</h3>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="6" style="padding-bottom: 0px;">
+              <div class="div-apt-center">
+                <ion-icon slot="start" color="danger" name="podium-outline" class="apt-text-icons"></ion-icon>
+                <p class="apt-center-title">{{list.value[0].FacilityName}}</p>
               </div>
 
-          </ion-col>
-          <ion-col size="8" class="col padding" style="border-bottom: 2px solid rgba(0,0,0,0.05); padding: 0px">
-              <ion-item style="--padding-start: 7px;height: 32px;display: flex;">
-                  <ion-label><b>{{list.value[0].FacilityName}}</b></ion-label>
-                  <ion-button color="danger" shape="round" style="font-size: 14px;">
-                    <!-- <ion-icon name="people" style="font-size: 10px;
-                    margin-right: 2px;"></ion-icon> -->
-                    {{list.value.length}}
-                  </ion-button>
-              </ion-item>
-              <ion-item style="--padding-start: 10px;height: 32px;display: flex;">
-                <p style="font-size: 14px;padding: 0px;
-                margin: 0px;">{{list.value[0].PurposeName ? list.value[0].PurposeName: '--'}}</p>
-                 <ion-icon *ngIf="list.value[0].BookingID" style="margin: 0px;
-                 margin-right: -5px;" slot="end" color="danger" name="star-outline"></ion-icon>
-              </ion-item>
+              <div class="div-apt-center">
+                <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
+                <p class="apt-center-subtitle">{{list.value[0].PurposeName ? list.value[0].PurposeName:'--'}}</p>
+              </div>
 
-              <!-- <h5>{{list.value[0].Category}}</h5> -->
-              <div text-right class="booking-status" style="margin: 0 auto;"  [ngClass]="{'approved':!list.value[0].Approval_Status}" *ngIf="!list.value[0].Approval_Status">
-                Approved
-            </div>
-            <div text-right *ngIf="list.value[0].Approval_Status != null" style="margin: 0 auto;" class="booking-status" [ngClass]="{'pending':list.value[0].Approval_Status=='Pending','canceled':list.value[0].Approval_Status=='Canceled','approved':list.value[0].Approval_Status=='Approved'}">
-                {{list.value[0].Approval_Status}}
-            </div>
+              <div class="div-apt-center">
+                <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
+                <p class="apt-center-subtitle">{{list.value[0].Contact ? list.value[0].Contact:'--'}}</p>
+              </div>
+
+              <div class="div-apt-center">
+                <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
+                <p class="apt-center-subtitle">{{list.value[0].Email ? list.value[0].Email:'--'}}</p>
+              </div>
+            </ion-col>
+
+            <ion-col size="2" class="colIcons">
+
+              <div>
+                <!-- <ion-badge color="danger">3</ion-badge> -->
+                <div class="outer-circle2">
+                  <div class="inner-circle2">
+                    <span id="inside-content">{{list.value.length}}</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="outer-circle2">
+                  <div class="inner-circle2">
+                    <span id="inside-content">
+                      <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
+                    </span>
+                  </div>
+                </div>
+                <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
+              </div>
+              <div class="">
+                <div class="outer-circle1">
+                  <div class="inner-circle1">
+                    <span id="inside-content">
+                      {{'A'}}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </ion-col>
           </ion-row>
-      </div>
+        </ion-item>
+        <ion-item-options side="end" primary slide-right-width>
+          <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="light"
+          fill="clear" no-border (click)="editVisitors(slideDOM, 'delete', list.value)">
+            <ion-icon color="light" class="siva-icon-trash-empty slideIcons"></ion-icon>
+          </ion-button>
+      </ion-item-options>
+        <ion-item-options side="start" primary slide-right-width>
+          <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="light"
+          fill="clear" shape="round" no-border (click)="editVisitors(slideDOM, 'edit', list.value)">
+              <ion-icon color="light" class="siva-icon-pencil-2 slideIcons"></ion-icon>
+          </ion-button>
+        </ion-item-options>
+      </ion-item-sliding>
     </ion-card>
   </ion-list>
+
 </ion-content>
 

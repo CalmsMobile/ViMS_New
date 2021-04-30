@@ -9,9 +9,10 @@
 
     <h5 theme-text-color *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)"
         class="header_text">Visitor Details</h5>
-    <h5 theme-text-color *ngIf="(appointment && appointment.length > 0 && appointment[0].isFacilityAlone)"
-        class="header_text">Staff Details</h5>
-    <ion-card mode="ios" no-margin style="width:100%;margin-top:3px !important;border: 1px solid #dedede;"
+    <h5 theme-text-color *ngIf="(appointment && appointment.length > 0 && appointment[0].isFacilityAlone && facilityBooking && facilityBooking[0] &&
+      facilityBooking[0].visitors &&  facilityBooking[0].visitors.length > 0)"
+        class="header_text" style="margin-bottom: 0px !important;">Staff Details</h5>
+    <ion-card mode="ios" no-margin style="width:100%;margin-top:3px !important;"
         *ngIf="(facilityBooking && facilityBooking[0] && facilityBooking[0].visitors &&  facilityBooking[0].visitors.length > 0)">
         <ion-item *ngFor="let visitors of facilityBooking[0].visitors" style="
         margin-left: 0px; --padding-start: 0px;
@@ -19,15 +20,19 @@
             <ion-avatar slot="start" style="
             margin: 3px;    width: 62px;
     height: 62px;
-            padding: 3px;" (click)="openVisitorDetails(visitors)">
+            padding: 3px;justify-content: center;
+    display: flex;
+    align-items: center;" (click)="openVisitorDetails(visitors)">
                 <img class="animated fadeInDown delay-1s" style="    background-color: darkgrey;
                 padding: 2px;" onError="this.src='../../assets/images/user.png';"
                     [src]="data.logo+visitors.SEQID + imageURLTypeHOST">
 
 
             </ion-avatar>
-            <ion-label (click)="openVisitorDetails(visitors)">{{visitors.Name}}</ion-label>
-            <ion-label (click)="openVisitorDetails(visitors)">{{visitors.Email}}</ion-label>
+            <div>
+              <ion-label (click)="openVisitorDetails(visitors)">{{visitors.Name}}</ion-label>
+              <ion-label (click)="openVisitorDetails(visitors)">{{visitors.Email}}</ion-label>
+            </div>
             <div slot="end" *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)"
                 style="margin: 0px;">
                 <ion-icon color="secondary" class="iconiconClass" name="qr-code-outline"
@@ -37,7 +42,7 @@
             </div>
         </ion-item>
     </ion-card>
-    <ion-card mode="ios" no-margin style="width:100%;margin-top:14px !important;border: 1px solid #dedede;"
+    <ion-card mode="ios" no-margin style="width:100%;margin-top:14px !important;"
         *ngIf="appointment && appointment[0] && !appointment[0].isFacilityAlone">
         <ion-item *ngFor="let visitors of appointment" style="
             margin-left: 0px;--padding-start: 0px;
@@ -45,7 +50,9 @@
             <ion-avatar slot="start" style="
                 margin: 3px;width: 62px;
     height: 62px;
-                padding: 3px;" (click)="openVisitorDetails(visitors)">
+                padding: 3px;justify-content: center;
+    display: flex;
+    align-items: center;" (click)="openVisitorDetails(visitors)">
                 <img class="animated fadeInDown delay-1s" style="    background-color: darkgrey;
                     padding: 2px;" onError="this.src='../../assets/images/user.png';"
                     [src]="data.logo+visitors.VisitorBookingSeqId + imageURLType">
@@ -64,7 +71,7 @@
 
         </ion-item>
     </ion-card>
-    <ion-card no-margin mode="ios" style="width:100%;margin-top:10px !important;border: 1px solid silver;"
+    <ion-card no-margin mode="ios" style="width:100%;margin-top:10px !important;"
         class="padding pending-info" *ngIf="!facilityBooking || facilityBooking.length == 0">
         <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
@@ -138,7 +145,10 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>Booked By</b></p>
+                      <ion-icon name="book-outline"></ion-icon>
+                        <span class="visitorDesc">
+                          Booked By
+                        </span>
                     </ion-col>
                     <ion-col>
                         <p no-margin>{{appointment[0].Booked_By}}</p>
@@ -152,7 +162,10 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>Floor</b></p>
+                      <ion-icon name="business-outline"></ion-icon>
+                      <span class="visitorDesc">
+                        Floor
+                      </span>
                     </ion-col>
                     <ion-col>
                         <p no-margin>{{appointment[0].Floor}}</p>
@@ -166,7 +179,10 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>Room</b></p>
+                      <ion-icon name="journal-outline"></ion-icon>
+                      <span class="visitorDesc">
+                        Room
+                      </span>
                     </ion-col>
                     <ion-col>
                         <p no-margin>{{appointment[0].Room}}</p>
@@ -180,7 +196,10 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>Vehicle No</b></p>
+                      <ion-icon name="bicycle-outline"></ion-icon>
+                      <span class="visitorDesc">
+                        Vehicle No
+                      </span>
                     </ion-col>
                     <ion-col>
                         <p no-margin>{{appointment[0].PLATE_NUM}}</p>
@@ -207,14 +226,17 @@
             </ion-grid>
         </ion-item-divider>
     </ion-card>
-    <ion-card no-margin mode="ios" style="width:100%;margin-top:5px !important;border: 1px solid #dedede;"
+    <ion-card no-margin mode="ios" style="width:100%;margin-top:5px !important;"
         class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.length > 0">
         <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>From</b></p>
+                      <ion-icon name="calendar-number-outline"></ion-icon>
+                      <span class="visitorDesc">
+                          From
+                      </span>
                     </ion-col>
                     <ion-col size="1"></ion-col>
                     <ion-col>
@@ -232,12 +254,14 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>To</b></p>
+                      <ion-icon name="calendar-number-outline"></ion-icon>
+                      <span class="visitorDesc">
+                          To
+                      </span>
                     </ion-col>
                     <ion-col size="1"></ion-col>
                     <ion-col>
-                        <p no-margin>{{facilityBooking[facilityBooking.length-1].EndDateTime | date:'MMM d, yyyy h:mm
-                            a'}}</p>
+                        <p no-margin>{{facilityBooking[facilityBooking.length-1].EndDateTime | date:'MMM d, yyyy h:mm a'}}</p>
                         <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                     </ion-col>
                 </ion-row>
@@ -248,7 +272,10 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>Purpose</b></p>
+                      <ion-icon name="filter-circle-outline"></ion-icon>
+                      <span class="visitorDesc">
+                          Purpose
+                      </span>
                     </ion-col>
                     <ion-col size="1"></ion-col>
                     <ion-col>
@@ -263,7 +290,10 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>Facility</b></p>
+                      <ion-icon name="podium-outline"></ion-icon>
+                        <span class="visitorDesc">
+                          Facility
+                        </span>
                     </ion-col>
                     <ion-col size="1"></ion-col>
                     <ion-col>
@@ -279,7 +309,10 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>Vehicle No</b></p>
+                      <ion-icon name="bicycle-outline"></ion-icon>
+                      <span class="visitorDesc">
+                        Vehicle No
+                      </span>
                     </ion-col>
                     <ion-col size="1"></ion-col>
                     <ion-col>
@@ -296,7 +329,10 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>Remarks</b></p>
+                      <ion-icon name="reader-outline"></ion-icon>
+                      <span class="visitorDesc">
+                          Remarks
+                      </span>
                     </ion-col>
                     <ion-col size="1"></ion-col>
                     <ion-col text-wrap>
@@ -312,7 +348,10 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                        <p no-margin class='stable'><b>Remarks</b></p>
+                      <ion-icon name="reader-outline"></ion-icon>
+                      <span class="visitorDesc">
+                          Remarks
+                      </span>
                     </ion-col>
                     <ion-col size="1"></ion-col>
                     <ion-col text-wrap>
@@ -323,17 +362,25 @@
         </ion-item-divider>
     </ion-card>
 
-    <ion-card no-margin mode="ios" style="width:100%;border: 1px solid #dedede;margin: 0px !important;padding: 0px;
+    <ion-card no-margin mode="ios" style="width:100%;margin: 0px !important;padding: 0px;
     margin-top: 15px !important;" class="ion-padding pending-info"
         *ngIf="facilityBooking && facilityBooking.length > 0 && FACILITYSLOTLIST && FACILITYSLOTLIST.length > 0">
-        <h2 style="color: white;padding: 10px;width: 100%;background: #ff515a;"><b>Booking Slot</b></h2>
-        <h3 *ngIf="Editable || hostSettings.AllowHostsToEndSession"
-            style="color: red;padding: 5px;text-align: center;padding-left: 10px;"><b>PIN Number : </b>
-            {{FACILITYSLOTLIST[0].value[0].PinNumber}}</h3>
+        <!-- <h2 style="color: white;padding: 10px;width: 100%;background: #ff515a;"><b>Booking Slot</b></h2> -->
+        <ion-card-header class="cardHeader" mode="ios" color="primary">
+          <ion-row>
+            <ion-col>
+              <ion-label>Booking Slot</ion-label>
+            </ion-col>
+            <ion-col>
+              <ion-label *ngIf="Editable || hostSettings.AllowHostsToEndSession">PIN Number :
+                {{FACILITYSLOTLIST[0].value[0].PinNumber}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-card-header>
+
         <div *ngFor="let slots of FACILITYSLOTLIST" style="margin-top:5px">
-            <h3 style="padding: 10px;width: 100%;background: lavender;text-align: center;"><b>{{slots.key | date : 'dd
-                    MMM yyyy'}}</b></h3>
-            <ion-row style="width: fit-content;margin: 0 auto;margin-bottom: 5px;">
+            <ion-text style="padding: 10px;width: 100%;text-align: center;margin-left: 3px;"><b>{{slots.key | date : 'dd MMM yyyy'}}</b></ion-text>
+            <ion-row style="width: fit-content;margin-left: 10px;margin-bottom: 5px;">
                 <div [ngClass]="{'ColSessionEnd': slot.selected == '4','slotUnselected': slot.selected == '0','ColslotSelected': slot.selected == '1',
                 'slotDisable': slot.selected == '2', 'ColslotExpired': slot.selected == '3'}"
                     *ngFor="let slot of slots.value">
@@ -346,7 +393,7 @@
         </div>
     </ion-card>
     <ion-card no-margin mode="ios"
-        style="width:100%;    padding: 0px;margin-top:14px !important;border: 1px solid #dedede;"
+        style="width:100%;    padding: 0px;margin-top:14px !important;"
         (click)="selectNotifyAppointment()">
         <ion-item lines="none" style="padding: 10px; --padding-start: 0px">
             <i slot="start" theme-text-color class="siva-icon-clock" style="font-size: 35px;margin: 0px;"></i>
