@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="danger">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
-    <ion-title>Additional Details</ion-title>
+    <ion-title>&nbsp;&nbsp;&nbsp;Additional Details</ion-title>
   </ion-toolbar>
   <!-- <ion-toolbar color="danger">
     <ion-title style="font-size: 14px">{{addAppointmentModel.START_DATE | date: "MMM dd, yyyy HH:mm a"}} to {{addAppointmentModel.END_DATE | date: "MMM dd, yyyy HH:mm a"}}</ion-title>
@@ -9,69 +9,98 @@
     <h1 *ngIf="VISITOR_SIZE > 1" style="color:white">{{VISITOR_SIZE}} Visitors</h1>
   </ion-toolbar> -->
 </ion-header>
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" style="--padding-top: 0px;">
+  <ion-grid style="padding-top: 0px;">
+    <ion-row align-items-start>
+      <form novalidate size="12" size-sm size-md (ngSubmit)="proceedToNextStep()" [formGroup]="facilityBooking"
+        class="simple-form">
+        <ion-col no-padding size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
+          <ion-item lines="none" class="ion-no-padding" no-padding transparent>
+            <ion-label style="font-size: 16px;" position="stacked">
+              {{'FACILITY_BOOKING.STEP2.LAB_FACILITY_NAME' | translate}}
+              <span style="color: #cf3c4f;">*</span>
+            </ion-label>
+            <ion-select mode="ios" required formControlName="facility"
+              (ionChange)="onChangeFacility($event.detail.value)"
+              [disabled]="onedit && addAppointmentModel.FacilityCode" style="font-size: 16px;"
+              [(ngModel)]="addAppointmentModel.FacilityCode" interface="action-sheet"
+              placeholder="{{'ADD_APPOIN.STEP2.LAB_FACILITY_NAME' | translate}}">
+              <ion-label position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_FACILITY_NAME' | translate}} <span
+                  style="color: #cf3c4f;">*</span></ion-label>
+              <ion-select-option text-left *ngFor="let avl_reason of VM.FACILITYMASTERLIST"
+                [value]="avl_reason.FacilityCode">
+                {{avl_reason.FacilityName}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item lines="none" class="ion-no-padding" no-padding transparent
+            *ngIf="hostSettings && hostSettings.PurposeEnabled && hostSettings.PurposeRequired">
+            <ion-label style="    font-size: 16px;" position="stacked">
+              {{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}
+              <span style="color: #cf3c4f;">*</span>
+            </ion-label>
+            <ion-select mode="ios" required formControlName="purpose" style="font-size: 16px;"
+              (ionChange)="onChangePurpose($event.detail.value)" [(ngModel)]="addAppointmentModel.PurposeCode"
+              interface="action-sheet" [disabled]="onedit && addAppointmentModel.PurposeCode"
+              placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}">
+              <ion-label position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let avl_reason of VM.FACILITYPURPOSELIST"
+                [value]="avl_reason.PurposeCode">
+                {{avl_reason.PurposeName}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item lines="none" class="ion-no-padding" no-padding transparent
+            *ngIf="hostSettings && hostSettings.isFacility && hostSettings.PurposeEnabled && !hostSettings.PurposeRequired">
+            <ion-label style="font-size: 16px;" position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}
+              <span style="color: #cf3c4f;">*</span>
+            </ion-label>
+            <ion-select mode="ios" formControlName="purpose" style="font-size: 16px;"
+              (ionChange)="onChangePurpose($event.detail.value)" [(ngModel)]="addAppointmentModel.PurposeCode"
+              interface="action-sheet" [disabled]="onedit && addAppointmentModel.PurposeCode"
+              placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}">
+              <ion-label position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let avl_reason of VM.FACILITYPURPOSELIST"
+                [value]="avl_reason.PurposeCode">
+                {{avl_reason.PurposeName}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item lines="none" class="ion-no-padding" no-padding transparent
+            *ngIf="hostSettings.RemarksEnabled && hostSettings.RemarksRequired">
+            <ion-label style="font-size: 16px;" position="stacked">{{'FACILITY_BOOKING.STEP2.REMARKS'
+              | translate}}
+              <span style="color: #cf3c4f;">*</span>
+            </ion-label>
+            <ion-input required formControlName="remarks" style="font-size: 16px;"
+              placeholder="{{'FACILITY_BOOKING.STEP2.REMARKS' | translate}}" type="text"
+              [(ngModel)]="addAppointmentModel.Remarks"></ion-input>
+          </ion-item>
+          <ion-item lines="none" class="ion-no-padding" no-padding transparent
+            *ngIf="hostSettings.RemarksEnabled && !hostSettings.RemarksRequired">
+            <ion-label style="font-size: 16px;" position="stacked">{{'FACILITY_BOOKING.STEP2.REMARKS'
+              | translate}}
+              <span style="color: #cf3c4f;">*</span>
+            </ion-label>
+            <ion-input formControlName="remarks" style="font-size: 16px;"
+              placeholder="{{'FACILITY_BOOKING.STEP2.REMARKS' | translate}}" type="text"
+              [(ngModel)]="addAppointmentModel.Remarks" placeholder=""></ion-input>
+          </ion-item>
 
-      <ion-grid>
-        <ion-row align-items-start>
-          <form novalidate size="12" size-sm size-md (ngSubmit)="proceedToNextStep()"
-            [formGroup]="facilityBooking" class="simple-form">
-            <ion-col no-padding size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
-                <ion-item lines="none" no-padding transparent>
-                    <ion-label style="    font-size: 16px;" color="danger" position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_FACILITY_NAME' | translate}}</ion-label>
-                    <ion-select [ngStyle]="{'border': '3px solid #cf3c4f'}"  mode="ios" required formControlName="facility" (ionChange)="onChangeFacility($event.detail.value)"
-                    [disabled] = "onedit && addAppointmentModel.FacilityCode" style="font-size: 16px;" [(ngModel)]="addAppointmentModel.FacilityCode" interface="action-sheet" placeholder="{{'ADD_APPOIN.STEP2.LAB_FACILITY_NAME' | translate}}">
-                      <ion-label position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_FACILITY_NAME' | translate}}</ion-label>
-                      <ion-select-option text-left *ngFor="let avl_reason of VM.FACILITYMASTERLIST" [value]="avl_reason.FacilityCode">
-                        {{avl_reason.FacilityName}}
-                      </ion-select-option>
-                    </ion-select>
-                </ion-item>
-                <ion-item lines="none" no-padding transparent *ngIf="hostSettings && hostSettings.PurposeEnabled && hostSettings.PurposeRequired">
-                    <ion-label style="    font-size: 16px;" color="danger" position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>
-                    <ion-select mode="ios" required formControlName="purpose" style="    font-size: 16px;" [ngStyle]="{'border': hostSettings.PurposeRequired ? '3px solid #cf3c4f': '3px solid #eee'}" (ionChange)="onChangePurpose($event.detail.value)"
-                    [(ngModel)]="addAppointmentModel.PurposeCode" interface="action-sheet" [disabled] = "onedit && addAppointmentModel.PurposeCode" placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}">
-                      <ion-label position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>
-                      <ion-select-option text-left *ngFor="let avl_reason of VM.FACILITYPURPOSELIST" [value]="avl_reason.PurposeCode">
-                        {{avl_reason.PurposeName}}
-                      </ion-select-option>
-                    </ion-select>
-                  </ion-item>
-                  <ion-item lines="none" no-padding transparent *ngIf="hostSettings && hostSettings.PurposeEnabled && !hostSettings.PurposeRequired">
-                    <ion-label style="    font-size: 16px;" color="danger" position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>
-                    <ion-select mode="ios" formControlName="purpose" style="    font-size: 16px;" [ngStyle]="{'border': hostSettings.PurposeRequired ? '3px solid #cf3c4f': '3px solid #eee'}" (ionChange)="onChangePurpose($event.detail.value)"
-                    [(ngModel)]="addAppointmentModel.PurposeCode" interface="action-sheet" [disabled] = "onedit && addAppointmentModel.PurposeCode" placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}">
-                      <ion-label position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>
-                      <ion-select-option text-left *ngFor="let avl_reason of VM.FACILITYPURPOSELIST" [value]="avl_reason.PurposeCode">
-                        {{avl_reason.PurposeName}}
-                      </ion-select-option>
-                    </ion-select>
-                  </ion-item>
-                  <ion-item lines="none" no-padding transparent *ngIf="hostSettings.RemarksEnabled && hostSettings.RemarksRequired">
-                      <ion-label style="    font-size: 16px;" color="danger" position="stacked">{{'FACILITY_BOOKING.STEP2.REMARKS' | translate}}</ion-label>
-                      <ion-input required formControlName="remarks" style="    font-size: 16px;" [ngStyle]="{'border': hostSettings.RemarksRequired ? '3px solid #cf3c4f': '3px solid #eee'}" placeholder="{{'FACILITY_BOOKING.STEP2.REMARKS' | translate}}" type="text" [(ngModel)]="addAppointmentModel.Remarks"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none" no-padding transparent *ngIf="hostSettings.RemarksEnabled && !hostSettings.RemarksRequired">
-                      <ion-label style="    font-size: 16px;" color="danger" position="stacked">{{'FACILITY_BOOKING.STEP2.REMARKS' | translate}}</ion-label>
-                      <ion-input formControlName="remarks" style="    font-size: 16px;" [ngStyle]="{'border': hostSettings.RemarksRequired ? '3px solid #cf3c4f': '3px solid #eee'}" placeholder="{{'FACILITY_BOOKING.STEP2.REMARKS' | translate}}" type="text"
-                        [(ngModel)]="addAppointmentModel.Remarks" placeholder=""
-                      ></ion-input>
-                  </ion-item>
-                 <ion-col align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
-                      <ion-button (click)="proceedToNextStep()" *ngIf="!edit" icon-right shape="round" fill="outline" color="danger"
-                      style="margin-left: auto;margin-top:25px; display: block;padding-left: 15px;"
-                      [disabled]= "facilityBooking.invalid">
-                          {{'ACC_MAPPING.PROCEED' | translate}}
-                        <ion-icon class="icon siva-icon-right-open"></ion-icon>
-                      </ion-button>
-                      <ion-button (click)="proceedToNextStep()" *ngIf="edit" icon-right shape="round" fill="outline" color="danger"
-                      style="margin-left: auto;margin-top:25px; display: block;padding-left: 15px;"
-                      [disabled]= "facilityBooking.invalid">
-                          {{'ACC_MAPPING.UPDATE' | translate}}
-                        <ion-icon class="icon siva-icon-right-open"></ion-icon>
-                      </ion-button>
-                  </ion-col>
-            </ion-col>
-          </form>
-        </ion-row>
-    </ion-grid>
+          <!-- <div style="margin-top: 20px;"> -->
+          <ion-button (click)="proceedToNextStep()" *ngIf="!edit" icon-right shape="round" fill="solid" color="danger"
+            style="margin-left: auto;margin-top:25px; display: block;padding-left: 15px;"
+            [disabled]="facilityBooking.invalid">
+            {{'ACC_MAPPING.PROCEED' | translate}}
+          </ion-button>
+          <ion-button (click)="proceedToNextStep()" *ngIf="edit" icon-right shape="round" fill="solid" color="danger"
+            style="margin-left: auto;margin-top:25px; display: block;padding-left: 15px;"
+            [disabled]="facilityBooking.invalid">
+            {{'ACC_MAPPING.UPDATE' | translate}}
+          </ion-button>
+          <!-- </div> -->
+        </ion-col>
+      </form>
+    </ion-row>
+  </ion-grid>
 </ion-content>

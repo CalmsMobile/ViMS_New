@@ -10,74 +10,77 @@
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>Facility TimeSlot</ion-title>
     <ion-buttons slot="end" *ngIf="showDone">
-          <ion-button slot="icon-only" (click)="moveToNextStep()">
-            <ion-icon name="checkmark"></ion-icon>
-          </ion-button>
-      </ion-buttons>
+      <ion-button slot="icon-only" (click)="moveToNextStep()">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 
 </ion-header>
 
 
 <ion-content>
-    <ion-card style="display:flex; padding: 10px;margin: 0px;border-radius: 0px;width: auto;">
-        <ion-row>
-                <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: #00a1e1;margin: 5px"></ion-col>
-                <ion-col > <strong>Available</strong></ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col  style="max-width: 3px;max-height: 3px;border-radius: 50%;background: red;    margin: 5px"></ion-col>
-            <ion-col > <strong>Booked</strong></ion-col>
+  <ion-card style="display:flex; padding: 10px;margin: 0px;border-radius: 0px;width: auto;">
+    <ion-row>
+      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: #00a1e1;margin: 5px"></ion-col>
+      <ion-col> <strong>Available</strong></ion-col>
     </ion-row>
     <ion-row>
-        <ion-col  style="max-width: 3px;max-height: 3px;border-radius: 50%;background: rgb(91, 93, 94);   margin: 5px"></ion-col>
-        <ion-col > <strong>Expired</strong></ion-col>
+      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: red;    margin: 5px"></ion-col>
+      <ion-col> <strong>Booked</strong></ion-col>
     </ion-row>
     <ion-row>
-        <ion-col  style="max-width: 3px;max-height: 3px;border-radius: 50%;background: rgb(26, 122, 151);   margin: 5px"></ion-col>
-        <ion-col > <strong>Ended</strong></ion-col>
+      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: rgb(91, 93, 94);   margin: 5px">
+      </ion-col>
+      <ion-col> <strong>Expired</strong></ion-col>
     </ion-row>
-    </ion-card>
+    <ion-row>
+      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: rgb(26, 122, 151);   margin: 5px">
+      </ion-col>
+      <ion-col> <strong>Ended</strong></ion-col>
+    </ion-row>
+  </ion-card>
 
-    <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="!FACILITYSLOTLIST || FACILITYSLOTLIST.length == 0">
-        <ion-col size="12" size-sm size-md>
-                <img app-logo-img class="animated fadeInDown delay-1s" style="
+  <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"
+    *ngIf="!FACILITYSLOTLIST || FACILITYSLOTLIST.length == 0">
+    <ion-col size="12" size-sm size-md>
+      <img app-logo-img class="animated fadeInDown delay-1s" style="
                 display: block;
                 margin: 0 auto;
                 margin-top: 10px;
                 margin-bottom: 10px;
                 width: 150px;
             " src="assets/images/box.png">
-                <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'FACILITY_SLOT.NO_SLOTS' | translate}}</h5>
-        </ion-col>
+      <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'FACILITY_SLOT.NO_SLOTS'
+        | translate}}</h5>
+    </ion-col>
   </ion-row>
   <div *ngIf="FACILITYSLOTLIST && FACILITYSLOTLIST.length > 0">
 
-    <ion-grid [ngClass]= "'activateButton'" style="margin-right: 1px;
+    <ion-grid [ngClass]="'activateButton'" style="margin-right: 1px;
     color: white;
     background-color: #f53d3d;    margin: 0 auto;
 width: 100%;
-display: block;    padding: 24px;
+display: block;    padding: 5px;
 text-align: -webkit-center;">
       <ion-row style="    width: 100%;">
-          <ion-col *ngIf="showLeftArrow" style="display: contents;font-size: 25px;
-          margin: 0 auto;" (click)= "selectDate(currentTab-1)">
-              <
-          </ion-col>
-          <ion-col style="display: block;
+        <ion-col *ngIf="showLeftArrow" style="display: contents;font-size: 25px;
+          margin: 0 auto;" (click)="selectDate(currentTab-1)">
+          < </ion-col>
+            <ion-col style="display: block;
           margin: 0 auto;">
               {{selectedTap}}
-          </ion-col>
-          <ion-col *ngIf="showRightArrow" style="display: contents;font-size: 25px;
-          margin: 0 auto;" (click)= "selectDate(currentTab+1)">
-             >
-          </ion-col>
-        </ion-row>
+            </ion-col>
+            <ion-col *ngIf="showRightArrow" style="display: contents;font-size: 25px;
+          margin: 0 auto;" (click)="selectDate(currentTab+1)">
+              >
+            </ion-col>
+      </ion-row>
     </ion-grid>
 
 
-      <ion-list   class="no-margin" style="width: 100%;" *ngFor="let list of FACILITYSLOTLIST">
-        <!-- <ion-card style="    padding: 10px;
+    <ion-list class="no-margin" style="width: 100%;" *ngFor="let list of FACILITYSLOTLIST">
+      <!-- <ion-card style="    padding: 10px;
         margin: 5px;
         display: flex;
         background: ghostwhite;
@@ -85,32 +88,36 @@ text-align: -webkit-center;">
            -->
 
 
-        <ion-row >
-            <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="!list.value || list.value.length == 0">
-                <ion-col size="12" size-sm size-md>
-                        <img app-logo-img class="animated fadeInDown delay-1s" style="
+      <ion-row>
+        <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"
+          *ngIf="!list.value || list.value.length == 0">
+          <ion-col size="12" size-sm size-md>
+            <img app-logo-img class="animated fadeInDown delay-1s" style="
                         display: block;
                         margin: 0 auto;
                         margin-top: 10px;
                         margin-bottom: 10px;
                         width: 150px;
                     " src="assets/images/box.png">
-                        <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'FACILITY_SLOT.NO_SLOTS' | translate}}</h5>
-                </ion-col>
-          </ion-row>
-          <ion-row *ngIf="list.key == selectedTap">
-              <ion-col size="3" *ngFor="let slot of list.value">
-                  <p *ngIf="slot.SessionEnd" class="SessionEnd" (click) = "selectSlot(slot)">{{slot.startDisplayTime}}<br>{{slot.endDisplayTime}}</p>
+            <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">
+              {{'FACILITY_SLOT.NO_SLOTS' | translate}}</h5>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="list.key == selectedTap">
+          <ion-col size="3" *ngFor="let slot of list.value">
+            <p *ngIf="slot.SessionEnd" class="SessionEnd" (click)="selectSlot(slot)">
+              {{slot.startDisplayTime}}<br>{{slot.endDisplayTime}}</p>
 
-                  <p *ngIf="!slot.SessionEnd" [ngClass]= "{'slotUnselected': slot.selected == '0','slotSelected': slot.selected == '1',
-                  'slotDisable': slot.selected == '2', 'slotExpired': slot.selected == '3'}" (click) = "selectSlot(slot)">{{slot.startDisplayTime}}<br>{{slot.endDisplayTime}}</p>
-                  <!-- <p width="100%" ></p> -->
-              </ion-col>
-          </ion-row>
-
+            <p *ngIf="!slot.SessionEnd" [ngClass]="{'slotUnselected': slot.selected == '0','slotSelected': slot.selected == '1',
+                  'slotDisable': slot.selected == '2', 'slotExpired': slot.selected == '3'}"
+              (click)="selectSlot(slot)">{{slot.startDisplayTime}}<br>{{slot.endDisplayTime}}</p>
+            <!-- <p width="100%" ></p> -->
+          </ion-col>
         </ion-row>
 
-          <!-- <div class="col col-25" ng-if="$index + 1 < FACILITYSLOTLIST.length">
+      </ion-row>
+
+      <!-- <div class="col col-25" ng-if="$index + 1 < FACILITYSLOTLIST.length">
             <p width="100%" >{{FACILITYSLOTLIST[$index+1].StartTime}}</p>
             <p width="100%" >{{FACILITYSLOTLIST[$index+1].EndTime}}</p>
           </div>
@@ -122,7 +129,7 @@ text-align: -webkit-center;">
             <p width="100%" >{{FACILITYSLOTLIST[$index+3].StartTime}}</p>
             <p width="100%" >{{FACILITYSLOTLIST[$index+3].EndTime}}</p>
           </div> -->
-      </ion-list>
+    </ion-list>
   </div>
 
 </ion-content>
