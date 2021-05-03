@@ -52,9 +52,7 @@
           </ion-item>
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings && hostSettings.isFacility && hostSettings.PurposeEnabled && !hostSettings.PurposeRequired">
-            <ion-label style="font-size: 16px;" position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}
-              <span style="color: #cf3c4f;">*</span>
-            </ion-label>
+            <ion-label style="font-size: 16px;" position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>
             <ion-select mode="ios" formControlName="purpose" style="font-size: 16px;"
               (ionChange)="onChangePurpose($event.detail.value)" [(ngModel)]="addAppointmentModel.PurposeCode"
               interface="action-sheet" [disabled]="onedit && addAppointmentModel.PurposeCode"
@@ -79,9 +77,7 @@
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings.RemarksEnabled && !hostSettings.RemarksRequired">
             <ion-label style="font-size: 16px;" position="stacked">{{'FACILITY_BOOKING.STEP2.REMARKS'
-              | translate}}
-              <span style="color: #cf3c4f;">*</span>
-            </ion-label>
+              | translate}} </ion-label>
             <ion-input formControlName="remarks" style="font-size: 16px;"
               placeholder="{{'FACILITY_BOOKING.STEP2.REMARKS' | translate}}" type="text"
               [(ngModel)]="addAppointmentModel.Remarks" placeholder=""></ion-input>

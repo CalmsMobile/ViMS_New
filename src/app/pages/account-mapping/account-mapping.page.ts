@@ -186,9 +186,9 @@ export class AccountMappingPage {
           });
             // var qrCodeString = "" + encrypted;
             //HOST 1001
-            // var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
+            var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
             //HOST 2001
-            var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5oiFeX7BsAqxUzljIRJdDWo7fjFdjd5CYtyMqUPAqE82J7INYJg3yt8iYa+5P2zoCB+8qNoUbmH80zVyCrzpZJobcHl1pkIWqja9wnesvEJzOw==';
+            // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5oiFeX7BsAqxUzljIRJdDWo7fjFdjd5CYtyMqUPAqE82J7INYJg3yt8iYa+5P2zoCB+8qNoUbmH80zVyCrzpZJobcHl1pkIWqja9wnesvEJzOw==';
             //ACK
             // var qrCodeString = 'qYNb75lXZms19Ri+u9GuOKEOnI+Bw2rOjRNRz3F3gK5yStsC7HV5d0FoZmKl97l5D/TzMTQCqKnahYPuTqZ6TrHijxnIJnXGCrbD93loR9n/96rUnC+77Vl8D/VZ3XTIwc3axSyZQ7DQC4g4NiQGJlH8pY7wGwxGkeDBwIRR7GA=';
 

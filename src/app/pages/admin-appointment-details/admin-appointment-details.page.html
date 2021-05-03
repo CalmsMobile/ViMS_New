@@ -90,7 +90,7 @@
             </ion-row>
         </ion-grid>
     </ion-item-divider>
-    <ion-item-divider transparent *ngIf="appointment[0].REASON" style="padding: 0px;">
+    <ion-item-divider transparent *ngIf="appointment[0].REASON || appointment[0].REASON_DESC" style="padding: 0px;">
         <ion-grid style="--padding-end: 0px;
         padding-inline-end: 0px;">
             <ion-row style="padding: 0px;">
@@ -101,7 +101,7 @@
                     </span>
                 </ion-col>
                 <ion-col>
-                    <p no-margin>{{appointment[0].REASON}}</p>
+                    <p no-margin>{{appointment[0].REASON_DESC ? appointment[0].REASON_DESC : (appointment[0].REASON? appointment[0].REASON: '--')}}</p>
                     <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                 </ion-col>
             </ion-row>

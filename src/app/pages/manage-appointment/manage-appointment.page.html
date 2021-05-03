@@ -6,7 +6,7 @@
 	<ion-list has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false" style="margin:0px">
       <ion-card class="card_appointment" style="width: 98%;"
         no-padding no-border *ngFor="let event of selectedDate?.events" (click)="viewBooking(event.value.value)">
-        <ion-item-sliding #slideDOM >
+        <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, event.value.value, slideDOM)">
           <ion-item mode="ios" lines="none" no-padding class="apt-item">
             <ion-row lines="none" no-padding full-width>
               <ion-col size="4" class="col apt-left" no-padding>
@@ -36,12 +36,12 @@
 
                 <div class="div-apt-center">
                   <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
-                  <p class="apt-center-subtitle">{{event.value.value[0].Contact ? event.value.value[0].Contact:'--'}}</p>
+                  <p class="apt-center-subtitle">{{event.value.value[0].TELEPHONE_NO ? event.value.value[0].TELEPHONE_NO:'--'}}</p>
                 </div>
 
                 <div class="div-apt-center">
                   <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
-                  <p class="apt-center-subtitle">{{event.value.value[0].Email ? event.value.value[0].Email:'--'}}</p>
+                  <p class="apt-center-subtitle">{{event.value.value[0].EMAIL ? event.value.value[0].EMAIL:'--'}}</p>
                 </div>
               </ion-col>
 
@@ -77,17 +77,9 @@
               </ion-col>
             </ion-row>
           </ion-item>
-          <ion-item-options side="end" primary slide-right-width>
-            <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="light"
-            fill="clear" no-border (click)="editVisitors(slideDOM, 'delete', event.value.value)">
-              <ion-icon color="light" class="siva-icon-trash-empty slideIcons"></ion-icon>
-            </ion-button>
+          <ion-item-options side="end" slide-right-width>
         </ion-item-options>
-          <ion-item-options side="start" primary slide-right-width>
-            <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="light"
-            fill="clear" shape="round" no-border (click)="editVisitors(slideDOM, 'edit', event.value.value)">
-                <ion-icon color="light" class="siva-icon-pencil-2 slideIcons"></ion-icon>
-            </ion-button>
+          <ion-item-options side="start" slide-right-width>
           </ion-item-options>
         </ion-item-sliding>
       </ion-card>

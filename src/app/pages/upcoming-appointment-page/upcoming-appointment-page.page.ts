@@ -30,7 +30,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
     // public menu: MenuController,
     private alertCtrl: AlertController, public apiProvider: RestProvider) {
     this.translate.get([
-      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
+      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'ALERT_TEXT.EDIT_APPOINTMENT', 'ALERT_TEXT.DELETE_APPOINTMENT']).subscribe(t => {
         this.T_SVC = t;
     });
     events.observeDataCompany().subscribe((data1:any) => {
@@ -164,27 +164,33 @@ export class UpcomingAppointmentPagePage implements OnInit {
     //setTimeout(()=>{refresher.target.complete();},2000)
 	}
 
-  logDrag(event, item) {
+  logDrag(event, item, slideDOM) {
     let percent = event.detail.ratio;
     if (percent > 0) {
-      // positive
-      console.log('right side >>>' + item);
+      this.closeSlide(slideDOM);
       this.showAlertForSlide('delete', item);
     } else {
-      // negative
-      console.log('left side >>>' + item);
+      this.closeSlide(slideDOM);
       this.showAlertForSlide('edit', item);
 
     }
     if (Math.abs(percent) > 1) {
-      console.log('overscroll');
+      // console.log('overscroll');
     }
+  }
+
+  closeSlide(slideDOM) {
+    setTimeout(() => {
+      slideDOM.close();
+    }, 100);
   }
 
   async showAlertForSlide(action, item) {
     if (this.alertShowing) {
       return;
     }
+
+    console.log((action === 'edit')? 'left side ': 'right side' +  ' >>> '  + action);
     this.alertShowing = true;
     let msg = this.T_SVC['ALERT_TEXT.EDIT_APPOINTMENT'];
     if (action === 'delete') {
@@ -203,7 +209,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
           }
         },
         {
-          text: 'Delete',
+          text: 'Proceed',
           handler: () => {
           console.log(action +' clicked');
           // this.VM.visitors.splice(index, 1);
