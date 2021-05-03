@@ -205,7 +205,7 @@
 		"DETAIL": "Facility History",
 		"NO_LIST": "No Facility",
 		"NO_UPPCOMING_LIST": "No Upcoming Booking",
-		"NO_PENDING_LIST": "No Pending Booking",
+		"NO_PENDING_LIST": "No Pending Approval",
 		"NO_APPROVED_LIST": "No Approved Booking",
 		"NO_CANCELED_LIST": "No Canceled Booking"
 	},

@@ -355,6 +355,9 @@ export class AdminAppointmentDetailsPage implements OnInit {
   }
 
   async openVisitorDetails(visitor) {
+    visitor.Visitor_category = this.appointment[0].Visitor_category;
+    visitor.Country = this.appointment[0].Country;
+    visitor.Address = this.appointment[0].Address;
       const presentModel = await this.modalCtrl.create({
         component: CustomVisitorPopupComponent,
         componentProps: {
@@ -918,6 +921,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
       if (result.Table1 && result.Table1.length > 0) {
         this.appointment[0].Address = result.Table1[0].Address;
         this.appointment[0].Country = result.Table1[0].Country;
+        this.appointment[0].Visitor_category = result.Table1[0].Visitor_category;
       }
       },
     async (err) => {
