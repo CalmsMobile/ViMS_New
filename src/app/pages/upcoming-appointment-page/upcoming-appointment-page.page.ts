@@ -21,6 +21,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
   notificationCount = 0;
   T_SVC:any;
   loadingFinished = true;
+  alertShowing = false;
   isAdmin = true;
   constructor(public navCtrl: NavController,
     private events : EventsService,
@@ -162,6 +163,60 @@ export class UpcomingAppointmentPagePage implements OnInit {
     this.getAppointmentHistory(refresher);
     //setTimeout(()=>{refresher.target.complete();},2000)
 	}
+
+  logDrag(event, item) {
+    let percent = event.detail.ratio;
+    if (percent > 0) {
+      // positive
+      console.log('right side >>>' + item);
+      this.showAlertForSlide('delete', item);
+    } else {
+      // negative
+      console.log('left side >>>' + item);
+      this.showAlertForSlide('edit', item);
+
+    }
+    if (Math.abs(percent) > 1) {
+      console.log('overscroll');
+    }
+  }
+
+  async showAlertForSlide(action, item) {
+    if (this.alertShowing) {
+      return;
+    }
+    this.alertShowing = true;
+    let msg = this.T_SVC['ALERT_TEXT.EDIT_APPOINTMENT'];
+    if (action === 'delete') {
+      msg = this.T_SVC['ALERT_TEXT.DELETE_APPOINTMENT'];
+    }
+    let alert = await this.alertCtrl.create({
+      header: 'Confirmation',
+      message: msg,
+      cssClass: 'alert-warning',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+          console.log(action +' clicked');
+          // this.VM.visitors.splice(index, 1);
+
+          }
+        }
+      ]
+    });
+    alert.present();
+    alert.onWillDismiss().then(() => {
+      this.alertShowing = false;
+    })
+  }
 
 	getAppointmentHistory(refresher){
 

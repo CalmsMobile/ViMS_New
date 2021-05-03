@@ -514,6 +514,9 @@ refreshHostAccess(QRCodeValidity) {
 
   ionViewWillLeave(){
     this.showFab = false;
+    if (this.HOST_ACCESS_INTERVAL){
+      // clearInterval(this.HOST_ACCESS_INTERVAL);
+    }
   }
 
   ngOnInit() {

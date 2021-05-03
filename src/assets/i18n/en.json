@@ -487,6 +487,7 @@
 		"SELECT_VISITOR_COMPANY": "Please select visitor company",
 		"SEND_REMINDER": "Do you wish to send a reminder email to all visitor for this appointment now?",
 		"DELETE_APPOINTMENT": "Do you wish to delete this appointment now?",
+    "EDIT_APPOINTMENT": "Do you wish to edit this appointment now?",
 		"SELECT_EXPIRY_TIME": "Please select expiry time",
 		"REMOVE_STAFF": "Do you want to remove this staff?",
 		"DELETE_NOTIFIACTION": "Do you wish to delete this notification?",
