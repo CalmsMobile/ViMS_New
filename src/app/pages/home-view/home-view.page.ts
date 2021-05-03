@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { Firebase } from '@ionic-native/firebase/ngx';
@@ -51,6 +52,7 @@ export class HomeViewPage implements OnInit {
   isNotificationClicked = false;
   isHostAccessEnable = false;
   showQP = false;
+  HOST_QRVALUE = '';
   HOST_ACCESS_INTERVAL: any;
   constructor(public navCtrl: NavController,
     private localNotifications: LocalNotifications,
@@ -60,6 +62,7 @@ export class HomeViewPage implements OnInit {
     private _zone : NgZone,
     public menu: MenuController,
     private router: Router,
+    private datePipe: DatePipe,
     private statusBar: StatusBar,
     public events: EventsService, public apiProvider: RestProvider) {
         this.statusBar.backgroundColorByHexString(AppSettings.STATUS_BAR_COLOR);
@@ -415,7 +418,8 @@ subscribeToPushNotifications() {
   GetHostAccessSettings(){
     var params  = {
       "MAppId": this.appType,
-      "HostIc":""
+      "HostIc":"",
+      "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
     }
 
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -434,8 +438,16 @@ subscribeToPushNotifications() {
            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_SETTINGS,JSON.stringify(hostAccessSettings));
            try{
               this.isHostAccessEnable = hostAccessSettings.IsDynamicQRCodeEnabled;
+              if (hostAccessSettings.IsDynamicKey) {
+                this.HOST_QRVALUE = hostAccessSettings.DynamicCode;
+              } else {
+                this.HOST_QRVALUE = hostAccessSettings.HostCardSerialNo;
+              }
               if (this.isHostAccessEnable && hostAccessSettings.QRCodeValidity && hostAccessSettings.QRCodeValidity > 0) {
+                clearInterval(this.HOST_ACCESS_INTERVAL);
                 this.refreshHostAccess(hostAccessSettings.QRCodeValidity);
+              } else {
+                clearInterval(this.HOST_ACCESS_INTERVAL);
               }
             }catch(e){
             }
@@ -453,10 +465,16 @@ refreshHostAccess(QRCodeValidity) {
   if (this.HOST_ACCESS_INTERVAL) {
     clearInterval(this.HOST_ACCESS_INTERVAL);
   }
-  this.HOST_ACCESS_INTERVAL = setTimeout(() => {
-    console.log("refresh host access");
-    this.GetHostAccessSettings();
-  }, QRCodeValidity * 1000);
+  let timeout = QRCodeValidity;
+  localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_TIMEOUT, timeout);
+  this.HOST_ACCESS_INTERVAL = setInterval(() => {
+    timeout = timeout - 1;
+    localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_TIMEOUT, timeout);
+    if (timeout === 0) {
+      clearInterval(this.HOST_ACCESS_INTERVAL);
+      this.GetHostAccessSettings();
+    }
+  }, 1000);
 
 }
 
@@ -504,6 +522,9 @@ refreshHostAccess(QRCodeValidity) {
 
   ionViewWillLeave(){
     this.showFab = false;
+    if (this.HOST_ACCESS_INTERVAL){
+      // clearInterval(this.HOST_ACCESS_INTERVAL);
+    }
   }
 
   ngOnInit() {

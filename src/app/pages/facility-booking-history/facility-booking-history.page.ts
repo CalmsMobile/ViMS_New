@@ -20,13 +20,14 @@ export class FacilityBookingHistoryPage implements OnInit {
 	appointments:any = [];
 	T_SVC:any;
 	loadingFinished = true;
+  alertShowing = false;
 	constructor(public navCtrl: NavController,
 		private  translate : TranslateService,
     private router: Router,
 		private events : EventsService,
 		private alertCtrl: AlertController, public apiProvider: RestProvider) {
     this.translate.get([
-      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
+      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL' ,'ALERT_TEXT.EDIT_APPOINTMENT', 'ALERT_TEXT.DELETE_APPOINTMENT']).subscribe(t => {
         this.T_SVC = t;
     });
   }
@@ -78,6 +79,10 @@ export class FacilityBookingHistoryPage implements OnInit {
     }
 	}
 
+  editVisitors(slideDOM, action, item){
+
+  }
+
 	getDayofDate(dateString){
 		let dateObject = new Date(dateString);
 		let weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -114,7 +119,7 @@ export class FacilityBookingHistoryPage implements OnInit {
       "StaffSeqId": hostId,
       "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
 			"OffSet": ""+ this.OffSet,
-			"Rows":"100"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.VimsAppGetHostFacilityBookingList(params, true).then(
@@ -162,6 +167,66 @@ export class FacilityBookingHistoryPage implements OnInit {
 			  );
 		  }
 	  }
+
+    logDrag(event, item, slideDOM) {
+      let percent = event.detail.ratio;
+      if (percent > 0) {
+        this.closeSlide(slideDOM);
+        // this.showAlertForSlide('delete', item);
+      } else {
+        this.closeSlide(slideDOM);
+        // this.showAlertForSlide('edit', item);
+
+      }
+      if (Math.abs(percent) > 1) {
+        // console.log('overscroll');
+      }
+    }
+
+    closeSlide(slideDOM) {
+      setTimeout(() => {
+        slideDOM.close();
+      }, 100);
+    }
+
+    async showAlertForSlide(action, item) {
+      if (this.alertShowing) {
+        return;
+      }
+
+      console.log((action === 'edit')? 'left side ': 'right side' +  ' >>> '  + action);
+      this.alertShowing = true;
+      let msg = this.T_SVC['ALERT_TEXT.EDIT_APPOINTMENT'];
+      if (action === 'delete') {
+        msg = this.T_SVC['ALERT_TEXT.DELETE_APPOINTMENT'];
+      }
+      let alert = await this.alertCtrl.create({
+        header: 'Confirmation',
+        message: msg,
+        cssClass: 'alert-warning',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+              console.log('Cancel clicked');
+            }
+          },
+          {
+            text: 'Proceed',
+            handler: () => {
+            console.log(action +' clicked');
+            // this.VM.visitors.splice(index, 1);
+
+            }
+          }
+        ]
+      });
+      alert.present();
+      alert.onWillDismiss().then(() => {
+        this.alertShowing = false;
+      })
+    }
 
   viewBooking(list){
     var item = {

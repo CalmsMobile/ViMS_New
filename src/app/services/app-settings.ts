@@ -114,6 +114,7 @@ export const AppSettings = Object.freeze({
         "SIGN_PAD": "SignPad",
         "APPLICATION_HOST_SETTINGS": "ApplicationHostSettings",
         "HOST_ACCESS_SETTINGS": "VIMS_HOST_ACCESS_SETTINGS",
+        "HOST_ACCESS_TIMEOUT": "VIMS_HOST_ACCESS_TIMEOUT",
         "APPLICATION_ACK_SETTINGS": "ApplicationAcknowledgemntSettings",
         "APPLICATION_SECURITY_SETTINGS": "ApplicationSecuritySettings",
         "APPOINTMENT_VISITOR_DATA": "appointmentVisitorData",

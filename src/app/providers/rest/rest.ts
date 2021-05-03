@@ -105,8 +105,12 @@ export class RestProvider {
 
   async dismissLoading() {
     setTimeout(async () => {
-      this.isLoading = false;
-      return await this.loadingCtrl.dismiss().then(() => console.log('dismissed'));
+      try {
+        this.isLoading = false;
+        return await this.loadingCtrl.dismiss().then(() => console.log('dismissed'));
+      } catch (error) {
+
+      }
     }, 1000);
   }
 

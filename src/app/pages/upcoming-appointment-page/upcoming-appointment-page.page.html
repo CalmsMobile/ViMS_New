@@ -24,119 +24,6 @@
   </ion-refresher>
 
   <ion-list>
-
-    <!-- Start Sample Appoitmnet List -->
-
-    <ion-row>
-      <ion-col size="12" size-sm size-md>
-        <h5 margin-vertical ion-text text-start style="color:#00b508">
-          <i class="icon siva-icon-calendar-3" style="padding-right:10px;"></i>Today Appointments
-        </h5>
-        <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;" *ngIf="(todayAppointments.length == 0)">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
-        <ion-list class="no-margin" style="padding: 0px;">
-          <ion-card style="margin: 3px; margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;padding: 0px;"
-            no-padding no-border>
-            <div class="row no-padding" style="padding: 0px;">
-              <ion-row lines="none" style="padding: 0px;">
-                <!-- Below codes are sliding purpose code-->
-                <!-- <ion-item-sliding style="padding: 0px;">
-                  <ion-item-options side="start">
-                    <ion-item-option color="danger" expandable>
-                      <ion-icon name="trash-outline" color="light"></ion-icon>
-                    </ion-item-option>
-                  </ion-item-options>
-                  <ion-item style="padding: 0px;"> -->
-                <!-- Code here-->
-                <ion-col size="4" class="col apt-left"
-                  style="max-width:100px;padding:0px;text-align: center;">
-                  <div style="width: -webkit-fill-available;padding-top: 5px;">
-                    <h2 class="text-white" style="margin: 0px;font-size: 18px;">26 MON</h2>
-                  </div>
-                  <div class="row text-white no-padding" style="display:flex; padding: 5px;justify-content: center;">
-                    <h3 class="text-white" style="font-size: 15px;padding: 0px;margin-bottom: 0px;
-                      margin-top: 3px;">APR - 2021</h3>
-                  </div>
-                  <div class="row" style="background:rgba(0,0,0,0.1);">
-                    <div class="col">
-                      <h3 class="text-white" style="font-size: 15px;padding: 6px;margin: 0px;margin-top: 5px;">4:15 PM
-                      </h3>
-                    </div>
-                  </div>
-                </ion-col>
-                <ion-col size="6" style="    padding-bottom: 0px;">
-                  <div class="" style="display: flex;padding-bottom: 3px;">
-                    <ion-icon slot="start" color="danger" name="person-outline" style="font-size: 16px;padding: 0px;padding-right: 3px;"></ion-icon>
-                    <p style="margin: 0px;font-size: 14px;font-weight: 600;margin-top: 3px;">Karthi</p>
-                  </div>
-
-                  <div class="" style="display: flex;padding-bottom: 3px;">
-                    <ion-icon slot="start" color="danger" name="reader-outline" style="font-size: 16px;padding: 0px;padding-right: 3px;"></ion-icon>
-                    <p style="margin: 0px;font-size: 12px;margin-top: 1px;margin-bottom: 1px;">Purpose</p>
-                  </div>
-
-                  <div class="" style="display: flex;padding-bottom: 3px;">
-                    <ion-icon slot="start" color="danger" name="call-outline" style="font-size: 16px;padding: 0px;padding-right: 3px;"></ion-icon>
-                    <p style="margin: 0px;font-size: 12px;margin-top: 1px;margin-bottom: 1px;">9641365265</p>
-                  </div>
-
-                  <div class="" style="display: flex;">
-                    <ion-icon slot="start" color="danger" name="mail-outline" style="font-size: 16px;padding: 0px;padding-right: 3px;"></ion-icon>
-                    <p style="margin-top: 1px;margin-bottom: 1px;font-size: 12px;">test@gmail.com</p>
-                  </div>
-                </ion-col>
-
-                <ion-col size="2" style="    padding-bottom: 0px;">
-
-                  <div class="">
-                    <!-- <ion-badge color="danger">3</ion-badge> -->
-                    <div id="outer-circle">
-                      <div id="inner-circle">
-                        <span id="inside-content">2</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="">
-                    <div id="outer-circle">
-                      <div id="inner-circle">
-                        <span id="inside-content">
-                          <ion-icon slot="icon-only" name="calendar-outline"
-                            style="font-size: 13px;    padding: 1px;;color: #FFFFFF;padding-top: 0px;"></ion-icon>
-                        </span>
-                      </div>
-                    </div>
-                    <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
-                  </div>
-                  <div class="">
-                    <div id="outer-circle1">
-                      <div id="inner-circle1">
-                        <span id="inside-content">
-                          A
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </ion-col>
-                <!-- </ion-item>
-                  <ion-item-options side="end">
-                    <ion-item-option color="tertiary" expandable>
-                      Archive
-                    </ion-item-option>
-                  </ion-item-options>
-                </ion-item-sliding> -->
-
-
-
-              </ion-row>
-
-              <!--  -->
-            </div>
-          </ion-card>
-        </ion-list>
-
-      </ion-col>
-    </ion-row>
-
-    <!-- End Sample Appointment List-->
     <ion-row *ngIf="(todayAppointments.length > 0)">
       <ion-col size="12" size-sm size-md>
         <h5 margin-vertical ion-text text-start style="color:#00b508">
@@ -144,61 +31,87 @@
         </h5>
         <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;"
           *ngIf="(todayAppointments.length == 0)">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5>
-        <ion-list class="no-margin" *ngFor="let list of todayAppointments | groupBy:'appointment_group_id'">
-          <ion-card style="margin: 3px; margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;" no-padding
-            no-border (click)="viewBooking(list.value)">
-            <div class="row no-padding">
-              <ion-row lines="none">
-                <ion-col size="4" class="col apt-left"
-                  style="max-width:100px;padding:5px 0px 0px 0px;text-align: center;">
-                  <div class="row text-white no-padding" style="display:flex; padding: 5px;">
-                    <div class="col no-padding" style="width: -webkit-fill-available;">
-                      <h2 class="text-white" style="margin: 0px;font-size: 25px;">{{list.value[0].START_DATE | date :
-                        'dd'}}</h2>
-                    </div>
-                    <div class="col" style="    padding: 5px;width: -webkit-fill-available;padding-bottom: 0px;">
-                      <h3 class="text-white" style="font-size: 15px;padding: 0px;
-                                      margin: 0px;">{{getDayofDate(list.value[0].START_DATE)}}</h3>
-                      <h3 class="text-white" style="font-size: 12px;padding: 0px;margin-bottom: 0px;
-                                      margin-top: 3px;">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
-                    </div>
-                  </div>
-                  <div class="row" style="background:rgba(0,0,0,0.1);">
-                    <div class="col">
-                      <h3 class="text-white" style="font-size: 15px;padding: 6px;
-                                    margin: 0px;">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} -
-                        {{list.value[0].START_DATE | date : 'yyyy'}}</h3>
-                    </div>
-                  </div>
-                </ion-col>
-                <ion-col size="8" class="col padding" style="border-bottom: 2px solid rgba(0,0,0,0.05); padding: 0px">
-                  <ion-item style="--padding-start: 7px;height: 32px;display: flex;">
-                    <ion-label><b>{{list.value[0].VISITOR_NAME}}</b></ion-label>
-                    <ion-button color="danger" shape="round" style="font-size: 14px;">
-                      <!-- <ion-icon name="people" style="font-size: 10px;
-                                    margin-right: 2px;"></ion-icon> -->
-                      {{list.value.length}}
-                    </ion-button>
-                  </ion-item>
-                  <ion-item style="--padding-start: 10px;height: 32px;display: flex;">
-                    <p style="font-size: 14px;padding: 0px;
-                                margin: 0px;">{{list.value[0].REASON ? list.value[0].REASON: '--'}}</p>
-                    <ion-icon *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" style="margin: 0px;
-                                 margin-right: -5px;" slot="end" color="danger" name="star-outline"></ion-icon>
-                  </ion-item>
+          <ion-list no-padding no-margin *ngFor="let list of todayAppointments | groupBy:'appointment_group_id'">
+            <ion-card class="card_appointment" (click)="viewBooking(list.value)"
+              no-padding no-border >
+              <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, list.value, slideDOM)">
+                <ion-item lines="none" mode="ios" no-padding class="apt-item">
+                  <ion-row lines="none" no-padding full-width>
+                    <ion-col size="4" class="col apt-left" no-padding>
+                      <div class="div-date">
+                        <h2 class="text-white" no-margin style="font-size: 18px;">{{list.value[0].START_DATE | date :'dd'}} {{getDayofDate(list.value[0].START_DATE)}}</h2>
+                      </div>
+                      <div class="row text-white div-left-middle">
+                        <h3 class="text-white div-left-middle-text">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} -
+                          {{list.value[0].START_DATE | date : 'yyyy'}}</h3>
+                      </div>
+                      <div class="row" style="background:rgba(0,0,0,0.1);">
+                        <div class="col">
+                          <h3 class="text-white div-left-bottom-text">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
+                        </div>
+                      </div>
+                    </ion-col>
+                    <ion-col size="6" style="padding-bottom: 0px;">
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="person-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-title">{{list.value[0].VISITOR_NAME}}</p>
+                      </div>
 
-                  <!-- <h5>{{list.value[0].Category}}</h5> -->
-                  <div text-right *ngIf="(list.value[0].Approval_Status == null)" class="booking-status"
-                    [ngClass]="{'pending':list.value[0].Approval_Status=='Pending','canceled':list.value[0].Approval_Status=='Canceled','approved':list.value[0].Approval_Status=='Approved'}">
-                    Pending</div>
-                  <div text-right *ngIf="(list.value[0].Approval_Status != null)" class="booking-status"
-                    [ngClass]="{'pending':list.value[0].Approval_Status=='Pending','canceled':list.value[0].Approval_Status=='Canceled','approved':list.value[0].Approval_Status=='Approved'}">
-                    {{list.value[0].Approval_Status}}</div>
-                </ion-col>
-              </ion-row>
-            </div>
-          </ion-card>
-        </ion-list>
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-subtitle">{{list.value[0].REASON ? list.value[0].REASON:'--'}}</p>
+                      </div>
+
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-subtitle">{{list.value[0].TELEPHONE_NO ? list.value[0].TELEPHONE_NO:'--'}}</p>
+                      </div>
+
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-subtitle">{{list.value[0].EMAIL ? list.value[0].EMAIL:'--'}}</p>
+                      </div>
+                    </ion-col>
+
+                    <ion-col size="2" class="colIcons">
+
+                      <div>
+                        <!-- <ion-badge color="danger">3</ion-badge> -->
+                        <div class="outer-circle2">
+                          <div class="inner-circle2">
+                            <span id="inside-content">{{list.value.length}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'">
+                        <div class="outer-circle2">
+                          <div class="inner-circle2">
+                            <span id="inside-content">
+                              <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
+                            </span>
+                          </div>
+                        </div>
+                        <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
+                      </div>
+                      <div class="">
+                        <div [ngClass]="{'outer-circle':list.value[0].Approval_Status=='Pending','outer-circle2':list.value[0].Approval_Status=='Canceled','outer-circle1':list.value[0].Approval_Status=='Approved'}">
+                          <div [ngClass]="{'inner-circle':list.value[0].Approval_Status=='Pending','inner-circle2':list.value[0].Approval_Status=='Canceled','inner-circle1':list.value[0].Approval_Status=='Approved'}">
+                            <span id="inside-content">
+                              {{list.value[0].Approval_Status.charAt(0)}}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-item>
+                <ion-item-options side="end" slide-right-width>
+              </ion-item-options>
+                <ion-item-options side="start" slide-right-width>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-card>
+          </ion-list>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="(tomorrowAppointments.length > 0)">
@@ -208,61 +121,89 @@
         </h5>
         <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;"
           *ngIf="(tomorrowAppointments.length == 0)">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5>
-        <ion-list class="no-margin" *ngFor="let list of tomorrowAppointments | groupBy:'appointment_group_id'">
-          <ion-card style="margin: 3px; margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;" no-padding
-            no-border (click)="viewBooking(list.value)">
-            <div class="row no-padding">
-              <ion-row lines="none">
-                <ion-col size="4" class="col apt-left"
-                  style="max-width:100px;padding:5px 0px 0px 0px;text-align: center;;">
-                  <div class="row text-white no-padding" style="display:flex; padding: 5px;">
-                    <div class="col no-padding" style="width: -webkit-fill-available;">
-                      <h2 class="text-white" style="margin: 0px;font-size: 25px;">{{list.value[0].START_DATE | date :
-                        'dd'}}</h2>
-                    </div>
-                    <div class="col" style="    padding: 5px;width: -webkit-fill-available;padding-bottom: 0px;">
-                      <h3 class="text-white" style="font-size: 15px;padding: 0px;
-                                    margin: 0px;">{{getDayofDate(list.value[0].START_DATE)}}</h3>
-                      <h3 class="text-white" style="font-size: 12px;padding: 0px;margin-bottom: 0px;
-                                    margin-top: 3px;">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
-                    </div>
-                  </div>
-                  <div class="row" style="background:rgba(0,0,0,0.1);">
-                    <div class="col">
-                      <h3 class="text-white" style="font-size: 15px;padding: 6px;
-                                  margin: 0px;">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} -
-                        {{list.value[0].START_DATE | date : 'yyyy'}}</h3>
-                    </div>
-                  </div>
-                </ion-col>
-                <ion-col size="8" class="col padding" style="border-bottom: 2px solid rgba(0,0,0,0.05); padding: 0px;">
-                  <ion-item style="--padding-start: 7px;height: 32px;display: flex;">
-                    <ion-label><b>{{list.value[0].VISITOR_NAME}}</b></ion-label>
-                    <ion-button color="danger" shape="round" style="font-size: 14px;">
-                      <!-- <ion-icon name="people" style="font-size: 10px;
-                                  margin-right: 2px;"></ion-icon> -->
-                      {{list.value.length}}
-                    </ion-button>
-                  </ion-item>
-                  <ion-item style="--padding-start: 10px;height: 32px;display: flex;">
-                    <p style="font-size: 14px;padding: 0px;
-                              margin: 0px;">{{list.value[0].REASON ? list.value[0].REASON: '--'}}</p>
-                    <ion-icon *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" style="margin: 0px;
-                               margin-right: -5px;" slot="end" color="danger" name="star-outline"></ion-icon>
-                  </ion-item>
+          <ion-list no-padding no-margin *ngFor="let list of tomorrowAppointments | groupBy:'appointment_group_id'">
+            <ion-card class="card_appointment" (click)="viewBooking(list.value)"
+              no-padding no-border >
+              <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, list.value, slideDOM)">
+                <ion-item lines="none" mode="ios" no-padding class="apt-item">
+                  <ion-row lines="none" no-padding full-width>
+                    <ion-col size="4" class="col apt-left" no-padding>
+                      <div class="div-date">
+                        <h2 class="text-white" no-margin style="font-size: 18px;">{{list.value[0].START_DATE | date :'dd'}} {{getDayofDate(list.value[0].START_DATE)}}</h2>
+                      </div>
+                      <div class="row text-white div-left-middle">
+                        <h3 class="text-white div-left-middle-text">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} -
+                          {{list.value[0].START_DATE | date : 'yyyy'}}</h3>
+                      </div>
+                      <div class="row" style="background:rgba(0,0,0,0.1);">
+                        <div class="col">
+                          <h3 class="text-white div-left-bottom-text">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
+                        </div>
+                      </div>
+                    </ion-col>
+                    <ion-col size="6" style="padding-bottom: 0px;">
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="person-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-title">{{list.value[0].VISITOR_NAME}}</p>
+                      </div>
 
-                  <!-- <h5>{{list.value[0].Category}}</h5> -->
-                  <div text-right *ngIf="(list.value[0].Approval_Status == null)" class="booking-status"
-                    [ngClass]="{'pending':list.value[0].Approval_Status=='Pending','canceled':list.value[0].Approval_Status=='Canceled','approved':list.value[0].Approval_Status=='Approved'}">
-                    Pending</div>
-                  <div text-right *ngIf="(list.value[0].Approval_Status != null)" class="booking-status"
-                    [ngClass]="{'pending':list.value[0].Approval_Status=='Pending','canceled':list.value[0].Approval_Status=='Canceled','approved':list.value[0].Approval_Status=='Approved'}">
-                    {{list.value[0].Approval_Status}}</div>
-                </ion-col>
-              </ion-row>
-            </div>
-          </ion-card>
-        </ion-list>
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-subtitle">{{list.value[0].REASON ? list.value[0].REASON:'--'}}</p>
+                      </div>
+
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-subtitle">{{list.value[0].TELEPHONE_NO ? list.value[0].TELEPHONE_NO:'--'}}</p>
+                      </div>
+
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-subtitle">{{list.value[0].EMAIL ? list.value[0].EMAIL:'--'}}</p>
+                      </div>
+                    </ion-col>
+
+                    <ion-col size="2" class="colIcons">
+
+                      <div>
+                        <!-- <ion-badge color="danger">3</ion-badge> -->
+                        <div class="outer-circle2">
+                          <div class="inner-circle2">
+                            <span id="inside-content">{{list.value.length}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'">
+                        <div class="outer-circle2">
+                          <div class="inner-circle2">
+                            <span id="inside-content">
+                              <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
+                            </span>
+                          </div>
+                        </div>
+                        <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
+                      </div>
+                      <div class="">
+                        <div [ngClass]="{'outer-circle':list.value[0].Approval_Status=='Pending','outer-circle2':list.value[0].Approval_Status=='Canceled','outer-circle1':list.value[0].Approval_Status=='Approved'}">
+                          <div [ngClass]="{'inner-circle':list.value[0].Approval_Status=='Pending','inner-circle2':list.value[0].Approval_Status=='Canceled','inner-circle1':list.value[0].Approval_Status=='Approved'}">
+                            <span id="inside-content">
+                              {{list.value[0].Approval_Status.charAt(0)}}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-item>
+                <ion-item-options side="end" slide-right-width>
+
+              </ion-item-options>
+                <ion-item-options side="start" slide-right-width>
+
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-card>
+          </ion-list>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="futureAppointments.length > 0">
@@ -272,61 +213,89 @@
         </h5>
         <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;"
           *ngIf="futureAppointments.length == 0">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5>
-        <ion-list class="no-margin" *ngFor="let list of futureAppointments | groupBy:'appointment_group_id'">
-          <ion-card style="margin: 3px; margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;" no-padding
-            no-border (click)="viewBooking(list.value)">
-            <div class="row no-padding">
-              <ion-row lines="none">
-                <ion-col size="4" class="col apt-left"
-                  style="max-width:100px;padding:5px 0px 0px 0px;text-align: center;;">
-                  <div class="row text-white no-padding" style="display:flex; padding: 5px;">
-                    <div class="col no-padding" style="width: -webkit-fill-available;">
-                      <h2 class="text-white" style="margin: 0px;font-size: 25px;">{{list.value[0].START_DATE | date :
-                        'dd'}}</h2>
-                    </div>
-                    <div class="col" style="    padding: 5px;width: -webkit-fill-available;padding-bottom: 0px;">
-                      <h3 class="text-white" style="font-size: 15px;padding: 0px;
-                                    margin: 0px;">{{getDayofDate(list.value[0].START_DATE)}}</h3>
-                      <h3 class="text-white" style="font-size: 12px;padding: 0px;margin-bottom: 0px;
-                                    margin-top: 3px;">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
-                    </div>
-                  </div>
-                  <div class="row" style="background:rgba(0,0,0,0.1);">
-                    <div class="col">
-                      <h3 class="text-white" style="font-size: 15px;padding: 6px;
-                                  margin: 0px;">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} -
-                        {{list.value[0].START_DATE | date : 'yyyy'}}</h3>
-                    </div>
-                  </div>
-                </ion-col>
-                <ion-col size="8" class="col padding" style="border-bottom: 2px solid rgba(0,0,0,0.05); padding: 0px">
-                  <ion-item style="--padding-start: 7px;height: 32px;display: flex;">
-                    <ion-label><b>{{list.value[0].VISITOR_NAME}}</b></ion-label>
-                    <ion-button color="danger" shape="round" style="font-size: 14px;">
-                      <!-- <ion-icon name="people" style="font-size: 10px;
-                                  margin-right: 2px;"></ion-icon> -->
-                      {{list.value.length}}
-                    </ion-button>
-                  </ion-item>
-                  <ion-item style="--padding-start: 10px;height: 32px;display: flex;">
-                    <p style="font-size: 14px;padding: 0px;
-                              margin: 0px;">{{list.value[0].REASON ? list.value[0].REASON: '--'}}</p>
-                    <ion-icon *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" style="margin: 0px;
-                               margin-right: -5px;" slot="end" color="danger" name="star-outline"></ion-icon>
-                  </ion-item>
+          <ion-list no-padding no-margin *ngFor="let list of futureAppointments | groupBy:'appointment_group_id'">
+            <ion-card class="card_appointment" (click)="viewBooking(list.value)"
+              no-padding no-border >
+              <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, list.value, slideDOM)">
+                <ion-item lines="none"  mode="ios" no-padding class="apt-item">
+                  <ion-row lines="none" no-padding full-width>
+                    <ion-col size="4" class="col apt-left" no-padding>
+                      <div class="div-date">
+                        <h2 class="text-white" no-margin style="font-size: 18px;">{{list.value[0].START_DATE | date :'dd'}} {{getDayofDate(list.value[0].START_DATE)}}</h2>
+                      </div>
+                      <div class="row text-white div-left-middle">
+                        <h3 class="text-white div-left-middle-text">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} -
+                          {{list.value[0].START_DATE | date : 'yyyy'}}</h3>
+                      </div>
+                      <div class="row" style="background:rgba(0,0,0,0.1);">
+                        <div class="col">
+                          <h3 class="text-white div-left-bottom-text">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
+                        </div>
+                      </div>
+                    </ion-col>
+                    <ion-col size="6" style="padding-bottom: 0px;">
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="person-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-title">{{list.value[0].VISITOR_NAME}}</p>
+                      </div>
 
-                  <!-- <h5>{{list.value[0].Category}}</h5> -->
-                  <div text-right *ngIf="(list.value[0].Approval_Status == null)" class="booking-status"
-                    [ngClass]="{'pending':list.value[0].Approval_Status=='Pending','canceled':list.value[0].Approval_Status=='Canceled','approved':list.value[0].Approval_Status=='Approved'}">
-                    Pending</div>
-                  <div text-right *ngIf="(list.value[0].Approval_Status != null)" class="booking-status"
-                    [ngClass]="{'pending':list.value[0].Approval_Status=='Pending','canceled':list.value[0].Approval_Status=='Canceled','approved':list.value[0].Approval_Status=='Approved'}">
-                    {{list.value[0].Approval_Status}}</div>
-                </ion-col>
-              </ion-row>
-            </div>
-          </ion-card>
-        </ion-list>
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-subtitle">{{list.value[0].REASON ? list.value[0].REASON:'--'}}</p>
+                      </div>
+
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-subtitle">{{list.value[0].TELEPHONE_NO ? list.value[0].TELEPHONE_NO:'--'}}</p>
+                      </div>
+
+                      <div class="div-apt-center">
+                        <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
+                        <p class="apt-center-subtitle">{{list.value[0].EMAIL ? list.value[0].EMAIL:'--'}}</p>
+                      </div>
+                    </ion-col>
+
+                    <ion-col size="2" class="colIcons">
+
+                      <div>
+                        <!-- <ion-badge color="danger">3</ion-badge> -->
+                        <div class="outer-circle2">
+                          <div class="inner-circle2">
+                            <span id="inside-content">{{list.value.length}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'">
+                        <div class="outer-circle2">
+                          <div class="inner-circle2">
+                            <span id="inside-content">
+                              <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
+                            </span>
+                          </div>
+                        </div>
+                        <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
+                      </div>
+                      <div class="">
+                        <div [ngClass]="{'outer-circle':list.value[0].Approval_Status=='Pending','outer-circle2':list.value[0].Approval_Status=='Canceled','outer-circle1':list.value[0].Approval_Status=='Approved'}">
+                          <div [ngClass]="{'inner-circle':list.value[0].Approval_Status=='Pending','inner-circle2':list.value[0].Approval_Status=='Canceled','inner-circle1':list.value[0].Approval_Status=='Approved'}">
+                            <span id="inside-content">
+                              {{list.value[0].Approval_Status.charAt(0)}}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-item>
+                <ion-item-options side="end" slide-right-width>
+
+              </ion-item-options>
+                <ion-item-options side="start" slide-right-width>
+
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-card>
+          </ion-list>
       </ion-col>
     </ion-row>
     <div

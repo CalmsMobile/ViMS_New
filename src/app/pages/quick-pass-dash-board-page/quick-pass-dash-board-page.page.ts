@@ -15,7 +15,7 @@ import { EventsService } from 'src/app/services/EventsService';
 export class QuickPassDashBoardPagePage implements OnInit {
 
   title = "QuickPass";
-  title1 = "QuickPass Dashboard";
+  sub_title = "QuickPass Dashboard";
   TotalGuestInside = 0;
   TotalUnusedExpiredPass = 0;
   TotalUsedPass = 0;
@@ -176,7 +176,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
       var params = {
       "HostIC": HOST_ID,
       "OffSet": ""+ this.OffSet,
-      "Rows":"1000"
+      "Rows":"20000"
     };
       // this.VM.host_search_id = "adam";
       this.apiProvider.GetAllQuickPassVisitorsHistory(params, showLoading).then(

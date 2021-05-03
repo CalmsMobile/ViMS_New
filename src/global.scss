@@ -153,6 +153,14 @@ $global-opacity: (
   color: white !important;
 }
 
+.action-sheet-cancel.sc-ion-action-sheet-ios::after {
+  background: #bdbdbd;
+}
+
+.action-sheet-button-inner.sc-ion-action-sheet-ios {
+  color: #ec407a;
+}
+
 ion-title {
   margin-left: -40px;
   width: -webkit-fill-available;
@@ -548,7 +556,27 @@ ion-icon {
   padding: 0 !important;
 }
 
-.visitorPopupModal {
+[primary] {
+  background: #eb445a;
+}
+
+[full-width] {
+  width: 100%;
+}
+
+[slide-right-width] {
+  width: 25% !important;
+}
+
+.monthview-primary-with-event {
+  background-color: #e91e63 !important;
+}
+
+.monthview-selected {
+  background-color: #93133e !important;
+}
+
+.hostAccessModal {
   @media (min-width: 300px) and (min-height: 80%) {
     ion-backdrop {
       visibility: visible;
@@ -561,7 +589,32 @@ ion-icon {
     max-width: 300px;
     border-radius: 10px;
     width: 90vw;
-    height: 55%;
+    height: 65%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 0;
+    box-shadow: 0 16px 20px rgba(0, 0, 0, 0.4);
+    background-color: #fafafa;
+  }
+}
+
+.visitorPopupModal {
+  @media (min-width: 300px) and (min-height: 80%) {
+    ion-backdrop {
+      visibility: visible;
+    }
+  }
+
+  .modal-wrapper {
+    position: absolute;
+    overflow: hidden;
+    max-width: 330px;
+    border-radius: 10px;
+    width: 90vw;
+    height: 75%;
     top: 0;
     bottom: 0;
     left: 0;
@@ -596,7 +649,7 @@ $border-radius: 8px;
   padding: 10px !important;
   font-size: 32px !important;
   color: white !important;
-  margin-left: 10px;
+  margin-left: 0px;
 }
 
 ion-thumbnail img {
@@ -1159,7 +1212,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 [header-background-image] {
-  height: 200px;
+  height: 170px;
   background-size: cover;
   background-position: center;
   // background-color: transparent !important;
@@ -1173,6 +1226,12 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   }
   p {
     color: #ffffff;
+  }
+}
+
+ion-toolbar {
+  ion-title {
+    text-align: left !important;
   }
 }
 

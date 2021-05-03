@@ -538,13 +538,7 @@ export class AddAppointmentStep2Page implements OnInit {
           }
 
 
-          let toast = await this.toastCtrl.create({
-            message: this.T_SVC['ALERT_TEXT.ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS'],
-            duration: 3000,
-            color: 'primary',
-            position: 'bottom'
-          });
-          toast.present();
+          this.showAlert(this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS']);
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
           this.navCtrl.pop().then((data)=>{
             this.navCtrl.pop();
@@ -590,6 +584,16 @@ export class AddAppointmentStep2Page implements OnInit {
         alert.present();
       }
     );
+  }
+
+  async showAlert(msg){
+    let alert = await this.alertCtrl.create({
+      header: 'Notification',
+      message: msg,
+      cssClass: 'alert-danger',
+      buttons: ['Okay']
+    });
+    alert.present();
   }
 
   async proceedToNextStep(){
@@ -727,14 +731,7 @@ export class AddAppointmentStep2Page implements OnInit {
           }
 
 
-          let toast = await this.toastCtrl.create({
-            message: this.T_SVC['ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS'],
-            duration: 3000,
-            color: 'primary',
-            cssClass: 'alert-danger',
-            position: 'bottom'
-          });
-          toast.present();
+          this.showAlert(this.T_SVC['ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS']);
           this.events.publishDataCompany({
             action: 'addAppointmentSuccess1',
             title: showAlert,

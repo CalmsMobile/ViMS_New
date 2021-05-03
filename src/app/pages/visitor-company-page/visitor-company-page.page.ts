@@ -64,7 +64,7 @@ export class VisitorCompanyPagePage implements OnInit {
       }
       var params = {"SearchString":this.VM.queryText,
       "OffSet":this.OffSet+"",
-      "Rows":"20"};
+      "Rows":"20000"};
       // this.VM.host_search_id = "adam";
       this.apiProvider.GetVisitorCompany(params).then(
         (val) => {

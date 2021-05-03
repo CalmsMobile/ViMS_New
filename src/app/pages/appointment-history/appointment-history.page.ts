@@ -21,14 +21,14 @@ export class AppointmentHistoryPage implements OnInit {
 	T_SVC:any;
 	loadingFinished = true;
 	isAdmin = true;
-
+  alertShowing = false;
 	constructor(public navCtrl: NavController,
 		 private events : EventsService,
      private router: Router,
 		 private translate: TranslateService,
 		 private alertCtrl: AlertController, public apiProvider: RestProvider) {
 			this.translate.get([
-				'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
+				'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'ALERT_TEXT.EDIT_APPOINTMENT', 'ALERT_TEXT.DELETE_APPOINTMENT']).subscribe(t => {
 					this.T_SVC = t;
 			});
 			events.observeDataCompany().subscribe((data: any)=> {
@@ -100,7 +100,7 @@ export class AppointmentHistoryPage implements OnInit {
 			var params = {"hostID":hostId,
 			"lastSyncDate":"",
 			"OffSet": ""+ this.OffSet,
-			"Rows":"100"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.syncAppointment(params, false, true).then(
@@ -148,6 +148,66 @@ export class AppointmentHistoryPage implements OnInit {
 			);
 		}
 	}
+
+  logDrag(event, item, slideDOM) {
+    let percent = event.detail.ratio;
+    if (percent > 0) {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('delete', item);
+    } else {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('edit', item);
+
+    }
+    if (Math.abs(percent) > 1) {
+      // console.log('overscroll');
+    }
+  }
+
+  closeSlide(slideDOM) {
+    setTimeout(() => {
+      slideDOM.close();
+    }, 100);
+  }
+
+  async showAlertForSlide(action, item) {
+    if (this.alertShowing) {
+      return;
+    }
+
+    console.log((action === 'edit')? 'left side ': 'right side' +  ' >>> '  + action);
+    this.alertShowing = true;
+    let msg = this.T_SVC['ALERT_TEXT.EDIT_APPOINTMENT'];
+    if (action === 'delete') {
+      msg = this.T_SVC['ALERT_TEXT.DELETE_APPOINTMENT'];
+    }
+    let alert = await this.alertCtrl.create({
+      header: 'Confirmation',
+      message: msg,
+      cssClass: 'alert-warning',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Proceed',
+          handler: () => {
+          console.log(action +' clicked');
+          // this.VM.visitors.splice(index, 1);
+
+          }
+        }
+      ]
+    });
+    alert.present();
+    alert.onWillDismiss().then(() => {
+      this.alertShowing = false;
+    })
+  }
 
   viewBooking(list){
 

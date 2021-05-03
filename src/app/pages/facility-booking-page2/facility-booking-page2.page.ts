@@ -624,13 +624,7 @@ export class FacilityBookingPage2Page implements OnInit {
           return;
       }else if(result && result.Status == 1){
         window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
-        let toast = await this.toastCtrl.create({
-          message: this.T_SVC['FACILITY_BOOKING.ADD_APPOINTMENT_DONE_SUCCESS'],
-          duration: 3000,
-          color: 'primary',
-          position: 'bottom'
-        });
-        toast.present();
+        this.showAlert(this.T_SVC['FACILITY_BOOKING.ADD_APPOINTMENT_DONE_SUCCESS']);
         this.events.publishDataCompany({
           action: 'addAppointmentSuccess',
           title: '',
@@ -718,6 +712,16 @@ export class FacilityBookingPage2Page implements OnInit {
         alert.present();
       }
     );
+  }
+
+  async showAlert(msg){
+    let alert = await this.alertCtrl.create({
+      header: 'Notification',
+      message: msg,
+      cssClass: 'alert-danger',
+      buttons: ['Okay']
+    });
+    alert.present();
   }
 
   ionViewWillEnter(){

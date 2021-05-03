@@ -758,7 +758,7 @@ ionViewDidEnter() {
 
       var params = {"SearchString":company,
       "OffSet":"0",
-      "Rows":"200"};
+      "Rows":"20000"};
       // this.VM.host_search_id = "adam";
       this.apiProvider.GetVisitorCompany(params).then(
         (val) => {

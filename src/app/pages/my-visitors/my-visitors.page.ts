@@ -95,7 +95,7 @@ export class MyVisitorsPage implements OnInit {
       var params = {
         "HOSTIC": STAFF_IC,
         "OffSet": this.OffSet+"",
-        "Rows":"20"
+        "Rows":"20000"
      }
      this.apiProvider.GetVisitorsListByHost(params, showLoading).then(
        (val) => {

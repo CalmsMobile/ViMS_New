@@ -1,32 +1,28 @@
-.visitorPopupModal {
-    padding: 30px;
-    background: #dfd5d6;
-    margin: 0 auto;
-    .modal-wrapper {
-         border-radius: 7px;
-         background: rgba(0, 0, 0, 0.5);
-         height: 60vh !important;
-         margin-top: 25%;
-         ion-list{               
-               
-              .login-top{
-                   
-                   background: red; 
-                   padding: 5px;
-               //     margin-bottom: 15px;         
-              }
-              img {
-                   margin-top: 5%;
-                  
-              }
-
-              .item{
-                    
-                   background: none !important;
-                   button{
-                        height:4rem !important;
-                   }
-              }
-         }
+.modal-wrapper {
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.5);
+  height: 60vh !important;
+  margin-top: 25%;
+  ion-list {
+    .login-top {
+      background: red;
+      padding: 5px;
+      //     margin-bottom: 15px;
     }
+    img {
+      margin-top: 5%;
+    }
+
+    .item {
+      background: none !important;
+      button {
+        height: 4rem !important;
+      }
+    }
+  }
+}
+
+.ion-labelClass {
+  display: inline-flex;
+  align-items: center;
 }

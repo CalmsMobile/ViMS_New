@@ -142,7 +142,7 @@ export class QuickPassHistoryPagePage implements OnInit {
       var params = {
       "HostIC": HOST_ID,
       "OffSet": ""+ this.OffSet,
-      "Rows":"1000"
+      "Rows":"20000"
     };
       // this.VM.host_search_id = "adam";
       this.apiProvider.GetAllQuickPassVisitorsHistory(params, showLoading).then(
@@ -396,6 +396,27 @@ export class QuickPassHistoryPagePage implements OnInit {
       (await alert).present();
     }
 
+  }
+
+  logDrag(event, item, slideDOM) {
+    let percent = event.detail.ratio;
+    if (percent > 0) {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('delete', item);
+    } else {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('edit', item);
+
+    }
+    if (Math.abs(percent) > 1) {
+      // console.log('overscroll');
+    }
+  }
+
+  closeSlide(slideDOM) {
+    setTimeout(() => {
+      slideDOM.close();
+    }, 100);
   }
 
   showDetails(item){

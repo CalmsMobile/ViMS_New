@@ -32,13 +32,15 @@ export class HostAccessComponent implements OnInit, OnDestroy {
       } else {
         key = hA.HostCardSerialNo;
       }
-      this.TIMEOUT = hA.QRCodeValidity;
-      this.qrCodePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+
-      '/Handler/ImageHandler.ashx?RefSlno=' + key + '&RefType=QR&Refresh='+ new Date().getTime();
+      const timeout1 = localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_TIMEOUT);
+      this.TIMEOUT = timeout1 ? (+timeout1): hA.QRCodeValidity;
+      // this.qrCodePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+
+      // '/Handler/ImageHandler.ashx?RefSlno=' + key + '&RefType=QR&Refresh='+ new Date().getTime();
+      this.qrCodePath = hA.DataString;
       this.INTERVAL = setInterval(() => {
         this.TIMEOUT = this.TIMEOUT - 1;
         console.log("resetValues host access::" + this.TIMEOUT);
-        if (this.TIMEOUT === 0) {
+        if (this.TIMEOUT <= 0) {
           clearInterval(this.INTERVAL);
           this.resetValues();
         }

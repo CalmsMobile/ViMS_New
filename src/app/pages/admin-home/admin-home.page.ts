@@ -145,6 +145,10 @@ export class AdminHomePage implements OnInit {
     //setTimeout(()=>{refresher.target.complete();},2000)
 	}
 
+  editVisitors(slideDOM, action, item){
+
+  }
+
 	getAppointmentHistory(refresher){
     this.loadingFinished = false;
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -153,7 +157,7 @@ export class AdminHomePage implements OnInit {
 			var params = {
       "hostID":hostId,
 			"OffSet": ""+ this.OffSet,
-      "Rows":"500",
+      "Rows":"20000",
       "StatusType":"0"
     };
 
