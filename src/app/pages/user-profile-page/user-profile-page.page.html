@@ -75,32 +75,33 @@
               [(ngModel)]="data.profile.HOST_ID" formControlName="hostId"
               [class.error1]="!userProfile.controls.hostId.valid && userProfile.controls.hostId.dirty"></ion-input>
           </ion-item>
+
           <ion-item class="box_round_corner" lines="none" no-padding transparent>
-            <ion-label color="danger" style="font-size: 20px;
-                vertical-align: middle;
-                align-items: center;
-                align-content: center;
-                align-self: center;" position="floating">{{'USER_PROFILE.LAB_FLOOR' | translate}}</ion-label>
-            <ion-select slot="end" mode="ios" formControlName="floor" [(ngModel)]="data.profile.HostFloor"
-              placeholder="{{'USER_PROFILE.LAB_FLOOR' | translate}}" interface="action-sheet" enableBackdropDismiss>
-              <ion-label>{{'USER_PROFILE.LAB_FLOOR' | translate}}</ion-label>
-              <ion-select-option text-left *ngFor="let avl_floor of data.AVAIL_FLOOR" [value]="avl_floor.floor_id">
-                {{avl_floor.floor_desc}}
-              </ion-select-option>
-            </ion-select>
+            <div class="" style="width: 100%;">
+              <ion-label color="danger" style="font-size: 16px;padding-top: 10px;">{{'USER_PROFILE.LAB_FLOOR' |
+                translate}}</ion-label>
+
+              <ion-select mode="ios" formControlName="floor" [(ngModel)]="data.profile.HostFloor" class="select_icon"
+                placeholder="{{'USER_PROFILE.LAB_FLOOR' | translate}}" interface="action-sheet" enableBackdropDismiss>
+                <!-- <ion-label>{{'USER_PROFILE.LAB_FLOOR' | translate}}</ion-label> -->
+                <ion-select-option text-left *ngFor="let avl_floor of data.AVAIL_FLOOR" [value]="avl_floor.floor_id">
+                  {{avl_floor.floor_desc}}
+                </ion-select-option>
+              </ion-select>
+            </div>
           </ion-item>
           <!-- <ion-item no-padding transparent>
                   <ion-label>{{'USER_PROFILE.EMAIL_ALERT' | translate}}</ion-label>
                   <ion-toggle formControlName="emailAlert" color="danger" [(ngModel)]="data.profile.EMAIL_ALERT" [checked]="data.profile.EMAIL_ALERT"></ion-toggle>
               </ion-item> -->
           <ion-col align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
-            <ion-button bottom right icon-right align-items-end shape="round" fill="outline" color="danger"
+            <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="danger"
               style="margin-left: auto;margin-top:10px; display: block;" type="submit" [disabled]="userProfile.invalid">
               {{'USER_PROFILE.UPDATE_PROFILE' | translate}}</ion-button>
           </ion-col>
           <ion-col *ngIf="false" align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3
             col-xl-6>
-            <ion-button shape="round" expand="full" text-capitalize color="danger"
+            <ion-button shape="round" expand="full" text-capitalize color="danger" fill="solid"
               (click)="onEvent('onChangePassword')">
               {{'USER_PROFILE.CHANGE_PASSWORD' | translate}}</ion-button>
           </ion-col>

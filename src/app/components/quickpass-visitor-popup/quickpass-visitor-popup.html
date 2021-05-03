@@ -26,8 +26,8 @@
                         <img class="qrCodeImage" [src]="qrCodeString"/>
                 </ion-item>
                 <ion-item>
-                    <ion-button shape="round" color='danger'
-                            style="padding: 14px 7px 14px 18px;    display: block;
+                    <ion-button shape="round" color='danger' fill="outline"
+                            style="padding: 14px 7px 14px 18px;display: block;
                             margin: 0 auto;min-width: 150px;"
                             (click)="UpdateQPVisitorCheckInTime()" >
                             {{CheckIn? ('SECURITY_APP.CHECK_IN' | translate) : ('SECURITY_APP.SHARE_QR' | translate)}}

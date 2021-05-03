@@ -107,9 +107,9 @@ ion-header.transparent-header.active::after {
   background-image: initial;
 }
 
-.commonItem {
-  // margin-top: -30px;
-}
+// .commonItem {
+//   // margin-top: -30px;
+// }
 
 .simple-form {
   display: flex;
@@ -118,14 +118,13 @@ ion-header.transparent-header.active::after {
   width: -webkit-fill-available;
 }
 .item-label-floating.item-has-placeholder.sc-ion-input-ios-h:not(.item-has-value),
-.item-label-floating.item-has-placeholder:not(.item-has-value)
-  .sc-ion-input-ios-h {
+.item-label-floating.item-has-placeholder:not(.item-has-value) .sc-ion-input-ios-h {
   opacity: 1;
 }
 .simple-form ion-label {
   // margin-left: 10px !important;
   font-size: 16px !important;
-  margin-bottom: 16px !important;
+  //margin-bottom: 16px !important;
 }
 .simple-form ion-input {
   min-width: 125px;
@@ -137,17 +136,14 @@ ion-header.transparent-header.active::after {
   margin: 0 auto;
   --padding-start: 0px;
 }
-.item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus):not(.item-input-has-focus)
-  .item-inner {
+.item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
   border-bottom-color: transparent !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
 
-.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus)
-  .item-inner,
-.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus)
-  .item-inner {
+.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner,
+.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
   border-bottom-color: #8e8e93 !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -164,7 +160,7 @@ ion-header.transparent-header.active::after {
   width: 100%;
   min-width: 100%;
   padding: 10px;
-  margin-top: 10px;
+  //margin-top: 10px;
 }
 .simple-form .box_round_corner {
   width: 97.5%;
@@ -190,4 +186,8 @@ ion-header.transparent-header.active::after {
 
 .select-text {
   padding: 5px;
+}
+
+ion-item {
+  margin-bottom: 8px !important;
 }
