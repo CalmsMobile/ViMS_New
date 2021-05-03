@@ -77,8 +77,7 @@
 
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings && hostSettings.IdProofEnabled && !hostSettings.IdProofRequired">
-            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_USER_IC' | translate}} <span
-                style="color: #cf3c4f;">*</span></ion-label>
+            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_USER_IC' | translate}}</ion-label>
             <ion-input required formControlName="icPassport" placeholder="{{'ADD_VISITORS.LAB_PH_USER_IC' | translate}}"
               style="font-size: 16px;" type="text" [(ngModel)]="visitorInfoModal.visitor_ic" [disabled]="disableIc">
             </ion-input>
@@ -96,8 +95,7 @@
 
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings && hostSettings.EmailEnabled && !hostSettings.EmailRequired">
-            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_E_MAIL' | translate}} <span
-                style="color: #cf3c4f;">*</span></ion-label>
+            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_E_MAIL' | translate}}</ion-label>
             <ion-input required editable='false' formControlName="email"
               placeholder="{{'ADD_VISITORS.LAB_PH_EMAIL' | translate}}" style="font-size: 16px;" type="email"
               pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
@@ -108,7 +106,7 @@
             <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_USER_COMPANY' | translate}} <span
                 style="color: #cf3c4f;">*</span></ion-label>
             <ion-input required editable='false' formControlName="email" placeholder="{{'ADD_VISITORS.LAB_PH_EMAIL' | translate}}"
-              style="font-size: 16px;" type="email" 
+              style="font-size: 16px;" type="email"
               pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" [(ngModel)]="visitorInfoModal.visitor_email"></ion-input>
           </ion-item> -->
 
@@ -146,8 +144,7 @@
 
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings && hostSettings.ContactNumberEnabled && !hostSettings.ContactNumberRequired">
-            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_USER_CONTACT' | translate}} <span
-                style="color: #cf3c4f;">*</span></ion-label>
+            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_USER_CONTACT' | translate}}</ion-label>
             <ion-input required editable='false' placeholder="{{'ADD_VISITORS.LAB_PH_USER_CONTACT' | translate}}"
               style="font-size: 16px;" type="text" formControlName="contact"
               [(ngModel)]="visitorInfoModal.visitor_mobile_no"></ion-input>
@@ -164,8 +161,7 @@
 
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings && hostSettings.VehicleNumberEnabled && !hostSettings.VehicleNumberRequired">
-            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}} <span
-                style="color: #cf3c4f;">*</span></ion-label>
+            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
             <ion-input required editable='false' placeholder="{{'ADD_APPOIN.STEP2.PH_VECHILE_NO' | translate}}"
               style="font-size: 16px;" type="text" formControlName="vechile" [(ngModel)]="visitorInfoModal.vehicle_no">
             </ion-input>
@@ -188,7 +184,6 @@
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings && hostSettings.GenderEnabled && !hostSettings.GenderRequired">
             <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}
-              <span style="color: #cf3c4f;">*</span>
             </ion-label>
             <ion-select mode="ios" formControlName="purpose" style="font-size: 16px;"
               [(ngModel)]="visitorInfoModal.visitor_gender" formControlName="gender" interface="action-sheet"
@@ -209,8 +204,7 @@
 
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings && hostSettings.AddressEnabled && !hostSettings.AddressRequired">
-            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_APPOIN.STEP2.ADDRESS' | translate}} <span
-                style="color: #cf3c4f;">*</span></ion-label>
+            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_APPOIN.STEP2.ADDRESS' | translate}}</ion-label>
             <ion-input required placeholder="{{'ADD_APPOIN.STEP2.ENTER_ADDRESS' | translate}}" style="font-size: 16px;"
               type="text" formControlName="address" [(ngModel)]="visitorInfoModal.visitor_address"></ion-input>
           </ion-item>
@@ -232,9 +226,7 @@
 
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings && hostSettings.CountryEnabled && !hostSettings.CountryRequired">
-            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_COUNTRY' | translate}}
-              <span style="color: #cf3c4f;">*</span>
-            </ion-label>
+            <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_COUNTRY' | translate}}</ion-label>
             <ion-select mode="ios" formControlName="country" style="font-size: 16px;"
               [(ngModel)]="visitorInfoModal.visitor_country" interface="action-sheet"
               placeholder="{{'COMMON.SELECT_COUNTRY' | translate}}">

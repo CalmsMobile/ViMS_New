@@ -39,7 +39,7 @@ export class HostAccessComponent implements OnInit, OnDestroy {
       this.INTERVAL = setInterval(() => {
         this.TIMEOUT = this.TIMEOUT - 1;
         console.log("resetValues host access::" + this.TIMEOUT);
-        if (this.TIMEOUT === 0) {
+        if (this.TIMEOUT <= 0) {
           clearInterval(this.INTERVAL);
           this.resetValues();
         }

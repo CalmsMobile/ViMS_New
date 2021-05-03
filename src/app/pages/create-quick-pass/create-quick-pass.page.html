@@ -29,7 +29,7 @@
             ></ion-input> -->
             <ion-label position="stacked" *ngIf="expiryTime">{{'CREATE_QUICK_PASS.EXPIRY_TIME' | translate}} <span style="color: #cf3c4f;">*</span></ion-label>
             <ion-label position="stacked" *ngIf="!expiryTime">{{'CREATE_QUICK_PASS.SELECT_EXPIRY_TIME' | translate}} <span style="color: #cf3c4f;">*</span></ion-label>
-            
+
             <ion-input  placeholder="{{expiryTime| date : 'dd MMM yyyy hh:mm a'}}" type="text" [(ngModel)]="expiryTime" [ngModelOptions]="{standalone: true}"></ion-input>
 
         </ion-item>
@@ -57,7 +57,7 @@
         </ion-item> -->
 
         <!-- <ion-item lines="none" no-padding transparent style="--padding-start: 0px;">
-          
+
           <ion-label position="stacked">{{'ADD_VISITORS.STEP2.VECHILE_NO' | translate}}<span style="color: #cf3c4f;">*</span></ion-label>
           <ion-input  formControlName="vechile" placeholder="{{'ADD_VISITORS.STEP2.VECHILE_NO' | translate}}" required type="text" [(ngModel)]="visitorInfoModal.vehicle_no"></ion-input>
 
@@ -86,7 +86,9 @@
           </ion-item>
 
        <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="danger"
-        style="margin-left: auto;margin-top:0px; display: block;margin-top: 10px;"
+        style="margin: 0 auto;
+        display: table;
+        margin-top: 20px;"
         type="submit" [disabled]="visitorProfile.invalid">
         {{'ACC_MAPPING.CREATE' | translate}}</ion-button>
       </ion-col>

@@ -153,10 +153,10 @@ export class AppointmentHistoryPage implements OnInit {
     let percent = event.detail.ratio;
     if (percent > 0) {
       this.closeSlide(slideDOM);
-      this.showAlertForSlide('delete', item);
+      // this.showAlertForSlide('delete', item);
     } else {
       this.closeSlide(slideDOM);
-      this.showAlertForSlide('edit', item);
+      // this.showAlertForSlide('edit', item);
 
     }
     if (Math.abs(percent) > 1) {
