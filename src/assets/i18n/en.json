@@ -202,21 +202,16 @@
 	},
 	"FACILITY_HISTORY": {
 		"TITLE": "Facility History",
-		"DETAIL": "Facility History",
-		"NO_LIST": "No Facility",
-		"NO_UPPCOMING_LIST": "No Upcoming Booking",
-		"NO_PENDING_LIST": "No Pending Approval",
-		"NO_APPROVED_LIST": "No Approved Booking",
-		"NO_CANCELED_LIST": "No Canceled Booking"
+		"NO_LIST": "No Facility"
 	},
 	"APPOIN_HISTORY": {
 		"TITLE": "Appointment History",
 		"DETAIL": "Appointment History",
 		"NO_LIST": "No Appointments",
 		"NO_UPPCOMING_LIST": "No Upcoming Appointments",
-		"NO_PENDING_LIST": "No Pending Appointments",
-		"NO_APPROVED_LIST": "No Approved Appointments",
-		"NO_CANCELED_LIST": "No Canceled Appointments"
+		"NO_PENDING_LIST": "No Pending Approval",
+		"NO_APPROVED_LIST": "No Approved Approval",
+		"NO_CANCELED_LIST": "No Canceled Approval"
 	},
 	"FACILITY_HOME": {
 		"TITLE": "Home"

@@ -103,7 +103,7 @@ text-align: -webkit-center;">
               {{'FACILITY_SLOT.NO_SLOTS' | translate}}</h5>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="list.key == selectedTap">
+        <ion-row *ngIf="list.key == selectedTap" style="width: 100%;">
           <ion-col size="3" *ngFor="let slot of list.value">
             <p *ngIf="slot.SessionEnd" class="SessionEnd" (click)="selectSlot(slot)">
               {{slot.startDisplayTime}}<br>{{slot.endDisplayTime}}</p>

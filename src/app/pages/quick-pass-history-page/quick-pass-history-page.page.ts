@@ -398,6 +398,27 @@ export class QuickPassHistoryPagePage implements OnInit {
 
   }
 
+  logDrag(event, item, slideDOM) {
+    let percent = event.detail.ratio;
+    if (percent > 0) {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('delete', item);
+    } else {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('edit', item);
+
+    }
+    if (Math.abs(percent) > 1) {
+      // console.log('overscroll');
+    }
+  }
+
+  closeSlide(slideDOM) {
+    setTimeout(() => {
+      slideDOM.close();
+    }, 100);
+  }
+
   showDetails(item){
   //   const modalOptions: ModalOptions = {
   //     cssClass: "signInModal"

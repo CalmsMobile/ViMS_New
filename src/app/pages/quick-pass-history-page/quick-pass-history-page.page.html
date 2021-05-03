@@ -27,11 +27,11 @@
   <ion-list>
     <ion-row >
       <ion-col size="12" size-sm size-md>
-        
+
           <ion-list no-padding no-margin *ngFor="let list of appointmentsClone">
-            <ion-card class="card_appointment" 
+            <ion-card class="card_appointment"
               no-padding no-border >
-              <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, list.value)">
+              <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, list.value, slideDOM)">
                 <ion-item lines="none" mode="ios" no-padding class="apt-item" (click)="showDetails(list)">
                   <ion-row lines="none" no-padding full-width>
                     <ion-col size="4" class="col apt-left" no-padding>
@@ -102,17 +102,9 @@
                     </ion-col> -->
                   </ion-row>
                 </ion-item>
-                <ion-item-options side="end" primary slide-right-width>
-                  <!-- <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="light"
-                  fill="clear" no-border (click)="editVisitors(slideDOM, 'delete', list.value)">
-                    <ion-icon color="light" class="siva-icon-trash-empty slideIcons"></ion-icon>
-                  </ion-button> -->
+                <ion-item-options side="end" slide-right-width>
               </ion-item-options>
-                <ion-item-options side="start" primary slide-right-width>
-                  <!-- <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="light"
-                  fill="clear" shape="round" no-border (click)="editVisitors(slideDOM, 'edit', list.value)">
-                      <ion-icon color="light" class="siva-icon-pencil-2 slideIcons"></ion-icon>
-                  </ion-button> -->
+                <ion-item-options side="start" slide-right-width>
                 </ion-item-options>
               </ion-item-sliding>
             </ion-card>

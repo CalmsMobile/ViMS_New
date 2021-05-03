@@ -153,6 +153,14 @@ $global-opacity: (
   color: white !important;
 }
 
+.action-sheet-cancel.sc-ion-action-sheet-ios::after {
+  background: #bdbdbd;
+}
+
+.action-sheet-button-inner.sc-ion-action-sheet-ios {
+  color: #ec407a;
+}
+
 ion-title {
   margin-left: -40px;
   width: -webkit-fill-available;
@@ -462,7 +470,11 @@ ion-icon {
   // Get the color variant
   $color: map-get($color-spectrum, $variant);
   // Get the alpha setting
-  $alpha: if(type-of($opacity) == "number", $opacity, map-get($global-opacity, $opacity));
+  $alpha: if(
+    type-of($opacity) == "number",
+    $opacity,
+    map-get($global-opacity, $opacity)
+  );
   // Set the alpha of the color
   @if $alpha {
     $color: rgba($color, $alpha);
@@ -972,16 +984,31 @@ $checkbox-md-icon-checkmark-color: #ffffff;
 }
 
 // Input Field Settings
-$text-input-md-highlight-color: theme-colors("textColors", "secondary") !important;
-$text-input-md-highlight-color-valid: theme-colors("textColors", "secondary") !important;
+$text-input-md-highlight-color: theme-colors(
+  "textColors",
+  "secondary"
+) !important;
+$text-input-md-highlight-color-valid: theme-colors(
+  "textColors",
+  "secondary"
+) !important;
 $text-input-md-highlight-color-invalid: red !important;
-$text-input-md-background-color: theme-colors("mainColors", "accent") !important;
+$text-input-md-background-color: theme-colors(
+  "mainColors",
+  "accent"
+) !important;
 // Input Settings Label
 $label-md-text-color: #8e8e93 !important;
 $label-ios-text-color: #8e8e93 !important;
 $text-input-ios-highlight-color-invalid: red !important;
-$text-input-ios-highlight-color: theme-colors("textColors", "secondary") !important;
-$text-input-ios-highlight-color-valid: theme-colors("textColors", "secondary") !important;
+$text-input-ios-highlight-color: theme-colors(
+  "textColors",
+  "secondary"
+) !important;
+$text-input-ios-highlight-color-valid: theme-colors(
+  "textColors",
+  "secondary"
+) !important;
 
 // Tabs Setting
 $tabs-background: #eb445a;
