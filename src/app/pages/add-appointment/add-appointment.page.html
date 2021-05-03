@@ -171,11 +171,9 @@
 
 </ion-content>
 
-
-
 <ion-footer transparent>
     <ion-toolbar transparent>
-        <ion-button bottom slot="end" icon-right align-items-end shape="round" fill="outline" color="danger"
+        <ion-button bottom slot="end" icon-right align-items-end shape="round" fill="solid" color="danger"
         style="height: 40px;margin-left: auto;display: block;"
         (click)="proceedToNextStep()" [disabled]="(VM.visitors.length == 0)">
             {{'ACC_MAPPING.PROCEED' | translate}}

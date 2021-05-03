@@ -42,8 +42,8 @@ ion-thumbnail {
   background-position: center !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
-  height: 120px;
-  padding-top: 40px !important;
+  height: 85px;
+  padding-top: 15px !important;
   background: linear-gradient(to bottom, #ff3399 0%, #ff0000 100%);
 }
 .circle-pic {
@@ -79,9 +79,11 @@ ion-thumbnail {
 .simple-form ion-select {
   border-radius: 5px;
   transition: border-color 0.5s ease-out;
-  padding: 15px !important;
+  //padding: 15px !important;
   text-align: left;
-  margin: 0 auto;
+  padding-left: 0px;
+  //margin: 0 auto;
+  padding-top: 6px !important;
 }
 .simple-form .box_round_corner {
   width: 97.5%;
@@ -103,4 +105,12 @@ ion-thumbnail {
 }
 .simple-form ion-input:invalid {
   border-left-color: salmon !important;
+}
+
+.select_icon {
+  //color: red;
+  width: 100%;
+}
+ion-select {
+  max-width: 100%;
 }
