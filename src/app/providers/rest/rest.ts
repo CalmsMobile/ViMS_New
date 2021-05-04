@@ -477,11 +477,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SavePushNotificationId', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -551,11 +551,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetValidateHost', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -903,21 +903,23 @@ export class RestProvider {
 
   GetAddVisitorSettings(data){
     data  = this.setAuthorizedInfo(data);
+    var loading = this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAddVisitorSettings');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          // this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAddVisitorSettings', data, {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -926,10 +928,9 @@ export class RestProvider {
         }else{
           reject(output);
         }
-        //this.dismissLoading();
       }, (err) => {
+        this.dismissLoading();
         reject(err);
-        //this.dismissLoading();
       });
     });
   }
@@ -1048,10 +1049,11 @@ export class RestProvider {
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
+        this.dismissLoading();
         reject({
             "message":"No Internet"
           });
-          this.dismissLoading();
+
           return;
       }
 
@@ -1096,10 +1098,10 @@ export class RestProvider {
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
+        this.dismissLoading();
           reject({
             "message":"No Internet"
           });
-          this.dismissLoading();
           return;
       }
 
@@ -1145,10 +1147,10 @@ export class RestProvider {
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
+        this.dismissLoading();
         reject({
             "message":"No Internet"
           });
-          this.dismissLoading();
           return;
       }
      this.http.post(url, JSON.stringify(data), {
@@ -1190,10 +1192,11 @@ export class RestProvider {
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
+        this.dismissLoading();
         reject({
             "message":"No Internet"
           });
-          this.dismissLoading();
+
           return;
       }
 
@@ -1230,10 +1233,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
+        this.dismissLoading();
           reject({
             "message":"No Internet"
           });
-          this.dismissLoading();
+
           return;
       }
 
@@ -1277,10 +1281,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
+        this.dismissLoading();
           reject({
             "message":"No Internet"
           });
-          this.dismissLoading();
+
           return;
       }
 
@@ -1336,23 +1341,19 @@ export class RestProvider {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          if(showLoading){
-            await this.dismissLoading();
-          }
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+
+        return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/syncAppointment', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(async response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(showLoading){
-          await this.dismissLoading();
-
-        }
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1375,9 +1376,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        if(loading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1397,22 +1396,18 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          if(loading){
-            this.dismissLoading();
-          }
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(URL, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(loading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1430,9 +1425,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        if(loading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1452,23 +1445,18 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
      if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          if(loading){
-            this.dismissLoading();
-          }
-
-          return;
+      this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(loading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
 
         if(output){
           if(output.Table != undefined){
@@ -1484,9 +1472,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        if(loading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1509,23 +1495,18 @@ export class RestProvider {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          if(loading){
-            this.dismissLoading();
-          }
-
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(loading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1543,9 +1524,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        if(loading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1569,23 +1548,18 @@ export class RestProvider {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          if(loading){
-            this.dismissLoading();
-          }
-
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(loading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1603,9 +1577,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        if(loading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
         reject(err);
 
       });
@@ -1626,22 +1598,18 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          if(showLoading){
-            this.dismissLoading();
-          }
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(showLoading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -1659,9 +1627,7 @@ export class RestProvider {
           }
         }
       }, (err) => {
-        if(showLoading){
-          this.dismissLoading();
-        }
+        this.dismissLoading();
 
         reject(err);
       });
@@ -1681,11 +1647,11 @@ export class RestProvider {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -1728,11 +1694,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -1774,11 +1740,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -1820,11 +1786,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -1866,11 +1832,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -1912,11 +1878,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -2005,11 +1971,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(URL, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -2052,11 +2018,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(URL, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -2100,11 +2066,11 @@ export class RestProvider {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeApppointmentApprovalSettings', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -2148,11 +2114,11 @@ export class RestProvider {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/getHostNotification', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -2196,11 +2162,11 @@ export class RestProvider {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -2241,11 +2207,11 @@ export class RestProvider {
 
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -2337,11 +2303,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       // alert("data: "+ JSON.stringify(data));
@@ -2387,11 +2353,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       this.http.post(url, JSON.stringify(data), {
@@ -2434,11 +2400,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       // alert("data: "+ JSON.stringify(data));
@@ -2482,11 +2448,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       // alert("data: "+ JSON.stringify(data));
@@ -2531,11 +2497,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       // alert("data: "+ JSON.stringify(data));
@@ -2579,11 +2545,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       // alert("data: "+ JSON.stringify(data));
@@ -2629,11 +2595,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       // alert("data: "+ JSON.stringify(data));
@@ -2679,11 +2645,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       // alert("data: "+ JSON.stringify(data));
@@ -2730,11 +2696,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       // alert("data: "+ JSON.stringify(data));
@@ -2779,11 +2745,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       // alert("data: "+ JSON.stringify(data));
@@ -3202,11 +3168,11 @@ export class RestProvider {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
       this.http.post(ApiUrl, {}, {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
@@ -3465,11 +3431,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       this.http.post(api, JSON.stringify(data), {
@@ -3517,11 +3483,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       this.http.post(api, JSON.stringify(data), {
@@ -3565,11 +3531,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       this.http.post(api, JSON.stringify(data), {
@@ -3615,11 +3581,11 @@ export class RestProvider {
     return new Promise((resolve, reject) => {
 
       if (this.checkConnection()) {
-          reject({
-            "message":"No Internet"
-          });
-          this.dismissLoading();
-          return;
+        this.dismissLoading();
+        reject({
+          "message":"No Internet"
+        });
+        return;
       }
 
       this.http.post(api, JSON.stringify(data), {

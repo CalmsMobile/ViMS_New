@@ -21,7 +21,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class AppointmentDetailsPage implements OnInit {
 
-
+  fromPage = '';
   appointment : any;
   facilityBooking : any ;
   notifyTime  = 0;
@@ -199,6 +199,7 @@ export class AppointmentDetailsPage implements OnInit {
         const passData = this.router.getCurrentNavigation().extras.state.passData;
         console.log('passData : ' + passData);
         this.appointment = passData.appointment;
+        this.fromPage = passData.fromPage;
         if(this.appointment && this.appointment[0] && !this.appointment[0].isFacilityAlone){
           var fTime = new Date(this.appointment[0].START_DATE).getTime();
           var cDate = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");
@@ -250,7 +251,7 @@ export class AppointmentDetailsPage implements OnInit {
   }
 
   goBack() {
-    this.navCtrl.pop();
+    this.router.navigateByUrl(this.fromPage);
     console.log('goBack ');
   }
 
