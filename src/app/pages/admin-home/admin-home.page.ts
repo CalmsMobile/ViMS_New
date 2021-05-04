@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { NavController, ToastController, AlertController, MenuController } from '@ionic/angular';
@@ -28,6 +29,7 @@ export class AdminHomePage implements OnInit {
   constructor(public navCtrl: NavController,
     private toastCtrl:ToastController,
     private router: Router,
+    private datePipe: DatePipe,
     private eventService: EventsService,
     private translate:TranslateService,
     private alertCtrl: AlertController, public apiProvider: RestProvider, private menuCtrl: MenuController) {
@@ -352,7 +354,7 @@ export class AdminHomePage implements OnInit {
 
   goBack() {
     this.navCtrl.pop();
-    console.log('goBack ');
+    this.router.navigateByUrl('home-view');
   }
 
   getPreAppointmentenableApprovalSettings(){
@@ -403,7 +405,8 @@ export class AdminHomePage implements OnInit {
       var HOSTIC = JSON.parse(hostData).HOSTIC;
 			var params = {
 			"STAFF_IC":HOSTIC,
-			"appointment_group_id": list[0].appointment_group_id
+			"appointment_group_id": list[0].appointment_group_id,
+      "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
 		};
 		// this.VM.host_search_id = "adam";
 		this.apiProvider.GetAppointmentByGroupId(params).then(

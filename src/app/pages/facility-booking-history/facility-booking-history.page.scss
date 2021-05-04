@@ -47,14 +47,14 @@
   position: relative;
   //background: #385a94;
   border-radius: 50%;
-  border: 1px solid #673ab7;
+  border: 1px solid #ffeb3b;
   height: 25px;
   width: 25px;
   margin-bottom: 3px;
 }
 .inner-circle {
   position: absolute;
-  background: #673ab7;
+  background: #ffeb3b;
   border-radius: 50%;
   right: 2px;
   left: 2px;
@@ -62,7 +62,8 @@
   bottom: 2px;
   padding: 0px;
   text-align: center;
-  color: #ffffff;
+  color: #000000;
+  font-weight: bold;
 }
 
 .outer-circle1 {

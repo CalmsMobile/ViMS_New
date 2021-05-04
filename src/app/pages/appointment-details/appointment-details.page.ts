@@ -299,23 +299,12 @@ export class AppointmentDetailsPage implements OnInit {
     if(!appointment.HexCode){
       appointment.HexCode = "";
     }
-    // var qrJsonString1 = "{\"aptid\":\""+appointment.VisitorBookingSeqId+ "\",\"aptgid\":\"" + title + "\",\"cid\":\"" + appointment.cid + "\"}";
-    var qrJsonString1 = appointment.HexCode;
-    var key = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
-    var iv = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
-
-    var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(qrJsonString1), key,
-    {
-        keySize: 128,
-        iv: iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-    });
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     var hostName = "";
     if(hostData){
       hostName = JSON.parse(hostData).HOSTNAME;
     }
+    var qrJsonString1 = appointment.HexCode;
     var qrCodeString = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=' + qrJsonString1 + '&RefType=QR&Refresh='+ new Date().getTime();
     const fileTransfer: FileTransferObject = this.transfer.create();
     // const fileURI = this.file.dataDirectory + encrypted + '.jpg';
@@ -344,7 +333,6 @@ export class AppointmentDetailsPage implements OnInit {
               fileTransfer.download(url, targetPath).then(async (entry) => {
                 (await loading).dismiss();
                 console.log('download complete: ' + entry.toURL());
-                console.log("New encrypt: "+ encrypted);
                 var data = "Hi, I have shared the QR code for our appointment. Please use the QR code for your registration when you visit me."+
                 "\n"+" Thanks,"+"\n"+"["+hostName+"]";
                 this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(async () => {

@@ -6,7 +6,9 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
-import { ToastController, Platform, LoadingController, ModalController, NavParams } from '@ionic/angular';
+import { ToastController, Platform, LoadingController, ModalController, NavParams, AlertController } from '@ionic/angular';
+import { RestProvider } from 'src/app/providers/rest/rest';
+import { DatePipe } from '@angular/common';
 
 /**
  * Generated class for the CustomVisitorPopupComponent component.
@@ -27,17 +29,24 @@ export class CustomVisitorPopupComponent{
     "coverImage":"assets/images/profile_bg.jpg"
   };
   imageURLType: any = "&RefType=QR&Refresh="+ new Date().getTime();
+  visitorType ="&RefType=VPB&Refresh=";
   aptid:any = "";
   aptgid:any = "";
   cid:any = "";
-  qrCodeString: any = "";
+  // qrCodeString: any = "";
   qrJsonString1:any = "";
   T_SVC:any;
   qrCodePath = '';
+  userImgPath = ''
+  INTERVAL: any;
+  TIMEOUT = 0;
+  IsDynamicQR = false;
   constructor(public viewCtrl: ModalController,
     public toastCtrl: ToastController,
-    private platform: Platform,
+    private apiProvider: RestProvider,
+    private datePipe: DatePipe,
     private androidPermissions : AndroidPermissions,
+    private alertCtrl: AlertController,
     private loadingCtrl : LoadingController,
     private translate: TranslateService,
     private transfer: FileTransfer, private file: File,
@@ -49,40 +58,72 @@ export class CustomVisitorPopupComponent{
       this.cid = navParams.data.data.cid;
       var HexCode = navParams.data.data.HexCode;
 
+      this.userImgPath = this.data.logo + this.visitor.VisitorBookingSeqId + this.visitorType + new Date().getTime();
 
 
       // var qrJsonString1 = "{\"aptid\":\""+this.aptid+ "\",\"aptgid\":\"" + this.aptgid + "\",\"cid\":\"" + this.cid + "\"}";
       this.qrJsonString1 = HexCode;
-      var key = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
-      var iv = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
-
-      var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(this.qrJsonString1), key,
-      {
-          keySize: 128,
-          iv: iv,
-          mode: CryptoJS.mode.CBC,
-          padding: CryptoJS.pad.Pkcs7
-      });
-      this.qrCodeString = "" + encrypted;
-      console.log("New encrypt: "+ encrypted);
-
-    this.translate.get(['ALERT_TEXT.QRSHARE_SUCCESS']).subscribe(t => {
+      this.translate.get(['ALERT_TEXT.QRSHARE_SUCCESS']).subscribe(t => {
         this.T_SVC = t;
       });
-      this.qrCodePath = this.data.logo+this.qrJsonString1+this.imageURLType;
+      this.getDynamicQRCode();
       console.log(this.qrCodePath);
+  }
 
-  //   var decrypted = CryptoJS.AES.decrypt(encrypted, key, {
-  //     keySize: 128,
-  //     iv: iv,
-  //     mode: CryptoJS.mode.CBC,
-  //     padding: CryptoJS.pad.Pkcs7
-  // });
-  // console.log("New Decrypt: "+decrypted.toString(CryptoJS.enc.Utf8));
+  getDynamicQRCode() {
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+    if(settings && JSON.parse(settings)){
+      const objSetting = JSON.parse(settings);
+      this.IsDynamicQR = objSetting.Table1[0].IsDynamicQR;
+      if (this.IsDynamicQR) {
+        if(hostData){
+          var HOSTIC = JSON.parse(hostData).HOSTIC;
+          var params = {
+          "STAFF_IC":HOSTIC,
+          "QRCodeValue": this.visitor.HexCode,
+          "QRCodeValidity": objSetting.Table1[0].QRCodeValidity,
+          "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
+          };
+          this.resetQR(params);
+        }
+      } else {
+        this.qrCodePath = this.data.logo+this.qrJsonString1+this.imageURLType;
+      }
+    }
+  }
 
+  resetQR(params) {
+    params.CurrentDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    this.apiProvider.GetDynamicQRCodeForVisitor(params).then(
+      async (val) => {
+        var result = JSON.parse(JSON.stringify(val));
+        if(result){
+          const dataResult = JSON.parse(result);
+          this.qrCodePath = 'data:image/jpeg;base64,'+ dataResult.DataQRCodeString;
+          this.qrJsonString1 = dataResult.DataValueString;
+          clearInterval(this.INTERVAL);
+          this.TIMEOUT = +params.QRCodeValidity;
+          this.INTERVAL = setInterval(() => {
+            this.TIMEOUT = this.TIMEOUT - 1;
+            console.log("resetValues host access::" + this.TIMEOUT);
+            if (this.TIMEOUT <= 0) {
+              clearInterval(this.INTERVAL);
+              this.resetQR(params);
+            }
+          }, 1000);
+        }
+      },
+      async (err) => {
+        if(err && err.message == "No Internet"){
+          return;
+        }
+        }
+      );
   }
 
   dismiss() {
+    clearInterval(this.INTERVAL);
     this.viewCtrl.dismiss();
   }
 

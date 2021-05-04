@@ -64,3 +64,18 @@ ion-content .scroll-content {
   background-color: darkgrey;
   padding: 2px;
 }
+
+ion-button {
+  ion-label {
+    margin-bottom: 10px;
+  }
+}
+
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: #e13d3d;
+  border-radius: 50%;
+  display: inline-block;
+  padding-top: 5px;
+}

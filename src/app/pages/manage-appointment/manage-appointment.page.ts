@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { NavController, ActionSheetController, ToastController, AlertController } from '@ionic/angular';
@@ -41,6 +42,7 @@ export class ManageAppointmentPage implements OnInit {
     private actionSheetCtrl: ActionSheetController,
     private apiProvider: RestProvider,
     private groupBy : CustomPipe,
+    private datePipe: DatePipe,
     private router: Router,
     private events : EventsService,
     private toastCtrl : ToastController,
@@ -318,7 +320,8 @@ export class ManageAppointmentPage implements OnInit {
         var HOSTIC = JSON.parse(hostData).HOSTIC;
         var params = {
         "STAFF_IC":HOSTIC,
-        "appointment_group_id": list[0].appointment_group_id
+        "appointment_group_id": list[0].appointment_group_id,
+        "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
       };
       // this.VM.host_search_id = "adam";
       this.apiProvider.GetAppointmentByGroupId(params).then(

@@ -40,8 +40,7 @@
         <ion-item lines="full"
           [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
-          <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
-
+          <ion-icon name="{{(notification.IsRead === true || notification.IsRead === 'true') ? 'mail-open-outline': 'mail-unread-outline'}}" slot="start"></ion-icon>
           <ion-label text-wrap [innerHTML]="notification.HtmlContent.trim()">
 
 
@@ -71,7 +70,7 @@
         <ion-item lines="full"
           [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
-          <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
+          <ion-icon name="{{(notification.IsRead === true || notification.IsRead === 'true') ? 'mail-open-outline': 'mail-unread-outline'}}" slot="start"></ion-icon>
 
           <ion-label text-wrap [innerHTML]="notification.HtmlContent.trim()">
 
@@ -97,9 +96,11 @@
                   margin: 0 auto;
                   margin-top: 10px;
                   margin-bottom: 10px;
-              " src="assets/images/notification_empty.png">
-      <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">
-        {{'NOTIFICATION.NO_NOTIFICATION' | translate}}</h5>
+                  width: 200px;
+                  height: 200px;
+              " src="assets/images/notification_empty.jpeg">
+      <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">
+        {{'NOTIFICATION.NO_NOTIFICATION' | translate}}</h5> -->
     </ion-col>
   </ion-row>
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">

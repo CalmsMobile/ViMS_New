@@ -380,7 +380,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
   }
 
   goBack() {
-    this.navCtrl.pop();
+    this.router.navigateByUrl('admin-home');
     console.log('goBack ');
   }
 

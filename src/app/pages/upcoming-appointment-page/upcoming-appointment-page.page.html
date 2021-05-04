@@ -76,7 +76,6 @@
                     <ion-col size="2" class="colIcons">
 
                       <div>
-                        <!-- <ion-badge color="danger">3</ion-badge> -->
                         <div class="outer-circle2">
                           <div class="inner-circle2">
                             <span id="inside-content">{{list.value.length}}</span>
@@ -91,7 +90,7 @@
                             </span>
                           </div>
                         </div>
-                        <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
+
                       </div>
                       <div class="">
                         <div [ngClass]="{'outer-circle':list.value[0].Approval_Status=='Pending','outer-circle2':list.value[0].Approval_Status=='Canceled','outer-circle1':list.value[0].Approval_Status=='Approved'}">
@@ -308,10 +307,10 @@
                     margin: 0 auto;
                     margin-top: 10px;
                     margin-bottom: 10px;
-                    width: 150px;
-                " src="../../../assets/images/box.png">
-          <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">
-            {{'APPOIN_HISTORY.NO_UPPCOMING_LIST' | translate}}</h5>
+                    width: 200px;
+                " src="../../../assets/images/box.jpeg">
+          <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">
+            {{'APPOIN_HISTORY.NO_UPPCOMING_LIST' | translate}}</h5> -->
         </ion-col>
       </ion-row>
     </div>

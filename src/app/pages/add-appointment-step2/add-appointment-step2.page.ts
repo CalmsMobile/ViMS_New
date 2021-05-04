@@ -730,7 +730,7 @@ export class AddAppointmentStep2Page implements OnInit {
             }
           }
 
-
+          this.apiProvider.dismissLoading();
           this.showAlert(this.T_SVC['ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS']);
           this.events.publishDataCompany({
             action: 'addAppointmentSuccess1',
