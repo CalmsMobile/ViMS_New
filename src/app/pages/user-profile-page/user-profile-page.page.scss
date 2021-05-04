@@ -47,12 +47,12 @@ ion-thumbnail {
   background: linear-gradient(to bottom, #ff3399 0%, #ff0000 100%);
 }
 .circle-pic {
-  width: 125px;
-  height: 125px;
+  width: 130px;
+  height: 130px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
-  padding: 2px;
+  border: 5px solid white;
+  padding: 5px;
 }
 
 [no-lines] ion-label {
@@ -65,8 +65,10 @@ ion-thumbnail {
   overflow-y: scroll;
   padding-bottom: 1.25rem;
 }
-.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner,
-.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
+.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus)
+  .item-inner,
+.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus)
+  .item-inner {
   border-bottom-color: #8e8e93 !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -83,7 +85,6 @@ ion-thumbnail {
   text-align: left;
   padding-left: 0px;
   //margin: 0 auto;
-  padding-top: 6px !important;
 }
 .simple-form .box_round_corner {
   width: 97.5%;

@@ -27,13 +27,15 @@ export class CustomVisitorPopupComponent{
     "coverImage":"assets/images/profile_bg.jpg"
   };
   imageURLType: any = "&RefType=QR&Refresh="+ new Date().getTime();
+  visitorType ="&RefType=VPB&Refresh=";
   aptid:any = "";
   aptgid:any = "";
   cid:any = "";
-  qrCodeString: any = "";
+  // qrCodeString: any = "";
   qrJsonString1:any = "";
   T_SVC:any;
   qrCodePath = '';
+  userImgPath = ''
   constructor(public viewCtrl: ModalController,
     public toastCtrl: ToastController,
     private platform: Platform,
@@ -49,37 +51,16 @@ export class CustomVisitorPopupComponent{
       this.cid = navParams.data.data.cid;
       var HexCode = navParams.data.data.HexCode;
 
+      this.userImgPath = this.data.logo + this.visitor.VisitorBookingSeqId + this.visitorType + new Date().getTime();
 
 
       // var qrJsonString1 = "{\"aptid\":\""+this.aptid+ "\",\"aptgid\":\"" + this.aptgid + "\",\"cid\":\"" + this.cid + "\"}";
       this.qrJsonString1 = HexCode;
-      var key = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
-      var iv = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
-
-      var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(this.qrJsonString1), key,
-      {
-          keySize: 128,
-          iv: iv,
-          mode: CryptoJS.mode.CBC,
-          padding: CryptoJS.pad.Pkcs7
-      });
-      this.qrCodeString = "" + encrypted;
-      console.log("New encrypt: "+ encrypted);
-
-    this.translate.get(['ALERT_TEXT.QRSHARE_SUCCESS']).subscribe(t => {
+      this.translate.get(['ALERT_TEXT.QRSHARE_SUCCESS']).subscribe(t => {
         this.T_SVC = t;
       });
       this.qrCodePath = this.data.logo+this.qrJsonString1+this.imageURLType;
       console.log(this.qrCodePath);
-
-  //   var decrypted = CryptoJS.AES.decrypt(encrypted, key, {
-  //     keySize: 128,
-  //     iv: iv,
-  //     mode: CryptoJS.mode.CBC,
-  //     padding: CryptoJS.pad.Pkcs7
-  // });
-  // console.log("New Decrypt: "+decrypted.toString(CryptoJS.enc.Utf8));
-
   }
 
   dismiss() {

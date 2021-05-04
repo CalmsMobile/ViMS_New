@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';
@@ -27,7 +28,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
     private events : EventsService,
     private router: Router,
     private translate : TranslateService,
-    // public menu: MenuController,
+    private datePipe: DatePipe,
     private alertCtrl: AlertController, public apiProvider: RestProvider) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'ALERT_TEXT.EDIT_APPOINTMENT', 'ALERT_TEXT.DELETE_APPOINTMENT']).subscribe(t => {
@@ -310,7 +311,8 @@ export class UpcomingAppointmentPagePage implements OnInit {
       var HOSTIC = JSON.parse(hostData).HOSTIC;
 			var params = {
 			"STAFF_IC":HOSTIC,
-			"appointment_group_id": list[0].appointment_group_id
+			"appointment_group_id": list[0].appointment_group_id,
+      "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
 		};
 		// this.VM.host_search_id = "adam";
 		this.apiProvider.GetAppointmentByGroupId(params).then(
