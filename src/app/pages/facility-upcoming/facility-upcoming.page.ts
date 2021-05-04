@@ -229,7 +229,8 @@ export class FacilityUpcomingPage implements OnInit {
       const navigationExtras: NavigationExtras = {
         state: {
           passData: {
-            appointment: list
+            appointment: list,
+            fromPage: 'home-view'
           }
         }
       };
@@ -251,7 +252,8 @@ export class FacilityUpcomingPage implements OnInit {
         const navigationExtras: NavigationExtras = {
           state: {
             passData: {
-              appointment: aList
+              appointment: aList,
+              fromPage: 'home-view'
             }
           }
         };

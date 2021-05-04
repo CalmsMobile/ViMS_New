@@ -252,7 +252,8 @@ export class FacilityBookingHistoryPage implements OnInit {
       const navigationExtras: NavigationExtras = {
         state: {
           passData: {
-            appointment: list
+            appointment: list,
+            fromPage: 'facility-booking-history'
           }
         }
       };
@@ -274,7 +275,8 @@ export class FacilityBookingHistoryPage implements OnInit {
         const navigationExtras: NavigationExtras = {
           state: {
             passData: {
-              appointment: aList
+              appointment: aList,
+              fromPage: 'facility-booking-history'
             }
           }
         };
