@@ -3058,11 +3058,11 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
-          return;
-        }
-        if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
-          resolve(JSON.stringify(output));
+        // if(this.validateUser(output)){
+        //   return;
+        // }
+        if(output != undefined){
+          resolve(JSON.stringify(output.Table1[0]));
         }else{
           reject(JSON.stringify(output));
         }

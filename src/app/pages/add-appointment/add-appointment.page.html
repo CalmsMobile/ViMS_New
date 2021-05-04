@@ -107,7 +107,7 @@
     <ion-row style="background: rgb(248, 248, 248);    margin-top: 10px;" *ngIf="VM.addVisitorSettings">
         <ion-col size="8" style="padding: 0px;align-self: center;">
                 <ion-label margin-top padding-horizontal theme-text-color>
-                        {{'ADD_APPOIN.NUM_VISITORS' | translate}} ({{VM.visitors.length}}) </ion-label>
+                        {{'ADD_APPOIN.NUM_VISITORS' | translate}} </ion-label>
         </ion-col>
         <ion-col size="4" style="text-align: end;padding: 0px;">
           <!-- <ion-fab-button color="primary" (click)="goToAddManageVisitors()" style="display: inline-block;width: 35px;
@@ -116,7 +116,7 @@
 
         <ion-button color="light" fill="clear" (click)="goToAddManageVisitors()">
             <ion-icon size="small" name="person-add-outline" color="danger"></ion-icon>
-            <ion-label ><span class="dot">{{VM.visitors.length}}</span></ion-label>
+            <ion-label style="margin-left: -7px;"><span class="dot">{{VM.visitors.length}}</span></ion-label>
           </ion-button>
 
         </ion-col>
@@ -160,7 +160,7 @@
                     <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM)">
                     <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
                 </ion-button> -->
-                <ion-button slot="icon-only" no-padding color="primary" fill="outline" no-border (click)="editVisitors(slideDOM, 'edit', item)">
+                <ion-button slot="icon-only" style="align-self: center;" shape="round" no-padding color="primary" fill="clear" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                     <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>
                 </ion-button>
                 </ion-item-options>

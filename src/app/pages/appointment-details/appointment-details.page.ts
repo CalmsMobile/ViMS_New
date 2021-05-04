@@ -299,9 +299,6 @@ export class AppointmentDetailsPage implements OnInit {
     if(!appointment.HexCode){
       appointment.HexCode = "";
     }
-    if (appointment.QRVALUE) {
-      appointment.HexCode = appointment.QRVALUE;
-    }
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     var hostName = "";
     if(hostData){
@@ -395,9 +392,6 @@ export class AppointmentDetailsPage implements OnInit {
       title = this.facilityBooking[0].BookingID;
     }else{
       title = this.appointment[0].appointment_group_id;
-    }
-    if (visitor.QRVALUE) {
-      visitor.HexCode = visitor.QRVALUE;
     }
     const presentModel = await this.modalCtrl.create({
       component: CustomVisitorPopupComponent,

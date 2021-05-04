@@ -952,8 +952,10 @@ export class AddAppointmentPage implements OnInit {
 
   onChangeCategory(visitor_ctg_id, allowCheck){
 
-    if (allowCheck && visitor_ctg_id !== this.VM.visitor_ctg.visitor_ctg_id) {
-      this.VM.visitors = [];
+    if (this.VM.visitors) {
+      this.VM.visitors.forEach(element => {
+        element.VisitorCategory = visitor_ctg_id;
+      });
     }
 
     this.VM.visitor_ctg.visitor_ctg_id = visitor_ctg_id;

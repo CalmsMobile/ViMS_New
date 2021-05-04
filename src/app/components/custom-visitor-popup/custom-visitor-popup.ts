@@ -81,7 +81,7 @@ export class CustomVisitorPopupComponent{
           var HOSTIC = JSON.parse(hostData).HOSTIC;
           var params = {
           "STAFF_IC":HOSTIC,
-          "QRCodeValue": this.visitor.QRVALUE,
+          "QRCodeValue": this.visitor.HexCode,
           "QRCodeValidity": objSetting.Table1[0].QRCodeValidity,
           "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
           };
@@ -94,12 +94,14 @@ export class CustomVisitorPopupComponent{
   }
 
   resetQR(params) {
+    params.CurrentDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
     this.apiProvider.GetDynamicQRCodeForVisitor(params).then(
       async (val) => {
         var result = JSON.parse(JSON.stringify(val));
         if(result){
-          this.qrCodePath = 'data:image/jpeg;base64,'+ result.qrCodePath;
-          this.qrJsonString1 = result.qrJsonString1;
+          const dataResult = JSON.parse(result);
+          this.qrCodePath = 'data:image/jpeg;base64,'+ dataResult.DataQRCodeString;
+          this.qrJsonString1 = dataResult.DataValueString;
           clearInterval(this.INTERVAL);
           this.TIMEOUT = +params.QRCodeValidity;
           this.INTERVAL = setInterval(() => {

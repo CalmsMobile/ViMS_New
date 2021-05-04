@@ -10,8 +10,7 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row style="border: 1px solid grey;
-    border-radius: 5px;
+    <ion-row style="border-radius: 5px;
     margin: 5px;">
       <ion-col size="8">
         <ion-row>
@@ -74,7 +73,8 @@
       <ion-col size="4">
         <ion-row>
           <ion-col>
-            <img class="animated fadeInDown delay-1s qrCodeImage" onError="this.src='../../assets/images/user.png';"
+            <img style="width: 82px;
+            height: 82px;" class="animated fadeInDown delay-1s qrCodeImage" onError="this.src='../../assets/images/user.png';"
           [src]="userImgPath" />
           </ion-col>
         </ion-row>
