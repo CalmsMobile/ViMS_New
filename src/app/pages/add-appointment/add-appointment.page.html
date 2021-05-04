@@ -110,9 +110,15 @@
                         {{'ADD_APPOIN.NUM_VISITORS' | translate}} ({{VM.visitors.length}}) </ion-label>
         </ion-col>
         <ion-col size="4" style="text-align: end;padding: 0px;">
-          <ion-fab-button color="primary" (click)="goToAddManageVisitors()" style="    display: inline-block;width: 35px;
+          <!-- <ion-fab-button color="primary" (click)="goToAddManageVisitors()" style="display: inline-block;width: 35px;
           height: 35px;
-          margin-right: 10px;"><ion-icon name="person-add-outline" style="font-size:1.3rem;" ></ion-icon></ion-fab-button>
+          margin-right: 10px;"><ion-icon name="person-add-outline" style="font-size:1.3rem;" ></ion-icon></ion-fab-button> -->
+
+        <ion-button color="light" fill="clear" (click)="goToAddManageVisitors()">
+            <ion-icon size="small" name="person-add-outline" color="danger"></ion-icon>
+            <ion-label ><span class="dot">{{VM.visitors.length}}</span></ion-label>
+          </ion-button>
+
         </ion-col>
     </ion-row>
 
