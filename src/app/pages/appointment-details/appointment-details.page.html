@@ -17,21 +17,20 @@
         <ion-item *ngFor="let visitors of facilityBooking[0].visitors" style="
         margin-left: 0px; --padding-start: 0px;
         padding: 0px;" lines="none">
-            <ion-avatar slot="start" style="
-            margin: 3px;    width: 62px;
-    height: 62px;
-            padding: 3px;justify-content: center;
-    display: flex;
-    align-items: center;" (click)="openVisitorDetails(visitors)">
-                <img class="animated fadeInDown delay-1s" style="    background-color: darkgrey;
-                padding: 2px;" onError="this.src='../../assets/images/user.png';"
+                <img class="animated fadeInDown delay-1s" slot="start" (click)="openVisitorDetails(visitors)" style="margin: 0 auto;
+                width: 62px;
+                height: 62px;
+                padding: 4px;
+                justify-content: center;
+                display: block;
+                align-items: center;
+                padding-left: 4px;" onError="this.src='../../assets/images/user.png';"
                     [src]="data.logo+visitors.SEQID + imageURLTypeHOST">
 
-
-            </ion-avatar>
             <div>
               <ion-label (click)="openVisitorDetails(visitors)">{{visitors.Name}}</ion-label>
-              <ion-label (click)="openVisitorDetails(visitors)">{{visitors.Email}}</ion-label>
+              <ion-label style="font-size: 14px;
+              padding-top: 2px;" (click)="openVisitorDetails(visitors)">{{visitors.Email}}</ion-label>
             </div>
             <div slot="end" *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)"
                 style="margin: 0px;">
@@ -47,19 +46,19 @@
         <ion-item *ngFor="let visitors of appointment" style="
             margin-left: 0px;--padding-start: 0px;
             padding: 0px;" lines="none">
-            <ion-avatar slot="start" style="
-                margin: 3px;width: 62px;
-    height: 62px;
-                padding: 3px;justify-content: center;
-    display: flex;
-    align-items: center;" (click)="openVisitorDetails(visitors)">
-                <img class="animated fadeInDown delay-1s" style="    background-color: darkgrey;
-                    padding: 2px;" onError="this.src='../../assets/images/user.png';"
-                    [src]="data.logo+visitors.VisitorBookingSeqId + imageURLType">
-            </ion-avatar>
+            <img class="animated fadeInDown delay-1s" slot="start" (click)="openVisitorDetails(visitors)" style="margin: 0 auto;
+            width: 62px;
+            height: 62px;
+            padding: 4px;
+            justify-content: center;
+            display: block;
+            align-items: center;
+            padding-left: 4px;" onError="this.src='../../assets/images/user.png';"
+                    [src]="data.logo+visitors.VisitorBookingSeqId + imageURLType"/>
             <div>
                 <ion-label (click)="openVisitorDetails(visitors)">{{visitors.VISITOR_NAME}}</ion-label>
-                <ion-label (click)="openVisitorDetails(visitors)">{{visitors.EMAIL}}</ion-label>
+                <ion-label style="font-size: 14px;
+                padding-top: 2px;" (click)="openVisitorDetails(visitors)">{{visitors.EMAIL}}</ion-label>
             </div>
             <div slot="end" *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)"
                 style="margin: 0px;">

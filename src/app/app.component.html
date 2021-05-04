@@ -1,88 +1,88 @@
 <ion-app>
-    <ion-split-pane contentId="main-content">
-        <!-- Menu Main Top -->
-        <ion-menu side="start" menuId="myLeftMenu" id="myLeftMenu" contentId="myLeftMenu" [content]="content"
-            *ngIf="params != null">
-            <ion-header>
-                <!-- <div header-background-image [ngStyle]="{'background-image': 'url(' + params.background + ')'}"> -->
-                <div header-background-image [ngStyle]="{'background-image': ''}"
-                    style="text-align: center;background: linear-gradient(to bottom, #ff0066 0%, #3366ff 100%);">
+  <ion-split-pane contentId="main-content">
+      <!-- Menu Main Top -->
+      <ion-menu side="start" menuId="myLeftMenu" id="myLeftMenu" contentId="myLeftMenu" [content]="content"
+          *ngIf="params != null">
+          <ion-header>
+              <!-- <div header-background-image [ngStyle]="{'background-image': 'url(' + params.background + ')'}"> -->
+              <div header-background-image [ngStyle]="{'background-image': ''}"
+                  style="text-align: center;background: linear-gradient(to bottom, #ff0066 0%, #3366ff 100%);">
 
-                    <ion-avatar slot="start" style="background:transparent;padding: 5px 0 0 0;margin: 0 auto;">
-                        <img [src]="params.hostImage" onError="this.src='../assets/images/user.png';" style="padding: 2px;width: 70px;background-color: darkgrey;
-              height: 70px;">
-                    </ion-avatar>
-                    <div style="padding-top: 35px;">
-                        <!-- <p style="font-size: 20px">{{params.title}}</p>
-                        <p style="font-size: 12px">{{params.company}}</p>
-                        <p style="font-size: 12px">{{params.email}}</p> -->
-                        <ion-label>
-                            <h3>
-                                {{params.title}}</h3>
-                            <h5>
-                                <span>
-                                    <ion-icon name="podium-outline" color="light" style="font-size: 20px;"></ion-icon>
-                                </span>
-                                {{params.company}}
-                            </h5>
-                            <h5>
-                                <span>
-                                    <ion-icon name="mail-outline" color="light" style="font-size: 20px;"></ion-icon>
-                                </span>
-                                {{params.email}}
-                            </h5>
-                        </ion-label>
-                    </div>
-                    <!-- <ion-label>
-                        <h4>{{params.title}}</h4>
-                        <h6>{{params.company}}</h6>
-                    </ion-label> -->
+                  <ion-avatar slot="start" style="background:transparent;padding: 5px 0 0 0;margin: 0 auto;">
+                      <img [src]="params.hostImage" onError="this.src='../assets/images/user.png';" style="padding: 2px;width: 70px;background-color: darkgrey;
+            height: 70px;">
+                  </ion-avatar>
+                  <div style="padding-top: 35px;">
+                      <!-- <p style="font-size: 20px">{{params.title}}</p>
+                      <p style="font-size: 12px">{{params.company}}</p>
+                      <p style="font-size: 12px">{{params.email}}</p> -->
+                      <ion-label>
+                          <h3>
+                              {{params.title}}</h3>
+                          <h5>
+                              <span>
+                                  <ion-icon name="podium-outline" color="light" style="font-size: 20px;"></ion-icon>
+                              </span>
+                              {{params.company}}
+                          </h5>
+                          <h5>
+                              <span>
+                                  <ion-icon name="mail-outline" color="light" style="font-size: 20px;"></ion-icon>
+                              </span>
+                              {{params.email}}
+                          </h5>
+                      </ion-label>
+                  </div>
+                  <!-- <ion-label>
+                      <h4>{{params.title}}</h4>
+                      <h6>{{params.company}}</h6>
+                  </ion-label> -->
 
-                    <!-- <p>{{params.description}}</p> -->
-                </div>
-            </ion-header>
-            <!-- Menu Main List -->
-            <ion-content>
-                <ion-menu-toggle auto-hide="true" no-margin *ngFor="let p of pages" class="custom-menu-item">
-                    <ion-item item-title main-menu lines="none" (click)="openPage(p)" class="no-padding"
-                        style="pointer-events: auto !important;">
-                        <ion-icon slot="start" [name]="p.icon" color="danger" style="margin-right: 3px;"></ion-icon>
-                        <span style="color:#eb445a;">
-                            {{p.title}}
-                        </span>
-                    </ion-item>
-                    <ion-item style="margin-left: 35px;pointer-events: auto !important;display: block;" item-title
-                        main-menu lines="none" *ngFor="let subMenu of p.subMenu" (click)="openPage(subMenu)">
-                        <!-- <ion-icon icon-small item-left>
-                  <i class="icon {{subMenu.icon}}"></i>
-                  </ion-icon> -->
-                        <!-- <p item-left class="bullet"></p> -->
-                        <ion-icon slot="start" [name]="subMenu.icon"
-                            style="padding-left: 0;margin-left: 0;margin-right: 3px;"></ion-icon>
-                        <span style="margin-left: 0px;">{{subMenu.title}}</span>
-                    </ion-item>
-                </ion-menu-toggle>
-            </ion-content>
+                  <!-- <p>{{params.description}}</p> -->
+              </div>
+          </ion-header>
+          <!-- Menu Main List -->
+          <ion-content>
+              <ion-menu-toggle auto-hide="true" no-margin *ngFor="let p of pages" class="custom-menu-item">
+                  <ion-item item-title main-menu lines="none" (click)="openPage(p)" class="no-padding"
+                      style="pointer-events: auto !important;">
+                      <ion-icon slot="start" [name]="p.icon" color="danger" class="sideIcon"></ion-icon>
+                      <span class="sideMenuTitle">
+                          {{p.title}}
+                      </span>
+                  </ion-item>
+                  <ion-item style="margin-left: 35px;pointer-events: auto !important;display: block;" item-title
+                      main-menu lines="none" *ngFor="let subMenu of p.subMenu" (click)="openPage(subMenu)">
+                      <!-- <ion-icon icon-small item-left>
+                <i class="icon {{subMenu.icon}}"></i>
+                </ion-icon> -->
+                      <!-- <p item-left class="bullet"></p> -->
+                      <ion-icon slot="start" [name]="subMenu.icon"
+                          class="subMenuIcon"></ion-icon>
+                      <span class="sideSubMenuTitle">{{subMenu.title}}</span>
+                  </ion-item>
+              </ion-menu-toggle>
+          </ion-content>
 
-            <!-- <ion-footer no-lines no-border>
-                <ion-row item-end no-lines no-border >
-                    <ion-col color="danger">
-                        <p class="versionP">{{'APP_NAME' | translate}} V{{'APP_VERSION' | translate}}</p>
-                    </ion-col>
+          <!-- <ion-footer no-lines no-border>
+              <ion-row item-end no-lines no-border >
+                  <ion-col color="danger">
+                      <p class="versionP">{{'APP_NAME' | translate}} V{{'APP_VERSION' | translate}}</p>
+                  </ion-col>
 
 
-                </ion-row>
-            </ion-footer> -->
+              </ion-row>
+          </ion-footer> -->
 
-            <ion-footer class="ion-no-border ">
-                <ion-toolbar class="myColor">
-                    <ion-label text-right>{{'APP_NAME' | translate}} V{{'APP_VERSION' | translate}}</ion-label>
-                </ion-toolbar>
-            </ion-footer>
-        </ion-menu>
+          <ion-footer class="ion-no-border ">
+              <ion-toolbar class="myColor">
+                  <ion-label text-right>{{'APP_NAME' | translate}} V{{'APP_VERSION' | translate}}</ion-label>
+              </ion-toolbar>
+          </ion-footer>
+      </ion-menu>
 
-        <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
-        <!-- <ion-nav [root]="rootPage" #content main swipeBackEnabled="false"></ion-nav> -->
-        <ion-router-outlet id="main-content" #content main swipeBackEnabled="false"></ion-router-outlet>
-    </ion-split-pane>
+      <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
+      <!-- <ion-nav [root]="rootPage" #content main swipeBackEnabled="false"></ion-nav> -->
+      <ion-router-outlet id="main-content" #content main swipeBackEnabled="false"></ion-router-outlet>
+  </ion-split-pane>
 </ion-app>

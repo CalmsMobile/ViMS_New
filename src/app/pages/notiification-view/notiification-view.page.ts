@@ -114,7 +114,7 @@ export class NotiificationViewPage implements OnInit {
   }
 
   goBack() {
-    this.navCtrl.pop();
+    this.router.navigateByUrl('notifications');
     console.log('goBack ');
    }
 

@@ -913,7 +913,7 @@ export class AddAppointmentPage implements OnInit {
   }
 
   goBack() {
-    this.navCtrl.pop();
+    this.router.navigateByUrl('home-view');
     console.log('goBack ');
   }
 

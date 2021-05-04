@@ -6,7 +6,9 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
-import { ToastController, Platform, LoadingController, ModalController, NavParams } from '@ionic/angular';
+import { ToastController, Platform, LoadingController, ModalController, NavParams, AlertController } from '@ionic/angular';
+import { RestProvider } from 'src/app/providers/rest/rest';
+import { DatePipe } from '@angular/common';
 
 /**
  * Generated class for the CustomVisitorPopupComponent component.
@@ -36,10 +38,15 @@ export class CustomVisitorPopupComponent{
   T_SVC:any;
   qrCodePath = '';
   userImgPath = ''
+  INTERVAL: any;
+  TIMEOUT = 0;
+  IsDynamicQR = false;
   constructor(public viewCtrl: ModalController,
     public toastCtrl: ToastController,
-    private platform: Platform,
+    private apiProvider: RestProvider,
+    private datePipe: DatePipe,
     private androidPermissions : AndroidPermissions,
+    private alertCtrl: AlertController,
     private loadingCtrl : LoadingController,
     private translate: TranslateService,
     private transfer: FileTransfer, private file: File,
@@ -59,11 +66,62 @@ export class CustomVisitorPopupComponent{
       this.translate.get(['ALERT_TEXT.QRSHARE_SUCCESS']).subscribe(t => {
         this.T_SVC = t;
       });
-      this.qrCodePath = this.data.logo+this.qrJsonString1+this.imageURLType;
+      this.getDynamicQRCode();
       console.log(this.qrCodePath);
   }
 
+  getDynamicQRCode() {
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+    if(settings && JSON.parse(settings)){
+      const objSetting = JSON.parse(settings);
+      this.IsDynamicQR = objSetting.Table1[0].IsDynamicQR;
+      if (this.IsDynamicQR) {
+        if(hostData){
+          var HOSTIC = JSON.parse(hostData).HOSTIC;
+          var params = {
+          "STAFF_IC":HOSTIC,
+          "QRCodeValue": this.visitor.QRVALUE,
+          "QRCodeValidity": objSetting.Table1[0].QRCodeValidity,
+          "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
+          };
+          this.resetQR(params);
+        }
+      } else {
+        this.qrCodePath = this.data.logo+this.qrJsonString1+this.imageURLType;
+      }
+    }
+  }
+
+  resetQR(params) {
+    this.apiProvider.GetDynamicQRCodeForVisitor(params).then(
+      async (val) => {
+        var result = JSON.parse(JSON.stringify(val));
+        if(result){
+          this.qrCodePath = 'data:image/jpeg;base64,'+ result.qrCodePath;
+          this.qrJsonString1 = result.qrJsonString1;
+          clearInterval(this.INTERVAL);
+          this.TIMEOUT = +params.QRCodeValidity;
+          this.INTERVAL = setInterval(() => {
+            this.TIMEOUT = this.TIMEOUT - 1;
+            console.log("resetValues host access::" + this.TIMEOUT);
+            if (this.TIMEOUT <= 0) {
+              clearInterval(this.INTERVAL);
+              this.resetQR(params);
+            }
+          }, 1000);
+        }
+      },
+      async (err) => {
+        if(err && err.message == "No Internet"){
+          return;
+        }
+        }
+      );
+  }
+
   dismiss() {
+    clearInterval(this.INTERVAL);
     this.viewCtrl.dismiss();
   }
 

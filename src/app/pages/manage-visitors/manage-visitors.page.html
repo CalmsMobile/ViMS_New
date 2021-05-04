@@ -3,8 +3,11 @@
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title> &nbsp;&nbsp;&nbsp;{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
     <ion-buttons slot="end" >
-      <ion-fab-button color="danger" shape="round" slot="icon-only" (click)="goToAddVisitorProfile()">
-          <ion-icon  name="person-add-outline"></ion-icon>
+      <ion-fab-button color="light" shape="round" slot="icon-only" style="    width: 35px;
+      height: 35px;
+      margin-right: 5px;" (click)="goToAddVisitorProfile()">
+          <ion-icon color="primary" style="font-size: 22px;
+          padding-left: 2px;" name="person-add-outline"></ion-icon>
         </ion-fab-button>
     </ion-buttons>
   </ion-toolbar>

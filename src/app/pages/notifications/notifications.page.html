@@ -40,8 +40,7 @@
         <ion-item lines="full"
           [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
-          <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
-
+          <ion-icon name="{{(notification.IsRead === true || notification.IsRead === 'true') ? 'mail-open-outline': 'mail-unread-outline'}}" slot="start"></ion-icon>
           <ion-label text-wrap [innerHTML]="notification.HtmlContent.trim()">
 
 
@@ -71,7 +70,7 @@
         <ion-item lines="full"
           [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
-          <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
+          <ion-icon name="{{(notification.IsRead === true || notification.IsRead === 'true') ? 'mail-open-outline': 'mail-unread-outline'}}" slot="start"></ion-icon>
 
           <ion-label text-wrap [innerHTML]="notification.HtmlContent.trim()">
 

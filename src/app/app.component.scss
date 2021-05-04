@@ -15,6 +15,29 @@ h5 {
   display: flex;
 }
 
+.subMenuIcon {
+  padding-left: 0;
+  margin-left: 0;
+  margin-right: 3px;
+  font-size: 18px;
+}
+
+.sideIcon {
+  margin-right: 3px;
+  font-size: 18px;
+}
+
+.sideMenuTitle {
+  margin-left: 0px;
+  font-size: 14px;
+  color: #eb445a;
+}
+
+.sideSubMenuTitle {
+  margin-left: 0px;
+  font-size: 14px;
+}
+
 .myColor {
   --background: #eb445a;
   text-align: right;

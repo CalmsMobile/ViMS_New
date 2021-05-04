@@ -354,7 +354,7 @@ export class AdminHomePage implements OnInit {
 
   goBack() {
     this.navCtrl.pop();
-    console.log('goBack ');
+    this.router.navigateByUrl('home-view');
   }
 
   getPreAppointmentenableApprovalSettings(){

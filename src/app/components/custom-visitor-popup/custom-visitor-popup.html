@@ -84,9 +84,7 @@
           width: 82px;
           height: 82px;
           margin: 0 auto;
-
-          display: block;
-      " onError="this.src='../../assets/images/user.png';" [src]="qrCodePath">
+          display: block;"  [src]="qrCodePath">
           </ion-col>
         </ion-row>
         <!-- <ion-row>
@@ -256,3 +254,9 @@
 
       </ion-list> -->
 </ion-content>
+
+<ion-footer *ngIf="IsDynamicQR">
+  <ion-toolbar color="primary" style="text-align: center;">
+    <ion-label class="center">QR image will refresh in {{TIMEOUT}} sec.</ion-label>
+  </ion-toolbar>
+</ion-footer>

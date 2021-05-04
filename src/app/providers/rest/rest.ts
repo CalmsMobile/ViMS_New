@@ -3042,9 +3042,42 @@ export class RestProvider {
     });
   }
 
-  async GetAppointmentDetailBySeqId(data) {
+  GetDynamicQRCodeForVisitor(data) {
     data  = this.setAuthorizedInfo(data);
-    var loading = await this.presentLoading();
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetDynamicQRCodeForVisitor';
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          this.dismissLoading();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        this.dismissLoading();
+        reject(err);
+
+      });
+    });
+  }
+
+  GetAppointmentDetailBySeqId(data) {
+    data  = this.setAuthorizedInfo(data);
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppointmentDetailBySeqId';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
