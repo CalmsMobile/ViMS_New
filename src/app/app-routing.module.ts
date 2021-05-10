@@ -147,6 +147,11 @@ const routes: Routes = [
     path: 'security-dash-board-page',
     loadChildren: () => import('./pages/security-dash-board-page/security-dash-board-page.module').then( m => m.SecurityDashBoardPagePageModule)
   },
+  //Security Login
+  {
+    path: 'security-login',
+    loadChildren: () => import('./pages/security-login/security-login.module').then( m => m.SecurityLoginPageModule)
+  },
   {
     path: 'security-visitor-list-page',
     loadChildren: () => import('./pages/security-visitor-list-page/security-visitor-list-page.module').then( m => m.SecurityVisitorListPagePageModule)
@@ -182,7 +187,18 @@ const routes: Routes = [
   {
     path: 'admin-login',
     loadChildren: () => import('./pages/admin-login/admin-login.module').then( m => m.AdminLoginPageModule)
-  }
+  },
+  {
+    path: 'security-login',
+    loadChildren: () => import('./pages/security-login/security-login.module').then( m => m.SecurityLoginPageModule)
+  },  {
+    path: 'security-appointment-detail',
+    loadChildren: () => import('./pages/security-appointment-detail/security-appointment-detail.module').then( m => m.SecurityAppointmentDetailPageModule)
+  },
+
+  
+
+
 ];
 
 @NgModule({
