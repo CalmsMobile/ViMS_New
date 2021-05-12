@@ -28,6 +28,9 @@ img {
   display: inline;
   padding: 10px;
 }
+ion-col {
+  display: flex;
+}
 .modal-wrapper {
   border-radius: 7px;
   background: rgba(0, 0, 0, 0.5);

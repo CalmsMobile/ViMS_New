@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NavController, AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { QuickPassVisitorPopupComponent } from 'src/app/components/quickpass-visitor-popup/quickpass-visitor-popup';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -419,25 +420,33 @@ export class QuickPassHistoryPagePage implements OnInit {
     }, 100);
   }
 
-  showDetails(item){
-  //   const modalOptions: ModalOptions = {
-  //     cssClass: "signInModal"
-  //   };
-  //   let contactModal = this.modalCtrl.create(QuickPassVisitorPopupComponent,
-  //     {
-  //       QPAppointment : JSON.stringify(item),
-  //       CheckIn : false
-  //     }, modalOptions);
-  //  contactModal.present();
-  const navigationExtras: NavigationExtras = {
-    state: {
-      passData: {
+  async showDetails(item){
+
+   const presentModel = await this.modalCtrl.create({
+    component: QuickPassVisitorPopupComponent,
+    componentProps: {
+      data: {
         QPAppointment : JSON.stringify(item),
         CheckIn : false
       }
-    }
-  };
-  this.router.navigate(['quick-pass-details-page'], navigationExtras);
+    },
+    showBackdrop: true,
+    mode: 'ios',
+    cssClass: 'visitorPopupModal1'
+  });
+  presentModel.onWillDismiss().then((data) => {
+  });
+  return await presentModel.present();
+
+  // const navigationExtras: NavigationExtras = {
+  //   state: {
+  //     passData: {
+  //       QPAppointment : JSON.stringify(item),
+  //       CheckIn : false
+  //     }
+  //   }
+  // };
+  // this.router.navigate(['quick-pass-details-page'], navigationExtras);
   }
 
   ngOnInit() {

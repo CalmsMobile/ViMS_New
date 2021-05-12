@@ -49,9 +49,9 @@
             <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.ACC_HOLD_ORG_DETAILS' | translate}}</h5> -->
             <ion-card sp-card-map-acc-org>
                 <ion-item>
-                  <ion-avatar slot="start" style="background:transparent">
-                    <img [src]="companyImage" onError="this.src='../../assets/logo/2.png';">
-                  </ion-avatar>
+                  <img style="width: 52px;
+                  height: 52px;
+                  border-radius: 50%;" slot="start" [src]="companyImage" onError="this.src='../../assets/logo/2.png';">
                   <div>
                     <h2 class="sticky">{{companyInfo.comp_name}}</h2>
                     <p *ngIf="companyInfo.comp_fax_no"><b>Fax:</b>{{companyInfo.comp_fax_no}}</p>
@@ -104,11 +104,11 @@
             <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.ACC_HOLD_DETAILS' | translate}}</h5> -->
             <ion-card sp-card-map-acc-org>
               <ion-item>
-                <ion-avatar slot="start" style="background:transparent">
-                  <img [src]="hostImage" onError="this.src='../../../assets/images/user.png';">
-                </ion-avatar>
+                <img slot="start" style="width: 52px;
+                  height: 52px;
+                  border-radius: 50%;" [src]="hostImage" onError="this.src='../../../assets/images/user.png';">
                 <div>
-                  <h1 class="sticky">{{hostInfo.HOSTNAME}}</h1>
+                  <ion-label class="sticky">{{hostInfo.HOSTNAME}}</ion-label>
                   <p style="margin-top: 5px;"><b>Department : </b>{{hostInfo.DEPARTMENT_REFID ? hostInfo.DEPARTMENT_REFID : '--'}}</p>
                 </div>
               </ion-item>

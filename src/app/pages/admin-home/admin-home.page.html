@@ -18,7 +18,7 @@
           </ion-button>
     </ion-buttons>
 </ion-toolbar>
-<ion-toolbar color="primary">
+<ion-toolbar color="primary" *ngIf="pendingList && pendingList.length > 0">
   <ion-item lines="none" mode="ios" style="    margin: 5px;padding: 0px; width: -webkit-fill-available;">
     <ion-label color="light">Select All</ion-label>
     <ion-checkbox mode="ios" slot="end" [(ngModel)]="checkAll" (ionChange)="selectAll()"></ion-checkbox>

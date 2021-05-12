@@ -275,7 +275,7 @@ export class SecurityCheckInPagePage implements OnInit {
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "ED6F9206" //"C4B9F365";
+      var data = "0012764311" //"C4B9F365";
       var params = {"hexcode":""+ data};
       this.apiProvider.VimsAppGetAppointmentByHexCode(params).then(
         async (val) => {

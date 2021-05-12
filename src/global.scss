@@ -161,6 +161,14 @@ $global-opacity: (
   color: #ec407a;
 }
 
+.picker-columns.sc-ion-picker-ios {
+  margin-right: 5px;
+  margin-left: 5px;
+  .picker-opt {
+    font-size: 14px;
+  }
+}
+
 ion-title {
   margin-left: -40px;
   width: -webkit-fill-available;
@@ -614,7 +622,32 @@ ion-icon {
     max-width: 330px;
     border-radius: 10px;
     width: 90vw;
-    height: 58%;
+    height: 62%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 0;
+    box-shadow: 0 16px 20px rgba(0, 0, 0, 0.4);
+    background-color: #fafafa;
+  }
+}
+
+.visitorPopupModal1 {
+  @media (min-width: 300px) and (min-height: 80%) {
+    ion-backdrop {
+      visibility: visible;
+    }
+  }
+
+  .modal-wrapper {
+    position: absolute;
+    overflow: hidden;
+    max-width: 330px;
+    border-radius: 10px;
+    width: 90vw;
+    height: 40%;
     top: 0;
     bottom: 0;
     left: 0;

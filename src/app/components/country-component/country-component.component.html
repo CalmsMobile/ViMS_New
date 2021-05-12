@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-title style="padding-left: 56px;">Select Country</ion-title>
+    <ion-icon name="close-circle-outline" slot="end" size="large" (click)="dismiss()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-searchbar mode="ios" [value]="searchText" (ionChange)="filterTechnologies($event.target.value, '')"
+  color="light" placeholder="Search" animated>
+</ion-searchbar>
+<ion-radio-group (ionChange)="selectCountry($event)" [value]="selectedCountry.code">
+  <ion-item *ngFor="let country of countryListFiltered">
+    <ion-label>{{country.name}}</ion-label>
+    <ion-radio value="{{country.code}}"></ion-radio>
+  </ion-item>
+</ion-radio-group>
+
+</ion-content>
+<ion-footer >
+  <ion-toolbar (click)="addVisitorsCountry()" *ngIf="isDone">
+    <!-- <ion-title>{{'VISITORS_COMPANY.DONE' | translate}}</ion-title> -->
+    <ion-buttons slot="end">
+        <ion-button> {{'VISITORS_COMPANY.DONE' | translate}}
+          <!-- <ion-icon name="checkmark"></ion-icon> -->
+        </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

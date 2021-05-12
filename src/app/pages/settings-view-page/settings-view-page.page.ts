@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
 import { ToastService } from 'src/app/services/util/Toast.service';
@@ -31,6 +32,7 @@ export class SettingsViewPagePage implements OnInit {
   constructor(public navCtrl: NavController,
      private alertCtrl: AlertController,
      private toastCtrl:ToastService,
+     private apiProvider: RestProvider,
      private events : EventsService,
      private router: Router,
      private translate:TranslateService) {
@@ -176,4 +178,47 @@ export class SettingsViewPagePage implements OnInit {
   ngOnInit() {
   }
 
+  syncSettings() {
+
+    var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (!qrInfo) {
+      this.navCtrl.navigateRoot('account-mapping');
+      return;
+    }
+    const QRObj = JSON.parse(qrInfo);
+    if(QRObj && QRObj.MAppId){
+
+    var params  = {
+      "MAppId": QRObj.MAppId,
+      "HostIc":""
+    }
+
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if(!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID){
+      return;
+    }
+    params.HostIc = JSON.parse(hostData).HOSTIC;
+    this.apiProvider.requestApi(params, '/api/vims/GetHostAccessSettings', false, '').then(
+      (val) => {
+        try{
+          var result = JSON.parse(JSON.stringify(val));
+          if(result){
+           const hostAccessSettings = JSON.parse(result).Table1[0];
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS,JSON.stringify(hostAccessSettings));
+            this.events.publishDataCompany({
+              action: 'user:created',
+              title: "ReloadMenu",
+              message: "ReloadMenu"
+            });
+            this.apiProvider.showAlert('Device sync successfully.');
+          }
+        }catch(e){
+        }
+
+      },
+      (err) => {
+      }
+    );
+  }
+  }
 }

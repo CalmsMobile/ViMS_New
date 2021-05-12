@@ -30,7 +30,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   margin: 0 auto;
   padding: 2px;
 }
@@ -39,7 +40,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   // margin: 0 auto;
   padding: 2px;
   margin: 0px 8px 0px 3px !important;
@@ -50,7 +52,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   margin: 0 auto;
   padding: 2px;
   // margin: 0px 8px 0px 3px !important;
@@ -62,7 +65,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   // margin: 0 auto;
   padding: 2px;
   margin: 0px 8px 0px 3px !important;
@@ -118,13 +122,15 @@ ion-header.transparent-header.active::after {
   width: -webkit-fill-available;
 }
 .item-label-floating.item-has-placeholder.sc-ion-input-ios-h:not(.item-has-value),
-.item-label-floating.item-has-placeholder:not(.item-has-value) .sc-ion-input-ios-h {
+.item-label-floating.item-has-placeholder:not(.item-has-value)
+  .sc-ion-input-ios-h {
   opacity: 1;
 }
 .simple-form ion-label {
   // margin-left: 10px !important;
   font-size: 16px !important;
-  //margin-bottom: 16px !important;
+  color: #4c5358;
+  font-weight: 600;
 }
 .simple-form ion-input {
   min-width: 125px;
@@ -136,14 +142,17 @@ ion-header.transparent-header.active::after {
   margin: 0 auto;
   --padding-start: 0px;
 }
-.item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
+.item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus):not(.item-input-has-focus)
+  .item-inner {
   border-bottom-color: transparent !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
 
-.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner,
-.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner {
+.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus)
+  .item-inner,
+.item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus)
+  .item-inner {
   border-bottom-color: #8e8e93 !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -171,7 +180,7 @@ ion-header.transparent-header.active::after {
   padding: 15px;
   // padding-left: 0px;
   text-align: left;
-  margin-top: 25px !important;
+  margin-top: 4px !important;
   margin-right: 16px !important;
 }
 .simple-form ion-input:optional {

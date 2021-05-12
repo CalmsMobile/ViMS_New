@@ -23,7 +23,7 @@
             <ion-item sp-visitor-item class="myItem">
                   <img class="vImage" slot="start" onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType">
                 <ion-label>
-                  <ion-row style="    margin-bottom: 2px !important;">
+                  <ion-row>
                       <ion-icon name="person-outline" class="myIcons"></ion-icon>
                       <h2 class="myName"><b>{{doCapitalize(item.visitor_name)}}</b></h2>
                   </ion-row>
@@ -42,7 +42,7 @@
                       </ion-col>
                       <ion-col size="6" class="myCol" *ngIf="item.visitor_mobile_no">
                           <ion-row class="myRow">
-                            <ion-icon name="phone-portrait-outline" class="myIcons"></ion-icon>
+                            <ion-icon name="call-outline" class="myIcons"></ion-icon>
                             <p>{{item.visitor_mobile_no}}</p>
                           </ion-row>
                       </ion-col>
@@ -50,13 +50,13 @@
                   <ion-row class="myRow" style="    margin-bottom: 2px !important;">
                       <ion-col size="6" class="myCol">
                           <ion-row class="myRow">
-                            <ion-icon name="time-outline" class="myIcons"></ion-icon>
+                            <ion-icon name="calendar-outline" class="myIcons"></ion-icon>
                             <p class="mytime">{{item.CheckInDatetime}}</p>
                           </ion-row>
                       </ion-col>
                       <ion-col size="6" class="myCol">
                         <ion-row class="myRow">
-                          <ion-icon name="time-outline" class="myIcons"></ion-icon>
+                          <ion-icon name="calendar-outline" class="myIcons"></ion-icon>
                           <p class="mytime">{{item.CheckOutDatetime? item.CheckOutDatetime : 'still inside'}}</p>
                         </ion-row>
                       </ion-col>

@@ -355,7 +355,7 @@ export class AddAppointmentStep2Page implements OnInit {
   loadMasterData(){
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
     if(masterDetails){
-      this.VM.AVAIL_ROOMS = JSON.parse(masterDetails).Table1;
+      this.VM.AVAIL_ROOMS = JSON.parse(masterDetails).Table8;
       this.VM.AVAIL_FLOOR = JSON.parse(masterDetails).Table2;
       var newFloors = [];
       for (var i = 0; i <= this.VM.AVAIL_FLOOR.length - 1; i++) {
@@ -403,7 +403,7 @@ export class AddAppointmentStep2Page implements OnInit {
         (val) => {
           var result = JSON.parse(JSON.stringify(val));
           if(result){
-            this.VM.AVAIL_ROOMS = result.Table1;
+            this.VM.AVAIL_ROOMS = result.Table8;
             this.VM.AVAIL_FLOOR = result.Table2;
             this.VM.AVAIL_REASONS = result.Table3;
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
@@ -536,16 +536,10 @@ export class AddAppointmentStep2Page implements OnInit {
             });
             return await presentModel.present();
           }
-
-
           this.showAlert(this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS']);
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-          this.navCtrl.pop().then((data)=>{
-            this.navCtrl.pop();
-          });
-
+          this.navCtrl.navigateRoot('home-view');
           return;
-
       }
       let alert = await this.alertCtrl.create({
         header: 'Error !',
@@ -625,8 +619,6 @@ export class AddAppointmentStep2Page implements OnInit {
       this.proceedUpdate();
       return;
     }
-
-
 
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
@@ -729,9 +721,8 @@ export class AddAppointmentStep2Page implements OnInit {
               }
             }
           }
-
-          this.apiProvider.dismissLoading();
           this.showAlert(this.T_SVC['ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS']);
+          this.apiProvider.dismissLoading();
           this.events.publishDataCompany({
             action: 'addAppointmentSuccess1',
             title: showAlert,
@@ -739,19 +730,12 @@ export class AddAppointmentStep2Page implements OnInit {
           });
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
           this.navCtrl.navigateRoot('home-view').then((data)=>{
-            var page = {
-              component :"appointment-history"
-            }
-            if(this.QRObj.MAppId == AppSettings.LOGINTYPES.FACILITY){
-              page.component = 'facility-booking-history';
-            }
-
             this.events.publishDataCompany({
-              action:'ChangeTab',
-              title: page,
+              action:'RefreshUpcoming',
+              title: 'RefreshUpcoming',
               message: 0
             });
-
+            this.apiProvider.dismissLoading();
           });
 
           return;

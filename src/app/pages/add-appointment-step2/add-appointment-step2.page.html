@@ -2,7 +2,7 @@
   <ion-toolbar color="danger">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>&nbsp;&nbsp;&nbsp;Additional Details</ion-title>
-  </ion-toolbar> 
+  </ion-toolbar>
   <!-- <ion-toolbar color="danger">
     <ion-title style="font-size: 14px">{{addAppointmentModel.START_DATE | date: "MMM dd, yyyy HH:mm a"}} to {{addAppointmentModel.END_DATE | date: "MMM dd, yyyy HH:mm a"}}</ion-title>
     <h1 *ngIf="VISITOR_SIZE == 0 || VISITOR_SIZE == 1" style="color:white">{{VISITOR_SIZE}} Visitor</h1>
@@ -124,7 +124,7 @@
               style="    font-size: 16px;" [(ngModel)]="addAppointmentModel.Floor"
               placeholder="{{'ADD_APPOIN.STEP2.SELECT_FLOOR' | translate}}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.SELECT_FLOOR' | translate}}</ion-label>
-              <ion-select-option text-left *ngFor="let avl_floor of VM.AVAIL_FLOOR" [value]="avl_floor.floor_desc">
+              <ion-select-option text-left *ngFor="let avl_floor of VM.AVAIL_FLOOR" [value]="avl_floor.floor_id">
                 {{avl_floor.floor_desc}}
               </ion-select-option>
             </ion-select>
@@ -133,10 +133,9 @@
             *ngIf="hostSettings && !hostSettings.isFacility && hostSettings.FloorEnabled && !hostSettings.FloorRequired">
             <ion-label style="font-size: 16px;" position="stacked">{{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}</ion-label>
             <ion-select mode="ios" interface="action-sheet" formControlName="floor" style="font-size: 16px;"
-              [(ngModel)]="addAppointmentModel.Floor" placeholder="{{'ADD_APPOIN.STEP2.SELECT_FLOOR' | translate}}"
-              interface="action-sheet">
+              [(ngModel)]="addAppointmentModel.Floor" placeholder="{{'ADD_APPOIN.STEP2.SELECT_FLOOR' | translate}}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.SELECT_FLOOR' | translate}}</ion-label>
-              <ion-select-option text-left *ngFor="let avl_floor of VM.AVAIL_FLOOR" [value]="avl_floor.floor_desc">
+              <ion-select-option text-left *ngFor="let avl_floor of VM.AVAIL_FLOOR" [value]="avl_floor.floor_id">
                 {{avl_floor.floor_desc}}
               </ion-select-option>
             </ion-select>
@@ -146,24 +145,27 @@
             <ion-label style="font-size: 16px;" position="stacked">{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}} <span
                 style="color: #cf3c4f;">*</span></ion-label>
             <ion-select mode="ios" interface="action-sheet" required formControlName="room" style="font-size: 16px;"
-              [(ngModel)]="addAppointmentModel.Room" placeholder="{{'ADD_APPOIN.STEP2.LAB_SELECT_ROOM' | translate}}"
-              interface="action-sheet">
+              [(ngModel)]="addAppointmentModel.Room" placeholder="{{'ADD_APPOIN.STEP2.LAB_SELECT_ROOM' | translate}}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_SELECT_ROOM' | translate}}</ion-label>
-              <ion-select-option text-left *ngFor="let avl_room of VM.AVAIL_ROOMS" [value]="avl_room.Meetingroom_Level">
-                {{avl_room.Meetingroom_Level}}
-              </ion-select-option>
+              <div *ngFor="let avl_room of VM.AVAIL_ROOMS" >
+                <ion-select-option text-left *ngIf="avl_room.Active" [value]="avl_room.MeetingRoomSeqId">
+                  {{avl_room.MeetingRoomDesc}}
+                </ion-select-option>
+              </div>
             </ion-select>
           </ion-item>
           <ion-item lines="none" class="ion-no-padding" no-padding transparent
             *ngIf="hostSettings && !hostSettings.isFacility && hostSettings.RoomEnabled && !hostSettings.RoomRequired">
+
             <ion-label style="font-size: 16px;" position="stacked">{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}</ion-label>
-            <ion-select mode="ios" interface="action-sheet" formControlName="room" style="font-size: 16px;"
-              [(ngModel)]="addAppointmentModel.Room" placeholder="{{'ADD_APPOIN.STEP2.LAB_SELECT_ROOM' | translate}}"
-              interface="action-sheet">
+            <ion-select mode="ios" interface="action-sheet" formControlName="floor" style="font-size: 16px;"
+              [(ngModel)]="addAppointmentModel.Room" placeholder="{{'ADD_APPOIN.STEP2.LAB_SELECT_ROOM' | translate}}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_SELECT_ROOM' | translate}}</ion-label>
-              <ion-select-option text-left *ngFor="let avl_room of VM.AVAIL_ROOMS" [value]="avl_room.Meetingroom_Level">
-                {{avl_room.Meetingroom_Level}}
-              </ion-select-option>
+              <div *ngFor="let avl_room of VM.AVAIL_ROOMS" >
+                <ion-select-option text-left *ngIf="avl_room.Active" [value]="avl_room.MeetingRoomSeqId">
+                  {{avl_room.MeetingRoomDesc}}
+                </ion-select-option>
+              </div>
             </ion-select>
           </ion-item>
           <ion-item lines="none" class="ion-no-padding" no-border no-padding transparent
