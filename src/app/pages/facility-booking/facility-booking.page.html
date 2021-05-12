@@ -114,7 +114,7 @@
           <ion-card mode="ios" no-padding no-border  *ngFor="let item of VM.visitors" style="margin:10px">
             <ion-item-sliding #slideDOM >
                 <ion-item mode="ios" sp-visitor-item lines="none" style="padding: 3px;--padding-start: 5px;">
-                  <img slot="start" class="visitorImage" onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQID+ imageURLType + newImage" style="    background-color: darkgrey;
+                  <img slot="start" class="visitorImage" onError="this.src='../../assets/images/user.png';" [src]="imageURL+item.SEQID+ imageURLType + newImage" style="    background-color: #e8e8e8;object-fit: cover;
                   padding: 2px;"/>
                     <div>
                       <h2 no-margin style="font-size: 18px;

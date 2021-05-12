@@ -8,12 +8,12 @@
 
 <ion-grid style="padding-top: 0px;">
   <ion-row align-items-start>
-    <form novalidate size="12" size-sm size-md (ngSubmit)="addVisitors()"
-    [formGroup]="visitorProfile" class="simple-form">
+    <form novalidate size="12" size-sm size-md (ngSubmit)="addVisitors()" [formGroup]="visitorProfile"
+        class="simple-form">
       <ion-col no-padding size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
 
           <!---Input field username-->
-          <ion-item lines="none" no-padding transparent style="--padding-start: 0px;">
+          <ion-item lines="none" no-padding transparent style="--padding-start: 0px;margin-bottom: 12px;">
               <!-- <ion-label color="danger" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
               <ion-input lines="none" placeholder="{{'ADD_VISITORS.LAB_USER_NAME' | translate}}" required [ngStyle]="{'border': '3px solid #cf3c4f'}" type="text" [(ngModel)]="visitorInfoModal.visitor_name"
               formControlName="username"
@@ -22,17 +22,40 @@
               <ion-input  formControlName="username" placeholder="{{'ADD_VISITORS.LAB_USER_NAME' | translate}}" required type="text" [(ngModel)]="visitorInfoModal.visitor_name"></ion-input>
 
           </ion-item>
-          <ion-item *ngIf="hostSettings.VisitorExpiryTimeEnabled" lines="none" no-padding transparent style="--padding-start: 0px;" (click)="openCalendar()">
-            <!-- <ion-label color="danger" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
-            <ion-input lines="none" placeholder="{{'ADD_VISITORS.LAB_USER_NAME' | translate}}" required [ngStyle]="{'border': '3px solid #cf3c4f'}" type="text" [(ngModel)]="visitorInfoModal.visitor_name"
-            formControlName="username"
-            ></ion-input> -->
+
+          <ion-label *ngIf="hostSettings.VisitorExpiryTimeEnabled" position="stacked">{{'CREATE_QUICK_PASS.EXPIRY_TIME' | translate}} <span style="color: #cf3c4f;">*</span></ion-label>
+
+          <ion-item *ngIf="hostSettings.VisitorExpiryTimeEnabled" style="--padding-start: 0px;" class="box_round_corner" lines="none" no-padding transparent (click)="openCalendar(picker)">
+            <ion-datetime #picker style=" margin-left: 5px;
+            font-size: 14px;display: none;" displayFormat="YYYY-MM-DDTHH:mm" min="{{minDate}}" max="2121-12-12" placeholder="Select Date" (ionChange)="changeCalendar($event)"></ion-datetime>
+
+            <ion-row *ngIf="!expiryTime">
+              <ion-label style="    color: #656363;
+              min-width: auto;
+              border: 0px;
+              border-left: 0px;
+              margin-left: 8px;" text-wrap>{{'CREATE_QUICK_PASS.SELECT_EXPIRY_TIME' | translate}}</ion-label>
+            </ion-row>
+            <ion-row *ngIf="expiryTime">
+                <ion-label style="color: #605b5b;
+                min-width: auto;
+                border: 0px;
+                border-left: 0px;
+                padding-top: 5px;
+                padding-left: 8px;" text-wrap>{{expiryTime| date : 'dd MMM yyyy hh:mm a'}}</ion-label>
+            </ion-row>
+        </ion-item>
+
+          <!-- <ion-item *ngIf="hostSettings.VisitorExpiryTimeEnabled" lines="none" no-padding transparent style="--padding-start: 0px;" (click)="openCalendar(picker1)">
+
+            <ion-datetime style=" margin-left: 5px;
+            font-size: 14px;display: none;" #picker1 displayFormat="YYYY-MM-DDTHH:mm" min="{{minDate}}" max="2121-12-12" [(ngModel)]="expiryTime" (ionChange)="changeCalendar()"></ion-datetime>
+
+
             <ion-label position="stacked" *ngIf="expiryTime">{{'CREATE_QUICK_PASS.EXPIRY_TIME' | translate}} <span style="color: #cf3c4f;">*</span></ion-label>
             <ion-label position="stacked" *ngIf="!expiryTime">{{'CREATE_QUICK_PASS.SELECT_EXPIRY_TIME' | translate}} <span style="color: #cf3c4f;">*</span></ion-label>
 
-            <ion-input  placeholder="{{expiryTime| date : 'dd MMM yyyy hh:mm a'}}" type="text" [(ngModel)]="expiryTime" [ngModelOptions]="{standalone: true}"></ion-input>
-
-        </ion-item>
+        </ion-item> -->
 
           <!-- <ion-item lines="inset" no-padding transparent style="--padding-start: 0px;"> -->
             <!-- <ion-label color="danger" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
@@ -89,14 +112,14 @@
         style="margin: 0 auto;
         display: table;
         margin-top: 20px;"
-        type="submit" [disabled]="visitorProfile.invalid">
+        type="submit">
         {{'ACC_MAPPING.CREATE' | translate}}</ion-button>
       </ion-col>
 
       <!-- <ion-col align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6> -->
 
       <!-- </ion-col> -->
-    </form>
+      </form>
   </ion-row>
 </ion-grid>
 </ion-content>

@@ -1,6 +1,6 @@
 {
 	"APP_NAME": "ViMS Host",
-	"APP_VERSION": "1.0.48",
+	"APP_VERSION": "1.0.50",
 	"COPY_RIGHTS": "@ CALMS Technologies",
 	"COMMON": {
 		"EXIT1": "Exit",
@@ -134,10 +134,10 @@
 			"LAB_FACILITY_NAME": "Select Facility",
 			"LAB_FACILITY": "Facility",
 			"LAB_DEPARTMENT": "Department",
-			"LAB_FLOOR": "Visit Floor",
+			"LAB_FLOOR": "Floor",
 			"SELECT_FLOOR": "Select Floor",
-			"LAB_ROOM": "Meeting Room",
-			"LAB_SELECT_ROOM": "Select Room",
+			"LAB_ROOM": "Meeting Location",
+			"LAB_SELECT_ROOM": "Select Meeting Location",
 			"LAB_NOTE_FOR_VISI": "Notes for visitors",
 			"PLACE_NOTE_FOR_VISI": "Notes",
 			"LAB_NOTE_FOR_SECURITY": "Notes for security",
@@ -154,7 +154,7 @@
 			"REQUIRED_LAB_FACILITY_NAME": " * Required Facility Room",
 			"REQUIRED_LAB_PURPOSE": " * Required Purpose of visit",
 			"REQUIRED_LAB_FLOOR": " * Required Floor",
-			"REQUIRED_LAB_ROOM": " * Required Room",
+			"REQUIRED_LAB_ROOM": " * Required Meeting Location",
 			"REQUIRED_REMARKS": " * Required Remarks",
 			"REQUIRED_VECHILE_NO": " * Required Vehicle No"
 		}
@@ -177,8 +177,8 @@
 			"LAB_FACILITY_NAME": "Select Facility",
 			"CHECK_AVAILABLITY": "Check Facility Availability",
 			"LAB_DEPARTMENT": "Department",
-			"LAB_FLOOR": "Visit Floor",
-			"LAB_ROOM": "Meeting Room",
+			"LAB_FLOOR": "Floor",
+			"LAB_ROOM": "Meeting Location",
 			"LAB_NOTE_FOR_VISI": "Notes for Staff",
 			"PLACE_NOTE_FOR_VISI": "Notes",
 			"LAB_NOTE_FOR_SECURITY": "Notes for security",
@@ -191,7 +191,7 @@
 			"REQUIRED_LAB_FACILITY_NAME": " * Required Facility Room",
 			"REQUIRED_LAB_PURPOSE": " * Required Purpose of visit",
 			"REQUIRED_LAB_FLOOR": " * Required Floor",
-			"REQUIRED_LAB_ROOM": " * Required Room",
+			"REQUIRED_LAB_ROOM": " * Required Meeting Location",
 			"REQUIRED_REMARKS": " * Required Remarks",
 			"REQUIRED_VECHILE_NO": " * Required Vehicle No"
 		}
@@ -417,7 +417,8 @@
 		"ARE_U_SURE_LOGOUT": "Are you sure want to exit from account?",
 		"ARE_U_SURE_ADMIN_LOGOUT": "Are you sure want to exit from admin account?",
 		"EXIT_ACCOUNT_SCUSS": "Successfully exited from account!",
-		"EXIT_ACCOUNT_FAILED": "Exit from account Failed"
+		"EXIT_ACCOUNT_FAILED": "Exit from account Failed",
+    "SYNC_NOW": "Sync now"
 	},
 	"SECURITY_APP": {
 		"SELECT_HOST": "Please Select Staff",
@@ -480,6 +481,8 @@
 		"MEMBER_NOT_FOUND": "Member not found",
 		"REMOVE_VISITOR": "Do you want to remove this visitor?",
 		"SELECT_VISITOR_COMPANY": "Please select visitor company",
+		"SELECT_VISITOR_COUNTRY": "Please select visitor country",
+    "SELECT_VISITOR_IMAGE": "Please upload visitor image",
 		"SEND_REMINDER": "Do you wish to send a reminder email to all visitor for this appointment now?",
 		"DELETE_APPOINTMENT": "Do you wish to delete this appointment now?",
     "EDIT_APPOINTMENT": "Do you wish to edit this appointment now?",

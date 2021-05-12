@@ -54,14 +54,15 @@ import { QuestionDocPopupComponent } from './components/question-doc-popup/quest
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { PreviewAnyFile } from '@ionic-native/preview-any-file/ngx';
 import { HostAccessComponent } from './components/host-access/host-access.component';
+import { CountryComponentComponent } from './components/country-component/country-component.component';
 
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent,
-    CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent,
+    CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent, CountryComponentComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent],
   entryComponents: [],
   exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent, QuestionDocPopupComponent,HostAccessComponent,
-    IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent],
+    IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent, CountryComponentComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [ BrowserModule,
     HttpClientModule,

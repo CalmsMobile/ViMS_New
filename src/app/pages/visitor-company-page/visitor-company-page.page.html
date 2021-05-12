@@ -29,9 +29,9 @@
           <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
       <ion-button *ngIf="(VM.companyList.length == 0 && VM.queryText.length > 2)" expand="full" (click)="addVisitors()">ADD</ion-button>
-      <ion-radio-group *ngFor="let company of VM.companyList"
-      (ionChange)="selectCompany(company)" [(ngModel)]="relationship">
-          <ion-item>
+      <ion-radio-group
+      (ionChange)="selectCompany($event)" [(ngModel)]="relationship">
+          <ion-item *ngFor="let company of VM.companyList">
             <ion-label>{{company.visitor_comp_name}}</ion-label>
             <ion-radio value="{{company.visitor_comp_code}}"></ion-radio>
           </ion-item>

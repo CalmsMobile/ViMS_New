@@ -110,20 +110,23 @@
                 </ion-row>
             </ion-grid>
         </ion-item-divider>
-        <ion-item-divider transparent *ngIf="false" style="padding: 0px;">
-            <ion-grid style="--padding-end: 0px;
-            padding-inline-end: 0px;">
-                <ion-row style="padding: 0px;">
-                    <ion-col size="4">
-                        <p no-margin class='stable'><b>Booked On</b></p>
-                    </ion-col>
-                    <ion-col>
-                        <p no-margin>{{appointment.length}}</p>
-                        <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-item-divider>
+        <ion-item-divider transparent *ngIf="appointment[0].Applied_Date" style="padding: 0px;">
+          <ion-grid style="--padding-end: 0px;
+          padding-inline-end: 0px;">
+              <ion-row style="padding: 0px;">
+                  <ion-col size="4">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                      <span class="visitorDesc">
+                        Applied On
+                      </span>
+                  </ion-col>
+                  <ion-col>
+                      <p no-margin>{{appointment[0].Applied_Date | date:'MMM d, yyyy h:mm a'}}</p>
+                      <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
+                  </ion-col>
+              </ion-row>
+          </ion-grid>
+      </ion-item-divider>
         <ion-item-divider transparent *ngIf="appointment[0].REASON || appointment[0].REASON_DESC" style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;">
@@ -165,7 +168,7 @@
                     <ion-col size="4">
                       <ion-icon name="business-outline"></ion-icon>
                       <span class="visitorDesc">
-                        Floor
+                        {{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}
                       </span>
                     </ion-col>
                     <ion-col>
@@ -182,7 +185,7 @@
                     <ion-col size="4">
                       <ion-icon name="journal-outline"></ion-icon>
                       <span class="visitorDesc">
-                        Room
+                        {{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}
                       </span>
                     </ion-col>
                     <ion-col>

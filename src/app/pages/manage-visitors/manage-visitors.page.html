@@ -36,7 +36,7 @@
             <ion-item sp-visitor-item lines="none"  style="border: 1px solid #dedede;">
 
                 <ion-avatar slot="start" (click)="editVisitor(item)">
-                    <img onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType + newImage"(click)="editVisitor(item)" style="background-color: darkgrey;
+                    <img onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType + newImage"(click)="editVisitor(item)" style="background-color: darkgrey#e8e8e8;object-fit: cover;
                     padding: 2px;">
                 </ion-avatar>
                 <ion-label style="padding: 5px;">
@@ -53,7 +53,7 @@
                 <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM, 'delete', item)">
                 <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
               </ion-button> -->
-              <ion-button slot="icon-only" no-padding color="primary" fill="outline" no-border (click)="editVisitors(slideDOM, 'edit', item)">
+              <ion-button slot="icon-only" style="align-self: center;" no-padding color="primary" fill="clear" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                   <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>
               </ion-button>
               </ion-item-options>

@@ -8,10 +8,12 @@
 }
 .myItem {
   padding: 0px;
+  --padding-start: 8px;
 }
 .myRow {
   padding: 0px !important;
   margin: 0px !important;
+  align-items: center;
 }
 .myCol {
   padding: 0px !important;
@@ -47,7 +49,7 @@
   padding-left: 7px;
 }
 .myName {
-  padding-left: 3px;
+  padding-left: 0px;
 }
 .item-md p {
   color: inherit;
@@ -85,4 +87,5 @@
   height: 62px;
   border-radius: 50%;
   border: 3px solid darkgray;
+  margin: 0px;
 }

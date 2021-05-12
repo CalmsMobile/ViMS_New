@@ -38,7 +38,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
       if (data1.action === "NotificationReceived") {
         console.log("Notification Received: " + data1.title);
         this.showNotificationCount();
-      } else if (data1.action === 'refreshApproveList') {
+      } else if (data1.action === 'refreshApproveList' || data1.action === 'RefreshUpcoming') {
         this.OffSet = 0;
         this.appointments = [];
         this.getAppointmentHistory(null);

@@ -16,7 +16,7 @@
     <ion-card *ngFor="let hostData of reaponseArray" mode="ios" color="primary" style="margin-bottom: 5px;margin-top: 5px;background-color: #d6d8dc!important;border-radius: 3%" no-padding no-border>
         <ion-item sp-visitor-item lines="none"  style="border: 1px solid #dedede;padding: 0px;">
             <ion-avatar slot="start" style="    margin: 5px;">
-                <img [src]="imageURL+hostData.SEQ_ID+ imageURLType + newImage" onError="this.src='../../assets/images/user.png';" style="    background-color: darkgrey;
+                <img [src]="imageURL+hostData.SEQ_ID+ imageURLType + newImage" onError="this.src='../../assets/images/user.png';" style="    background-color: #e8e8e8;object-fit: cover;
                 padding: 2px;">
             </ion-avatar>
             <h2 *ngIf="hostData.visitor_name" theme-text-color>{{hostData.visitor_name}}</h2>

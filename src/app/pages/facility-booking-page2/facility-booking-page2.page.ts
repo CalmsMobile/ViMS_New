@@ -214,7 +214,7 @@ export class FacilityBookingPage2Page implements OnInit {
      }
      var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
      params.HostIc = JSON.parse(hostData).HOSTIC;
-     this.apiProvider.GetHostAppSettings(params).then(
+     this.apiProvider.GetHostAppSettings(params, false).then(
        (val) => {
          try{
            var result = JSON.parse(JSON.stringify(val));

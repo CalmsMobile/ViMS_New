@@ -30,7 +30,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   margin: 0 auto;
   padding: 2px;
 }
@@ -76,6 +77,8 @@ ion-header.transparent-header.active::after {
 .simple-form ion-label {
   //margin-bottom: 15px !important;
   font-size: 16px;
+  color: #4c5358;
+  font-weight: 600;
 }
 .simple-form ion-input {
   // margin: 0 .25rem;
@@ -122,14 +125,14 @@ ion-header.transparent-header.active::after {
 }
 .simple-form .box_round_corner {
   width: 97.5%;
-  //border: 3px solid #eee;
-  //border-left: 3px solid #eee;
-  //border-radius: 5px;
+  border: 3px solid #eee;
+  border-left: 3px solid #eee;
+  border-radius: 5px;
   transition: border-color 0.5s ease-out;
-  padding: 10px !important;
+  padding: 15px;
   // padding-left: 0px;
   text-align: left;
-  //margin-top: 25px !important;
+  margin-top: 6px !important;
   margin-right: 16px !important;
 }
 .simple-form ion-input:optional {

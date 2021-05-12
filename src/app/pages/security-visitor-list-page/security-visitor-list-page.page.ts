@@ -275,9 +275,6 @@ export class SecurityVisitorListPagePage implements OnInit {
       }
     };
     this.router.navigate(['security-check-in-page'], navigationExtras);
-   // this.events.publish("AddVisitorNew", this.visitorList);
-   // this.navCtrl.pop();
-
   }
 
   async removeVisitor(item){

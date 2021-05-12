@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AlertController, IonItemSliding, IonList, NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -11,7 +11,7 @@ import { EventsService } from 'src/app/services/EventsService';
   templateUrl: './manage-visitors.page.html',
   styleUrls: ['./manage-visitors.page.scss'],
 })
-export class ManageVisitorsPage implements OnInit {
+export class ManageVisitorsPage implements OnInit, OnDestroy {
 
   @ViewChild('visitorsList') visitorsList: IonList;
 
@@ -32,7 +32,9 @@ export class ManageVisitorsPage implements OnInit {
   imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   appSettings : any = {};
 
-
+  ngOnDestroy(): void {
+    this.events.clearObserve();
+  }
 
   constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
@@ -83,22 +85,25 @@ export class ManageVisitorsPage implements OnInit {
             var visitor1 = visitorCats[visitors];
             if(visitor1.SEQ_ID == visitor.SEQ_ID){
               //alert("Changed");
-              visitor1.VISITOR_IC = visitor.VISITOR_IC,
-              visitor1.VISITOR_NAME=visitor.VISITOR_NAME,
-              visitor1.VISITOR_COMPANY=visitor.VISITOR_COMPANY_ID,
-              visitor1.VISITOR_COMPANY_ID=visitor.VISITOR_COMPANY_ID,
-              visitor1.EMAIL=visitor.EMAIL,
-              visitor1.TELEPHONE_NO=visitor.TELEPHONE_NO,
-              visitor1.VISITOR_GENDER=visitor.VISITOR_GENDER,
-              visitor1.VisitorDesignation= "",
-              visitor1.VisitorCategory=visitor.VisitorCategory,
-              visitor1.VisitorCategory_ID=visitor.VisitorCategory_ID,
-              visitor1.VISITOR_IMG=visitor.VISITOR_IMG,
-              visitor1.PLATE_NUM=visitor.PLATE_NUM,
-              visitor1.isChecked = true,
-              visitor1.visitor_RemoveImg =visitor.visitor_RemoveImg,
-              visitor1.visitor_id = visitor.VISITOR_IC,
-              visitor1.ImageChanged = visitor.ImageChanged,
+              visitor1.VISITOR_IC = visitor.VISITOR_IC;
+              visitor1.VISITOR_NAME=visitor.VISITOR_NAME;
+              visitor1.VISITOR_COMPANY_NAME = visitor.VISITOR_COMPANY_NAME;
+              visitor1.VISITOR_COMPANY_ID = visitor.VISITOR_COMPANY_ID;
+              visitor1.VISITOR_COMPANY = visitor.VISITOR_COMPANY_ID;
+              visitor1.EMAIL=visitor.EMAIL;
+              visitor1.TELEPHONE_NO=visitor.TELEPHONE_NO;
+              visitor1.VISITOR_GENDER=visitor.VISITOR_GENDER;
+              visitor1.Address=visitor.Address;
+              visitor1.Country=visitor.Country;
+              visitor1.VisitorDesignation= "";
+              visitor1.VisitorCategory=visitor.VisitorCategory;
+              visitor1.VisitorCategory_ID=visitor.VisitorCategory_ID;
+              visitor1.VISITOR_IMG=visitor.VISITOR_IMG;
+              visitor1.PLATE_NUM=visitor.PLATE_NUM;
+              visitor1.isChecked = true;
+              visitor1.visitor_RemoveImg =visitor.visitor_RemoveImg;
+              visitor1.visitor_id = visitor.VISITOR_IC;
+              visitor1.ImageChanged = visitor.ImageChanged;
               this.newImage = this.newImage +"_"+ new Date().getTime();
               this.isAnyoneSelected = true;
               break;
@@ -176,7 +181,7 @@ export class ManageVisitorsPage implements OnInit {
         for(let visitors in this.visitors1){
           if(this.visitors1[visitors].SEQ_ID == visitorTemp[contacts].SEQ_ID){
             this.visitors1[visitors].VisitorDesignation = "";
-            this.visitors1[visitors].VISITOR_COMPANY =  this.visitors1[visitors].VISITOR_COMPANY_ID;
+            this.visitors1[visitors].VISITOR_COMPANY =  this.visitors1[visitors].VISITOR_COMPANY? this.visitors1[visitors].VISITOR_COMPANY : this.visitors1[visitors].VISITOR_COMPANY_ID;
             this.visitors1[visitors].VisitorBookingSeqId = this.visitors1[visitors].VisitorBookingSeqId ? this.visitors1[visitors].VisitorBookingSeqId :"";
             this.visitors1[visitors].ImageChanged = this.visitors1[visitors].ImageChanged ? this.visitors1[visitors].ImageChanged : 0;
             this.visitors1[visitors] = visitorTemp[contacts];
@@ -185,7 +190,7 @@ export class ManageVisitorsPage implements OnInit {
         }
         if(!exist){
           visitorTemp[contacts].VisitorDesignation = "";
-          visitorTemp[contacts].VISITOR_COMPANY = visitorTemp[contacts].VISITOR_COMPANY_ID ? visitorTemp[contacts].VISITOR_COMPANY_ID :"";
+          visitorTemp[contacts].VISITOR_COMPANY = visitorTemp[contacts].VISITOR_COMPANY ? visitorTemp[contacts].VISITOR_COMPANY : visitorTemp[contacts].VISITOR_COMPANY_ID;
           visitorTemp[contacts].VisitorBookingSeqId = visitorTemp[contacts].VisitorBookingSeqId ? visitorTemp[contacts].VisitorBookingSeqId :"";
           visitorTemp[contacts].ImageChanged = visitorTemp[contacts].ImageChanged ? visitorTemp[contacts].ImageChanged : 0;
           visitorTemp1.push(visitorTemp[contacts]);

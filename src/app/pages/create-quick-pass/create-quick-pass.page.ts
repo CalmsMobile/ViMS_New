@@ -3,8 +3,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Camera } from '@ionic-native/camera/ngx';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { NavController, AlertController, ActionSheetController, ToastController, Platform, LoadingController, IonContent } from '@ionic/angular';
+import { NavController, AlertController, ActionSheetController, ToastController, Platform, LoadingController, IonContent, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { QuickPassVisitorPopupComponent } from 'src/app/components/quickpass-visitor-popup/quickpass-visitor-popup';
 import { VisitorInfoModal } from 'src/app/model/visitorInfoModal';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -40,6 +41,7 @@ export class CreateQuickPassPage implements OnInit {
   hostSettings: any = "";
   T_SVC: any;
   expiryTime: any;
+  minDate = "";
   constructor(public navCtrl: NavController,
 
     public toastService: ToastService,
@@ -48,6 +50,7 @@ export class CreateQuickPassPage implements OnInit {
     private alertCtrl: AlertController,
     private camera: Camera,
     private dateformat: DateFormatPipe,
+    private modalCtrl: ModalController,
     public actionSheetCtrl: ActionSheetController,
     public toastCtrl: ToastController,
     public platform: Platform,
@@ -63,6 +66,7 @@ export class CreateQuickPassPage implements OnInit {
     ]).subscribe(t => {
       this.T_SVC = t;
     });
+    this.minDate = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");
     this.visitorProfile = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]),
       notes: new FormControl('', (this.hostSettings && this.hostSettings.notesEnabled && this.hostSettings.notesRequired) ? ([Validators.required]) : []),
@@ -150,31 +154,41 @@ export class CreateQuickPassPage implements OnInit {
 
   }
 
-  openCalendar() {
-
-    var showDate = new Date();
-    showDate.setTime(showDate.getTime() + (AppSettings.APPOINTMENT_BufferTime * 60 * 1000));
-
-    console.log("OpenCalender:" + showDate);
-    this.datePicker.show({
-      date: showDate,
-      mode: 'datetime',
-      minDate: showDate,
-      popoverArrowDirection: "down",
-      // androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
-    }).then(
-      date => {
-
-        this.expiryTime = this.dateformat.transform(date + "", "yyyy-MM-ddTHH:mm:ss");
-        console.log("OpenCalender:" + this.expiryTime);
-
-      },
-      err => console.log('Error occurred while getting date: ', err)
-    );
-
-
+  openCalendar(picker) {
+    picker.open();
   }
+
+  changeCalendar($event){
+      this.expiryTime = this.dateformat.transform($event.detail.value + "", "yyyy-MM-ddTHH:mm:ss");
+      console.log("OpenCalender:Start:"+ this.expiryTime);
+  }
+
+
+  // openCalendar() {
+
+  //   var showDate = new Date();
+  //   showDate.setTime(showDate.getTime() + (AppSettings.APPOINTMENT_BufferTime * 60 * 1000));
+
+  //   console.log("OpenCalender:" + showDate);
+    // this.datePicker.show({
+    //   date: showDate,
+    //   mode: 'datetime',
+    //   minDate: showDate,
+    //   popoverArrowDirection: "down",
+    //   // androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    //   androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
+    // }).then(
+    //   date => {
+
+    //     this.expiryTime = this.dateformat.transform(date + "", "yyyy-MM-ddTHH:mm:ss");
+    //     console.log("OpenCalender:" + this.expiryTime);
+
+    //   },
+    //   err => console.log('Error occurred while getting date: ', err)
+    // );
+
+
+  // }
 
 
 
@@ -246,16 +260,18 @@ export class CreateQuickPassPage implements OnInit {
               "CheckInTime": "",
               "CheckOutTime": null
             };
-            const navigationExtras: NavigationExtras = {
-              state: {
-                passData: {
-                  QPAppointment: JSON.stringify(item),
-                  CheckIn: false,
-                  fromCreate: true
-                }
-              }
-            };
-            this.router.navigate(['quick-pass-details-page'], navigationExtras);
+            // const navigationExtras: NavigationExtras = {
+            //   state: {
+            //     passData: {
+            //       QPAppointment: JSON.stringify(item),
+            //       CheckIn: false,
+            //       fromCreate: true
+            //     }
+            //   }
+            // };
+            // this.router.navigate(['quick-pass-details-page'], navigationExtras);
+
+            this.showPassDetails(item);
             return;
           }
           let toast = await this.toastCtrl.create({
@@ -296,6 +312,26 @@ export class CreateQuickPassPage implements OnInit {
     }
 
 
+
+  }
+
+  async showPassDetails(item) {
+    const presentModel = await this.modalCtrl.create({
+      component: QuickPassVisitorPopupComponent,
+      componentProps: {
+        data: {
+          QPAppointment : JSON.stringify(item),
+          CheckIn: false,
+          fromCreate: true
+        }
+      },
+      showBackdrop: true,
+      mode: 'ios',
+      cssClass: 'visitorPopupModal1'
+    });
+    presentModel.onWillDismiss().then((data) => {
+    });
+    return await presentModel.present();
 
   }
 

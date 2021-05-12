@@ -279,7 +279,7 @@ export class AppComponent {
       return;
     }
     params.HostIc = JSON.parse(hostData).HOSTIC;
-    this.apiProvider.GetHostAppSettings(params).then(
+    this.apiProvider.GetHostAppSettings(params, false).then(
       (val) => {
         try {
           var result = JSON.parse(JSON.stringify(val));

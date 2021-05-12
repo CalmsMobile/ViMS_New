@@ -841,7 +841,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
       "STAFF_IC": this.appointment[0].STAFF_IC
   };
   // this.VM.host_search_id = "adam";
-  this.apiProvider.requestApi(params, api, true).then(
+  this.apiProvider.requestApi(params, api, true, '').then(
     async (val) => {
       var result = JSON.parse(val.toString());
       if (result.Table && result.Table.length > 0) {
@@ -921,7 +921,9 @@ export class AdminAppointmentDetailsPage implements OnInit {
       if (result.Table1 && result.Table1.length > 0) {
         this.appointment[0].Address = result.Table1[0].Address;
         this.appointment[0].Country = result.Table1[0].Country;
+        this.appointment[0].Purpose_Visit = result.Table1[0].Purpose_Visit;
         this.appointment[0].Visitor_category = result.Table1[0].Visitor_category;
+        this.appointment[0].Room_Name = result.Table1[0].Room_Name;
       }
       },
     async (err) => {

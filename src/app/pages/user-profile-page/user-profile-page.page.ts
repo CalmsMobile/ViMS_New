@@ -65,13 +65,13 @@ export class UserProfilePagePage implements OnInit {
     });
 
     var hostInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-    if (hostInfo && JSON.parse(hostInfo).HOSTIC) {
+    if (hostInfo && (JSON.parse(hostInfo).HOSTIC || JSON.parse(hostInfo).HOST_ID)) {
       this.data.profile = JSON.parse(hostInfo);
       if (!this.data.profile.SEQID) {
         this.data.profile.SEQID = "0";
       }
     }
-
+    this.getProfileInfo();
     if (localStorage.getItem("USER_INFO") != undefined) {
       this.USER_INFO = JSON.parse(localStorage.getItem("USER_INFO"));
       this.userUpdateModal.username = this.USER_INFO['username'];
@@ -195,6 +195,28 @@ export class UserProfilePagePage implements OnInit {
       position: 'top'
     });
     toast.present();
+  }
+
+
+  getProfileInfo() {
+    var params = {
+      "SearchString":""+ this.data.profile.HOST_ID ? this.data.profile.HOST_ID : this.data.profile.HOSTIC,
+      "DeviceUID": ""
+    };
+    if(this.platform.is('cordova')) {
+      params.DeviceUID = this.device.uuid;
+    }else{
+      params.DeviceUID = AppSettings.TEST_DATA.SAMPLE_DEVICE_ID
+    }
+    this.apiProvider.GetValidateHost(params).then(
+      (val) => {
+        var result = JSON.parse(val+"");
+        this.data.profile = result.Table1[0];
+        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS,JSON.stringify(this.data.profile));
+      },
+      async (err) => {
+      }
+    );
   }
 
 

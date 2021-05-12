@@ -71,65 +71,6 @@ export class HomeViewPage implements OnInit {
           title: "ReloadMenu",
           message: "ReloadMenu"
         });
-        this.events.observeDataCompany().subscribe((data1: any) => {
-            if (data1.action === 'ChangeTab') {
-              const page = data1.title;
-              const position = data1.message;
-              console.log("position:"+ position);
-              console.log("page:"+ page.component);
-              switch(page.component){
-                case "home-view":
-                  this.updateSettings();
-                break;
-                case "appointment-history":
-                break;
-                case "settings-view-page":
-                break;
-                case "facility-booking-history":
-                break;
-                case "manage-appointment":
-                break;
-                case "facility-upcoming":
-                  this.updateSettings();
-                break;
-                case "quick-pass-dash-board-page":
-                  break;
-              }
-
-              var cClass = this;
-              this._zone.run(function() {
-                // cClass.myTabs._tabs[cClass.myIndex].btn.onClick();
-                cClass.myTabs.select(page.component);
-              });
-            } else if (data1.action === 'page') {
-              const data = data1.title;
-              if(data){
-                this.currentPage = data;
-                switch(this.currentPage){
-                  case "user-profile-page":
-                  case "add-appointment":
-                  case "admin-appointment-details":
-                  case "Admin":
-                  case "appointment-details":
-                  case "facility-booking-history":
-                  case "facility-booking":
-                  case  "home-view1":
-                  case "create-quick-pass":
-                  case "notifications":
-                    this.showFab = false;
-                    break;
-                  default:
-                    this.showFab = true;
-                    break;
-
-                }
-
-              //  alert("subscribe Cuent Page: " + this.currentPage);
-              }
-            }
-
-          //this.myTabs.select(this.myIndex);
-        });
         this.platform.ready().then(() => {
 
           if(this.platform.is('cordova')) {
@@ -145,12 +86,7 @@ export class HomeViewPage implements OnInit {
 
 
           this.updateSettings();
-
         });
-
-
-
-
   }
 
   updateSettings(){
@@ -164,13 +100,13 @@ export class HomeViewPage implements OnInit {
       this.appType = this.QRObj.MAppId;
       switch(this.QRObj.MAppId){
           case AppSettings.LOGINTYPES.HOSTAPPT:
-              this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
+            this.updateMenu();
               break;
           case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP);
+            this.updateMenu();
             break;
           case AppSettings.LOGINTYPES.FACILITY:
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.FACILITY);
+            this.updateMenu();
             this.tab1Root = 'facility-upcoming';
             this.tab3Root = 'facility-booking-history';
             this.tab5Root = 'settings-view-page';
@@ -195,6 +131,21 @@ export class HomeViewPage implements OnInit {
     }
   }
 
+  updateMenu() {
+    try{
+      const settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+      var hostSettings = JSON.parse(settings).Table1[0];
+      this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
+    }catch(e){
+    }
+
+    this.events.publishDataCompany({
+      action: 'user:created',
+      title: "ReloadMenu",
+      message: "ReloadMenu"
+    });
+  }
+
   createBooking(){
     var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if(this.currentPage == "quick-pass-dash-board-page"){
@@ -208,6 +159,68 @@ export class HomeViewPage implements OnInit {
   }
   ionViewDidEnter() {
     this.showFab = true;
+
+    setTimeout(() => {
+      this.events.observeDataCompany().subscribe((data1: any) => {
+        if (data1.action === 'ChangeTab') {
+          const page = data1.title;
+          const position = data1.message;
+          console.log("position:"+ position);
+          console.log("page:"+ page.component);
+          switch(page.component){
+            case "home-view":
+              this.updateSettings();
+            break;
+            case "appointment-history":
+            break;
+            case "settings-view-page":
+            break;
+            case "facility-booking-history":
+            break;
+            case "manage-appointment":
+            break;
+            case "facility-upcoming":
+              this.updateSettings();
+            break;
+            case "quick-pass-dash-board-page":
+              break;
+          }
+
+          var cClass = this;
+          this._zone.run(function() {
+            // cClass.myTabs._tabs[cClass.myIndex].btn.onClick();
+            cClass.myTabs.select(page.component);
+          });
+        } else if (data1.action === 'page') {
+          const data = data1.title;
+          if(data){
+            this.currentPage = data;
+            switch(this.currentPage){
+              case "user-profile-page":
+              case "add-appointment":
+              case "admin-appointment-details":
+              case "Admin":
+              case "appointment-details":
+              case "facility-booking-history":
+              case "facility-booking":
+              case  "home-view1":
+              case "create-quick-pass":
+              case "notifications":
+                this.showFab = false;
+                break;
+              default:
+                this.showFab = true;
+                break;
+
+            }
+
+          //  alert("subscribe Cuent Page: " + this.currentPage);
+          }
+        }
+
+      //this.myTabs.select(this.myIndex);
+    });
+    }, 500);
   }
 
   ionViewWillEnter(){
@@ -423,13 +436,12 @@ subscribeToPushNotifications() {
     }
 
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-    console.log("calling GetHostAppSettings Home Page: "+ hostData);
     if(!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID){
       return;
     }
     params.HostIc = JSON.parse(hostData).HOSTIC;
 
-    this.apiProvider.requestApi(params, '/api/vims/GetHostAccessSettings', false).then(
+    this.apiProvider.requestApi(params, '/api/vims/GetHostAccessSettings', false, '').then(
       (val) => {
         try{
           var result = JSON.parse(JSON.stringify(val));
@@ -478,47 +490,7 @@ refreshHostAccess(QRCodeValidity) {
 
 }
 
-  GetHostAppSettings(MAppId){
-      var params  = {
-        "MAppId": MAppId,
-        "HostIc":""
-      }
 
-      var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-      console.log("calling GetHostAppSettings Home Page: "+ hostData);
-      if(!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID){
-        return;
-      }
-      params.HostIc = JSON.parse(hostData).HOSTIC;
-
-      this.apiProvider.GetHostAppSettings(params).then(
-        (val) => {
-          try{
-            var result = JSON.parse(JSON.stringify(val));
-            if(result){
-             console.log(JSON.stringify(val));
-             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS,JSON.stringify(val));
-
-             try{
-                var hostSettings = result.Table1[0];
-                this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
-              }catch(e){
-              }
-
-             this.events.publishDataCompany({
-               action: 'user:created',
-               title: "ReloadMenu",
-               message: "ReloadMenu"
-             });
-            }
-          }catch(e){
-          }
-
-        },
-        (err) => {
-        }
-      );
-  }
 
   ionViewWillLeave(){
     this.showFab = false;

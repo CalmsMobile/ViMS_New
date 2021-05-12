@@ -30,7 +30,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   margin: 0 auto;
   padding: 2px;
   display: block;
@@ -75,6 +76,8 @@ ion-header.transparent-header.active::after {
 }
 .simple-form ion-label {
   margin-left: 0px !important;
+  color: #4c5358;
+  font-weight: 600;
 }
 .simple-form ion-input {
   // margin: 0 .25rem;
