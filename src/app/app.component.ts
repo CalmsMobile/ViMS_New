@@ -1,6 +1,6 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Firebase } from '@ionic-native/firebase/ngx';
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AlertController, MenuController, ModalController, NavController, Platform } from '@ionic/angular';
@@ -39,7 +39,7 @@ export class AppComponent {
     // private ionicApp: IonicApp,
     private navCtrl: NavController,
     private apiProvider: RestProvider,
-    private firebase: Firebase,
+    private firebase: FirebaseX,
     public alertCtrl: AlertController,
     public splashScreen: SplashScreen,
     private translate: TranslateService,

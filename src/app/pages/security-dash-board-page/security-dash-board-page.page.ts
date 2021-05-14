@@ -1,13 +1,14 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { BarcodeScannerOptions, BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
-import { NavController, Platform, AlertController, ModalController, ToastController } from '@ionic/angular';
+import { NavController, Platform, AlertController, ModalController, ToastController,IonSlides,AnimationController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
 import { ToastService } from 'src/app/services/util/Toast.service';
+import { Chart } from "chart.js";
 declare var cordova: any;
 
 @Component({
@@ -16,7 +17,11 @@ declare var cordova: any;
   styleUrls: ['./security-dash-board-page.page.scss'],
 })
 export class SecurityDashBoardPagePage implements OnInit {
+  @ViewChild("totCheckin") totCheckinGraph: ElementRef;
+  @ViewChild('slides', { static: true }) slider: IonSlides;
+  @ViewChild("button", { read: ElementRef, static: true }) button: ElementRef
 
+  segment = 0;
 
   VM = {
     visitors : []
@@ -71,6 +76,9 @@ export class SecurityDashBoardPagePage implements OnInit {
     }
 
   }
+
+  private barChart: Chart;
+
   constructor(public navCtrl: NavController,
     private platform : Platform,
     private router: Router,
@@ -83,7 +91,8 @@ export class SecurityDashBoardPagePage implements OnInit {
     private toastCtrl1 : ToastService,
     private dateformat : DateFormatPipe,
     private events : EventsService,
-    private _zone : NgZone) {
+    private _zone : NgZone,
+    private animationCtrl: AnimationController,) {
 
       this.translate.get(['ACC_MAPPING.INVALID_QR', 'ACC_MAPPING.INVALID_ORG_TITLE',
       'ACC_MAPPING.INVALID_FCM_TITLE',
@@ -117,6 +126,7 @@ export class SecurityDashBoardPagePage implements OnInit {
       }
       this.enableMyKad();
     }
+    this.displayChart();
   }
 
   ionViewWillEnter(){
@@ -1177,8 +1187,6 @@ export class SecurityDashBoardPagePage implements OnInit {
     });
   }
 
-
-
   activateListenAckSettings(refresh, _currentClass : any){
 
       if(_currentClass.timeoutIntervalSettings){
@@ -1256,6 +1264,76 @@ export class SecurityDashBoardPagePage implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  displayChart(){
+    this.barChart = new Chart(this.totCheckinGraph.nativeElement, {
+      type: "bar",
+      data: {
+        labels: ["1/5", "2/5", "3/5", "4/5", "5/5", "6/5","7/5"],
+        datasets: [
+          {
+            label: "No. of Check-In",
+            data: [12, 10, 3, 5, 2, 3,7],
+            backgroundColor: [
+              "rgba(235, 68, 90, 0.8)",
+              "rgba(235, 68, 90, 0.8)",
+              "rgba(235, 68, 90, 0.8)",
+              "rgba(235, 68, 90, 0.8)",
+              "rgba(235, 68, 90, 0.8)",
+              "rgba(235, 68, 90, 0.8)",
+              "rgba(235, 68, 90, 0.8)"
+            ],
+            borderColor: [
+              "rgba(235, 68, 90, 1)",
+              "rgba(235, 68, 90, 1)",
+              "rgba(235, 68, 90, 1)",
+              "rgba(235, 68, 90, 1)",
+              "rgba(235, 68, 90, 1)",
+              "rgba(235, 68, 90, 1)",
+              "rgba(235, 68, 90, 1)"
+            ],
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          // yAxes: [
+          //   {
+          //     ticks: {
+          //       beginAtZero: true
+          //     },
+          //   }
+          // ]
+        }
+      }
+    });
+  }
+  async segmentChanged() {
+    await this.slider.slideTo(this.segment);
+  }
+
+  async slideChanged() {
+    this.segment = await this.slider.getActiveIndex();
+  }
+
+  ngAfterViewInit(){
+    this.animateButton()
+  }
+
+  public animateButton() {
+    const animation = this.animationCtrl
+      .create()
+      .addElement(this.button.nativeElement)
+      .duration(1000)
+      .iterations(Infinity)
+      .keyframes([
+        { offset: 0, boxShadow: "0 0 0 0 rgba(219, 49, 49, 1)" },
+        { offset: 0.7, boxShadow: "0 0 0 4px rgba(219, 49, 49, 1)" },
+        { offset: 1, boxShadow: "0 0 0 0 rgba(219, 49, 49, 1)" }
+      ]);
+    animation.play();
   }
 
 }

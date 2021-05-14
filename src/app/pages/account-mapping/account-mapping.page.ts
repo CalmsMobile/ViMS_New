@@ -186,7 +186,7 @@ export class AccountMappingPage {
           });
             // var qrCodeString = "" + encrypted;
             // 1001 HOST APP
-            var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohZjEU6Evg3rcMxk+/Ugdcex2hFM6P4LE2zMmCF/XoF6kbtLZRrN6d2wZtKDKw7wzf5ZU6E1Ud9RSlXHW9nXhMnyNXs3gJR/8IT4DDzEQdmP+K6TVrX4YXzUbuP+qEN6/U=';
+            // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohZjEU6Evg3rcMxk+/Ugdcex2hFM6P4LE2zMmCF/XoF6kbtLZRrN6d2wZtKDKw7wzf5ZU6E1Ud9RSlXHW9nXhMnyNXs3gJR/8IT4DDzEQdmP+K6TVrX4YXzUbuP+qEN6/U=';
             //HOSTWF 1001
            // var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
             //HOST 2001
@@ -200,7 +200,7 @@ export class AccountMappingPage {
             // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmvsXGxqidWW1oDwCCbeG7M0xYw+SnR7J6F5RAATHeqKnA==';
 
             //SeCurity
-            //var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWA2FWpesNBQIHXTksM5p7Ic7CzOKYKHk4ldqHgNySH0+Zu438uZb0nPrSF3ezTkSN2TkCtUVFGpCmKnBV2TiW9DWO4iQYIQ6zS7+ADOKM5q2w==';
+            var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWA2FWpesNBQIHXTksM5p7Ic7CzOKYKHk4ldqHgNySH0+Zu438uZb0nPrSF3ezTkSN2TkCtUVFGpCmKnBV2TiW9DWO4iQYIQ6zS7+ADOKM5q2w==';
             this.processJson(qrCodeString);
           }
         } else{

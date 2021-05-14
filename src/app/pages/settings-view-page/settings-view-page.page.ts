@@ -198,18 +198,28 @@ export class SettingsViewPagePage implements OnInit {
       return;
     }
     params.HostIc = JSON.parse(hostData).HOSTIC;
-    this.apiProvider.requestApi(params, '/api/vims/GetHostAccessSettings', false, '').then(
+    this.apiProvider.GetHostAppSettings(params, false).then(
       (val) => {
-        try{
+        try {
           var result = JSON.parse(JSON.stringify(val));
-          if(result){
-           const hostAccessSettings = JSON.parse(result).Table1[0];
-            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS,JSON.stringify(hostAccessSettings));
+          if (result) {
+            console.log(JSON.stringify(val));
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, JSON.stringify(val));
             this.events.publishDataCompany({
               action: 'user:created',
               title: "ReloadMenu",
               message: "ReloadMenu"
             });
+            this.apiProvider.GetMasterDetails().then(
+              (val) => {
+                var result = JSON.parse(JSON.stringify(val));
+                if(result){
+                  window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+                }
+              },
+              (err) => {
+              }
+            );
             this.apiProvider.showAlert('Device sync successfully.');
           }
         }catch(e){

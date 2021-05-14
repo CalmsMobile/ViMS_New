@@ -787,11 +787,13 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
           });
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
           this.navCtrl.navigateRoot('home-view').then((data)=>{
-            this.events.publishDataCompany({
-              action:'RefreshUpcoming',
-              title: 'RefreshUpcoming',
-              message: 0
-            });
+            setTimeout(() => {
+              this.events.publishDataCompany({
+                action:'RefreshUpcoming',
+                title: 'RefreshUpcoming',
+                message: 0
+              });
+            }, 1000);
             this.apiProvider.dismissLoading();
           });
 

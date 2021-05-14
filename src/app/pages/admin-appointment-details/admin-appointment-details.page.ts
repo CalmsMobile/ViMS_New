@@ -15,6 +15,7 @@ import { FileTransferObject,  FileTransfer } from '@ionic-native/file-transfer/n
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
+import { CommonUtil } from 'src/app/services/util/CommonUtil';
 @Component({
   selector: 'app-admin-appointment-details',
   templateUrl: './admin-appointment-details.page.html',
@@ -170,6 +171,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     private dateformat : DateFormatPipe,
     private socialSharing: SocialSharing,
     private router: Router,
+    private commonUtil: CommonUtil,
     private route: ActivatedRoute,
     private translate : TranslateService,
     private localNotifications: LocalNotifications, private alertCtrl: AlertController) {
@@ -196,6 +198,12 @@ export class AdminAppointmentDetailsPage implements OnInit {
         this.appointment = passData.appointment;
         this.autoApproval = passData.autoApproval;
         this.showOption = passData.showOption;
+        if (this.appointment && this.appointment[0] && this.appointment[0].REASON) {
+          this.appointment[0].REASON_DESC = commonUtil.getPurposeName(this.appointment[0].REASON);
+        }
+        if (this.appointment && this.appointment[0] && this.appointment[0].Room) {
+          this.appointment[0].Room_Name = commonUtil.getRoomName(this.appointment[0].Room);
+        }
 
         if(this.appointment && this.appointment[0] && !this.appointment[0].isFacilityAlone){
           var fTime = new Date(this.appointment[0].START_DATE).getTime();
@@ -782,11 +790,13 @@ export class AdminAppointmentDetailsPage implements OnInit {
 
         // this.navCtrl.pop();
         this.navCtrl.navigateRoot('home-view');
-        this.events.publishDataCompany({
-          action: 'refreshApproveList',
-          title: 'refreshApproveList',
-          message: 'refreshApproveList'
-        })
+        setTimeout(() => {
+          this.events.publishDataCompany({
+            action: 'refreshApproveList',
+            title: 'refreshApproveList',
+            message: 'refreshApproveList'
+          })
+        }, 1000);
       },
       async (err) => {
         if(err && err.message == "No Internet"){

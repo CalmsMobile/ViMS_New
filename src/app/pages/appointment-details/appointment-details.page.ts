@@ -14,6 +14,7 @@ import { EventsService } from 'src/app/services/EventsService';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import * as CryptoJS from 'crypto-js';
+import { CommonUtil } from 'src/app/services/util/CommonUtil';
 @Component({
   selector: 'app-appointment-details',
   templateUrl: './appointment-details.page.html',
@@ -170,6 +171,7 @@ export class AppointmentDetailsPage implements OnInit {
     private loadingCtrl : LoadingController,
     private transfer: FileTransfer,
     private file: File,
+    private commonUtil: CommonUtil,
     private dateformat : DateFormatPipe,
     private socialSharing: SocialSharing,
     private translate : TranslateService,
@@ -200,6 +202,13 @@ export class AppointmentDetailsPage implements OnInit {
         console.log('passData : ' + passData);
         this.appointment = passData.appointment;
         this.fromPage = passData.fromPage;
+        if (this.appointment && this.appointment[0] && this.appointment[0].REASON) {
+          this.appointment[0].REASON_DESC = commonUtil.getPurposeName(this.appointment[0].REASON);
+        }
+        if (this.appointment && this.appointment[0] && this.appointment[0].Room) {
+          this.appointment[0].Room_Name = commonUtil.getRoomName(this.appointment[0].Room);
+        }
+
         if(this.appointment && this.appointment[0] && !this.appointment[0].isFacilityAlone){
           var fTime = new Date(this.appointment[0].START_DATE).getTime();
           var cDate = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");

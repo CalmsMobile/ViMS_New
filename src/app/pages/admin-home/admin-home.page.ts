@@ -321,11 +321,13 @@ export class AdminHomePage implements OnInit {
         this.OffSet = 0;
         this.getAppointmentHistory(null);
         this.navCtrl.navigateRoot('home-view');
-        this.eventService.publishDataCompany({
-          action: 'refreshApproveList',
-          title: 'refreshApproveList',
-          message: 'refreshApproveList'
-        });
+        setTimeout(() => {
+          this.eventService.publishDataCompany({
+            action: 'refreshApproveList',
+            title: 'refreshApproveList',
+            message: 'refreshApproveList'
+          });
+        }, 1000);
       },
       async (err) => {
         if(err && err.message == "No Internet"){

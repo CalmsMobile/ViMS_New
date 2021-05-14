@@ -10,7 +10,7 @@ export class AddAppointmentModel
         "CC":any = {type: String};
         "Message"= "";
         "Floor"= "";
-        "Room"= "";
+        "Room": any = "";
         "FacilityCode":any = "";
         "PurposeCode":any = "";
         "Remarks"= "";

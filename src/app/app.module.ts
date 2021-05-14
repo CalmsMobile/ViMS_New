@@ -29,7 +29,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { NetworkProvider } from './providers/network/network';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
-import { Firebase } from '@ionic-native/firebase/ngx';
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { CommonModule, DatePipe } from '@angular/common';
 import { VimsFacilityDisplay } from './services/vims-facility-display';
@@ -55,6 +55,7 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { PreviewAnyFile } from '@ionic-native/preview-any-file/ngx';
 import { HostAccessComponent } from './components/host-access/host-access.component';
 import { CountryComponentComponent } from './components/country-component/country-component.component';
+import { CommonUtil } from './services/util/CommonUtil';
 
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent,
@@ -113,7 +114,7 @@ import { CountryComponentComponent } from './components/country-component/countr
     Network,
     WheelSelector,
     PreviewAnyFile,
-    Firebase,
+    FirebaseX,
     DatePicker,
     DatePipe,
     VimsFacilityDisplay,
@@ -122,6 +123,7 @@ import { CountryComponentComponent } from './components/country-component/countr
     StreamingMedia,
     Contacts,
     AndroidPermissions,
+    CommonUtil,
     Base64],
   bootstrap: [AppComponent],
 })

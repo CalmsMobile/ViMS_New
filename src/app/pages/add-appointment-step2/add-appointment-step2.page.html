@@ -158,10 +158,10 @@
             *ngIf="hostSettings && !hostSettings.isFacility && hostSettings.RoomEnabled && !hostSettings.RoomRequired">
 
             <ion-label style="font-size: 16px;" position="stacked">{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}</ion-label>
-            <ion-select mode="ios" interface="action-sheet" formControlName="floor" style="font-size: 16px;"
+            <ion-select mode="ios" interface="action-sheet" formControlName="room" style="font-size: 16px;"
               [(ngModel)]="addAppointmentModel.Room" placeholder="{{'ADD_APPOIN.STEP2.LAB_SELECT_ROOM' | translate}}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_SELECT_ROOM' | translate}}</ion-label>
-              <div *ngFor="let avl_room of VM.AVAIL_ROOMS" >
+              <div *ngFor="let avl_room of VM.AVAIL_ROOMS">
                 <ion-select-option text-left *ngIf="avl_room.Active" [value]="avl_room.MeetingRoomSeqId">
                   {{avl_room.MeetingRoomDesc}}
                 </ion-select-option>

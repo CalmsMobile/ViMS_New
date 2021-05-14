@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { Firebase } from '@ionic-native/firebase/ngx';
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { NavController, Platform, MenuController, IonTabs, ModalController } from '@ionic/angular';
@@ -56,7 +56,7 @@ export class HomeViewPage implements OnInit {
   HOST_ACCESS_INTERVAL: any;
   constructor(public navCtrl: NavController,
     private localNotifications: LocalNotifications,
-    private firebase: Firebase,
+    private firebase: FirebaseX,
     private platform : Platform,
     private modalCtrl: ModalController,
     private _zone : NgZone,
@@ -307,6 +307,10 @@ initializeFirebaseIOS() {
         window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, ""+token);
         console.log("Token:"+ token);
       })
+      this.firebase.onApnsTokenReceived().subscribe((token) => {
+        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, ""+token);
+        console.log("Token:"+ token);
+      });
       this.subscribeToPushNotifications();
 
     })
@@ -314,9 +318,15 @@ initializeFirebaseIOS() {
       this.firebase.logError(error);
     });
   }
-subscribeToPushNotifications() {
-    this.firebase.onNotificationOpen().subscribe((response) => {
-      console.log(JSON.stringify(response));
+  subscribeToPushNotifications() {
+    this.firebase.onMessageReceived().subscribe((response) => {
+      this.onMessageReceived(response);
+    });
+
+  }
+
+  onMessageReceived(response) {
+    console.log(JSON.stringify(response));
       var typeOfNotification = "Visitor"
       if (response.push_type != undefined && response.push_type === "10") {
         typeOfNotification = "General"
@@ -407,7 +417,6 @@ subscribeToPushNotifications() {
 
 
       }
-    });
   }
 
 
