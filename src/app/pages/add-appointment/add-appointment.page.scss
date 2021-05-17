@@ -16,12 +16,18 @@ ion-content .scroll-content {
   padding: 15px;
   border-radius: 10px;
   margin-top: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #302e2e;
 }
 .visitorImage {
   width: 72px;
   height: 72px;
   padding: 2px;
   border-radius: 50%;
+  object-fit: cover;
+  background-color: #e8e8e8;
+  padding: 2px;
 }
 [text-alpha-caption] {
   color: rgba(255, 255, 255, 0.6);
@@ -61,6 +67,22 @@ ion-content .scroll-content {
   height: 72px !important;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   padding: 2px;
+}
+
+ion-button {
+  ion-label {
+    margin-bottom: 10px;
+  }
+}
+
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: #e13d3d;
+  border-radius: 50%;
+  display: inline-block;
+  padding-top: 5px;
 }

@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { NavController, ActionSheetController, ToastController, AlertController } from '@ionic/angular';
@@ -36,11 +37,12 @@ export class ManageAppointmentPage implements OnInit {
   T_SVC:any;
   notificationCount = 0;
   isAdmin = true;
-
+  alertShowing = false;
   constructor(public navCtrl: NavController,
     private actionSheetCtrl: ActionSheetController,
     private apiProvider: RestProvider,
     private groupBy : CustomPipe,
+    private datePipe: DatePipe,
     private router: Router,
     private events : EventsService,
     private toastCtrl : ToastController,
@@ -48,7 +50,7 @@ export class ManageAppointmentPage implements OnInit {
     private alertCtrl : AlertController) {
 
       this.translate.get([
-        'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
+        'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'ALERT_TEXT.EDIT_APPOINTMENT', 'ALERT_TEXT.DELETE_APPOINTMENT']).subscribe(t => {
           this.T_SVC = t;
       });
 
@@ -240,17 +242,78 @@ export class ManageAppointmentPage implements OnInit {
     this.viewTitle = title;
   }
 
+  logDrag(event, item, slideDOM) {
+    let percent = event.detail.ratio;
+    if (percent > 0) {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('delete', item);
+    } else {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('edit', item);
+
+    }
+    if (Math.abs(percent) > 1) {
+      // console.log('overscroll');
+    }
+  }
+
+  closeSlide(slideDOM) {
+    setTimeout(() => {
+      slideDOM.close();
+    }, 100);
+  }
+
+  async showAlertForSlide(action, item) {
+    if (this.alertShowing) {
+      return;
+    }
+
+    console.log((action === 'edit')? 'left side ': 'right side' +  ' >>> '  + action);
+    this.alertShowing = true;
+    let msg = this.T_SVC['ALERT_TEXT.EDIT_APPOINTMENT'];
+    if (action === 'delete') {
+      msg = this.T_SVC['ALERT_TEXT.DELETE_APPOINTMENT'];
+    }
+    let alert = await this.alertCtrl.create({
+      header: 'Confirmation',
+      message: msg,
+      cssClass: 'alert-warning',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Proceed',
+          handler: () => {
+          console.log(action +' clicked');
+          // this.VM.visitors.splice(index, 1);
+
+          }
+        }
+      ]
+    });
+    alert.present();
+    alert.onWillDismiss().then(() => {
+      this.alertShowing = false;
+    })
+  }
+
 
   viewBooking(list){
     if(list[0].isFacilityAlone){
       const navigationExtras: NavigationExtras = {
         state: {
           passData: {
-            appointment: list
+            appointment: list,
+            fromPage: 'home-view'
           }
         }
       };
-      this.router.navigate(['admin-appointment-details'], navigationExtras);
+      this.router.navigate(['appointment-details'], navigationExtras);
       return;
     }
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -258,7 +321,8 @@ export class ManageAppointmentPage implements OnInit {
         var HOSTIC = JSON.parse(hostData).HOSTIC;
         var params = {
         "STAFF_IC":HOSTIC,
-        "appointment_group_id": list[0].appointment_group_id
+        "appointment_group_id": list[0].appointment_group_id,
+        "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
       };
       // this.VM.host_search_id = "adam";
       this.apiProvider.GetAppointmentByGroupId(params).then(
@@ -267,7 +331,8 @@ export class ManageAppointmentPage implements OnInit {
           const navigationExtras: NavigationExtras = {
             state: {
               passData: {
-                appointment: aList
+                appointment: aList,
+                fromPage: 'home-view'
               }
             }
           };

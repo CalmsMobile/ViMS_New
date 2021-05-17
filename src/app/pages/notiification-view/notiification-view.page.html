@@ -15,9 +15,8 @@
 
 
 <ion-content class="ion-padding">
-  <h6 style="margin: 10px;
-  color: red;">{{notification.CreatedOn| date : 'dd MMM yyyy hh:mm a'}}</h6>
-  <ion-card>
+  <h6>{{notification.CreatedOn| date : 'dd MMM yyyy hh:mm a'}}</h6>
+  <ion-card no-margin>
       <div [innerHTML]="notification.HtmlContent" text-wrap class="myText"></div>
   </ion-card>
 

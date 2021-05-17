@@ -1,9 +1,11 @@
+import { DatePipe } from '@angular/common';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { Firebase } from '@ionic-native/firebase/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { NavController, Platform, MenuController, IonTabs } from '@ionic/angular';
+import { NavController, Platform, MenuController, IonTabs, ModalController } from '@ionic/angular';
+import { HostAccessComponent } from 'src/app/components/host-access/host-access.component';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
@@ -48,14 +50,19 @@ export class HomeViewPage implements OnInit {
   showFab = true;
   QRObj : any = {};
   isNotificationClicked = false;
+  isHostAccessEnable = false;
   showQP = false;
+  HOST_QRVALUE = '';
+  HOST_ACCESS_INTERVAL: any;
   constructor(public navCtrl: NavController,
     private localNotifications: LocalNotifications,
     private firebase: Firebase,
     private platform : Platform,
+    private modalCtrl: ModalController,
     private _zone : NgZone,
     public menu: MenuController,
     private router: Router,
+    private datePipe: DatePipe,
     private statusBar: StatusBar,
     public events: EventsService, public apiProvider: RestProvider) {
         this.statusBar.backgroundColorByHexString(AppSettings.STATUS_BAR_COLOR);
@@ -63,65 +70,6 @@ export class HomeViewPage implements OnInit {
           action: 'user:created',
           title: "ReloadMenu",
           message: "ReloadMenu"
-        });
-        this.events.observeDataCompany().subscribe((data1: any) => {
-            if (data1.action === 'ChangeTab') {
-              const page = data1.title;
-              const position = data1.message;
-              console.log("position:"+ position);
-              console.log("page:"+ page.component);
-              switch(page.component){
-                case "home-view":
-                  this.updateSettings();
-                break;
-                case "appointment-history":
-                break;
-                case "settings-view-page":
-                break;
-                case "facility-booking-history":
-                break;
-                case "manage-appointment":
-                break;
-                case "facility-upcoming":
-                  this.updateSettings();
-                break;
-                case "quick-pass-dash-board-page":
-                  break;
-              }
-
-              var cClass = this;
-              this._zone.run(function() {
-                // cClass.myTabs._tabs[cClass.myIndex].btn.onClick();
-                cClass.myTabs.select(page.component);
-              });
-            } else if (data1.action === 'page') {
-              const data = data1.title;
-              if(data){
-                this.currentPage = data;
-                switch(this.currentPage){
-                  case "user-profile-page":
-                  case "add-appointment":
-                  case "admin-appointment-details":
-                  case "Admin":
-                  case "appointment-details":
-                  case "facility-booking-history":
-                  case "facility-booking":
-                  case  "home-view1":
-                  case "create-quick-pass":
-                  case "notifications":
-                    this.showFab = false;
-                    break;
-                  default:
-                    this.showFab = true;
-                    break;
-
-                }
-
-              //  alert("subscribe Cuent Page: " + this.currentPage);
-              }
-            }
-
-          //this.myTabs.select(this.myIndex);
         });
         this.platform.ready().then(() => {
 
@@ -138,12 +86,7 @@ export class HomeViewPage implements OnInit {
 
 
           this.updateSettings();
-
         });
-
-
-
-
   }
 
   updateSettings(){
@@ -157,13 +100,13 @@ export class HomeViewPage implements OnInit {
       this.appType = this.QRObj.MAppId;
       switch(this.QRObj.MAppId){
           case AppSettings.LOGINTYPES.HOSTAPPT:
-              this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
+            this.updateMenu();
               break;
           case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP);
+            this.updateMenu();
             break;
           case AppSettings.LOGINTYPES.FACILITY:
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.FACILITY);
+            this.updateMenu();
             this.tab1Root = 'facility-upcoming';
             this.tab3Root = 'facility-booking-history';
             this.tab5Root = 'settings-view-page';
@@ -184,7 +127,23 @@ export class HomeViewPage implements OnInit {
             break;
       }
       // this.myTabs.select(this.tab1Root);
+      this.GetHostAccessSettings();
     }
+  }
+
+  updateMenu() {
+    try{
+      const settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+      var hostSettings = JSON.parse(settings).Table1[0];
+      this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
+    }catch(e){
+    }
+
+    this.events.publishDataCompany({
+      action: 'user:created',
+      title: "ReloadMenu",
+      message: "ReloadMenu"
+    });
   }
 
   createBooking(){
@@ -200,6 +159,68 @@ export class HomeViewPage implements OnInit {
   }
   ionViewDidEnter() {
     this.showFab = true;
+
+    setTimeout(() => {
+      this.events.observeDataCompany().subscribe((data1: any) => {
+        if (data1.action === 'ChangeTab') {
+          const page = data1.title;
+          const position = data1.message;
+          console.log("position:"+ position);
+          console.log("page:"+ page.component);
+          switch(page.component){
+            case "home-view":
+              this.updateSettings();
+            break;
+            case "appointment-history":
+            break;
+            case "settings-view-page":
+            break;
+            case "facility-booking-history":
+            break;
+            case "manage-appointment":
+            break;
+            case "facility-upcoming":
+              this.updateSettings();
+            break;
+            case "quick-pass-dash-board-page":
+              break;
+          }
+
+          var cClass = this;
+          this._zone.run(function() {
+            // cClass.myTabs._tabs[cClass.myIndex].btn.onClick();
+            cClass.myTabs.select(page.component);
+          });
+        } else if (data1.action === 'page') {
+          const data = data1.title;
+          if(data){
+            this.currentPage = data;
+            switch(this.currentPage){
+              case "user-profile-page":
+              case "add-appointment":
+              case "admin-appointment-details":
+              case "Admin":
+              case "appointment-details":
+              case "facility-booking-history":
+              case "facility-booking":
+              case  "home-view1":
+              case "create-quick-pass":
+              case "notifications":
+                this.showFab = false;
+                break;
+              default:
+                this.showFab = true;
+                break;
+
+            }
+
+          //  alert("subscribe Cuent Page: " + this.currentPage);
+          }
+        }
+
+      //this.myTabs.select(this.myIndex);
+    });
+    }, 500);
   }
 
   ionViewWillEnter(){
@@ -389,50 +410,93 @@ subscribeToPushNotifications() {
     });
   }
 
-  GetHostAppSettings(MAppId){
-      var params  = {
-        "MAppId": MAppId,
-        "HostIc":""
-      }
 
-      var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-      console.log("calling GetHostAppSettings Home Page: "+ hostData);
-      if(!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID){
-        return;
-      }
-      params.HostIc = JSON.parse(hostData).HOSTIC;
-
-      this.apiProvider.GetHostAppSettings(params).then(
-        (val) => {
-          try{
-            var result = JSON.parse(JSON.stringify(val));
-            if(result){
-             console.log(JSON.stringify(val));
-             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS,JSON.stringify(val));
-
-             try{
-                var hostSettings = result.Table1[0];
-                this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
-              }catch(e){
-              }
-
-             this.events.publishDataCompany({
-               action: 'user:created',
-               title: "ReloadMenu",
-               message: "ReloadMenu"
-             });
-            }
-          }catch(e){
-          }
-
-        },
-        (err) => {
+  async openHostAccess() {
+    console.log("Host access clicked");
+    const presentModel = await this.modalCtrl.create({
+      component: HostAccessComponent,
+      componentProps: {
+        data: {
         }
-      );
+      },
+      showBackdrop: true,
+      mode: 'ios',
+      cssClass: 'hostAccessModal'
+    });
+    presentModel.onWillDismiss().then((data) => {
+    });
+    return await presentModel.present();
   }
+
+  GetHostAccessSettings(){
+    var params  = {
+      "MAppId": this.appType,
+      "HostIc":"",
+      "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
+    }
+
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if(!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID){
+      return;
+    }
+    params.HostIc = JSON.parse(hostData).HOSTIC;
+
+    this.apiProvider.requestApi(params, '/api/vims/GetHostAccessSettings', false, '').then(
+      (val) => {
+        try{
+          var result = JSON.parse(JSON.stringify(val));
+          if(result){
+           const hostAccessSettings = JSON.parse(result).Table1[0];
+           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_SETTINGS,JSON.stringify(hostAccessSettings));
+           try{
+              this.isHostAccessEnable = hostAccessSettings.IsDynamicQRCodeEnabled;
+              if (hostAccessSettings.IsDynamicKey) {
+                this.HOST_QRVALUE = hostAccessSettings.DynamicCode;
+              } else {
+                this.HOST_QRVALUE = hostAccessSettings.HostCardSerialNo;
+              }
+              if (this.isHostAccessEnable && hostAccessSettings.QRCodeValidity && hostAccessSettings.QRCodeValidity > 0) {
+                clearInterval(this.HOST_ACCESS_INTERVAL);
+                this.refreshHostAccess(hostAccessSettings.QRCodeValidity);
+              } else {
+                clearInterval(this.HOST_ACCESS_INTERVAL);
+              }
+            }catch(e){
+            }
+          }
+        }catch(e){
+        }
+
+      },
+      (err) => {
+      }
+    );
+}
+
+refreshHostAccess(QRCodeValidity) {
+  if (this.HOST_ACCESS_INTERVAL) {
+    clearInterval(this.HOST_ACCESS_INTERVAL);
+  }
+  let timeout = QRCodeValidity;
+  localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_TIMEOUT, timeout);
+  this.HOST_ACCESS_INTERVAL = setInterval(() => {
+    timeout = timeout - 1;
+    localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_ACCESS_TIMEOUT, timeout);
+    if (timeout === 0) {
+      clearInterval(this.HOST_ACCESS_INTERVAL);
+      this.GetHostAccessSettings();
+    }
+  }, 1000);
+
+}
+
+
 
   ionViewWillLeave(){
     this.showFab = false;
+    if (this.HOST_ACCESS_INTERVAL){
+      // clearInterval(this.HOST_ACCESS_INTERVAL);
+    }
   }
 
   ngOnInit() {

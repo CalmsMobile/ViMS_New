@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { NavController, ToastController, AlertController, MenuController } from '@ionic/angular';
@@ -28,6 +29,7 @@ export class AdminHomePage implements OnInit {
   constructor(public navCtrl: NavController,
     private toastCtrl:ToastController,
     private router: Router,
+    private datePipe: DatePipe,
     private eventService: EventsService,
     private translate:TranslateService,
     private alertCtrl: AlertController, public apiProvider: RestProvider, private menuCtrl: MenuController) {
@@ -145,6 +147,10 @@ export class AdminHomePage implements OnInit {
     //setTimeout(()=>{refresher.target.complete();},2000)
 	}
 
+  editVisitors(slideDOM, action, item){
+
+  }
+
 	getAppointmentHistory(refresher){
     this.loadingFinished = false;
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -153,7 +159,7 @@ export class AdminHomePage implements OnInit {
 			var params = {
       "hostID":hostId,
 			"OffSet": ""+ this.OffSet,
-      "Rows":"500",
+      "Rows":"20000",
       "StatusType":"0"
     };
 
@@ -348,7 +354,7 @@ export class AdminHomePage implements OnInit {
 
   goBack() {
     this.navCtrl.pop();
-    console.log('goBack ');
+    this.router.navigateByUrl('home-view');
   }
 
   getPreAppointmentenableApprovalSettings(){
@@ -399,22 +405,83 @@ export class AdminHomePage implements OnInit {
       var HOSTIC = JSON.parse(hostData).HOSTIC;
 			var params = {
 			"STAFF_IC":HOSTIC,
-			"appointment_group_id": list[0].appointment_group_id
+			"appointment_group_id": list[0].appointment_group_id,
+      "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
 		};
 		// this.VM.host_search_id = "adam";
 		this.apiProvider.GetAppointmentByGroupId(params).then(
 			(val) => {
 				var aList = JSON.parse(val.toString());
-        const navigationExtras: NavigationExtras = {
-          state: {
-            passData: {
-              appointment: aList,
-              enableApproval: this.enableApproval,
-              showOption : (this.selectedTap == 'pending')
+        this.apiProvider.requestApi(params, '/api/vims/GetApprovalVisitorsByGroupId', false, '').then(
+          (val) => {
+            var aList1 = JSON.parse(val.toString()).Table1;
+            for (let pos = 0; pos < aList1.length; pos++) {
+              const element = aList1[pos];
+              element.Applied_Date= aList[pos].Applied_Date;
+              element.Approval_Status= aList[pos].Approval_Status;
+              element.Booked_by= aList[pos].Booked_by;
+              element.Category= aList[pos].Category;
+              element.EMAIL= element.EMAIL;
+              element.END_DATE= aList[pos].END_DATE;
+              element.FacilityBookingID= element.FacilityBookingID;
+              element.FacilityBookingID1= aList[pos].FacilityBookingID1;
+              element.Floor= aList[pos].Floor;
+              element.HexCode= element.HexCode;
+              element.ImageChanged= aList[pos].ImageChanged;
+              element.IsNewAppointment= aList[pos].IsNewAppointment;
+              element.REASON= aList[pos].REASON;
+              element.Remarks= aList[pos].Remarks;
+              element.Room= aList[pos].Room;
+              element.STAFF_IC= element.STAFF_IC;
+              element.STAFF_NAME= aList[pos].STAFF_NAME;
+              element.START_DATE= aList[pos].START_DATE;
+              element.STATUS= aList[pos].STATUS;
+              element.TELEPHONE_NO= element.TELEPHONE_NO;
+              element.VISITOR_COMPANY= element.VISITOR_COMPANY;
+              element.VISITOR_COMPANY_ID= aList[pos].VISITOR_COMPANY_ID;
+              element.VISITOR_GENDER= aList[pos].VISITOR_GENDER;
+              element.VISITOR_IMG= aList[pos].VISITOR_IMG;
+              element.VisitorCategory= element.VisitorCategory;
+              element.VisitorDesignation= element.VisitorDesignation;
+              element.VisitorDesignation1= element.VisitorDesignation1;
+              element.appointment_group_id= aList[pos].appointment_group_id;
+              element.bookedby_id= aList[pos].bookedby_id;
+              element.cid= aList[pos].cid;
+            }
+            const navigationExtras: NavigationExtras = {
+              state: {
+                passData: {
+                  appointment: aList1,
+                  enableApproval: this.enableApproval,
+                  showOption : (this.selectedTap == 'pending')
+                }
+              }
+            };
+            this.router.navigate(['admin-appointment-details'], navigationExtras);
+          },
+          async (err) => {
+            if(err && err.message == "No Internet"){
+              return;
+            }
+            var message = "";
+            if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+              message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+            } else if(err && JSON.parse(err) && JSON.parse(err).message){
+              message =JSON.parse(err).message;
+            }
+            if(message){
+              // message = " Unknown"
+              let alert = await this.alertCtrl.create({
+                header: 'Error !',
+                message: message,
+                cssClass: 'alert-danger',
+                buttons: ['Okay']
+              });
+                alert.present();
             }
           }
-        };
-        this.router.navigate(['admin-appointment-details'], navigationExtras);
+        );
+
 			},
 			async (err) => {
         if(err && err.message == "No Internet"){

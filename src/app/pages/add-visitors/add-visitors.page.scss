@@ -30,7 +30,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   margin: 0 auto;
   padding: 2px;
 }
@@ -39,7 +40,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   // margin: 0 auto;
   padding: 2px;
   margin: 0px 8px 0px 3px !important;
@@ -50,7 +52,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   margin: 0 auto;
   padding: 2px;
   // margin: 0px 8px 0px 3px !important;
@@ -62,7 +65,8 @@ ion-thumbnail {
   height: 92px;
   border-radius: 50% !important;
   overflow: hidden;
-  background-color: darkgrey;
+  background-color: #e8e8e8;
+  object-fit: cover;
   // margin: 0 auto;
   padding: 2px;
   margin: 0px 8px 0px 3px !important;
@@ -107,9 +111,9 @@ ion-header.transparent-header.active::after {
   background-image: initial;
 }
 
-.commonItem {
-  // margin-top: -30px;
-}
+// .commonItem {
+//   // margin-top: -30px;
+// }
 
 .simple-form {
   display: flex;
@@ -125,7 +129,8 @@ ion-header.transparent-header.active::after {
 .simple-form ion-label {
   // margin-left: 10px !important;
   font-size: 16px !important;
-  margin-bottom: 16px !important;
+  color: #4c5358;
+  font-weight: 600;
 }
 .simple-form ion-input {
   min-width: 125px;
@@ -164,7 +169,7 @@ ion-header.transparent-header.active::after {
   width: 100%;
   min-width: 100%;
   padding: 10px;
-  margin-top: 10px;
+  //margin-top: 10px;
 }
 .simple-form .box_round_corner {
   width: 97.5%;
@@ -175,7 +180,7 @@ ion-header.transparent-header.active::after {
   padding: 15px;
   // padding-left: 0px;
   text-align: left;
-  margin-top: 25px !important;
+  margin-top: 4px !important;
   margin-right: 16px !important;
 }
 .simple-form ion-input:optional {
@@ -190,4 +195,8 @@ ion-header.transparent-header.active::after {
 
 .select-text {
   padding: 5px;
+}
+
+ion-item {
+  margin-bottom: 8px !important;
 }

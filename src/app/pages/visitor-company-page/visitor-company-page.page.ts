@@ -21,7 +21,6 @@ export class VisitorCompanyPagePage implements OnInit {
   OffSet = 0;
   done = false;
   visitorInfoModal = new VisitorInfoModal();
-  translation:any = {};
   T_SVC:any;
   relationship: any = '';
   loadingFinished = true;
@@ -34,7 +33,7 @@ export class VisitorCompanyPagePage implements OnInit {
     public events: EventsService,
     private alertCtrl : AlertController) {
       this.translate.get([
-        'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
+        'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'ADD_VISITORS.SUCCESS.ADD_VISITOR_COMPANY_SUCCESS', 'USER_PROFILE.ERROR.SERVER_ERROR']).subscribe(t => {
           this.T_SVC = t;
       });
       this.route.queryParams.subscribe(params => {
@@ -43,10 +42,6 @@ export class VisitorCompanyPagePage implements OnInit {
           console.log('passData : ' + passData);
           this.visitorInfoModal =  passData.data;
         }
-      });
-
-      this.translate.get(['ADD_VISITORS.SUCCESS.ADD_VISITOR_SUCCESS', 'USER_PROFILE.ERROR.SERVER_ERROR']).subscribe(t => {
-        this.translation = t;
       });
   }
 
@@ -64,7 +59,7 @@ export class VisitorCompanyPagePage implements OnInit {
       }
       var params = {"SearchString":this.VM.queryText,
       "OffSet":this.OffSet+"",
-      "Rows":"20"};
+      "Rows":"20000"};
       // this.VM.host_search_id = "adam";
       this.apiProvider.GetVisitorCompany(params).then(
         (val) => {
@@ -141,20 +136,21 @@ export class VisitorCompanyPagePage implements OnInit {
         var result = JSON.parse(val.toString());
         if(result && result.Table && result.Table1 && result.Table[0].Code == 10){
             let toast = await this.toastCtrl.create({
-              message: this.translation['ADD_VISITORS.SUCCESS.ADD_VISITOR_COMPANY_SUCCESS'],
+              message: this.T_SVC['ADD_VISITORS.SUCCESS.ADD_VISITOR_COMPANY_SUCCESS'],
               duration: 3000,
               color: 'primary',
               position: 'bottom'
             });
             toast.present();
+
             this.visitorInfoModal.visitor_comp_id = result.Table1[0].visitor_company_code;
-            result.Table[0].visitor_comp_name = params.visitor_comp_name;
-            this.visitorInfoModal.visitor_comp_name = result.Table[0].visitor_comp_name;
+            this.visitorInfoModal.visitor_comp = result.Table1[0].visitor_company_code;
+            this.visitorInfoModal.visitor_comp_name = this.VM.queryText;
             this.addVisitorsCompany();
             return;
         }
         let toast = await this.toastCtrl.create({
-          message: this.translation['USER_PROFILE.ERROR.SERVER_ERROR'],
+          message: this.T_SVC['USER_PROFILE.ERROR.SERVER_ERROR'],
           duration: 3000,
           color: 'primary',
           position: 'bottom'
@@ -195,11 +191,22 @@ export class VisitorCompanyPagePage implements OnInit {
   getVisitorsCompanyBySearch(typing, refresher){
     this.getCompanyList(typing, refresher);
   }
-  selectCompany(visitor_company){
-    this.visitorInfoModal.visitor_comp_id = visitor_company["visitor_comp_code"];
-    this.visitorInfoModal.visitor_comp_name = visitor_company["visitor_comp_name"];
-    console.log('VisitorCompanyPage'+ visitor_company["visitor_comp_code"]);
-    this.done = true;
+  selectCompany(event){
+    console.log("relationship:" + JSON.stringify(event.detail));
+    if (event.detail.value) {
+      this.VM.companyList.forEach(element => {
+        if ((+event.detail.value) === element.visitor_comp_code) {
+          this.visitorInfoModal['visitor_comp_name'] = element["visitor_comp_name"];
+          this.visitorInfoModal['visitor_comp_id'] = element["visitor_comp_code"];
+          console.log('VisitorCompanyPage'+ JSON.stringify(element));
+          this.done = true;
+          return;
+        }
+      });
+
+    }
+    // this.visitorInfoModal.visitor_comp_id = ;
+
   }
 
   doRefresh(refresher) {

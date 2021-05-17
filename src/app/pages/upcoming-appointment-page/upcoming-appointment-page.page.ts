@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';
@@ -21,22 +22,23 @@ export class UpcomingAppointmentPagePage implements OnInit {
   notificationCount = 0;
   T_SVC:any;
   loadingFinished = true;
+  alertShowing = false;
   isAdmin = true;
   constructor(public navCtrl: NavController,
     private events : EventsService,
     private router: Router,
     private translate : TranslateService,
-    // public menu: MenuController,
+    private datePipe: DatePipe,
     private alertCtrl: AlertController, public apiProvider: RestProvider) {
     this.translate.get([
-      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
+      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'ALERT_TEXT.EDIT_APPOINTMENT', 'ALERT_TEXT.DELETE_APPOINTMENT']).subscribe(t => {
         this.T_SVC = t;
     });
     events.observeDataCompany().subscribe((data1:any) => {
       if (data1.action === "NotificationReceived") {
         console.log("Notification Received: " + data1.title);
         this.showNotificationCount();
-      } else if (data1.action === 'refreshApproveList') {
+      } else if (data1.action === 'refreshApproveList' || data1.action === 'RefreshUpcoming') {
         this.OffSet = 0;
         this.appointments = [];
         this.getAppointmentHistory(null);
@@ -163,6 +165,66 @@ export class UpcomingAppointmentPagePage implements OnInit {
     //setTimeout(()=>{refresher.target.complete();},2000)
 	}
 
+  logDrag(event, item, slideDOM) {
+    let percent = event.detail.ratio;
+    if (percent > 0) {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('delete', item);
+    } else {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('edit', item);
+
+    }
+    if (Math.abs(percent) > 1) {
+      // console.log('overscroll');
+    }
+  }
+
+  closeSlide(slideDOM) {
+    setTimeout(() => {
+      slideDOM.close();
+    }, 100);
+  }
+
+  async showAlertForSlide(action, item) {
+    if (this.alertShowing) {
+      return;
+    }
+
+    console.log((action === 'edit')? 'left side ': 'right side' +  ' >>> '  + action);
+    this.alertShowing = true;
+    let msg = this.T_SVC['ALERT_TEXT.EDIT_APPOINTMENT'];
+    if (action === 'delete') {
+      msg = this.T_SVC['ALERT_TEXT.DELETE_APPOINTMENT'];
+    }
+    let alert = await this.alertCtrl.create({
+      header: 'Confirmation',
+      message: msg,
+      cssClass: 'alert-warning',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Proceed',
+          handler: () => {
+          console.log(action +' clicked');
+          // this.VM.visitors.splice(index, 1);
+
+          }
+        }
+      ]
+    });
+    alert.present();
+    alert.onWillDismiss().then(() => {
+      this.alertShowing = false;
+    })
+  }
+
 	getAppointmentHistory(refresher){
 
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -172,7 +234,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
 			var params = {"hostID":hostId,
 			"lastSyncDate":"",
 			"OffSet": ""+ this.OffSet,
-			"Rows":"100"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.syncAppointment(params, true, false).then(
@@ -237,7 +299,8 @@ export class UpcomingAppointmentPagePage implements OnInit {
       const navigationExtras: NavigationExtras = {
         state: {
           passData: {
-            appointment: list
+            appointment: list,
+            fromPage: 'home-view'
           }
         }
       };
@@ -249,7 +312,8 @@ export class UpcomingAppointmentPagePage implements OnInit {
       var HOSTIC = JSON.parse(hostData).HOSTIC;
 			var params = {
 			"STAFF_IC":HOSTIC,
-			"appointment_group_id": list[0].appointment_group_id
+			"appointment_group_id": list[0].appointment_group_id,
+      "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
 		};
 		// this.VM.host_search_id = "adam";
 		this.apiProvider.GetAppointmentByGroupId(params).then(
@@ -258,7 +322,8 @@ export class UpcomingAppointmentPagePage implements OnInit {
         const navigationExtras: NavigationExtras = {
           state: {
             passData: {
-              appointment: aList
+              appointment: aList,
+              fromPage: 'home-view'
             }
           }
         };

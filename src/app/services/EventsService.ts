@@ -15,4 +15,8 @@ export class EventsService {
   observeDataCompany() {
     return this.dataCompanySubject;
   }
+
+  clearObserve() {
+    this.dataCompanySubject = new Subject();
+  }
 }

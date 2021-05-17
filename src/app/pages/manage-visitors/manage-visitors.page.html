@@ -1,10 +1,13 @@
 <ion-header>
   <ion-toolbar color="danger">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
-    <ion-title>{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
+    <ion-title> &nbsp;&nbsp;&nbsp;{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
     <ion-buttons slot="end" >
-      <ion-fab-button color="danger" shape="round" slot="icon-only" (click)="goToAddVisitorProfile()">
-          <ion-icon  name="person-add-outline"></ion-icon>
+      <ion-fab-button color="light" shape="round" slot="icon-only" style="    width: 35px;
+      height: 35px;
+      margin-right: 5px;" (click)="goToAddVisitorProfile()">
+          <ion-icon color="primary" style="font-size: 22px;
+          padding-left: 2px;" name="person-add-outline"></ion-icon>
         </ion-fab-button>
     </ion-buttons>
   </ion-toolbar>
@@ -33,7 +36,7 @@
             <ion-item sp-visitor-item lines="none"  style="border: 1px solid #dedede;">
 
                 <ion-avatar slot="start" (click)="editVisitor(item)">
-                    <img onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType + newImage"(click)="editVisitor(item)" style="background-color: darkgrey;
+                    <img onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType + newImage"(click)="editVisitor(item)" style="background-color: darkgrey#e8e8e8;object-fit: cover;
                     padding: 2px;">
                 </ion-avatar>
                 <ion-label style="padding: 5px;">
@@ -50,7 +53,7 @@
                 <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM, 'delete', item)">
                 <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
               </ion-button> -->
-              <ion-button slot="icon-only" no-padding color="primary" fill="outline" no-border (click)="editVisitors(slideDOM, 'edit', item)">
+              <ion-button slot="icon-only" style="align-self: center;" no-padding color="primary" fill="clear" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                   <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>
               </ion-button>
               </ion-item-options>

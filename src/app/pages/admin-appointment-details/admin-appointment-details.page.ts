@@ -355,6 +355,9 @@ export class AdminAppointmentDetailsPage implements OnInit {
   }
 
   async openVisitorDetails(visitor) {
+    visitor.Visitor_category = this.appointment[0].Visitor_category;
+    visitor.Country = this.appointment[0].Country;
+    visitor.Address = this.appointment[0].Address;
       const presentModel = await this.modalCtrl.create({
         component: CustomVisitorPopupComponent,
         componentProps: {
@@ -377,7 +380,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
   }
 
   goBack() {
-    this.navCtrl.pop();
+    this.router.navigateByUrl('admin-home');
     console.log('goBack ');
   }
 
@@ -830,7 +833,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     if (action === 'doc') {
       api = '/api/Vims/GetVisitorDocsBySeqId';
     } else if (action === 'declaration'){
-      api = '/vims/GetVisitorItemChecklistBySeqId';
+      api = '/api/vims/GetVisitorItemChecklistBySeqId';
     }
 
     var params = {
@@ -838,7 +841,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
       "STAFF_IC": this.appointment[0].STAFF_IC
   };
   // this.VM.host_search_id = "adam";
-  this.apiProvider.requestApi(params, api).then(
+  this.apiProvider.requestApi(params, api, true, '').then(
     async (val) => {
       var result = JSON.parse(val.toString());
       if (result.Table && result.Table.length > 0) {
@@ -863,6 +866,8 @@ export class AdminAppointmentDetailsPage implements OnInit {
         let msg = 'Questionaries not added.';
         if (action === 'doc') {
           msg = 'Verification document not added.';
+        } else if (action === 'declaration'){
+          msg = 'Declaration not added.';
         }
         this.showAlert(msg);
       }
@@ -916,6 +921,9 @@ export class AdminAppointmentDetailsPage implements OnInit {
       if (result.Table1 && result.Table1.length > 0) {
         this.appointment[0].Address = result.Table1[0].Address;
         this.appointment[0].Country = result.Table1[0].Country;
+        this.appointment[0].Purpose_Visit = result.Table1[0].Purpose_Visit;
+        this.appointment[0].Visitor_category = result.Table1[0].Visitor_category;
+        this.appointment[0].Room_Name = result.Table1[0].Room_Name;
       }
       },
     async (err) => {

@@ -12,6 +12,7 @@
   }
   .text-white {
     color: white;
+    text-align: center;
   }
   .booking-status {
     padding: 5px;
@@ -37,12 +38,12 @@
     line-height: 1.5;
   }
 }
+
 ion-icon {
   background-repeat: no-repeat;
   background-position: 50%;
   background-size: contain;
   background-size: 18px;
-
   &[ng-reflect-name="customicon"] {
     background-image: url("../../../assets/images/x-icon/admin.png");
     &[ng-reflect-is-active="true"] {
@@ -51,4 +52,169 @@ ion-icon {
     width: 2.4rem;
     height: 2.4rem;
   }
+}
+ion-toolbar {
+  ion-title {
+    text-align: left;
+  }
+}
+
+.item-native {
+  padding: 0px !important;
+}
+
+.outer-circle {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid #ffeb3b;
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+}
+.inner-circle {
+  position: absolute;
+  background: #ffeb3b;
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #000000;
+  font-weight: bold;
+}
+
+.outer-circle1 {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid #17be17;
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+}
+
+.inner-circle1 {
+  position: absolute;
+  background: #17be17;
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.outer-circle2 {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid #eb445a;
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+}
+
+.inner-circle2 {
+  position: absolute;
+  background: #eb445a;
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.colIcons {
+  display: grid;
+  justify-content: end;
+  padding-bottom: 0px;
+}
+.card_appointment {
+  margin: 3px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border: 1px solid #dedede;
+  padding: 0px;
+}
+.col_apt_left {
+  max-width: 100px;
+  padding: 0px;
+  text-align: center;
+}
+.div-date {
+  width: -webkit-fill-available;
+  padding-top: 5px;
+}
+.div-left-middle {
+  display: flex;
+  padding: 5px;
+  justify-content: center;
+}
+
+.div-left-middle-text {
+  font-size: 15px;
+  padding: 0px;
+  margin-bottom: 0px;
+  margin-top: 3px;
+}
+
+.div-left-bottom-text {
+  font-size: 15px;
+  padding: 6px;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+.div-apt-center {
+  display: flex;
+  padding-bottom: 3px;
+}
+
+.apt-center-title {
+  margin: 0px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.apt-center-subtitle {
+  margin: 0px;
+  font-size: 12px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.apt-text-icons {
+  font-size: 16px;
+  padding: 0px;
+  padding-right: 3px;
+}
+
+.apt-right-icon {
+  font-size: 13px;
+  padding: 1px;
+  color: #ffffff;
+  padding-top: 0px;
+}
+
+.apt-item {
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+}
+
+.slideIcons {
+  border: 2px solid white;
+  border-radius: 50%;
+  padding: 7px;
+  display: flex;
 }

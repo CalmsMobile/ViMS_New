@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-icon class="iconClass" slot="start" name="person-outline"></ion-icon>
+    <ion-label class="bold">
+      {{'ALERT_TEXT.HOST_ACCESS_TITLE' | translate}}
+    </ion-label>
+    <ion-icon class="iconClass" (click)="closeModal()" slot="end" name="close-circle-outline"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list lines="none">
+    <div class="login-top">
+      <img class="animated fadeInDown delay-1s" style="
+    width: 45vh;
+    height: 45vh;
+    margin: 0 auto;
+    display: block;
+" [src]="'data:image/jpeg;base64,'+ qrCodePath">
+    </div>
+    </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-label class="center">Your access will refresh in {{TIMEOUT}} sec.</ion-label>
+  </ion-toolbar>
+</ion-footer>

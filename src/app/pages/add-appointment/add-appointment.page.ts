@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { NavController, AlertController, ToastController, ModalController, ActionSheetController, IonItemSliding, IonContent } from '@ionic/angular';
@@ -15,7 +15,7 @@ import { EventsService } from 'src/app/services/EventsService';
   templateUrl: './add-appointment.page.html',
   styleUrls: ['./add-appointment.page.scss'],
 })
-export class AddAppointmentPage implements OnInit {
+export class AddAppointmentPage implements OnInit, OnDestroy {
 
   @ViewChild('visitorsList') visitorsList: any;
   // @ViewChild(Navbar) navBar: Navbar;
@@ -28,6 +28,8 @@ export class AddAppointmentPage implements OnInit {
   newImage = "&tes='test'";
   addAppointmentModel = new AddAppointmentModel();
   T_SVC:any;
+  datepickerFrmDate = '';
+  datepickerToDate = '';
   VM = {
     "visitors":[],
     facility : [],
@@ -78,44 +80,30 @@ export class AddAppointmentPage implements OnInit {
         'ALERT_TEXT.SETTINGS_NOT_FOUND']).subscribe(t => {
           this.T_SVC = t;
       });
+    var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    this.QRObj = JSON.parse(qrInfo);
+    var today = new Date();
+    var hostDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if(hostDetails){
+      this.hostData = JSON.parse(hostDetails);
+    }
 
 
+    if(this.QRObj && this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
+      this.showFacility = false;
+    }
 
-      var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-      this.QRObj = JSON.parse(qrInfo);
-      var today = new Date();
-      var hostDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-      if(hostDetails){
-        this.hostData = JSON.parse(hostDetails);
-      }
+    var hours = today.getHours();
+    var min = today.getMinutes();
+    var minutes = ""+min;
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    minutes = min < 10 ? '0'+minutes : minutes;
 
+    var strTime = hours + ':' + minutes;
+    this.VM.fromTime = strTime;
+    this.VM.fromTimeSession = ampm;
 
-      if(this.QRObj && this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
-        this.showFacility = false;
-      }
-
-      var hours = today.getHours();
-      var min = today.getMinutes();
-      var minutes = ""+min;
-      var ampm = hours >= 12 ? 'PM' : 'AM';
-      minutes = min < 10 ? '0'+minutes : minutes;
-
-      var strTime = hours + ':' + minutes;
-      this.VM.fromTime = strTime;
-      this.VM.fromTimeSession = ampm;
-
-      var dd = today.getDate();
-      var mm = today.getMonth()+1; //January is 0!
-      var ddd = ""+dd;
-      var mmm = ""+mm;
-      var yyyy = today.getFullYear();
-      if(dd<10){
-        ddd='0'+dd;
-      }
-      if(mm<10){
-        mmm='0'+mm;
-      }
-    this.minDate = yyyy+'-'+mmm+"-" + ddd;
+    this.minDate = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");
 
     this.VM.fromDate = new Date();
     this.VM.toDate = new Date();
@@ -139,16 +127,14 @@ export class AddAppointmentPage implements OnInit {
       if(this.edit){
         this.VM.appointment = this.passData.appointment;
         this.VM.facility = this.passData.facility;
-        var sdate = this.VM.appointment[0].START_DATE.split(" ")[0];
         var stime = this.VM.appointment[0].START_DATE.split("T")[1]
-
-        var edate = this.VM.appointment[0].END_DATE.split(" ")[0];
         var etime = this.VM.appointment[0].END_DATE.split("T")[1]
         this.VM.fromDate = this.VM.appointment[0].START_DATE;
         this.VM.fromTime = stime.split(":")[0]+":"+stime.split(":")[1];
         this.VM.toDate = this.VM.appointment[0].END_DATE;
         this.VM.toTime =  etime.split(":")[0]+":"+etime.split(":")[1];
-
+        this.datepickerFrmDate = this.dateformat.transform(new Date(this.VM.fromDate) + '', 'yyyy-MM-ddTHH:mm');
+        this.datepickerToDate = this.dateformat.transform(new Date(this.VM.toDate) +"", "yyyy-MM-ddTHH:mm");
         // this.VM.visitor_ctg = VisitorCategory;
         this.addAppointmentModel.visitor_ctg_id = this.VM.appointment[0].VisitorCategory;
         if(stime.split(":")[0] > 11){
@@ -168,7 +154,8 @@ export class AddAppointmentPage implements OnInit {
               VisitorDesignation:"",
               VisitorCategory: item.VisitorCategory,
               VISITOR_COMPANY_ID: item.VISITOR_COMPANY_ID,
-              VISITOR_COMPANY: item.VISITOR_COMPANY,
+              VISITOR_COMPANY: item.VISITOR_COMPANY_ID,
+              VISITOR_COMPANY_NAME: item.VISITOR_COMPANY,
               VISITOR_GENDER: item.VISITOR_GENDER,
               PLATE_NUM: item.PLATE_NUM,
               TELEPHONE_NO: item.TELEPHONE_NO,
@@ -283,21 +270,23 @@ export class AddAppointmentPage implements OnInit {
                   // var visitor1 = visitorCats[visitors];
                   if(visitorCats.EMAIL == visitor.EMAIL || visitorCats.VISITOR_NAME == visitor.VISITOR_NAME || (visitorCats.SEQ_ID && visitorCats.SEQ_ID == visitor.SEQ_ID)){
                     //alert("Changed");
-                    visitorCats.VISITOR_IC =visitor.VISITOR_IC,
-                    visitorCats.VISITOR_NAME=visitor.VISITOR_NAME,
-                    visitorCats.VISITOR_COMPANY=visitor.VISITOR_COMPANY,
-                    visitorCats.VISITOR_COMPANY_ID=visitor.VISITOR_COMPANY_ID,
-                    visitorCats.EMAIL=visitor.EMAIL,
-                    visitorCats.TELEPHONE_NO=visitor.TELEPHONE_NO,
-                    visitorCats.VISITOR_GENDER=visitor.VISITOR_GENDER,
-                    visitorCats.VisitorDesignation= "",
-                    visitorCats.VisitorCategory=visitor.VisitorCategory,
-                    visitorCats.VisitorCategory_ID=visitor.VisitorCategory_ID,
-                    visitorCats.VISITOR_IMG=visitor.VISITOR_IMG,
-                    visitorCats.PLATE_NUM=visitor.PLATE_NUM,
-                    visitorCats.isChecked = true,
-                    visitorCats.visitor_RemoveImg =visitor.visitor_RemoveImg,
-                    visitorCats.ImageChanged = visitor.ImageChanged,
+                    visitorCats.VISITOR_IC =visitor.VISITOR_IC;
+                    visitorCats.VISITOR_NAME=visitor.VISITOR_NAME;
+                    visitorCats.VISITOR_COMPANY=visitor.VISITOR_COMPANY;
+                    visitorCats.VISITOR_COMPANY_ID=visitor.VISITOR_COMPANY_ID;
+                    visitorCats.EMAIL=visitor.EMAIL;
+                    visitorCats.TELEPHONE_NO=visitor.TELEPHONE_NO;
+                    visitorCats.VISITOR_GENDER=visitor.VISITOR_GENDER;
+                    visitorCats.VisitorDesignation= "";
+                    visitorCats.VisitorCategory=visitor.VisitorCategory;
+                    visitorCats.VisitorCategory_ID=visitor.VisitorCategory_ID;
+                    visitorCats.VISITOR_IMG=visitor.VISITOR_IMG;
+                    visitorCats.PLATE_NUM=visitor.PLATE_NUM;
+                    visitorCats.isChecked = true;
+                    visitorCats.visitor_RemoveImg =visitor.visitor_RemoveImg;
+                    visitorCats.ImageChanged = visitor.ImageChanged;
+                    visitorCats.Address=visitor.Address;
+                    visitorCats.Country=visitor.Country;
                     this.newImage = this.newImage +"_"+ new Date().getTime();
                     break;
                   }
@@ -311,91 +300,105 @@ export class AddAppointmentPage implements OnInit {
     })
   });
   }
+  ngOnDestroy(): void {
+    this.events.clearObserve();
+  }
 
   ionViewWillLeave(){
 
-    if(this.VM.visitors && this.VM.visitors.length > 0 && !this.edit){
-      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, JSON.stringify(this.VM));
-    }else{
-      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-    }
-    // this.events.unsubscribe("addAppointmentSuccess1");
-    // this.events.unsubscribe("AddVisitorNew");
-    // this.events.unsubscribe("user:created");
   }
 
-  openCalendar(from){
+
+  async presentActionSheet() {
+    const actionSheet = await this.actionsheetCtrl.create({
+      header: 'Albums',
+      cssClass: 'my-custom-class',
+      buttons: [{
+        text: 'Delete',
+        role: 'destructive',
+        icon: 'trash',
+        handler: () => {
+          console.log('Delete clicked');
+        }
+      }, {
+        text: 'Share',
+        icon: 'share',
+        handler: () => {
+          console.log('Share clicked');
+        }
+      }, {
+        text: 'Play (open modal)',
+        icon: 'caret-forward-circle',
+        handler: () => {
+          console.log('Play clicked');
+        }
+      }, {
+        text: 'Favorite',
+        icon: 'heart',
+        handler: () => {
+          console.log('Favorite clicked');
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
+
+    const { role } = await actionSheet.onDidDismiss();
+    console.log('onDidDismiss resolved with role', role);
+  }
+
+
+  openCalender(picker) {
+    picker.open();
+  }
+
+
+  changeCalendar(from){
     if(!this.edit || (!this.VM.facility || this.VM.facility.length == 0) || !this.showFacility){
-      var showDate = new Date();
+      let showDate = new Date();
       if(from){
-        showDate = new Date(this.VM.fromDate);
+        showDate = new Date(this.datepickerFrmDate);
       }else{
-        showDate = new Date(this.VM.toDate);
+        showDate = new Date(this.datepickerToDate);
       }
       console.log("OpenCalender:Start:"+ this.VM.fromDate);
       console.log("OpenCalender:End:"+ this.VM.toDate);
-      console.log("OpenCalender:"+ showDate);
-      this.datePicker.show({
-        date: showDate,
-        mode: 'datetime',
-        minDate : showDate,
-        popoverArrowDirection :  "down" ,
-        // androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-        androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
-      }).then(
-        date => {
-         // alert(date)
-          var hours = date.getHours();
-          var min = date.getMinutes();
-          var minutes = ""+min;
-          var ampm = hours >= 12 ? 'PM' : 'AM';
-          // hours = hours % 12;
-          // hours = hours ? hours : 12;
+
+      var hours = showDate.getHours();
+      var min = showDate.getMinutes();
+      var minutes = ""+min;
+      var ampm = hours >= 12 ? 'PM' : 'AM';
+      minutes = min < 10 ? '0'+minutes : minutes;
+      var strTime = hours + ':' + minutes;
+      var ftDate = this.dateformat.transform(showDate+"", "yyyy-MM-ddTHH:mm:ss");
+      if(from){
+        this.VM.fromDate = new Date(showDate.getTime());
+        this.VM.fromTime = strTime;
+        this.VM.fromTimeSession = ampm;
+        var sTime = new Date(ftDate).getTime() + (AppSettings.APPOINTMENT_BufferTime * 60 * 1000);
+        if(sTime >= new Date(this.VM.toDate).getTime()){
+          this.VM.toDate = new Date(new Date(ftDate).getTime()+ (AppSettings.APPOINTMENT_BufferTime * 60 * 1000));
+          hours = this.VM.toDate.getHours();
+          min = this.VM.toDate.getMinutes();
+          minutes = ""+min;
+          ampm = hours >= 12 ? 'PM' : 'AM';
           minutes = min < 10 ? '0'+minutes : minutes;
-
-          // var sdate = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
-          // var smonthh = (date.getMonth()+1) < 10 ? '0'+ (date.getMonth()+1) : (date.getMonth()+1);
-
-          var strTime = hours + ':' + minutes;
-          // var selectedDate =sdate +':'+smonthh+':'+date.getFullYear()+" "+""+strTime+" "+ ampm;
-          var ftDate = this.dateformat.transform(date+"", "yyyy-MM-ddTHH:mm:ss");
-          if(from){
-            this.VM.fromDate = new Date(date.getTime());
-            this.VM.fromTime = strTime;
-            this.VM.fromTimeSession = ampm;
-
-            var sTime = new Date(ftDate).getTime() + (AppSettings.APPOINTMENT_BufferTime * 60 * 1000);
-            //alert(this.VM.fromDate)
-            if(sTime >= new Date(this.VM.toDate).getTime()){
-              this.VM.toDate = new Date(new Date(ftDate).getTime()+ (AppSettings.APPOINTMENT_BufferTime * 60 * 1000));
-
-              hours = this.VM.toDate.getHours();
-              min = this.VM.toDate.getMinutes();
-              minutes = ""+min;
-              ampm = hours >= 12 ? 'PM' : 'AM';
-              minutes = min < 10 ? '0'+minutes : minutes;
-              strTime = hours + ':' + minutes;
-
-              this.VM.toTime = strTime;
-              this.VM.toTimeSession = ampm;
-            }
-
-
-          }else{
-            this.VM.toDate = new Date(date.getTime());
-            this.VM.toTime = strTime;
-            this.VM.toTimeSession = ampm;
-            //alert(this.VM.toDate)
-          }
-
-          // alert(strTime)
-          // alert(ampm)
-
-        },
-        err => console.log('Error occurred while getting date: ', err)
-      );
+          strTime = hours + ':' + minutes;
+          this.VM.toTime = strTime;
+          this.VM.toTimeSession = ampm;
+        }
+      }else{
+        this.VM.toDate = new Date(showDate.getTime());
+        this.VM.toTime = strTime;
+        this.VM.toTimeSession = ampm;
+      }
     }
-
   }
 
 
@@ -438,13 +441,13 @@ export class AddAppointmentPage implements OnInit {
       title: "add-appointment",
       message: ''
     });
-    var appntmntData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA);
-    if(appntmntData && !this.edit && (!this.VM.visitors || this.VM.visitors.length == 0)){
-      this.VM.visitors =  JSON.parse(appntmntData).visitors;
-      this.VM.addVisitorSettings = JSON.parse(appntmntData).addVisitorSettings;
-      this.VM.visitor_ctg = JSON.parse(appntmntData).visitor_ctg;
-      this.addAppointmentModel.visitor_ctg_id = this.VM.visitor_ctg.visitor_ctg_id;
-    }
+    // var appntmntData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA);
+    // if(appntmntData && !this.edit && (!this.VM.visitors || this.VM.visitors.length == 0)){
+    //   this.VM.visitors =  JSON.parse(appntmntData).visitors;
+    //   this.VM.addVisitorSettings = JSON.parse(appntmntData).addVisitorSettings;
+    //   this.VM.visitor_ctg = JSON.parse(appntmntData).visitor_ctg;
+    //   this.addAppointmentModel.visitor_ctg_id = this.VM.visitor_ctg.visitor_ctg_id;
+    // }
     if(this.showFacility){
       this.loadVimsAppFacilityMasterList();
     }
@@ -454,12 +457,22 @@ export class AddAppointmentPage implements OnInit {
   editVisitors(slideDOM:IonItemSliding, type, visitor: any){
     slideDOM.close();
     if(type == 'edit'){
+      visitor.VisitorCategory = this.addAppointmentModel.visitor_ctg_id;
+      this.VISITOR_CATEGORY.forEach(element => {
+        if (element.visitor_ctg_id === this.addAppointmentModel.visitor_ctg_id) {
+          this.VM.visitor_ctg.visitor_ctg_desc = element.visitor_ctg_desc;
+          visitor.visitor_ctg_desc = element.visitor_ctg_desc;
+          return;
+        }
+      });
+      visitor.VisitorCategory_ID = this.addAppointmentModel.visitor_ctg_id;
       const navigationExtras: NavigationExtras = {
         state: {
           passData: {
             changeMaster: visitor.SEQ_ID ? true : false,
             fromAppointmentPage : true,
-            visitor:visitor
+            visitor:visitor,
+            addVisitorSettings: this.VM.addVisitorSettings
           }
         }
       };
@@ -516,10 +529,7 @@ export class AddAppointmentPage implements OnInit {
     this.router.navigate(['manage-visitors'], navigationExtras);
   }
 
-  async proceedToNextStep(){
-
-
-
+  proceedToNextStep(){
     var type = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
     var allow = true;
 
@@ -529,7 +539,7 @@ export class AddAppointmentPage implements OnInit {
       }else{
         allow = false;
       }
-    }else if(type == AppSettings.LOGINTYPES.FACILITY){
+    } else if(type == AppSettings.LOGINTYPES.FACILITY){
       allow = true;
     }else if(this.hostSettings && !this.hostSettings.PurposeEnabled && !this.hostSettings.FloorEnabled && !this.hostSettings.VehicleNumberEnabled && !this.hostSettings.RemarksEnabled && !this.hostSettings.RoomEnabled){
       allow = false;
@@ -537,7 +547,16 @@ export class AddAppointmentPage implements OnInit {
 
     for(var i = 0 ; i < this.VM.visitors.length ; i++){
       var vObj = this.VM.visitors[i];
-      vObj.VISITOR_COMPANY = vObj.VISITOR_COMPANY_ID
+      if (!vObj.VISITOR_COMPANY_NAME) {
+        vObj.VISITOR_COMPANY_NAME = vObj.VISITOR_COMPANY;
+      }
+      if(vObj.VISITOR_COMPANY_ID) {
+        vObj.VISITOR_COMPANY = vObj.VISITOR_COMPANY_ID;
+      }
+      if (vObj.VisitorCategory_ID) {
+        vObj.VisitorCategory = vObj.VisitorCategory_ID;
+      }
+
     }
 
     if(allow){
@@ -568,7 +587,7 @@ export class AddAppointmentPage implements OnInit {
       this.addAppointmentModel.START_TIME = START_DATE.split("T")[1];
     }
 
-    var END_DATE = this.dateformat.transform(this.VM.fromDate+"", "yyyy-MM-ddTHH:mm:ss");
+    var END_DATE = this.dateformat.transform(this.VM.toDate+"", "yyyy-MM-ddTHH:mm:ss");
     if(END_DATE.split("T").length>0){
       this.addAppointmentModel.END_DATE = END_DATE.split("T")[0];
       this.addAppointmentModel.END_TIME = END_DATE.split("T")[1];
@@ -699,20 +718,11 @@ export class AddAppointmentPage implements OnInit {
               });
               return await presentModel.present();
             }
-
-
-            let toast = await this.toastCtrl.create({
-              message: this.T_SVC['ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS'],
-              duration: 3000,
-              color: 'primary',
-              position: 'bottom'
-            });
-            toast.present();
+            this.showAlert(this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS']);
+            this.apiProvider.dismissLoading();
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-            this.navCtrl.pop();
-
+            this.navCtrl.navigateRoot('home-view');
             return;
-
         }
         let alert = await this.alertCtrl.create({
           header: 'Error !',
@@ -768,31 +778,21 @@ export class AddAppointmentPage implements OnInit {
               }
             }
           }
-
-
-          let toast = await this.toastCtrl.create({
-            message: this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS'],
-            duration: 3000,
-            color: 'primary',
-            cssClass: 'alert-danger',
-            position: 'bottom'
-          });
-          toast.present();
+          this.apiProvider.showAlert(this.T_SVC['ADD_APPOIN.ADD_APPOINTMENT_DONE_SUCCESS']);
+          this.apiProvider.dismissLoading();
           this.events.publishDataCompany({
-            action : 'addAppointmentSuccess1',
+            action: 'addAppointmentSuccess1',
             title: showAlert,
             message: messageArray
           });
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
           this.navCtrl.navigateRoot('home-view').then((data)=>{
-            var page = {
-              component :"facility-booking-history"
-            }
-            this.events.publishDataCompany({action : 'ChangeTab',
-            title: page,
-            message:0
-          });
-
+            this.events.publishDataCompany({
+              action:'RefreshUpcoming',
+              title: 'RefreshUpcoming',
+              message: 0
+            });
+            this.apiProvider.dismissLoading();
           });
 
           return;
@@ -880,6 +880,16 @@ export class AddAppointmentPage implements OnInit {
   }
   }
 
+  async showAlert(msg){
+    let alert = await this.alertCtrl.create({
+      header: 'Notification',
+      message: msg,
+      cssClass: 'alert-danger',
+      buttons: ['Okay']
+    });
+    alert.present();
+  }
+
   onChangeFacility(facilityItem){
     var str = JSON.stringify(this.VM);
     var data = JSON.parse(str);
@@ -916,7 +926,7 @@ export class AddAppointmentPage implements OnInit {
   }
 
   goBack() {
-    this.navCtrl.pop();
+    this.router.navigateByUrl('home-view');
     console.log('goBack ');
   }
 
@@ -955,8 +965,10 @@ export class AddAppointmentPage implements OnInit {
 
   onChangeCategory(visitor_ctg_id, allowCheck){
 
-    if (allowCheck && visitor_ctg_id !== this.VM.visitor_ctg.visitor_ctg_id) {
-      this.VM.visitors = [];
+    if (this.VM.visitors) {
+      this.VM.visitors.forEach(element => {
+        element.VisitorCategory = visitor_ctg_id;
+      });
     }
 
     this.VM.visitor_ctg.visitor_ctg_id = visitor_ctg_id;

@@ -239,7 +239,7 @@ export class NotificationsPage implements OnInit {
 			var params = {"HostIC":HostIC,
 			"lastSyncDate":"",
 			"OffSet": ""+ this.OffSet,
-			"Rows":"100"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.getHostNotification(params).then(
@@ -317,7 +317,7 @@ export class NotificationsPage implements OnInit {
 	}
 
   goBack() {
-    this.navCtrl.pop();
+    this.router.navigateByUrl('home-view');
     console.log('goBack ');
    }
 
@@ -383,31 +383,32 @@ export class NotificationsPage implements OnInit {
 	}
 
 	ondrag(event, slideDOM:IonItemSliding, notification: any) {
-		let percent = event.getSlidingPercent();
-		if (percent > 0) {
-		  // positive
-		  console.log('right side' + percent);
-		  if(this.showDelete){
-			return;
-		  }
+    let percent = event.detail.ratio;
+    if (percent > 0) {
+      this.closeSlide(slideDOM);
+      // this.showAlertForSlide('delete', item);
+      if(this.showDelete){
+        return;
+        }
+        this.showDelete = true;
+        this.deleteNotification(notification);
+    } else {
+      // this.closeSlide(slideDOM);
+      // this.showAlertForSlide('edit', item);
 
-		  this.deleteNotification(slideDOM, notification);
-
-
-		} else {
-		  // negative
-		  console.log('left side');
-		}
-		if (Math.abs(percent) > 1) {
-		  console.log('overscroll');
-		}
+    }
+    if (Math.abs(percent) > 1) {
+      // console.log('overscroll');
+    }
 	  }
 
-	async deleteNotification(slideDOM:IonItemSliding, notification: any){
+    closeSlide(slideDOM) {
+      setTimeout(() => {
+        slideDOM.close();
+      }, 100);
+    }
 
-
-
-	  slideDOM.close();
+	async deleteNotification(notification: any){
 	  let alert = this.alertCtrl.create({
       header: 'Delete Notification',
       cssClass:'alert-warning',
@@ -483,13 +484,9 @@ export class NotificationsPage implements OnInit {
 				}]
 				});
 				(await alert).present();
-				// alert.dismiss(() => {
-				// 	this.showDelete = false;
-				// });
-				this.showDelete = true;
-				setTimeout(() => {
-					this.showDelete = false;
-				}, 1000);
+        (await alert).onDidDismiss().then(()=> {
+          this.showDelete = false;
+        })
   }
 
 	viewNotification(notification1){

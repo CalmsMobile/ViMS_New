@@ -28,10 +28,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/add-appointment-step2/add-appointment-step2.module').then( m => m.AddAppointmentStep2PageModule)
   },
   {
-    path: 'add-visitor-company',
-    loadChildren: () => import('./pages/add-visitor-company/add-visitor-company.module').then( m => m.AddVisitorCompanyPageModule)
-  },
-  {
     path: 'add-visitors',
     loadChildren: () => import('./pages/add-visitors/add-visitors.module').then( m => m.AddVisitorsPageModule)
   },

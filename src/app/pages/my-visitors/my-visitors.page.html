@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="danger">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
-    <ion-title>{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
+    <ion-title> &nbsp;&nbsp;&nbsp;{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
   </ion-toolbar>
   <ion-toolbar color="danger">
     <ion-searchbar mode="ios"
@@ -21,47 +21,42 @@
       </div>
         <ion-item-sliding #slideDOM no-lines *ngFor="let item of VM.visitors">
             <ion-item sp-visitor-item class="myItem">
-                <div item-left [ngClass]="{ 'myItemCIO': (item.VisitorStatus == '20'),'myItemCINO':   (item.VisitorStatus == '10'), 'myItemCIExpired': (item.VisitorStatus == '30')}">
-                    <ion-avatar>
-                        <img onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType">
-                    </ion-avatar>
-                </div>
-
+                  <img class="vImage" slot="start" onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType">
                 <ion-label>
                   <ion-row>
-                      <ion-icon name="person" class="myIcons"></ion-icon>
+                      <ion-icon name="person-outline" class="myIcons"></ion-icon>
                       <h2 class="myName"><b>{{doCapitalize(item.visitor_name)}}</b></h2>
                   </ion-row>
 
                   <!-- <p>{{item.visitor_comp_id}}</p> -->
-                  <ion-row>
-                    <ion-icon name="grid" class="myIcons"></ion-icon>
+                  <ion-row style="    margin-bottom: 2px !important;">
+                    <ion-icon name="grid-outline" class="myIcons"></ion-icon>
                     <p>{{doCapitalize(item.visitor_comp_name)}}</p>
                   </ion-row>
-                  <ion-row class="myRow">
+                  <ion-row class="myRow" style="    margin-bottom: 2px !important;">
                       <ion-col size="6" class="myCol">
                           <ion-row class="myRow">
-                            <ion-icon name="book" class="myIcons"></ion-icon>
+                            <ion-icon name="book-outline" class="myIcons"></ion-icon>
                             <p>{{doCapitalize(item.att_reason)}}</p>
                           </ion-row>
                       </ion-col>
                       <ion-col size="6" class="myCol" *ngIf="item.visitor_mobile_no">
                           <ion-row class="myRow">
-                            <ion-icon name="phone-portrait" class="myIcons"></ion-icon>
+                            <ion-icon name="call-outline" class="myIcons"></ion-icon>
                             <p>{{item.visitor_mobile_no}}</p>
                           </ion-row>
                       </ion-col>
                   </ion-row>
-                  <ion-row class="myRow">
+                  <ion-row class="myRow" style="    margin-bottom: 2px !important;">
                       <ion-col size="6" class="myCol">
                           <ion-row class="myRow">
-                            <ion-icon name="time" class="myIcons"></ion-icon>
+                            <ion-icon name="calendar-outline" class="myIcons"></ion-icon>
                             <p class="mytime">{{item.CheckInDatetime}}</p>
                           </ion-row>
                       </ion-col>
                       <ion-col size="6" class="myCol">
                         <ion-row class="myRow">
-                          <ion-icon name="time" class="myIcons"></ion-icon>
+                          <ion-icon name="calendar-outline" class="myIcons"></ion-icon>
                           <p class="mytime">{{item.CheckOutDatetime? item.CheckOutDatetime : 'still inside'}}</p>
                         </ion-row>
                       </ion-col>
@@ -74,7 +69,8 @@
                 <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM, 'delete', item)">
                 <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
               </ion-button> -->
-              <ion-button color="danger" (click)="addVisitors(slideDOM, item)">
+              <ion-button shape="round" style="align-self: center;
+              margin-right: 10px;" color="danger" (click)="addVisitors(slideDOM, item)">
                   ADD
               </ion-button>
               </ion-item-options>

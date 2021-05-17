@@ -8,25 +8,21 @@
 <ion-header>
 <ion-toolbar color="danger">
   <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
-  <ion-title>
-     Appointment Approval
-    </ion-title>
+  <ion-title>&nbsp;&nbsp;&nbsp;Appointment Approval</ion-title>
 
     <ion-buttons slot="end">
-
-          <!-- <ion-button *ngIf="!(selectedTap == 'pending' && checkAll)" slot="icon-only" style="margin: 0px;font-size: 12px;max-width: 80px;text-transform: capitalize;" (click)= "changeAppointmentGlobalSettings()">
-                  <ion-icon style="    margin: 10px;
-                  font-size: 25px;" name="settings"></ion-icon></ion-button> -->
-          <!-- <ion-button *ngIf="!(selectedTap == 'pending' && checkAll)" slot="icon-only" style="margin: 0px;font-size: 12px;max-width: 80px;text-transform: capitalize;" (click)= "logoutMe(fab)">
-                  <ion-icon style="    margin: 10px;
-                  font-size: 25px;" name="log-out"></ion-icon></ion-button> -->
-
-        <ion-button *ngIf="selectedTap == 'pending' && checkAll" slot="icon-only" style="margin: 0px;font-size: 12px;max-width: 80px;text-transform: capitalize;" (click)= "showChangeAppointmentStatusAlert('All', '')"><ion-icon style="    margin: 10px;
-          font-size: 25px;" name="checkmark"></ion-icon></ion-button>
-      <!-- <ion-button slot="icon-only" (click)="openModal()">
-        <ion-icon name="options"></ion-icon>
-      </ion-button> -->
+        <ion-button color="light" shape="round" *ngIf="selectedTap == 'pending' && checkAll && pendingList && pendingList.length > 0" slot="icon-only" style="margin: 0px;font-size: 12px;margin-right: 7px;max-width: 80px;text-transform: capitalize;" (click)= "showChangeAppointmentStatusAlert('All', '')">
+        <!-- <ion-icon style="    margin: 10px;
+          font-size: 25px;" name="checkmark"></ion-icon> -->
+          <ion-label>Done</ion-label>
+          </ion-button>
     </ion-buttons>
+</ion-toolbar>
+<ion-toolbar color="primary" *ngIf="pendingList && pendingList.length > 0">
+  <ion-item lines="none" mode="ios" style="    margin: 5px;padding: 0px; width: -webkit-fill-available;">
+    <ion-label color="light">Select All</ion-label>
+    <ion-checkbox mode="ios" slot="end" [(ngModel)]="checkAll" (ionChange)="selectAll()"></ion-checkbox>
+  </ion-item>
 </ion-toolbar>
 </ion-header>
 
@@ -50,62 +46,65 @@
 </ion-refresher>
 <ion-list>
     <ion-row *ngIf="( selectedTap == 'pending' && pendingList.length > 0)">
-        <ion-item lines="none" style="    margin: 5px;padding: 0px; width: -webkit-fill-available;">
-            <ion-label>Select All</ion-label>
-            <ion-checkbox mode="ios" slot="end" [(ngModel)]="checkAll" (ionChange)="selectAll()"></ion-checkbox>
-          </ion-item>
+      <div style="width: 99%;">
+        <ion-list no-padding no-margin *ngFor="let list of pendingList | groupBy:'appointment_group_id'">
+          <ion-card class="card_appointment"
+            no-padding no-border >
+              <ion-item lines="none"  mode="ios" no-padding class="apt-item">
+                <ion-row lines="none" no-padding full-width>
+                  <ion-col size="4" class="col apt-left" no-padding (click)="viewBooking(list.value)">
+                    <div class="div-date">
+                      <h2 class="text-white" no-margin style="font-size: 18px;">{{list.value[0].START_DATE | date :'dd'}} {{getDayofDate(list.value[0].START_DATE)}}</h2>
+                    </div>
+                    <div class="row text-white div-left-middle">
+                      <h3 class="text-white div-left-middle-text">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} -
+                        {{list.value[0].START_DATE | date : 'yyyy'}}</h3>
+                    </div>
+                    <div class="row" style="background:rgba(0,0,0,0.1);">
+                      <div class="col">
+                        <h3 class="text-white div-left-bottom-text">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
+                      </div>
+                    </div>
+                  </ion-col>
+                  <ion-col size="6" style="padding-bottom: 0px;" (click)="viewBooking(list.value)">
+                    <div class="div-apt-center">
+                      <ion-icon slot="start" color="danger" name="person-outline" class="apt-text-icons"></ion-icon>
+                      <p class="apt-center-title">{{list.value[0].VISITOR_NAME}}</p>
+                    </div>
 
-      <ion-col size="12" size-sm size-md>
-            <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;" *ngIf="pendingList.length == 0">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
-            <ion-list class="no-margin" *ngFor="let list of pendingList | groupBy:'appointment_group_id'">
-              <ion-card style="margin: 0px;margin-bottom: 5px;margin-top: 5px;border: 1px solid #dedede;" no-padding no-border >
-                <ion-row class="row no-padding">
-                    <ion-col size="4" class="col apt-left" style="max-width:100px;padding-bottom: 0px;text-align: center;" (click)="viewBooking(list.value)">
-                        <div class="row text-white no-padding" style="display:flex">
-                            <div class="col no-padding" style="display:contents"><h2 class="text-white" style="font-size: 25px;display: flex">{{list.value[0].START_DATE | date : 'dd'}}</h2></div>
-                            <div class="col">
-                                <h3 class="text-white" style="font-size: 15px;">{{getDayofDate(list.value[0].START_DATE)}}</h3>
-                                <h3 class="text-white" style="font-size: 12px;">{{list.value[0].START_DATE | date:'h:mm a'}}</h3>
-                            </div>
-                        </div>
-                        <div class="row" style="background:rgba(0,0,0,0.1);">
-                            <div class="col" style="padding: 2px;"><h3 class="text-white" style="font-size: 15px;    margin: 7px;">{{list.value[0].START_DATE | date : 'MMM' | uppercase}} - {{list.value[0].START_DATE | date : 'yyyy'}}</h3></div>
-                        </div>
-                    </ion-col>
-                    <ion-col size="8" class="col padding" style="padding-bottom: 0px;">
-                        <div>
-                          <ion-item (click)="viewBooking(list.value)" lines="none" style="margin-top: -8px;
-                          --padding-start: 5px;">
-                            <ion-label slot="start" style="
-                            font-size: 16px;"><b>{{list.value[0].VISITOR_NAME}}</b></ion-label>
-                            <ion-icon *ngIf= "list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" slot="end" style="margin: 0px;
-                            margin-right: -5px;" slot="end" color="danger" name="star-outline"></ion-icon>
-                        </ion-item>
-                        <ion-item style="margin-top: -8px;
-                        --padding-start: 5px;">
-                          <div>
-                            <p *ngIf="list.value[0].REASON" (click)="viewBooking(list.value)" style="font-size: 14px;">{{list.value[0].REASON}}</p>
-                            <p *ngIf="!list.value[0].REASON" (click)="viewBooking(list.value)" style="font-size: 14px;padding-top: 5px;">--</p>
-                          </div>
-                          <ion-checkbox slot="end" style="margin: 0px;margin-right: 5px" [(ngModel)]="list.value[0].isChecked" (ionChange)="checkSelectAll()"></ion-checkbox>
-                        </ion-item>
+                    <div class="div-apt-center">
+                      <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
+                      <p class="apt-center-subtitle">{{list.value[0].REASON ? list.value[0].REASON:'--'}}</p>
+                    </div>
 
-                        <ion-row style="margin: 0px;    padding: 4px; margin-top: 3px;">
-                            <ion-col style="margin: 0px;padding: 0px;">
-                                <ion-button fill="outline" color="danger" style="margin: 0px;font-size: 12px;text-transform: capitalize;" (click)="showChangeAppointmentStatusAlert('Canceled', list.value[0].appointment_group_id)">Cancel<ion-icon style="    margin-left: 5px;" name="close-circle-outline"></ion-icon></ion-button>
-                              </ion-col>
-                          <ion-col style="margin: 0px;padding: 0px;">
-                            <ion-button fill="outline" color="secondary" style="margin: 0px;font-size: 12px;text-transform: capitalize;" (click)="showChangeAppointmentStatusAlert('Approved', list.value[0].appointment_group_id)">Approve<ion-icon style="    margin-left: 5px;" name="checkmark"></ion-icon></ion-button>
-                          </ion-col>
+                    <div class="div-apt-center">
+                      <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
+                      <p class="apt-center-subtitle">{{list.value[0].TELEPHONE_NO ? list.value[0].TELEPHONE_NO:'--'}}</p>
+                    </div>
 
-                        </ion-row>
-                        </div>
-                    </ion-col>
+                    <div class="div-apt-center">
+                      <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
+                      <p class="apt-center-subtitle">{{list.value[0].EMAIL ? list.value[0].EMAIL:'--'}}</p>
+                    </div>
+                  </ion-col>
+
+                  <ion-col size="2" class="colIcons">
+                    <div class="">
+                      <ion-checkbox slot="end" style="margin:0 auto;margin-right: 5px" [(ngModel)]="list.value[0].isChecked" (ionChange)="checkSelectAll()"></ion-checkbox>
+                    </div>
+
+                    <div style="display: flex;">
+                      <ion-icon color="success" class="iconiconClass" style="border: 3px solid #009688;" name="thumbs-up-outline"
+                      (click)="showChangeAppointmentStatusAlert('Approved', list.value[0].appointment_group_id)"></ion-icon>
+                      <ion-icon color="danger" class="iconiconClass" style="    border: 3px solid #e91e63;" name="thumbs-down-outline"
+                      (click)="showChangeAppointmentStatusAlert('Canceled', list.value[0].appointment_group_id)"></ion-icon>
+                    </div>
+                  </ion-col>
                 </ion-row>
-            </ion-card>
-
-            </ion-list>
-      </ion-col>
+              </ion-item>
+          </ion-card>
+        </ion-list>
+      </div>
     </ion-row>
     <ion-row *ngIf="( selectedTap == 'approved' && approvedList.length > 0)">
       <ion-col size="12" size-sm size-md>
@@ -211,9 +210,9 @@
               margin: 0 auto;
               margin-top: 10px;
               margin-bottom: 10px;
-              width: 150px;
-          " src="assets/images/box.png">
-              <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_PENDING_LIST' | translate}}</h5>
+              width: 200px;
+          " src="assets/images/box.jpeg">
+              <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_PENDING_LIST' | translate}}</h5> -->
       </ion-col>
   </ion-row>
 
@@ -224,9 +223,9 @@
               margin: 0 auto;
               margin-top: 10px;
               margin-bottom: 10px;
-              width: 150px;
-          " src="assets/images/box.png">
-              <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_APPROVED_LIST' | translate}}</h5>
+              width: 200px;
+          " src="assets/images/box.jpeg">
+              <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_APPROVED_LIST' | translate}}</h5> -->
       </ion-col>
   </ion-row>
   <ion-row style="height: 100%; width: 100%; margin-top:100px; display: flex; justify-content: center; align-items: center;" *ngIf="loadingFinished && (selectedTap == 'canceled' && cancelledList.length == 0)">
@@ -236,9 +235,9 @@
               margin: 0 auto;
               margin-top: 10px;
               margin-bottom: 10px;
-              width: 150px;
-          " src="assets/images/box.png">
-              <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_CANCELED_LIST' | translate}}</h5>
+              width: 200px;
+          " src="assets/images/box.jpeg">
+              <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_CANCELED_LIST' | translate}}</h5> -->
       </ion-col>
   </ion-row>
 </ion-list>

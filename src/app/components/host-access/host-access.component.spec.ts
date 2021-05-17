@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { AddVisitorCompanyPage } from './add-visitor-company.page';
+import { HostAccessComponent } from './host-access.component';
 
-describe('AddVisitorCompanyPage', () => {
-  let component: AddVisitorCompanyPage;
-  let fixture: ComponentFixture<AddVisitorCompanyPage>;
+describe('HostAccessComponent', () => {
+  let component: HostAccessComponent;
+  let fixture: ComponentFixture<HostAccessComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddVisitorCompanyPage ],
+      declarations: [ HostAccessComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AddVisitorCompanyPage);
+    fixture = TestBed.createComponent(HostAccessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

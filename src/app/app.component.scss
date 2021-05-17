@@ -9,6 +9,33 @@ h3 {
 h5 {
   padding: 3px 0;
   color: #ffffff;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  display: flex;
+}
+
+.subMenuIcon {
+  padding-left: 0;
+  margin-left: 0;
+  margin-right: 3px;
+  font-size: 18px;
+}
+
+.sideIcon {
+  margin-right: 3px;
+  font-size: 18px;
+}
+
+.sideMenuTitle {
+  margin-left: 0px;
+  font-size: 14px;
+  color: #eb445a;
+}
+
+.sideSubMenuTitle {
+  margin-left: 0px;
+  font-size: 14px;
 }
 
 .myColor {
@@ -28,7 +55,8 @@ h5 {
 ion-content {
   ion-menu-toggle {
     ion-item {
-      font-size: 15px !important;
+      font-size: 13px !important;
+      --padding-start: 5px !important;
     }
   }
 }

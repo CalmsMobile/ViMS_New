@@ -21,7 +21,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class AppointmentDetailsPage implements OnInit {
 
-
+  fromPage = '';
   appointment : any;
   facilityBooking : any ;
   notifyTime  = 0;
@@ -199,6 +199,7 @@ export class AppointmentDetailsPage implements OnInit {
         const passData = this.router.getCurrentNavigation().extras.state.passData;
         console.log('passData : ' + passData);
         this.appointment = passData.appointment;
+        this.fromPage = passData.fromPage;
         if(this.appointment && this.appointment[0] && !this.appointment[0].isFacilityAlone){
           var fTime = new Date(this.appointment[0].START_DATE).getTime();
           var cDate = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");
@@ -250,7 +251,7 @@ export class AppointmentDetailsPage implements OnInit {
   }
 
   goBack() {
-    this.navCtrl.pop();
+    this.router.navigateByUrl(this.fromPage);
     console.log('goBack ');
   }
 
@@ -299,23 +300,12 @@ export class AppointmentDetailsPage implements OnInit {
     if(!appointment.HexCode){
       appointment.HexCode = "";
     }
-    // var qrJsonString1 = "{\"aptid\":\""+appointment.VisitorBookingSeqId+ "\",\"aptgid\":\"" + title + "\",\"cid\":\"" + appointment.cid + "\"}";
-    var qrJsonString1 = appointment.HexCode;
-    var key = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
-    var iv = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
-
-    var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(qrJsonString1), key,
-    {
-        keySize: 128,
-        iv: iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-    });
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     var hostName = "";
     if(hostData){
       hostName = JSON.parse(hostData).HOSTNAME;
     }
+    var qrJsonString1 = appointment.HexCode;
     var qrCodeString = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=' + qrJsonString1 + '&RefType=QR&Refresh='+ new Date().getTime();
     const fileTransfer: FileTransferObject = this.transfer.create();
     // const fileURI = this.file.dataDirectory + encrypted + '.jpg';
@@ -344,7 +334,6 @@ export class AppointmentDetailsPage implements OnInit {
               fileTransfer.download(url, targetPath).then(async (entry) => {
                 (await loading).dismiss();
                 console.log('download complete: ' + entry.toURL());
-                console.log("New encrypt: "+ encrypted);
                 var data = "Hi, I have shared the QR code for our appointment. Please use the QR code for your registration when you visit me."+
                 "\n"+" Thanks,"+"\n"+"["+hostName+"]";
                 this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(async () => {
@@ -397,6 +386,8 @@ export class AppointmentDetailsPage implements OnInit {
   }
 
   async openVisitorDetails(visitor) {
+    console.log("VISITOR DETAILS");
+    console.log(visitor)
     var title  = '';
     if(this.facilityBooking && this.facilityBooking.length > 0){
       title = this.facilityBooking[0].BookingID;

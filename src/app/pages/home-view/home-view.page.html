@@ -16,13 +16,17 @@
           <ion-icon name="list"></ion-icon>
           <ion-label>Calendar</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="{{tab5Root}}">
-          <ion-icon name="cog"></ion-icon>
-          <ion-label>Settings</ion-label>
-        </ion-tab-button>
         <ion-tab-button tab="{{tab7Root}}">
           <ion-icon name="aperture"></ion-icon>
           <ion-label>Quick Pass</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="{{tab5Root}}" *ngIf="!isHostAccessEnable">
+          <ion-icon name="cog"></ion-icon>
+          <ion-label>Settings</ion-label>
+        </ion-tab-button>
+        <ion-tab-button *ngIf="isHostAccessEnable" (click)="openHostAccess()" [disabled]="!HOST_QRVALUE">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>Host Access</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -43,9 +47,13 @@
           <ion-icon name="list"></ion-icon>
           <ion-label>Calendar</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="{{tab5Root}}">
+        <ion-tab-button tab="{{tab5Root}}" *ngIf="!isHostAccessEnable">
           <ion-icon name="cog"></ion-icon>
           <ion-label>Settings</ion-label>
+        </ion-tab-button>
+        <ion-tab-button *ngIf="isHostAccessEnable" (click)="openHostAccess()" [disabled]="!HOST_QRVALUE">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>Host Access</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
       </ion-tabs>
@@ -66,13 +74,17 @@
           <ion-icon name="list"></ion-icon>
           <ion-label>Calendar</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="{{tab5Root}}">
-          <ion-icon name="cog"></ion-icon>
-          <ion-label>Settings</ion-label>
-        </ion-tab-button>
         <ion-tab-button tab="{{tab7Root}}">
           <ion-icon name="aperture"></ion-icon>
           <ion-label>Quick Pass</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="{{tab5Root}}" *ngIf="!isHostAccessEnable">
+          <ion-icon name="cog"></ion-icon>
+          <ion-label>Settings</ion-label>
+        </ion-tab-button>
+        <ion-tab-button *ngIf="isHostAccessEnable" (click)="openHostAccess()" [disabled]="!HOST_QRVALUE">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>Host Access</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -92,9 +104,13 @@
           <ion-icon name="list"></ion-icon>
           <ion-label>Calendar</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="{{tab5Root}}">
+        <ion-tab-button tab="{{tab5Root}}" *ngIf="!isHostAccessEnable">
           <ion-icon name="cog"></ion-icon>
           <ion-label>Settings</ion-label>
+        </ion-tab-button>
+        <ion-tab-button *ngIf="isHostAccessEnable" (click)="openHostAccess()" [disabled]="!HOST_QRVALUE">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>Host Access</ion-label>
         </ion-tab-button>
 
       </ion-tab-bar>
@@ -115,13 +131,17 @@
           <ion-icon name="list"></ion-icon>
           <ion-label>Calendar</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="{{tab5Root}}">
-          <ion-icon name="cog"></ion-icon>
-          <ion-label>Settings</ion-label>
-        </ion-tab-button>
         <ion-tab-button tab="{{tab7Root}}">
           <ion-icon name="aperture"></ion-icon>
           <ion-label>Quick Pass</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="{{tab5Root}}" *ngIf="!isHostAccessEnable">
+          <ion-icon name="cog"></ion-icon>
+          <ion-label>Settings</ion-label>
+        </ion-tab-button>
+        <ion-tab-button *ngIf="isHostAccessEnable" (click)="openHostAccess()" [disabled]="!HOST_QRVALUE">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>Host Access</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -140,9 +160,13 @@
           <ion-icon name="list"></ion-icon>
           <ion-label>Calendar</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="{{tab5Root}}">
+        <ion-tab-button tab="{{tab5Root}}" *ngIf="!isHostAccessEnable">
           <ion-icon name="cog"></ion-icon>
           <ion-label>Settings</ion-label>
+        </ion-tab-button>
+        <ion-tab-button *ngIf="isHostAccessEnable" (click)="openHostAccess()" [disabled]="!HOST_QRVALUE">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>Host Access</ion-label>
         </ion-tab-button>
 
       </ion-tab-bar>

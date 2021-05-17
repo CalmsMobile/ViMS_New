@@ -275,7 +275,7 @@ export class SecurityCheckInPagePage implements OnInit {
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "ED6F9206" //"C4B9F365";
+      var data = "0012764311" //"C4B9F365";
       var params = {"hexcode":""+ data};
       this.apiProvider.VimsAppGetAppointmentByHexCode(params).then(
         async (val) => {
@@ -925,7 +925,7 @@ ionViewDidEnter() {
 
       var params = {"SearchString":company,
       "OffSet":"0",
-      "Rows":"200"};
+      "Rows":"20000"};
       // this.VM.host_search_id = "adam";
       this.apiProvider.GetVisitorCompany(params).then(
         (val) => {

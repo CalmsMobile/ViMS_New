@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';
@@ -24,6 +25,7 @@ export class FacilityUpcomingPage implements OnInit {
   constructor(public navCtrl: NavController,
     private router: Router,
     private  translate : TranslateService,
+    private datePipe: DatePipe,
     private alertCtrl: AlertController, public apiProvider: RestProvider) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
@@ -82,7 +84,7 @@ export class FacilityUpcomingPage implements OnInit {
       "StaffSeqId": hostId,
       "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
       "OffSet": ""+ this.OffSet,
-      "Rows":"100"
+      "Rows":"20000"
     };
       // this.VM.host_search_id = "adam";
       this.apiProvider.VimsAppGetHostFacilityBookingList(params, true).then(
@@ -227,7 +229,8 @@ export class FacilityUpcomingPage implements OnInit {
       const navigationExtras: NavigationExtras = {
         state: {
           passData: {
-            appointment: list
+            appointment: list,
+            fromPage: 'home-view'
           }
         }
       };
@@ -239,7 +242,8 @@ export class FacilityUpcomingPage implements OnInit {
       var HOSTIC = JSON.parse(hostData).HOSTIC;
       var params = {
       "STAFF_IC":HOSTIC,
-      "appointment_group_id": list[0].appointment_group_id
+      "appointment_group_id": list[0].appointment_group_id,
+      "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
     };
     // this.VM.host_search_id = "adam";
     this.apiProvider.GetAppointmentByGroupId(params).then(
@@ -248,7 +252,8 @@ export class FacilityUpcomingPage implements OnInit {
         const navigationExtras: NavigationExtras = {
           state: {
             passData: {
-              appointment: aList
+              appointment: aList,
+              fromPage: 'home-view'
             }
           }
         };

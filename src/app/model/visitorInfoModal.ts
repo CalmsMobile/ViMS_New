@@ -9,9 +9,10 @@ export class VisitorInfoModal
     visitor_ctg_name: any = "";
     visitor_comp_id: any = "";
     visitor_comp_name: any = "";
-    visitor_comp_name1: any = "";
+    visitor_comp: any = "";
     visitor_gender: any = "";
     visitor_country: any = "";
+    visitor_country_name : any = '';
     visitor_address: any = "";
     visitor_mobile_no: any = "";
     vehicle_no:any = "";
