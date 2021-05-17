@@ -5,15 +5,19 @@
   Ionic pages and navigation.
 -->
 <ion-header lines="none" class="ion-no-border">
-  <ion-toolbar color="primary" style="min-height:90px;" lines="none" class="ion-no-border">
-    <div slot="start" class="ion-text-left" >
-      <!-- <img *ngIf="companyData.LogoImgUrl && companyData.StorageURL" class="circle-pic" onError="this.src='../../assets/images/logo/2.png';" [src]="companyData.StorageURL + companyData.LogoImgUrl" style="float: left;width: 60px;height: 60px;"> -->
-      <img src="../../../assets/images/user.png" style="width: 60px;height: 60px;">
-    </div>
-    <ion-label class="ion-padding" style="font-weight: 800;">USER NAME<br></ion-label>
-    <ion-label class="ion-padding" style="font-size: 12px;">LAST LOGGED IN</ion-label>
-    <ion-icon slot="end" style="font-size: 26px;padding-right: 10px;" name="notifications-outline"></ion-icon>
-    <ion-icon slot="end" style="font-size: 26px;" name="settings-sharp" (click)="pressed()"></ion-icon>
+  <ion-toolbar color="primary" lines="none" class="ion-no-border">
+    <ion-item lines="none" class="no-border">
+      <img src="../../../assets/images/user.png" slot="start" class="ion-text-left"  style="width: 60px;height: 60px;">
+      <div style="line-height: 22px;">
+        <ion-label style="font-weight: 800;color:white">USER NAME<br></ion-label>
+        <ion-label style="font-size: 12px;color:white">LAST LOGGED IN</ion-label>
+      </div>
+    </ion-item>
+
+    <ion-buttons slot="end">
+      <ion-icon style="font-size: 26px;padding-right: 10px;" name="notifications-outline"></ion-icon>
+      <ion-icon style="font-size: 26px;" name="settings-sharp" (click)="pressed()"></ion-icon>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -191,9 +195,9 @@
 </ion-content>
 
 <ion-footer lines="lines" no-border transparent>
-  <ion-toolbar color="white">
+  <ion-toolbar color="primary">
     <ion-row transparent style="padding: 5px;justify-content: center;">
-      <ion-tab-button color="primary" [ngStyle]="{'color': (tabSelected === 'QUICK_PASS')?'white': 'lightgray'}"
+      <ion-tab-button
     (click)="proceedNext('QUICK_PASS')" mode="ios" selected="{{tabSelected === 'QUICK_PASS'? 'true': 'false'}}">
       <div>
         <ion-icon class="tabIcon" name="archive-outline"></ion-icon>
@@ -201,7 +205,7 @@
       <ion-label style="font-size: 12px; text-transform: none;">Check-In</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button [ngStyle]="{'color': (tabSelected === 'QUICK_PASS_OUT')?'white': 'lightgray'}"
+      <ion-tab-button
       (click)="proceedNext('QUICK_PASS_OUT')" mode="ios" selected="{{tabSelected === 'QUICK_PASS_OUT'? 'true': 'false'}}">
         <div>
           <ion-icon class="tabIcon" name="archive-outline"></ion-icon>
@@ -209,7 +213,7 @@
         <ion-label style="font-size: 12px; text-transform: none;">Check-Out</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button [ngStyle]="{'color': (tabSelected === 'IN')?'white': 'lightgray'}"
+      <ion-tab-button
       (click)="proceedNext('IN')" mode="ios" selected="{{tabSelected === 'IN'? 'true': 'false'}}">
         <div>
           <ion-icon class="tabIcon" name="man"></ion-icon>
@@ -217,13 +221,14 @@
         <ion-label style="font-size: 12px; text-transform: none;">Appointment</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button [ngStyle]="{'color': (tabSelected === 'IN')?'white': 'lightgray'}"
+      <ion-tab-button
       (click)="proceedNext('IN')" mode="ios" selected="{{tabSelected === 'IN'? 'true': 'false'}}">
         <div>
           <ion-icon class="tabIcon" name="barcode-outline"></ion-icon>
         </div>
         <ion-label style="font-size: 12px; text-transform: none;">Quick Pass</ion-label>
       </ion-tab-button>
+
     </ion-row>
   </ion-toolbar>
 </ion-footer>

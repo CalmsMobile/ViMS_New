@@ -375,9 +375,9 @@ export class RestProvider {
     });
   }
 
-  SaveSecurityAppDeviceInfo(data, ApiUrl){
+  securityUserLogin(data, ApiUrl){
     var loading = this.presentLoading();
-    var Api = ApiUrl + '/api/SecurityApp/SaveSecurityAppDeviceInfo';
+    var Api = ApiUrl + '/api/SecurityApp/userLogin';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
 

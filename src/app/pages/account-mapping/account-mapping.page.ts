@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import * as CryptoJS from 'crypto-js';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { NavigationExtras, Router } from '@angular/router';
 @Component({
   selector: 'app-account-mapping',
   templateUrl: './account-mapping.page.html',
@@ -43,6 +44,7 @@ export class AccountMappingPage {
     //  private googleVision : GoogleVision,
      public menu: MenuController,
      private file: File,
+     private router: Router,
     //  private crashlytics: Crashlytics,
      private alertCtrl: AlertController,
      private toastCtrl:ToastService,
@@ -987,7 +989,14 @@ export class AccountMappingPage {
       this.SaveAckAppDeviceInfo();
       return;
     }else if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.SECURITYAPP){
-      this.SaveSecurityAppDeviceInfo();
+      // this.SaveSecurityAppDeviceInfo();
+      const navigationExtras: NavigationExtras = {
+        state: {
+          passData: { "QR_DETAIL": this.scannedJson,
+        }
+        }
+      };
+      this.router.navigate(['facility-time-slot'], navigationExtras);
       return;
     }else if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.DISPLAYAPP){
       this.SaveDisplayAppDeviceInfo();
@@ -1140,7 +1149,7 @@ export class AccountMappingPage {
         };
       }
 
-    this.apiProvider.SaveSecurityAppDeviceInfo(params1, this.scannedJson.ApiUrl).then(
+    this.apiProvider.securityUserLogin(params1, this.scannedJson.ApiUrl).then(
       (val) => {
         if(this.scannedJson.MAppId){
           switch(this.scannedJson.MAppId){
