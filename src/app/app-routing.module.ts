@@ -186,7 +186,11 @@ const routes: Routes = [
   {
     path: 'visitor-information',
     loadChildren: () => import('./pages/visitor-information/visitor-information.module').then( m => m.VisitorInformationPageModule)
+  },  {
+    path: 'security-appointment-list',
+    loadChildren: () => import('./pages/security-appointment-list/security-appointment-list.module').then( m => m.SecurityAppointmentListPageModule)
   }
+
 
 ];
 
