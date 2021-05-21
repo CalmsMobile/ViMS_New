@@ -1,10 +1,10 @@
 <ion-header>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     <ion-title>&nbsp;&nbsp;&nbsp;{{'NOTIFICATION.TITLE' | translate}}</ion-title>
   </ion-toolbar>
 
-  <ion-toolbar color="danger" mode="ios" *ngIf="!isSecurityApp">
+  <ion-toolbar color="primary" mode="ios" *ngIf="!isSecurityApp">
     <ion-segment [(ngModel)]="selectedTap" mode="ios" >
       <ion-segment-button value="general" (click)="showNotification('general')">
         General

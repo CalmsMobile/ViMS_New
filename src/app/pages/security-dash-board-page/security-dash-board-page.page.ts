@@ -120,6 +120,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       if (ackSeettings) {
         this.appSettings = JSON.parse(ackSeettings);
         this.composeRunTimeCss();
+        this.getSecurityStats();
         this.updateSyncInterval();
       }
   }
@@ -167,6 +168,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
           console.log(val+"");
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, JSON.stringify(this.appSettings));
           this.composeRunTimeCss();
+          this.updateSyncInterval();
         }
       },
       (err) => {
@@ -183,7 +185,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     if (this.segment === 'Graph') {
       setTimeout(() => {
         this.displayChart();
-      }, 1500);
+      }, 100);
     }
   }
 
@@ -1016,7 +1018,6 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
 
   getSecurityStats(){
     var params = {
-      "Branch":11001
     }
     this.apiProvider.VimsAppGetSecurityStats(params).then(
       (data: any) => {
@@ -1202,9 +1203,6 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   }
 
   ngAfterViewInit(){
-    setTimeout(() => {
-      // this.segment = 'Summary';
-    }, 2000);
   }
 
 }
