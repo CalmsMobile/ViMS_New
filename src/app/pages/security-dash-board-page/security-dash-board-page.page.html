@@ -5,230 +5,260 @@
   Ionic pages and navigation.
 -->
 <ion-header lines="none" class="ion-no-border">
-  <ion-toolbar color="primary" lines="none" class="ion-no-border">
-    <ion-item lines="none" class="no-border">
-      <img src="../../../assets/images/user.png" slot="start" class="ion-text-left"  style="width: 60px;height: 60px;">
+  <ion-toolbar lines="none" class="ion-no-border" color="primary">
+    <ion-item lines="none" class="no-border" style="--padding-start: 0px;">
+      <img src="../../../assets/images/user.png" slot="start" class="ion-text-left"  style="width: 52px;
+      height: 52px;
+      margin-right: 5px;
+      padding: 8px;">
       <div style="line-height: 22px;">
-        <ion-label style="font-weight: 800;color:white">USER NAME<br></ion-label>
-        <ion-label style="font-size: 12px;color:white">LAST LOGGED IN</ion-label>
+        <ion-label style="font-weight: 800;color:white">{{userInfoObj.UserName}}<br></ion-label>
+        <ion-label style="font-size: 11px;color:white">last logged in: {{lastLoggedIn? lastLoggedIn: ''}}</ion-label>
       </div>
     </ion-item>
 
     <ion-buttons slot="end">
-      <ion-icon style="font-size: 26px;padding-right: 10px;" name="notifications-outline"></ion-icon>
-      <ion-icon style="font-size: 26px;" name="settings-sharp" (click)="pressed()"></ion-icon>
+      <ion-icon style="font-size: 26px;padding-right: 10px;" color="light" name="notifications-outline" (click)="gotoNotifiations()"></ion-icon>
+      <ion-icon style="font-size: 26px;" name="settings-sharp" color="light" (click)="pressed()"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding class="ion-no-border">
+<ion-content padding class="ion-no-border" line="none">
   <div class="main">
-    <ion-segment mode="ios" (ionChange)="segmentChanged()" [(ngModel)]="segment" class="mainsegments">
+    <ion-segment mode="ios" [(ngModel)]="segment" class="mainsegments" (ionChange)="segmentChanged($event)">
 
-      <ion-segment-button value="0" layout="icon-start">
-        <ion-icon name="document-text-outline"></ion-icon>Summary
+      <ion-segment-button value="Summary" layout="icon-start">
+        <ion-icon style=" font-size: 14px;" name="document-text-outline"></ion-icon><ion-label style="font-size: 12px;">Summary</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="1" layout="icon-start">
-        Graph<ion-icon name="stats-chart-sharp"></ion-icon>
+      <ion-segment-button value="Graph" layout="icon-start">
+        <ion-label style="font-size: 12px;">Graph</ion-label><ion-icon style="font-size: 14px;" name="stats-chart-sharp"></ion-icon>
       </ion-segment-button>
   </ion-segment>
-    <ion-slides #slides pager style="padding-bottom: 150px" (ionSlideDidChange)="slideChanged()" scrollbar="true">
-      <ion-slide>
-        <ion-grid>
+    <!-- <ion-slides #slides pager style="padding-bottom: 150px" (ionSlideDidChange)="slideChanged()" scrollbar="true">
+      <ion-slide> -->
+        <ion-grid *ngIf="segment === 'Summary'">
           <ion-row style="padding-top: 5px;">
             <ion-col size="6">
               <ion-card class="card1" (click)= "statesClicked('10')" style="color: #236348;">
-                <ion-icon name="calendar-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+
                 <ion-grid>
                   <ion-row>
-                    <ion-col size="8">
-                      <ion-card-subtitle class="ion-tittle">Today Appointment</ion-card-subtitle>
+                    <ion-col size="1">
+
                     </ion-col>
-                    <ion-col size="4">
-                      <div class="para">99</div>
+                    <ion-col size="3">
+                      <ion-icon name="calendar-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8">
+                      <div class="para cardtitle">{{statsCountData.TodayAppointmentCount ? statsCountData.TodayAppointmentCount: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
+                <ion-card-subtitle class="ion-tittle">Today Appointment</ion-card-subtitle>
               </ion-card>
             </ion-col>
             <ion-col size="6">
               <ion-card class="card1" (click)= "statesClicked('20')" style="color: #418FC0;">
-                <ion-icon name="book-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
                 <ion-grid>
                   <ion-row>
-                    <ion-col size="8">
-                      <ion-card-subtitle class="ion-tittle">Overall Appointment</ion-card-subtitle>
+                    <ion-col size="1">
+
                     </ion-col>
-                    <ion-col size="4">
-                      <div class="para">{{TotalVisitorsOut}}</div>
+                    <ion-col size="3">
+                      <ion-icon name="book-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8">
+                      <div class="para cardtitle">{{statsCountData.TotalCheckInCount ? statsCountData.TotalCheckInCount: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
+                <ion-card-subtitle class="ion-tittle">Overall Check-In</ion-card-subtitle>
               </ion-card>
             </ion-col>
             <ion-col size="6">
               <ion-card class="card1" style="color: #3836BD;">
-                <ion-icon name="trending-up-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
                 <ion-grid>
                   <ion-row>
-                    <ion-col size="8">
-                      <ion-card-subtitle class="ion-tittle">Today Check-In</ion-card-subtitle>
+                    <ion-col size="1">
+
                     </ion-col>
-                    <ion-col size="4">
-                      <div class="para">{{TotalVisitorsOut}}</div>
+                    <ion-col size="3">
+                      <ion-icon name="trending-up-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8">
+                      <div class="para cardtitle">{{statsCountData.TotalVisitorsIn ? statsCountData.TotalVisitorsIn: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
+                <ion-card-subtitle class="ion-tittle">Today Check-In</ion-card-subtitle>
               </ion-card>
             </ion-col>
             <ion-col size="6">
               <ion-card class="card1" style="color: #90CC64;">
-                <ion-icon name="trending-down-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
                 <ion-grid>
                   <ion-row>
-                    <ion-col size="8">
-                      <ion-card-subtitle class="ion-tittle">Today Check-Out</ion-card-subtitle>
+                    <ion-col size="1">
+
                     </ion-col>
-                    <ion-col size="4">
-                      <div class="para">{{TotalVisitorsOut}}</div>
+                    <ion-col size="3">
+                      <ion-icon name="trending-down-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8">
+                      <div class="para cardtitle">{{statsCountData.TotalVisitorsOut? statsCountData.TotalVisitorsOut: '0'}}</div>
                     </ion-col>
                   </ion-row>
+                  <ion-card-subtitle class="ion-tittle">Today Check-Out</ion-card-subtitle>
                 </ion-grid>
               </ion-card>
             </ion-col>
             <ion-col size="6">
               <ion-card class="card1" (click)= "statesClicked('40')" style="color: #CA203D;">
                 <ion-fab vertical="top" horizontal="end" >
-                  <ion-fab-button #button class="alertanimate" style="width: 5px;height: 5px;margin-top: 7px;margin-right: 10px;">
+                  <ion-fab-button class="heart-beat animated infinite pulse delay-1s" style="width: 5px;height: 5px;margin-top: 7px;margin-right: 10px;">
                   </ion-fab-button>
+                  <!-- <div id="buttonOverstay" class="heart-beat animated pulse delay-1s"></div> -->
                 </ion-fab>
-                <ion-icon name="alert-circle-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
                 <ion-grid>
                   <ion-row>
-                    <ion-col size="8">
-                      <ion-card-subtitle class="ion-tittle">Overstay</ion-card-subtitle>
+                    <ion-col size="1">
+
                     </ion-col>
-                    <ion-col size="4">
-                      <div class="para">{{TotalVisitorsOut}}</div>
+                    <ion-col size="3">
+                      <ion-icon name="alert-circle-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8">
+                      <div class="para cardtitle">{{statsCountData.OverstayVisitor? statsCountData.OverstayVisitor: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
+                <ion-card-subtitle class="ion-tittle">Overstay</ion-card-subtitle>
               </ion-card>
             </ion-col>
             <ion-col size="6">
               <ion-card class="card1" (click)= "statesClicked('30')" style="color: #006A5C;">
-                <ion-icon name="podium-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
                 <ion-grid>
                   <ion-row>
-                    <ion-col size="8">
-                      <ion-card-subtitle class="ion-tittle">Currently Check-In</ion-card-subtitle>
+                    <ion-col size="1">
+
                     </ion-col>
-                    <ion-col size="4">
-                      <div class="para">{{TotalVisitorsOut}}</div>
+                    <ion-col size="3">
+                      <ion-icon name="podium-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8">
+                      <div class="para cardtitle">{{statsCountData.VisitorsInside? statsCountData.VisitorsInside: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
+                <ion-card-subtitle class="ion-tittle">Currently Check-In</ion-card-subtitle>
               </ion-card>
             </ion-col>
           </ion-row>
         </ion-grid>
-      </ion-slide>
-      <ion-slide>
-        <ion-grid>
+      <!-- </ion-slide>
+      <ion-slide> -->
+        <ion-grid *ngIf="segment === 'Graph'">
           <ion-row style="padding-top: 5px;">
             <ion-col size="12">
               <ion-card class="card2">
                 <ion-card-header>
-                  <ion-card-subtitle>
-                    Total Check-In by Day (May)
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Recent 10 days appointment
                   </ion-card-subtitle>
                 </ion-card-header>
-                <ion-card-content>
-                  <canvas #totCheckin></canvas>
+                <ion-card-content class="ion-no-padding">
+                  <canvas id="barCanvas1"></canvas>
                 </ion-card-content>
               </ion-card>
             </ion-col>
+          </ion-row>
 
+          <ion-row style="padding-top: 5px;">
             <ion-col size="12">
               <ion-card class="card2">
                 <ion-card-header>
-                  <ion-card-subtitle>
-                    Total Appointment by Day (May)
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Recent 10 days check-in
                   </ion-card-subtitle>
                 </ion-card-header>
-                <ion-card-content>
-                  <canvas #barCanvas></canvas>
+                <ion-card-content class="ion-no-padding">
+                  <canvas id="barCanvas2"></canvas>
                 </ion-card-content>
               </ion-card>
             </ion-col>
+          </ion-row>
 
+          <ion-row style="padding-top: 5px;">
             <ion-col size="12">
               <ion-card class="card2">
                 <ion-card-header>
-                  <ion-card-subtitle>
-                    Total Overstay by Day (May)
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Recent 10 days check-out
                   </ion-card-subtitle>
                 </ion-card-header>
-                <ion-card-content>
-                  <canvas #barCanvas></canvas>
+                <ion-card-content class="ion-no-padding">
+                  <canvas id="barCanvas3"></canvas>
                 </ion-card-content>
               </ion-card>
             </ion-col>
+          </ion-row>
 
+          <ion-row style="padding-top: 5px;">
             <ion-col size="12">
               <ion-card class="card2">
                 <ion-card-header>
-                  <ion-card-subtitle>
-                    Estimated No of Visitor by Day (May)
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Recent 10 days overstay
                   </ion-card-subtitle>
                 </ion-card-header>
-                <ion-card-content>
-                  <canvas #barCanvas></canvas>
+                <ion-card-content class="ion-no-padding">
+                  <canvas id="barCanvas4"></canvas>
                 </ion-card-content>
               </ion-card>
             </ion-col>
           </ion-row>
         </ion-grid>
-      </ion-slide>
-    </ion-slides>
+      <!-- </ion-slide>
+    </ion-slides> -->
+
+
+
   </div>
+
+
 </ion-content>
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="ion-no-border" color="primary">
+    <ion-tabs>
+      <ion-tab-bar slot="bottom" color="primary">
+        <ion-tab-button
+        (click)="proceedNext('QUICK_PASS')" mode="ios">
+        <ion-icon class="tabIcon" name="trending-up-outline"></ion-icon>
+          <ion-label style="font-size: 10px; text-transform: none;">Check-In</ion-label>
+          </ion-tab-button>
 
-<ion-footer lines="lines" no-border transparent>
-  <ion-toolbar color="primary">
-    <ion-row transparent style="padding: 5px;justify-content: center;">
-      <ion-tab-button
-    (click)="proceedNext('QUICK_PASS')" mode="ios" selected="{{tabSelected === 'QUICK_PASS'? 'true': 'false'}}">
-      <div>
-        <ion-icon class="tabIcon" name="archive-outline"></ion-icon>
-      </div>
-      <ion-label style="font-size: 12px; text-transform: none;">Check-In</ion-label>
-      </ion-tab-button>
+          <ion-tab-button
+          (click)="proceedNext('QUICK_PASS_OUT')" mode="ios">
+            <ion-icon class="tabIcon" name="trending-down-outline"></ion-icon>
+            <ion-label style="font-size: 10px; text-transform: none;">Check-Out</ion-label>
+          </ion-tab-button>
 
-      <ion-tab-button
-      (click)="proceedNext('QUICK_PASS_OUT')" mode="ios" selected="{{tabSelected === 'QUICK_PASS_OUT'? 'true': 'false'}}">
-        <div>
-          <ion-icon class="tabIcon" name="archive-outline"></ion-icon>
-        </div>
-        <ion-label style="font-size: 12px; text-transform: none;">Check-Out</ion-label>
-      </ion-tab-button>
+          <ion-tab-button
+          (click)="proceedNext('IN')" mode="ios">
+            <ion-icon class="tabIcon" name="qr-code-outline"></ion-icon>
+            <ion-label style="font-size: 10px; text-transform: none;">Appointment</ion-label>
+          </ion-tab-button>
 
-      <ion-tab-button
-      (click)="proceedNext('IN')" mode="ios" selected="{{tabSelected === 'IN'? 'true': 'false'}}">
-        <div>
-          <ion-icon class="tabIcon" name="man"></ion-icon>
-        </div>
-        <ion-label style="font-size: 12px; text-transform: none;">Appointment</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button
-      (click)="proceedNext('IN')" mode="ios" selected="{{tabSelected === 'IN'? 'true': 'false'}}">
-        <div>
-          <ion-icon class="tabIcon" name="barcode-outline"></ion-icon>
-        </div>
-        <ion-label style="font-size: 12px; text-transform: none;">Quick Pass</ion-label>
-      </ion-tab-button>
-
-    </ion-row>
+          <ion-tab-button
+          (click)="proceedNext('IN')" mode="ios">
+            <ion-icon class="tabIcon" name="barcode-outline"></ion-icon>
+            <ion-label style="font-size: 10px; text-transform: none;">Quick Pass</ion-label>
+          </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
   </ion-toolbar>
 </ion-footer>

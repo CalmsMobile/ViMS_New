@@ -4,10 +4,12 @@ import {AppSettings} from './../../services/app-settings'
 import { NetworkProvider } from '../network/network';
 import { File } from '@ionic-native/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
-import { AlertController, LoadingController, Platform } from '@ionic/angular';
+import { AlertController, LoadingController, Platform, PopoverController, ToastController } from '@ionic/angular';
 import { Network } from '@ionic-native/network/ngx';
 import { EventsService } from 'src/app/services/EventsService';
 import { Device } from '@ionic-native/device/ngx';
+import { ToolTipComponent } from 'src/app/components/tool-tip/tool-tip.component';
+import { DecimalPipe } from '@angular/common';
 
 /*
   Generated class for the RestProvider provider.
@@ -25,9 +27,12 @@ export class RestProvider {
     public platform: Platform,
     private device: Device,
     private file : File,
+    private toastCtrl: ToastController,
     private eventsService:EventsService,
     public network: Network,
     // private http1: Http,
+    private decimalPipe: DecimalPipe,
+    private popoverController: PopoverController,
     private alertCtrl: AlertController,
     private translate:TranslateService,
     public loadingCtrl: LoadingController) {
@@ -65,6 +70,16 @@ export class RestProvider {
     return result;
   }
 
+  async showToast(mesg) {
+    let toast = await this.toastCtrl.create({
+      message: mesg,
+      duration: 3000,
+      color: 'primary',
+      position: 'bottom',
+    });
+    toast.present();
+  }
+
   async showAlert(msg) {
     if(!this.alertShowing){
       this.alertShowing = true;
@@ -100,6 +115,28 @@ export class RestProvider {
           a.dismiss().then(() => console.log('abort presenting'));
         }
       });
+    });
+  }
+
+  async presentPopover(ev: any, message) {
+    const popover = await this.popoverController.create({
+      component: ToolTipComponent,
+      componentProps: {
+        data: {
+          title : message
+        }
+      },
+      cssClass: 'my-tooltip',
+      event: ev,
+      animated: true,
+      backdropDismiss: true,
+      mode: 'ios',
+      translucent: true
+    });
+    await popover.present().then(() => {
+      setTimeout(() => {
+        popover.dismiss();
+      }, 2000);
     });
   }
 
@@ -395,7 +432,7 @@ export class RestProvider {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
-          resolve(output.Table);
+          resolve(output);
         }else{
           reject(output);
         }
@@ -595,24 +632,20 @@ export class RestProvider {
     });
   }
 
-  setAuthorizedSecurityInfo(data){
-    var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
-    var MAppDevSeqId = "";
-    if(ackData && JSON.parse(ackData)){
-      MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
-    }
-    if(!this.platform.is('cordova')) {
-      data.Authorize = {
-        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
-        "AuMAppDevSeqId": MAppDevSeqId
-      }
-    }else{
+  twoDecimals(number) {
+    // number = ""+number;
+    return number.toFixed(0);
+}
 
-      data.Authorize = {
-        "AuDeviceUID": this.device.uuid,
-        "AuMAppDevSeqId": MAppDevSeqId
-      }
+  setAuthorizedSecurityInfo(data){
+    var MAppDevSeqId = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+
+    data.Authorize = {
+      "userID": MAppDevSeqId ? JSON.parse(MAppDevSeqId).userID: '',
+      "AuDeviceUID": (this.device && this.device.uuid) ? this.device.uuid: AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
+      "AuMAppDevSeqId": MAppDevSeqId ? JSON.parse(MAppDevSeqId).MAppDevSeqId: ''
     }
+    data.Branch = MAppDevSeqId ? JSON.parse(MAppDevSeqId).RefBranchSeqId: ''
     return data;
   }
 
@@ -1953,7 +1986,7 @@ export class RestProvider {
         }
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
-            resolve(JSON.stringify(output.Table1[0]));
+            resolve(JSON.stringify(output));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2113,8 +2146,8 @@ export class RestProvider {
     });
   }
 
-  async getHostNotification(data){
-    data  = this.setAuthorizedInfo(data, '');
+  async getHostNotification(data, WEB){
+    data  = this.setAuthorizedInfo(data, WEB);
     var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/getHostNotification');
@@ -3073,6 +3106,43 @@ export class RestProvider {
           return;
         }
         if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
+          resolve(JSON.stringify(output));
+        }else{
+          reject(JSON.stringify(output));
+        }
+
+      }, (err) => {
+        this.dismissLoading();
+        reject(err);
+
+      });
+    });
+  }
+
+  requestSecurityApi(data, API, loading) {
+    data  = this.setAuthorizedSecurityInfo(data);
+    if (loading) {
+      this.presentLoading();
+    }
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + API;
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          this.dismissLoading();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log("Result: "+ JSON.stringify(response));
+        var output = JSON.parse(response[0].Data);
+        this.dismissLoading();
+        if(this.validateUser(output)){
+          return;
+        }
+        if(output != undefined && output.Table){
           resolve(JSON.stringify(output));
         }else{
           reject(JSON.stringify(output));

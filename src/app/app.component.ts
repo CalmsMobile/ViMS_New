@@ -94,19 +94,7 @@ export class AppComponent {
 
       } else if (user == "InValidDeviceUIDOrUnAuthorized") {
         // this.rootPage = "AccountMappingPage";
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.LOGIN_TYPE, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFY_TIME, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.PREAPPOINTMENTAUTOAPPROVE, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.SIGN_PAD, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
+        localStorage.clear();
         if (!this.alertShowing) {
           this.alertShowing = true;
           this.navCtrl.navigateRoot('account-mapping');
@@ -253,7 +241,7 @@ export class AppComponent {
             this.navCtrl.navigateRoot("sign-pad-idle-page");
             break;
           case AppSettings.LOGINTYPES.SECURITYAPP:
-            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS);
             if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).MAppDevSeqId) {
               console.log("calling login Page: " + hostData);
               return;
@@ -314,7 +302,8 @@ export class AppComponent {
           var result = JSON.parse(val + "");
           if (result) {
             console.log(val + "");
-            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, val + "");
+            var result = JSON.parse(result.SettingDetail);
+            localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, JSON.stringify(result));
           }
         },
         (err) => {

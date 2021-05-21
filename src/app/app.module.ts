@@ -31,7 +31,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { VimsFacilityDisplay } from './services/vims-facility-display';
 import { DateFormatPipe } from './pipes/custom/DateFormat';
 import { CustomPipe } from './pipes/custom/custom';
@@ -56,13 +56,16 @@ import { PreviewAnyFile } from '@ionic-native/preview-any-file/ngx';
 import { HostAccessComponent } from './components/host-access/host-access.component';
 import { CountryComponentComponent } from './components/country-component/country-component.component';
 import { CommonUtil } from './services/util/CommonUtil';
-
+import { TooltipsModule } from 'ionic-tooltips';
+import { ToolTipComponent } from './components/tool-tip/tool-tip.component';
+import { ThemeSwitcherService } from './services/ThemeSwitcherService';
 @NgModule({
-  declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent,
+  declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent, ToolTipComponent,
     CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent, CountryComponentComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent],
   entryComponents: [],
   exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent, QuestionDocPopupComponent,HostAccessComponent,
+    ToolTipComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent, CountryComponentComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [ BrowserModule,
@@ -71,6 +74,7 @@ import { CommonUtil } from './services/util/CommonUtil';
     CommonModule,
     SignaturePadModule,
     AppRoutingModule,
+    TooltipsModule.forRoot(),
     NgCalendarModule,
     TranslateModule.forRoot(),
     PipesModule.forRoot(),
@@ -101,8 +105,10 @@ import { CommonUtil } from './services/util/CommonUtil';
     SpinnerDialog,
     HTTP,
     EventsService,
+    DecimalPipe,
     Device,
     RestProvider,
+    ThemeSwitcherService,
     LocalNotifications,
     FileOpener,
     FileTransfer,

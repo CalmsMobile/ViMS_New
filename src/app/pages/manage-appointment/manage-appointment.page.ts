@@ -87,7 +87,9 @@ export class ManageAppointmentPage implements OnInit {
   gotoAdminPage(){
     this.router.navigateByUrl('admin-home');
 	}
-
+  openTooltip(event, message) {
+    this.apiProvider.presentPopover(event, message);
+  }
   ionViewWillEnter(){
     this.events.publishDataCompany({
       action: "page",

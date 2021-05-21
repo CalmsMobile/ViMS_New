@@ -62,6 +62,10 @@ export class AppointmentHistoryPage implements OnInit {
 
 	}
 
+  openTooltip(event, message) {
+    this.apiProvider.presentPopover(event, message);
+  }
+
 	ionViewWillLeave(){
 		this.events.publishDataCompany({
       action: "page",

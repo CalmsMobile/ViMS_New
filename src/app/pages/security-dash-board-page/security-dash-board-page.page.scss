@@ -54,24 +54,24 @@ ion-thumbnail {
   background-color: transparent !important;
 }
 
-ion-content{
-  --ion-background-color:#EB445A;
+ion-content {
+  // --ion-background-color: #eb445a;
 }
-
 
 .card1 {
   margin: auto;
-  border-radius: 15%;
+  border-radius: 20px;
   align-items: center;
-  background-color: #F6F6F6;
-}
-
-.cardtitle{
-  padding-top:5vh;
+  background-color: #f6f6f6;
   text-align: center;
 }
 
-.ion-tittle{
+.cardtitle {
+  padding-top: 3vh;
+  text-align: center;
+}
+
+.ion-tittle {
   font-size: 11px;
   text-align: left;
   font-weight: 100;
@@ -80,77 +80,84 @@ ion-content{
   display: flex;
   align-items: center;
   justify-content: center;
+  text-transform: capitalize;
   color: inherit;
+  padding-bottom: 3vh;
 }
 .para {
-  font-size: 150%;
-  text-align: left;
-  vertical-align: bottom;
+  font-size: 32px;
+  padding-top: 4vh;
+}
+#bar-chart-container {
+  height: 400px;
+  width: 400px;
 }
 
+.heart-beat {
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  border: 5px solid #f1b2a3;
+  background: #c32222;
+}
 .card2 {
   margin: auto;
-  border-radius: 5%;
-  height: 250px;
-  width: 90%;
+  border-radius: 5px;
   align-items: center;
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
   --box-shadow: 50px;
 }
 
 .tabIcon {
-  font-size: 25px;
+  font-size: 20px;
 }
 
-.ion-padding{
+.ion-padding {
   display: inline-block;
   vertical-align: bottom;
   height: 15px;
   padding-top: 10px;
 }
 
-.main{
-  border-top-left-radius: 35px;
-  border-top-right-radius: 35px;
-  background: #ffffff;
-  padding: 20px;
-  height: calc(100vh - 80px);
-  width: 100%;
-  background-color: #F0F0F0;
+.has-refresher .scroll-content {
+  border-top: 0 !important;
 }
 
-ion-tab-button div ion-icon, ion-tab-button ion-label {
-  color:#CA203D;
+.main {
+  height: 100%;
+  background: #ffffff;
+  padding: 20px;
+  width: 100%;
+  background-color: #f0f0f0;
 }
 
 @keyframes pulse {
   0% {
     box-shadow: 0, 0, 0, 0 rgb(219, 49, 49, 1);
-    border-radius:100%;
+    border-radius: 100%;
   }
 
   70% {
     box-shadow: 0, 0, 0, 0 rgba(219, 49, 49, 1);
-    border-radius:100%;
+    border-radius: 100%;
   }
 
   100% {
     box-shadow: 0, 0, 0, 0 rgba(219, 49, 49, 1);
-    border-radius:100%;
+    border-radius: 100%;
   }
 }
 
-.alertanimate{
-  border-radius:100%;
+.alertanimate {
+  border-radius: 100%;
   border-color: rgba(219, 49, 49, 1);
 }
 
-
-.mainsegments{
+.mainsegments {
   float: inline-end;
 }
 
 .mainsegments ion-segment-button {
-  --color-checked: var(--ion-color-success-contrast);
+  --color-checked: #06beb6;
   // --background-checked: blue;
 }

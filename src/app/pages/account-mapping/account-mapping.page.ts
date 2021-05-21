@@ -100,7 +100,7 @@ export class AccountMappingPage {
             }
           return;
         case AppSettings.LOGINTYPES.SECURITYAPP:
-            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS);
             if(hostData && JSON.parse(hostData) && JSON.parse(hostData).MAppDevSeqId){
               this.showUI = false;
               return;
@@ -202,7 +202,7 @@ export class AccountMappingPage {
             // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmvsXGxqidWW1oDwCCbeG7M0xYw+SnR7J6F5RAATHeqKnA==';
 
             //SeCurity
-            var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWA2FWpesNBQIHXTksM5p7Ic7CzOKYKHk4ldqHgNySH0+Zu438uZb0nPrSF3ezTkSN2TkCtUVFGpCmKnBV2TiW9DWO4iQYIQ6zS7+ADOKM5q2w==';
+            var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWAMkGMm2Ls9krDV2SASum5GR/F9VbHfNxtnz6iJQRe1/RztruYth9NED/fwI4E5kD0+dt+G/p45qvctDRxDoY3DKYv0aEx8NxTjVcwkz/Kvsg==';
             this.processJson(qrCodeString);
           }
         } else{
@@ -996,7 +996,7 @@ export class AccountMappingPage {
         }
         }
       };
-      this.router.navigate(['facility-time-slot'], navigationExtras);
+      this.router.navigate(['login'], navigationExtras);
       return;
     }else if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.DISPLAYAPP){
       this.SaveDisplayAppDeviceInfo();
@@ -1053,118 +1053,6 @@ export class AccountMappingPage {
             case AppSettings.LOGINTYPES.ACKAPPT:
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
               this.navCtrl.navigateRoot('sign-pad-idle-page');
-              break;
-          }
-
-        }else{
-          this.STOPS = 'STOP2';
-        }
-      },
-      async (err) => {
-
-        if(err && err.message == "No Internet"){
-          return;
-        }
-        try {
-          var result = JSON.parse(err.toString());
-          if(result.message){
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: result.message,
-              cssClass: 'alert-danger',
-              buttons: ['Okay']
-            });
-              alert.present();
-              return;
-          }
-        } catch (error) {
-
-        }
-
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-         var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-          let alert = await this.alertCtrl.create({
-            header: 'Error !',
-            message: message,
-            cssClass: 'alert-danger',
-            buttons: ['Okay']
-          });
-            alert.present();
-            return;
-        }
-
-
-        let invalidORGConfirm = await this.alertCtrl.create({
-          header: "Error",
-          message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
-          cssClass: 'alert-danger',
-          buttons: [
-            {
-              text: this.T_SVC['COMMON.OK'],
-              role: 'cancel',
-              handler: () => {
-              }
-            }
-          ]
-        });
-        invalidORGConfirm.present();
-      }
-    );
-  }
-
-
-  SaveSecurityAppDeviceInfo(){
-    var token = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.FCM_ID);
-      if(!this.platform.is('cordova')) {
-        token = "crINLpP4e9s:APA91bFQ7slN5VncMGZTdJJ49N3h1rZC0zYwpcv78xzO-sXG-NFTouko6v-yvnut9tkMm-YX5I0kAUlwCRaE7j5cJGYVeSgQy5UOj9TICLahItYkX70O0LwZpMTF5kD17iX2vLAiwl3g";
-      }else if(!token){
-        token = "";
-      }
-      var MAppSeqId = this.scannedJson.MAppDevSeqId;
-      if(!MAppSeqId){
-        MAppSeqId = this.scannedJson.MAppSeqId;
-      }
-      var params1 = {
-          "PushNotificationId":token,
-          "MAppDevSeqId": MAppSeqId,
-          "DeviceUID":AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
-          "DevicePlatform":"Android",
-          "DeviceDetails":JSON.stringify({
-           "manufacturer": "samsung",
-           "version": "6.0.1",
-           "model": "SM-G532G"
-          })
-      }
-      if(this.device.uuid){
-        params1 = {
-          "PushNotificationId":token,
-          "MAppDevSeqId": MAppSeqId,
-          "DeviceUID":this.device.uuid,
-          "DevicePlatform":this.device.platform,
-          "DeviceDetails":JSON.stringify({
-           "manufacturer": this.device.manufacturer,
-           "version": this.device.version,
-           "model": this.device.model
-          })
-        };
-      }
-
-    this.apiProvider.securityUserLogin(params1, this.scannedJson.ApiUrl).then(
-      (val) => {
-        if(this.scannedJson.MAppId){
-          switch(this.scannedJson.MAppId){
-            case AppSettings.LOGINTYPES.DISPLAYAPP:
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              //this.STOPS = 'STOP3';
-              this.navCtrl.navigateRoot('facility-kiosk-display');
-              break;
-            case AppSettings.LOGINTYPES.ACKAPPT:
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              this.navCtrl.navigateRoot('sign-pad-idle-page');
-              break;
-            case AppSettings.LOGINTYPES.SECURITYAPP:
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              this.navCtrl.navigateRoot('security-dash-board-page');
               break;
           }
 

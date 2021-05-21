@@ -4,8 +4,8 @@
     <ion-title>&nbsp;&nbsp;&nbsp;{{'NOTIFICATION.TITLE' | translate}}</ion-title>
   </ion-toolbar>
 
-  <ion-toolbar color="danger" mode="ios">
-    <ion-segment [(ngModel)]="selectedTap" mode="ios">
+  <ion-toolbar color="danger" mode="ios" *ngIf="!isSecurityApp">
+    <ion-segment [(ngModel)]="selectedTap" mode="ios" >
       <ion-segment-button value="general" (click)="showNotification('general')">
         General
       </ion-segment-button>

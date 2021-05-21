@@ -8,7 +8,12 @@ import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
 import { ToastService } from 'src/app/services/util/Toast.service';
-import { Chart } from "chart.js";
+import { DatePipe } from '@angular/common';
+import { Chart } from 'chart.js';
+import { ThemeSwitcherService } from 'src/app/services/ThemeSwitcherService';
+import * as ChartJs from 'chart.js'
+
+
 declare var cordova: any;
 
 @Component({
@@ -16,69 +21,53 @@ declare var cordova: any;
   templateUrl: './security-dash-board-page.page.html',
   styleUrls: ['./security-dash-board-page.page.scss'],
 })
-export class SecurityDashBoardPagePage implements OnInit {
-  @ViewChild("totCheckin") totCheckinGraph: ElementRef;
-  @ViewChild('slides', { static: true }) slider: IonSlides;
-  @ViewChild("button", { read: ElementRef, static: true }) button: ElementRef
-
-  segment = 0;
-
+export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
+  // @ViewChild("myChart") totCheckinGraph: ElementRef;
+  // @ViewChild('slides', { static: true }) slider: IonSlides;
+  @ViewChild("barCanvas1") barCanvas1: ElementRef;
+  @ViewChild("barCanvas2") barCanvas2: ElementRef;
+  @ViewChild("barCanvas3") barCanvas3: ElementRef;
+  @ViewChild("barCanvas4") barCanvas4: ElementRef;
+  private barChart1: Chart;
+  private barChart2: Chart;
+  private barChart3: Chart;
+  private barChart4: Chart;
+  colorArray = ["#a63cb8", "#e93574", "#ffc720", "#98c95c", "#f4564a", "#1db2f6", "#883b56", "#6a808a", "#25e0a1",
+"#147ed8"];
+  segment = 'Summary';
+  dataSets1 = {
+    labels: [],
+    datasets: []
+  };
+  dataSets2 = {
+    labels: [],
+    datasets: []
+  };
+  dataSets3 = {
+    labels: [],
+    datasets: []
+  };
+  dataSets4 = {
+    labels: [],
+    datasets: []
+  };
   VM = {
     visitors : []
   }
-
-  TotalVisitorsIn = 0;
-  TotalVisitorsOut = 0;
-  VisitorsInside = 0;
-  OverstayVisitor = 0;
 
   options :BarcodeScannerOptions;
   T_SVC:any;
   GO_SETTINGS_COUNT:number = 0;
   GO_SETTINGS_TIMER:any = null;
-  isFetchingSettings = false;
+  loggedInInterval:any = null;
   timeoutInterval : any;
-  timeoutIntervalSettings : any;
-  AppointmentSync_Interval : any = 5000;
-  SettingsSync_Interval : any = 10000;
-  _currentClass : any = this;
-  MyKad_Enabled = true;
-  tabSelected = "";
-  companyData = {
-    HomeTitle : "Calms Tecnologies Sdn Bhd",
-    HomeContent : "Card Application Life Cycle Management System",
-    LogoImgUrl : "",
-    StorageURL :""
-  }
-
-  showQuickPass = true;
-  showPreAppointment = false;
+  Sync_Interval : any = 5000;
   loading : any;
   QRData : any = {};
-  customStyle : any = {
-    "WelcomePage":{
-      "Title":{
-        fontSize :  36,
-        fontFamily : "Germania"
-      },
-      "CheckInBtn":{
-        fontSize :  20,
-        bckgrndColor : "#DD2C00"
-      },
-      "CheckOutBtn":{
-        fontSize :  20,
-        bckgrndColor : "#FF5722"
-      },
-      "WelcomeDescription":{
-        fontSize :  16,
-        fontFamily : "Prompt"
-      }
-    }
-
-  }
-
-  private barChart: Chart;
-
+  appSettings: any = {};
+  userInfoObj: any;
+  statsCountData: any = {};
+  lastLoggedIn: any;
   constructor(public navCtrl: NavController,
     private platform : Platform,
     private router: Router,
@@ -87,13 +76,13 @@ export class SecurityDashBoardPagePage implements OnInit {
     private barcodeScanner: BarcodeScanner,
     public apiProvider: RestProvider,
     private translate:TranslateService,
+    private datePipe: DatePipe,
     private toastCtrl : ToastController,
-    private toastCtrl1 : ToastService,
+    private themeSwitcher: ThemeSwitcherService,
     private dateformat : DateFormatPipe,
     private events : EventsService,
     private _zone : NgZone,
     private animationCtrl: AnimationController,) {
-
       this.translate.get(['ACC_MAPPING.INVALID_QR', 'ACC_MAPPING.INVALID_ORG_TITLE',
       'ACC_MAPPING.INVALID_FCM_TITLE',
       'ACC_MAPPING.FCM_TITLE',
@@ -106,6 +95,15 @@ export class SecurityDashBoardPagePage implements OnInit {
       'COMMON.OK','COMMON.CANCEL']).subscribe(t => {
         this.T_SVC = t;
       });
+      const userInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+      if (userInfo) {
+        this.userInfoObj = JSON.parse(userInfo);
+      }
+
+      const QRDataInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+      if (QRDataInfo) {
+        this.QRData = JSON.parse(QRDataInfo);
+      }
 
       events.observeDataCompany().subscribe((data1:any) => {
         if(data1.action === "addVisitor") {
@@ -117,210 +115,76 @@ export class SecurityDashBoardPagePage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter SecurityDashBoardPage');
-    var ackSeettings =  window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
-    if(ackSeettings && JSON.parse(ackSeettings)){
-      var result1 = JSON.parse(ackSeettings);
-      if(result1){
-        var result = JSON.parse(result1.SettingDetail);
-        this.MyKad_Enabled = result.MyKad_Enabled;
+    this.enableMyKad();
+    const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
+      if (ackSeettings) {
+        this.appSettings = JSON.parse(ackSeettings);
+        this.composeRunTimeCss();
+        this.updateSyncInterval();
       }
-      this.enableMyKad();
-    }
-    this.displayChart();
+  }
+
+  composeRunTimeCss(){
+    this.themeSwitcher.setTheme('Theme1', this.appSettings.customStyle.AppTheme);
+    let _css = `
+    // ion-toolbar {
+    //   --background: `+ this.appSettings.customStyle.AppTheme +` !important;
+    // }
+    `;
+    document.getElementById("MY_RUNTIME_CSS").innerHTML = _css;
   }
 
   ionViewWillEnter(){
-    var QRData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    var ackSeettings =  window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
-    if(ackSeettings && JSON.parse(ackSeettings)){
-      var result1 = JSON.parse(ackSeettings);
-      if(result1){
-        var result = JSON.parse(result1.SettingDetail);
-        if(result.HomeTitle){
-          this.companyData.HomeTitle = result.HomeTitle;
-        }
-        if(result.HomeContent){
-          this.companyData.HomeContent = result.HomeContent;
-        }
-
-        if(result.LogoImgUrl){
-          this.companyData.LogoImgUrl = result.LogoImgUrl;
-        }
-
-        if(QRData){
-          var ApiUrl = JSON.parse(QRData).ApiUrl;
-          if(ApiUrl.indexOf("/api") > -1) {
-            ApiUrl = ApiUrl.split("/api")[0];
-          }
-          this.companyData.StorageURL = ApiUrl + "/FS/";
-        }
-
-        if(result.SettingsSync_Interval){
-          this.SettingsSync_Interval = result.SettingsSync_Interval*1000;
-        }else{
-          this.SettingsSync_Interval = 10000;
-        }
-        this.showPreAppointment = result.showPreAppointment
-        this.showQuickPass = result.showQuickPass
-        if(result.customStyle){
-          this.customStyle = result.customStyle;
-         if(!this.customStyle.WelcomePage.Title.fontSize){
-            this.customStyle.WelcomePage.Title.fontSize = 36;
-          }
-          if(!this.customStyle.WelcomePage.WelcomeDescription.fontSize){
-            this.customStyle.WelcomePage.WelcomeDescription.fontSize = 16;
-          }
-          if(!this.customStyle.WelcomePage.CheckInBtn.fontSize){
-            this.customStyle.WelcomePage.CheckInBtn.fontSize = 20;
-          }
-          if(!this.customStyle.WelcomePage.CheckOutBtn.fontSize){
-            this.customStyle.WelcomePage.CheckOutBtn.fontSize = 20;
-          }
-        }else{
-
-        this.customStyle = {
-          "WelcomePage":{
-           "Title":{
-              fontSize :  36,
-              fontFamily : "Open Sans Condensed"
-            },
-            "CheckInBtn":{
-              fontSize :  20,
-              bckgrndColor : "#DD2C00"
-            },
-            "CheckOutBtn":{
-              fontSize :  20,
-              bckgrndColor : "#FF5722"
-            },
-            "WelcomeDescription":{
-              fontSize :  16,
-              fontFamily : "Fira Sans Condensed"
-            }
-          }
-
-        }
-      }
-      }
-    }
-    this.activateListenAckSettings(true, this);
-    this.getAckSettings(this, true);
-
-
+    this.getSecuritySettings();
+    this.refreshLastLoggedIn();
   }
 
-  getAckSettings(_currentClass, refresh){
+  updateSyncInterval() {
+    if (this.timeoutInterval) {
+      clearInterval(this.timeoutInterval);
+    }
+    this.timeoutInterval = setInterval(() => {
+      this.getSecurityStats();
+    }, this.appSettings.Sync_Interval * 1000);
+  }
+
+  getSecuritySettings(){
     var QRData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-            if(!QRData){
-              if(_currentClass.timeoutIntervalSettings){
-                clearInterval(_currentClass.timeoutIntervalSettings);
-              }
-              return;
-            }
-            _currentClass.isFetchingSettings = true;
-            var params  = {
-              "RefSchoolSeqId": "",
-              "RefBranchSeqId": "",
-              "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
-              "MAppDevSeqId": JSON.parse(QRData).MAppDevSeqId
-            }
-            _currentClass.apiProvider.GetSecurityAppSettings(params).then(
-              (val) => {
+    if(!QRData){
+      return;
+    }
+    var params  = {
+      "RefSchoolSeqId": "",
+      "RefBranchSeqId": "",
+      "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
+      "MAppDevSeqId": this.QRData.MAppDevSeqId
+    }
+    this.apiProvider.GetSecurityAppSettings(params).then(
+      (val) => {
+        var result1 = JSON.parse(val+"");
+        if(result1){
+          this.appSettings = JSON.parse(result1.SettingDetail);
+          console.log(val+"");
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, JSON.stringify(this.appSettings));
+          this.composeRunTimeCss();
+        }
+      },
+      (err) => {
+      }
+    );
+  }
 
-                _currentClass.isFetchingSettings = false;
-                var result1 = JSON.parse(val+"");
-                if(result1){
-                  var result = JSON.parse(result1.SettingDetail);
-                  console.log(val+"");
-                  _currentClass._zone.run(() => {
+  gotoNotifiations() {
+    this.router.navigateByUrl('notifications');
+  }
 
-                  _currentClass.showPreAppointment = result.showPreAppointment
-                  _currentClass.showQuickPass = result.showQuickPass
-                  if(result.HomeTitle){
-                    _currentClass.companyData.HomeTitle = result.HomeTitle;
-                  }
-                  if(result.HomeContent){
-                    _currentClass.companyData.HomeContent = result.HomeContent;
-                  }
-                  if(result.LogoImgUrl){
-                    _currentClass.companyData.LogoImgUrl = result.LogoImgUrl;
-                  }
-                  // _currentClass.companyData.LogoImg = "";
-                  if(QRData){
-                    var ApiUrl = JSON.parse(QRData).ApiUrl;
-                    if(ApiUrl.indexOf("/api") > -1) {
-                      ApiUrl = ApiUrl.split("/api")[0];
-                    }
-                    _currentClass.companyData.StorageURL = ApiUrl + "/FS/";
-                  }
-
-                  if(result.SettingsSync_Interval){
-                    _currentClass.SettingsSync_Interval = result.SettingsSync_Interval*1000;
-                  }else{
-                    _currentClass.SettingsSync_Interval = 10000;
-                  }
-
-                  if(result.customStyle ){
-                    _currentClass.customStyle = result.customStyle;
-                   if(!_currentClass.customStyle.WelcomePage.Title.fontSize){
-                      _currentClass.customStyle.WelcomePage.Title.fontSize = 36;
-                    }
-                    if(!_currentClass.customStyle.WelcomePage.WelcomeDescription.fontSize){
-                      _currentClass.customStyle.WelcomePage.WelcomeDescription.fontSize = 16;
-                    }
-                    if(!_currentClass.customStyle.WelcomePage.CheckInBtn.fontSize){
-                      _currentClass.customStyle.WelcomePage.CheckInBtn.fontSize = 20;
-                    }
-                    if(!_currentClass.customStyle.WelcomePage.CheckOutBtn.fontSize){
-                      _currentClass.customStyle.WelcomePage.CheckOutBtn.fontSize = 20;
-                    }
-                  }else{
-                    if(refresh){
-                      _currentClass.customStyle = {
-                        "WelcomePage":{
-                          backgroundcolor1 : "#DD2C00",
-                          backgroundcolor2 : "#FF5722",
-                          "Title":{
-                            fontSize :  36,
-                            fontFamily : "Open Sans Condensed"
-                          },
-                          "CheckInBtn":{
-                            fontSize :  20,
-                            bckgrndColor : "#DD2C00"
-                          },
-                          "CheckOutBtn":{
-                            fontSize :  20,
-                            bckgrndColor : "#FF5722"
-                          },
-                          "WelcomeDescription":{
-                            fontSize :  16,
-                            fontFamily : "Fira Sans Condensed"
-                          }
-                        }
-
-                      }
-                    }
-
-                  }
-                  window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS,val+"");
-                  if(result.SettingsSync_Interval && _currentClass.SettingsSync_Interval != result.SettingsSync_Interval){
-                    if(_currentClass.timeoutIntervalSettings){
-                      clearInterval(_currentClass.timeoutIntervalSettings);
-                    }
-
-                    _currentClass.activateListenAckSettings(false, _currentClass);
-                  }
-
-                });
-                _currentClass.getSecurityStats(_currentClass);
-                }
-              },
-              (err) => {
-                _currentClass.isFetchingSettings = false;
-                if(_currentClass.timeoutIntervalSettings){
-                  clearInterval(_currentClass.timeoutIntervalSettings);
-                }
-              }
-            );
+  segmentChanged(event) {
+    console.log(this.segment);
+    if (this.segment === 'Graph') {
+      setTimeout(() => {
+        this.displayChart();
+      }, 1500);
+    }
   }
 
   showLoading(currentClass){
@@ -344,8 +208,6 @@ export class SecurityDashBoardPagePage implements OnInit {
   }
 
   proceedNext(type){
-    this.tabSelected = type;
-
     if(type == 'IN'){
       this.router.navigateByUrl("security-check-in-page");
       // this.enableMyKad();
@@ -371,8 +233,7 @@ export class SecurityDashBoardPagePage implements OnInit {
   }
 
   pressed(){
-    this.logoutMe();
-
+    this.router.navigateByUrl('settings-view-page');
   }
 
   active(){
@@ -380,7 +241,7 @@ export class SecurityDashBoardPagePage implements OnInit {
   }
 
   enableMyKad(){
-    if(this.MyKad_Enabled && this.platform.is('cordova')) {
+    if(this.appSettings.MyKad_Enabled && this.platform.is('cordova')) {
       var currentClass = this;
       var success = async function(result) {
         console.log(result);
@@ -1107,8 +968,11 @@ export class SecurityDashBoardPagePage implements OnInit {
       this.GO_SETTINGS_COUNT = 0;
       clearTimeout(this.GO_SETTINGS_TIMER);
     }
-    if(this.timeoutIntervalSettings){
-      clearInterval(this.timeoutIntervalSettings);
+    if(this.timeoutInterval){
+      clearInterval(this.timeoutInterval);
+    }
+    if(this.loggedInInterval){
+      clearInterval(this.loggedInInterval);
     }
 
   }
@@ -1127,127 +991,122 @@ export class SecurityDashBoardPagePage implements OnInit {
     if(this.GO_SETTINGS_COUNT === numOfClicks){
       this.GO_SETTINGS_COUNT = 0;
       clearTimeout(this.GO_SETTINGS_TIMER);
-      this.logoutMe();
     }
     if(this.GO_SETTINGS_COUNT > 5 && this.GO_SETTINGS_COUNT < numOfClicks){
-       this.showToast("Need " + (numOfClicks - this.GO_SETTINGS_COUNT) + " more clicks go to Settings");
+       this.apiProvider.showToast("Need " + (numOfClicks - this.GO_SETTINGS_COUNT) + " more clicks go to Settings");
     }
   }
 
-  async showToast(msg){
-   (await this.toastCtrl.create(
-      {
-        message: msg,
-        duration: 2000,
-        position: 'top'
-      })).present();
+  getDuration(endDate) {
+    const startDate = new Date(this.userInfoObj.LoginTime);
+    let difference = endDate.getTime() - startDate.getTime();
+
+    const dDays = this.apiProvider.twoDecimals(parseInt('' +difference/(24*60*60*1000)));
+    const dHours = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*60*1000)) % 24)) ;
+    const dMin = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*1000)) % 60));
+    this.lastLoggedIn = dDays +' day, '+dHours+' hour, '+dMin+' min';
   }
 
-  logoutMe(){
-    this.translate.get(['SETTINGS.ARE_U_SURE_LOGOUT_TITLE','SETTINGS.ARE_U_SURE_LOGOUT',
-     'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
-    ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
-      let loginConfirm = await this.alertCtrl.create({
-        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
-        message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
-        cssClass: 'alert-warning',
-        buttons: [
-          {
-            text: t['COMMON.EXIT1'],
-            handler: () => {
-
-              this.toastCtrl1.create(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.ACK_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.LOGIN_TYPE, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFY_TIME, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.PREAPPOINTMENTAUTOAPPROVE, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.SIGN_PAD, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
-              this.navCtrl.navigateRoot('account-mapping')
-
-            }
-          },
-          {
-            text: t['COMMON.CANCEL'],
-            role: 'cancel',
-            handler: () => {
-            }
-          }
-        ]
-      });
-      loginConfirm.present();
-    });
+  refreshLastLoggedIn() {
+   this.loggedInInterval = setInterval(() => {
+      const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+      this.getDuration(endDate);
+    }, 1000);
   }
 
-  activateListenAckSettings(refresh, _currentClass : any){
-
-      if(_currentClass.timeoutIntervalSettings){
-       clearInterval(_currentClass.timeoutIntervalSettings);
-      }
-
-      var timeoutInterval = setInterval(function(){
-          if(_currentClass.isFetchingSettings){
-              console.log("Dont try..Setting is Fetching");
-          }else{
-            _currentClass.getAckSettings(_currentClass, false);
-          }
-      },_currentClass.SettingsSync_Interval);
-      _currentClass.timeoutIntervalSettings = timeoutInterval;
-  }
-
-  getSecurityStats(_currentClass){
+  getSecurityStats(){
     var params = {
-
+      "Branch":11001
     }
-    _currentClass.apiProvider.VimsAppGetSecurityStats(params).then(
-      (val) => {
-       console.log("val : "+JSON.stringify(val));
-       var data = JSON.parse(val);
-       _currentClass.TotalVisitorsIn = data.TotalVisitorsIn;
-       _currentClass.TotalVisitorsOut = data.TotalVisitorsOut;
-       _currentClass.VisitorsInside = data.VisitorsInside;
-       _currentClass.OverstayVisitor = data.OverstayVisitor;
+    this.apiProvider.VimsAppGetSecurityStats(params).then(
+      (data: any) => {
+       console.log("Stats : "+ data);
+       const result = JSON.parse(data);
+       this.statsCountData = result.Table1[0];
+       this.dataSets1.labels = [];
+       this.dataSets2.labels = [];
+       this.dataSets3.labels = [];
+       this.dataSets4.labels = [];
+       if (result.Table2) {
+        const TenDaysAppointmentCount = [];
+        result.Table2.forEach(element => {
+          this.dataSets1.labels.push(this.datePipe.transform(element.Date, 'MMM dd'));
+          TenDaysAppointmentCount.push(element.TenDaysAppointmentCount);
+         });
+         this.dataSets1.datasets = [{
+          label: '',
+          data: TenDaysAppointmentCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1
+        }];
+        if (this.barChart1) {
+          this.barChart1.update();
+        }
+
+       }
+
+       if (result.Table3) {
+        const TenDaysCheckinCount = [];
+        result.Table3.forEach(element => {
+          this.dataSets2.labels.push(this.datePipe.transform(element.Date, 'MMM dd'));
+          TenDaysCheckinCount.push(element.TenDaysCheckinCount);
+         });
+         this.dataSets2.datasets = [{
+          label: 'Check-in count',
+          data: TenDaysCheckinCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1
+        }];
+        if (this.barChart2) {
+          this.barChart2.update();
+        }
+       }
+
+
+       if (result.Table4) {
+        const TenDaysCheckOutCount = [];
+        result.Table4.forEach(element => {
+          this.dataSets3.labels.push(this.datePipe.transform(element.Date, 'MMM dd'));
+          TenDaysCheckOutCount.push(element.TenDaysCheckOutCount);
+         });
+         this.dataSets3.datasets = [{
+          label: 'Check-out count',
+          data: TenDaysCheckOutCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1
+        }];
+        if (this.barChart3) {
+          this.barChart3.update();
+        }
+       }
+
+       if (result.Table5) {
+        const TenDaysOverStayTotalCount = [];
+        result.Table5.forEach(element => {
+          this.dataSets4.labels.push(this.datePipe.transform(element.Date, 'MMM dd'));
+          TenDaysOverStayTotalCount.push(element.TenDaysOverStayTotalCount);
+         });
+         this.dataSets4.datasets = [{
+          label: 'Overstay count',
+          data: TenDaysOverStayTotalCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1
+        }];
+        if (this.barChart4) {
+          this.barChart4.update();
+        }
+       }
+
       },
       (err) => {
         console.log("error : "+JSON.stringify(err));
         if(err && err.message == "No Internet"){
           return;
         }
-
-
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-          var message  = _currentClass.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-          let alert = _currentClass.alertCtrl.create({
-            header: 'Error !',
-            message: message,
-            cssClass:'alert-danger',
-            buttons: ['Okay']
-            });
-            // alert.present();
-            return;
-        }
-        let invalidORGConfirm = _currentClass.alertCtrl.create({
-          header: 'Error !',
-          message: "<span class='failed'>" + _currentClass.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass:'alert-danger',
-          buttons: [
-            {
-              text: _currentClass.T_SVC['COMMON.OK'],
-              role: 'cancel',
-              handler: () => {
-              }
-            }
-          ]
-        });
-        // invalidORGConfirm.present();
       }
     );
   }
@@ -1264,76 +1123,88 @@ export class SecurityDashBoardPagePage implements OnInit {
   }
 
   ngOnInit() {
+
   }
 
   displayChart(){
-    this.barChart = new Chart(this.totCheckinGraph.nativeElement, {
-      type: "bar",
-      data: {
-        labels: ["1/5", "2/5", "3/5", "4/5", "5/5", "6/5","7/5"],
-        datasets: [
-          {
-            label: "No. of Check-In",
-            data: [12, 10, 3, 5, 2, 3,7],
-            backgroundColor: [
-              "rgba(235, 68, 90, 0.8)",
-              "rgba(235, 68, 90, 0.8)",
-              "rgba(235, 68, 90, 0.8)",
-              "rgba(235, 68, 90, 0.8)",
-              "rgba(235, 68, 90, 0.8)",
-              "rgba(235, 68, 90, 0.8)",
-              "rgba(235, 68, 90, 0.8)"
-            ],
-            borderColor: [
-              "rgba(235, 68, 90, 1)",
-              "rgba(235, 68, 90, 1)",
-              "rgba(235, 68, 90, 1)",
-              "rgba(235, 68, 90, 1)",
-              "rgba(235, 68, 90, 1)",
-              "rgba(235, 68, 90, 1)",
-              "rgba(235, 68, 90, 1)"
-            ],
-            borderWidth: 1
+    try {
+      const nativeElm = document.getElementById('barCanvas1');
+      this.barChart1 = new Chart(nativeElm, {
+        type: 'bar',
+        data: this.dataSets1,
+        options: {
+          legend: {
+            display: false
+         },
+          scales: {
+            // yAxes: [{
+            //   ticks: {
+            //     beginAtZero: true
+            //   }
+            // }]
           }
-        ]
-      },
-      options: {
-        scales: {
-          // yAxes: [
-          //   {
-          //     ticks: {
-          //       beginAtZero: true
-          //     },
-          //   }
-          // ]
         }
-      }
-    });
-  }
-  async segmentChanged() {
-    await this.slider.slideTo(this.segment);
-  }
+      });
+      const nativeElm2 = document.getElementById('barCanvas2');
+      this.barChart2 = new Chart(nativeElm2, {
+        type: 'bar',
+        data: this.dataSets2,
+        options: {
+          legend: {
+            display: false
+         },
+          scales: {
+            // yAxes: [{
+            //   ticks: {
+            //     beginAtZero: true
+            //   }
+            // }]
+          }
+        }
+      });
+      const nativeElm3 = document.getElementById('barCanvas3');
+      this.barChart3 = new Chart(nativeElm3, {
+        type: 'bar',
+        data: this.dataSets3,
+        options: {
+          legend: {
+            display: false
+         },
+          scales: {
+            // yAxes: [{
+            //   ticks: {
+            //     beginAtZero: true
+            //   }
+            // }]
+          }
+        }
+      });
+      const nativeElm4 = document.getElementById('barCanvas4');
+      this.barChart4 = new Chart(nativeElm4, {
+        type: 'bar',
+        data: this.dataSets4,
+        options: {
+          legend: {
+            display: false
+         },
+          scales: {
+            // yAxes: [{
+            //   ticks: {
+            //     beginAtZero: true
+            //   }
+            // }]
+          }
+        }
+      });
+    } catch (error) {
 
-  async slideChanged() {
-    this.segment = await this.slider.getActiveIndex();
+    }
   }
 
   ngAfterViewInit(){
-    this.animateButton()
-  }
-
-  public animateButton() {
-    const animation = this.animationCtrl
-      .create()
-      .addElement(this.button.nativeElement)
-      .duration(1000)
-      .iterations(Infinity)
-      .keyframes([
-        { offset: 0, boxShadow: "0 0 0 0 rgba(219, 49, 49, 1)" },
-        { offset: 0.7, boxShadow: "0 0 0 4px rgba(219, 49, 49, 1)" },
-        { offset: 1, boxShadow: "0 0 0 0 rgba(219, 49, 49, 1)" }
-      ]);
-    animation.play();
+    setTimeout(() => {
+      // this.segment = 'Summary';
+    }, 2000);
   }
 
 }

@@ -105,6 +105,7 @@ export const AppSettings = Object.freeze({
         "SEL_FASILITY_DISPLAY_KIOSK_FACILITY":"SEL_FASILITY_DISPLAY_KIOSK_FACILITY",
         "DISPLAY_DETAILS": "DisplayDetails",
         "SECURITY_DETAILS": "SecurityDetails",
+        "SECURITY_USER_DETAILS": "SecurityUserDetails",
         "QRCODE_INFO":"QRCodeInfo",
         "FCM_ID":"FCMID",
         "LOGIN_TYPE": "LoginType",

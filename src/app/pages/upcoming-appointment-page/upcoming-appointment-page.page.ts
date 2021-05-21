@@ -48,6 +48,9 @@ export class UpcomingAppointmentPagePage implements OnInit {
 
   }
 
+  openTooltip(event, message) {
+    this.apiProvider.presentPopover(event, message);
+  }
   ionViewDidEnter() {
     console.log('ionViewDidEnter UpcomingAppointmentPage');
   }

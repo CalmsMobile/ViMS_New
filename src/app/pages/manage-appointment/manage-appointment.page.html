@@ -5,11 +5,11 @@
    </ion-toolbar>
 	<ion-list has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false" style="margin:0px">
       <ion-card class="card_appointment" style="width: 98%;"
-        no-padding no-border *ngFor="let event of selectedDate?.events" (click)="viewBooking(event.value.value)">
+        no-padding no-border *ngFor="let event of selectedDate?.events" >
         <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, event.value.value, slideDOM)">
           <ion-item mode="ios" lines="none" no-padding class="apt-item">
             <ion-row lines="none" no-padding full-width>
-              <ion-col size="4" class="col apt-left" no-padding>
+              <ion-col size="4" class="col apt-left" no-padding (click)="viewBooking(event.value.value)">
                 <div class="div-date">
                   <h2 class="text-white" no-margin style="font-size: 18px;">{{event.value.value[0].START_DATE | date :'dd'}} {{getDayofDate(event.value.value[0].START_DATE)}}</h2>
                 </div>
@@ -23,7 +23,7 @@
                   </div>
                 </div>
               </ion-col>
-              <ion-col size="6" style="padding-bottom: 0px;">
+              <ion-col size="6" style="padding-bottom: 0px;" (click)="viewBooking(event.value.value)">
                 <div class="div-apt-center">
                   <ion-icon slot="start" color="danger" name="person-outline" class="apt-text-icons"></ion-icon>
                   <ion-label class="apt-center-title">{{event.value.value[0].VISITOR_NAME}}</ion-label>
@@ -47,7 +47,7 @@
 
               <ion-col size="2" class="colIcons">
 
-                <div>
+                <div (click)="openTooltip($event, 'Visitors')">
                   <!-- <ion-badge color="danger">3</ion-badge> -->
                   <div class="outer-circle2">
                     <div class="inner-circle2">
@@ -55,7 +55,7 @@
                     </div>
                   </div>
                 </div>
-                <div *ngIf="event.value.value[0].FacilityBookingID && event.value.value[0].FacilityBookingID !== '0'">
+                <div *ngIf="event.value.value[0].FacilityBookingID && event.value.value[0].FacilityBookingID !== '0'" (click)="viewBooking(event.value.value)">
                   <div class="outer-circle2">
                     <div class="inner-circle2">
                       <span id="inside-content">
@@ -65,7 +65,7 @@
                   </div>
                   <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
                 </div>
-                <div class="">
+                <div (click)="openTooltip($event, event.value.value[0].Approval_Status)">
                   <div [ngClass]="{'outer-circle':event.value.value[0].Approval_Status=='Pending','outer-circle2':event.value.value[0].Approval_Status=='Canceled','outer-circle1':event.value.value[0].Approval_Status=='Approved'}">
                     <div [ngClass]="{'inner-circle':event.value.value[0].Approval_Status=='Pending','inner-circle2':event.value.value[0].Approval_Status=='Canceled','inner-circle1':event.value.value[0].Approval_Status=='Approved'}">
                       <span id="inside-content">

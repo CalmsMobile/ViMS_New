@@ -1,16 +1,17 @@
 
 <ion-header>
-  <ion-toolbar color="danger">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start" >
+      <ion-menu-button *ngIf="!isSecurityApp"></ion-menu-button>
+      <ion-icon *ngIf="isSecurityApp" slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
     </ion-buttons>
       <ion-title>{{"SETTINGS.TITLE" | translate}}
       </ion-title>
-      <ion-buttons slot="end">
+      <ion-buttons slot="end" *ngIf="!isSecurityApp">
         <ion-button *ngIf= "isAdmin" slot="icon-only" (click)="gotoAdminPage()">
             <ion-icon name="customicon"></ion-icon>
         </ion-button>
-        <ion-button slot="icon-only" (click)="gotoNotification()">
+        <ion-button slot="icon-only" (click)="gotoNotification()" >
           <ion-icon name="notifications-outline" style="position:relative">
                   <span *ngIf= "notificationCount > 0" style="position: absolute;
                   font-size: 16px;
@@ -26,7 +27,7 @@
         <span>{{'SETTINGS.BASIC' | translate}}</span>
       </ion-item-divider>
       <ion-item *ngIf="false">
-          <ion-icon class='siva-icon-language-1' color="danger" slot="start"></ion-icon>
+          <ion-icon class='siva-icon-language-1' color="primary" slot="start"></ion-icon>
           <ion-label [innerHTML]="'SETTINGS.APP_LANGUAGE' | translate"></ion-label>
           <ion-select mode="ios" [interfaceOptions]="customActionSheetOptions" interface="action-sheet"  [(ngModel)]="languageSelect.selectedItem"
               (ionChange)="onChangeLanguage()"
@@ -39,12 +40,12 @@
         </ion-item>
 
         <!-- <ion-item >
-            <ion-icon class='siva-icon-adjust' slot="start" color="danger"></ion-icon>
+            <ion-icon class='siva-icon-adjust' slot="start" color="primary"></ion-icon>
             <ion-label>Enable Option 1</ion-label>
             <ion-toggle color="secondary"></ion-toggle>
           </ion-item>
           <ion-item >
-            <ion-icon class='siva-icon-list-add' slot="start" color="danger"></ion-icon>
+            <ion-icon class='siva-icon-list-add' slot="start" color="primary"></ion-icon>
             <ion-label>Enable Option 2</ion-label>
             <ion-toggle color="secondary"></ion-toggle>
           </ion-item>
@@ -65,26 +66,26 @@
         </ion-item-divider>-->
 
         <ion-item *ngIf="false" style="padding: 10px;    --padding-start: 15px;">
-          <ion-icon class='siva-icon-help-circled-1' slot="start" color="danger"></ion-icon>
+          <ion-icon class='siva-icon-help-circled-1' slot="start" color="primary"></ion-icon>
           <ion-label>{{'SETTINGS.HELP' | translate}}</ion-label>
         </ion-item>
         <ion-item style="padding: 10px;    --padding-start: 15px;">
-          <ion-icon class='siva-icon-info-circled-1' slot="start" color="danger"></ion-icon>
+          <ion-icon class='siva-icon-info-circled-1' slot="start" color="primary"></ion-icon>
           <ion-label>{{'SETTINGS.APP_VERSION' | translate}}</ion-label>
           <ion-note slot="end">{{'APP_VERSION' | translate}}</ion-note>
         </ion-item>
-        <ion-item (click)="goToUserProfile()" style="padding: 10px;    --padding-start: 15px;">
-          <ion-icon class='siva-icon-user-circle-o' slot="start" color="danger"></ion-icon>
+        <ion-item (click)="goToUserProfile()" style="padding: 10px;    --padding-start: 15px;" *ngIf="!isSecurityApp">
+          <ion-icon class='siva-icon-user-circle-o' slot="start" color="primary"></ion-icon>
           <ion-label>{{'SETTINGS.PROFILE' | translate}}</ion-label>
           <ion-note slot="end">{{name}}</ion-note>
        </ion-item>
        <ion-item (click)="syncSettings()">
-        <ion-icon name="settings" style="margin-left: 8px;" slot="start" color="danger"></ion-icon>
-        <ion-label color="danger">{{'SETTINGS.SYNC_NOW' | translate}}</ion-label>
+        <ion-icon name="settings" style="margin-left: 8px;" slot="start" color="primary"></ion-icon>
+        <ion-label color="primary">{{'SETTINGS.SYNC_NOW' | translate}}</ion-label>
       </ion-item>
        <ion-item (click)="logoutMe()">
-          <ion-icon class='siva-icon-logout-2' slot="start" color="danger"></ion-icon>
-          <ion-label color="danger">{{'SETTINGS.LOGOUT' | translate}}</ion-label>
+          <ion-icon class='siva-icon-logout-2' slot="start" color="primary"></ion-icon>
+          <ion-label color="primary">{{'SETTINGS.LOGOUT' | translate}}</ion-label>
         </ion-item>
     </ion-list>
 </ion-content>

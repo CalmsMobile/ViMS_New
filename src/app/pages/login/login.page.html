@@ -1,9 +1,19 @@
-<ion-content class="background">
 
+<ion-content class="background">
+ <ion-toolbar transparent>
+  <ion-icon slot="start" (click)="goBack()" name="arrow-back-outline" size="large"></ion-icon>
+ </ion-toolbar>
   <!-- background: none;
   border: none;
   box-shadow: none;-->
-  <img src="assets/images/login/calms_logo.png" alt="logo">
+  <div style="position:absolute;
+  left: 0;
+  right: 0;
+  margin:0 auto;
+  top:50%;
+  transform:translateY(-50%);">
+
+    <img src="assets/images/login/calms_logo.png" alt="logo">
 
   <h4 style="color: #f5f6f9;
   margin-top: 0px;
@@ -11,21 +21,23 @@
   <h6 text-muted style="color: #f5f6f9;
   font-size: 12px;">Welcome to Security App</h6>
   <br>
-  <ion-card style="margin: 20px;
+  <ion-card style="margin: 0 auto;
   padding: 20px;
   margin-top: 0px;
-  border-radius: 15px;">
+  border-radius: 15px;    margin-left: 20px;
+    margin-right: 20px;">
     <div class="input-with-icon">
-      <input type="text" placeholder="Enter Username">
+      <input type="text" placeholder="Enter user ID" [(ngModel)]="loginData.userID">
       <ion-icon name="person" color="medium" slot="end"></ion-icon>
     </div>
-    
+
     <div class="input-with-icon">
-      <input type="text" placeholder="Enter Password">
+      <input type="password"  [(ngModel)]="loginData.Password" placeholder="Enter password">
       <ion-icon name="eye-off" color="medium" slot="end"></ion-icon>
     </div>
-    <ion-button  expand="block" class="login" [routerLink]="['/tabs/tab1']" (click)="login()">Login</ion-button>
+    <ion-button  expand="block" class="login" (click)="securityUserLogin()">Login</ion-button>
   </ion-card>
-  
-  
+  </div>
+
+
 </ion-content>

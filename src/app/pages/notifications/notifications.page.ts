@@ -37,6 +37,8 @@ export class NotificationsPage implements OnInit {
 	imageURLType = '01&RefType=VP&Refresh='+ new Date().getTime();
 	loadingFinished = true;
 	showDelete = false;
+  qrCodeInfo: any = {};
+  isSecurityApp = false;
   constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     private toastCtrl:ToastController,
@@ -54,6 +56,11 @@ export class NotificationsPage implements OnInit {
 		'ALERT_TEXT.DELETE_NOTIFIACTION']).subscribe(t => {
 				this.T_SVC = t;
 		});
+    const qrinfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrinfo) {
+      this.qrCodeInfo = JSON.parse(qrinfo);
+      this.isSecurityApp = (this.qrCodeInfo.MAppId === AppSettings.LOGINTYPES.SECURITYAPP);
+    }
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         const passData = this.router.getCurrentNavigation().extras.state.passData;
@@ -231,93 +238,108 @@ export class NotificationsPage implements OnInit {
   	}
 
   getAppointmentHistory(refresher, add){
+    let hostID = '';
+    if (this.isSecurityApp) {
+      var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+      if(hostData){
+        hostID = JSON.parse(hostData).userID;
+      }
+    } else {
+      var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+      if(hostData){
+        hostID = JSON.parse(hostData).HOSTIC;
+      }
+    }
+    if(hostID) {
+      this.loadingFinished = false
+      var params = {
+      "HostIC":hostID,
+      "lastSyncDate":"",
+      "OffSet": ""+ this.OffSet,
+      "Rows":"20000"
+      };
+      // this.VM.host_search_id = "adam";
+      this.apiProvider.getHostNotification(params, this.isSecurityApp? 'WEB': '').then(
+        (val) => {
+          this.loadingFinished = true
+          if(refresher){
+            refresher.target.complete();
+          }
+          var aList = JSON.parse(val.toString());
+          // aList = aList.reverse();
+          this.isFetching = false;
+          if(!this.platform.is('cordova')) {
+            if(add){
+              this.VM.notificationList = aList.concat(this.VM.notificationList);
+            }else{
+              this.VM.notificationList = aList;
+            }
+            this.VM.notificationList.sort((a, b) => (
+              a.CreatedOn <= b.CreatedOn ? -1 : 1
+            ));
 
-	var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-    if(hostData){
-			this.loadingFinished = false
-      var HostIC = JSON.parse(hostData).HOSTIC;
-			var params = {"HostIC":HostIC,
-			"lastSyncDate":"",
-			"OffSet": ""+ this.OffSet,
-			"Rows":"20000"
-		};
-			// this.VM.host_search_id = "adam";
-			this.apiProvider.getHostNotification(params).then(
-				(val) => {
-					this.loadingFinished = true
-					if(refresher){
-						refresher.target.complete();
-					}
-					var aList = JSON.parse(val.toString());
-					// aList = aList.reverse();
-					this.isFetching = false;
-					if(!this.platform.is('cordova')) {
-						if(add){
-							this.VM.notificationList = aList.concat(this.VM.notificationList);
-						}else{
-							this.VM.notificationList = aList;
-						}
-						this.VM.notificationList.sort((a, b) => (
-							a.CreatedOn <= b.CreatedOn ? -1 : 1
-						));
+            this.VM.notificationList.reverse();
+            this.OffSet = this.OffSet + aList.length;
+            this.showNotification(this.selectedTap);
+          }else{
+            this.VM.notificationList = [];
+            var currentClass = this;
+            var show = false;
+            if(!aList || aList.length == 0){
+              show = true;
+            }
+            if(this.OffSet == 0){
+              this.db.executeSql('DELETE FROM ' + AppSettings.DATABASE.TABLE.Notification, [])
+              .then(res => {
+                console.log("DELETE FROM:" + res);
+                this.goAsyncFunction(currentClass, aList);
+              }).catch(e => console.log(e));
 
-						this.VM.notificationList.reverse();
-						this.OffSet = this.OffSet + aList.length;
-						this.showNotification(this.selectedTap);
-					}else{
-						this.VM.notificationList = [];
-						var currentClass = this;
-						var show = false;
-						if(!aList || aList.length == 0){
-							show = true;
-						}
-						if(this.OffSet == 0){
-							this.db.executeSql('DELETE FROM ' + AppSettings.DATABASE.TABLE.Notification, [])
-							.then(res => {
-								console.log("DELETE FROM:" + res);
-								this.goAsyncFunction(currentClass, aList);
-							}).catch(e => console.log(e));
-
-						}else{
-							if(show){
-								currentClass.getDataFromLocalDatabase(currentClass);
-							}else{
-								this.goAsyncFunction(currentClass, aList);
-							}
-						}
-					}
-				},
-				async (err) => {
-					this.loadingFinished = true
-					if(refresher){
-						refresher.target.complete();
-					}
-					if(err && err.message == "No Internet"){
-						return;
-					}
-					var message = "";
-					if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-						message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-					} else if(err && JSON.parse(err) && JSON.parse(err).message){
-						message =JSON.parse(err).message;
-					}
-					if(message){
-						// message = " Unknown"
-						let alert = this.alertCtrl.create({
-						  header: 'Error !',
-						  message: message,
-						  cssClass:'alert-danger',
-						  buttons: ['Okay']
-						  });
-						  (await alert).present();
-					  }
-				}
-			);
-		}
+            }else{
+              if(show){
+                currentClass.getDataFromLocalDatabase(currentClass);
+              }else{
+                this.goAsyncFunction(currentClass, aList);
+              }
+            }
+          }
+        },
+        async (err) => {
+          this.loadingFinished = true
+          if(refresher){
+            refresher.target.complete();
+          }
+          if(err && err.message == "No Internet"){
+            return;
+          }
+          var message = "";
+          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+            message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+          } else if(err && JSON.parse(err) && JSON.parse(err).message){
+            message =JSON.parse(err).message;
+          }
+          if(message){
+            // message = " Unknown"
+            let alert = this.alertCtrl.create({
+              header: 'Error !',
+              message: message,
+              cssClass:'alert-danger',
+              buttons: ['Okay']
+              });
+              (await alert).present();
+            }
+          }
+        );
+      }
 	}
 
   goBack() {
-    this.router.navigateByUrl('home-view');
+    if (this.isSecurityApp) {
+      this.router.navigateByUrl('security-dash-board-page');
+    } else {
+      this.router.navigateByUrl('home-view');
+    }
+
     console.log('goBack ');
    }
 

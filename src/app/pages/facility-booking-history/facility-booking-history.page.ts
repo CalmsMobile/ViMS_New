@@ -52,6 +52,10 @@ export class FacilityBookingHistoryPage implements OnInit {
     console.log('goBack ');
   }
 
+  openTooltip(event, message) {
+    this.apiProvider.presentPopover(event, message);
+  }
+
 	ionViewWillLeave(){
 		var MAppId = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
 		if(MAppId == AppSettings.LOGINTYPES.FACILITY){
