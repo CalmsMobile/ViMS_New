@@ -39,7 +39,7 @@ export class AccountMappingPage {
   }
   showUI : any = false;
 
-  constructor(public navCtrl: NavController,
+  constructor(private navCtrl: NavController,
      public platform : Platform,
     //  private googleVision : GoogleVision,
      public menu: MenuController,
