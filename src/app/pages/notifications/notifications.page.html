@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>&nbsp;&nbsp;&nbsp;{{'NOTIFICATION.TITLE' | translate}}</ion-title>
   </ion-toolbar>
 
@@ -18,12 +18,12 @@
 
 <ion-content>
 
-  <ion-searchbar mode="ios" *ngIf="(selectedTap == 'general')" (ionChange)="filterTechnologies($event.target.value)"
+  <ion-searchbar mode="ios" *ngIf="(selectedTap == 'general')" (ionChange)="filterTechnologies($event)"
     color="light" placeholder="  Search" animated>
   </ion-searchbar>
 
 
-  <ion-searchbar mode="ios" *ngIf="(selectedTap == 'in')" (ionChange)="filterTechnologies($event.target.value)"
+  <ion-searchbar mode="ios" *ngIf="(selectedTap == 'in')" (ionChange)="filterTechnologies($event)"
     color="light" placeholder="  Search" animated>
   </ion-searchbar>
 

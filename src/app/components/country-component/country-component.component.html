@@ -5,7 +5,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-searchbar mode="ios" [value]="searchText" (ionChange)="filterTechnologies($event.target.value, '')"
+  <ion-searchbar mode="ios" [value]="searchText" (ionChange)="filterTechnologies($event, '')"
   color="light" placeholder="Search" animated>
 </ion-searchbar>
 <ion-radio-group (ionChange)="selectCountry($event)" [value]="selectedCountry.code">

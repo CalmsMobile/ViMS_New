@@ -1,11 +1,15 @@
 <ion-header>
-  <ion-toolbar class="new-background-color">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"
       style="font-size: x-large;color: #FFF;"></ion-icon>
     <ion-title>My Appointments</ion-title>
     <ion-buttons slot="end">
-
-      <ion-button slot="icon-only" (click)="gotoNotification()" style="font-size: larger;">
+      <ion-label style="font-size: 14px;
+      background: white;
+      color: var(--ion-color-primary);
+      padding: 7px;
+      border-radius: 12px;">21 May 2021</ion-label>
+      <ion-button slot="icon-only" (click)="showCalender()" style="font-size: larger;">
         <ion-icon name="calendar-outline" style="position:relative;" style="color: #FFF;">
         </ion-icon>
       </ion-button>
@@ -16,133 +20,97 @@
   <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
-  <!-- <h5 margin-vertical ion-text text-start style="color:#00b508">
-    <i class="icon siva-icon-calendar-3" style="padding-right:10px;"></i>Today Appointments
-  </h5> -->
-
-  <!-- <ion-list no-padding no-margin> -->
-  <ion-card class="card_appointment" no-padding no-border>
-    <!-- <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, list.value, slideDOM)">
-        <ion-item lines="none" mode="ios" no-padding class="apt-item"> -->
-    <!-- <ion-grid> -->
+  <ion-searchbar mode="ios" (ionChange)="filterTechnologies($event)"
+  color="light" placeholder="  Search" animated>
+  </ion-searchbar>
+  <ion-card class="card_appointment" *ngFor="let item of [1,2,3,4,5,6]" no-padding no-border (click)="moveToDetailsPage(item)">
     <ion-row lines="none" no-padding full-width>
       <ion-col size="4" class="col apt-left" no-padding>
-        <!-- <div class="div-date">
-                  <h2 class="text-white" no-margin style="font-size: 18px;">13</h2>
-                </div>
-                <div class="row text-white div-left-middle">
-                  <h3 class="text-white div-left-middle-text">May-2021</h3>
-                </div>
-                <div class="row" style="background:rgba(0,0,0,0.1);">
-                  <div class="col">
-                    <h3 class="text-white div-left-bottom-text">11:30 am</h3>
-                  </div>
-                </div> -->
-        <div style="padding-bottom: 22px;color: #f5f6f9 !important;font-family: sans-serif !important;
-        font-size: small;font-weight: 700;padding-top: 5px;">
-          <div style="font-size: 19px;text-align: center;">10:40 AM</div>
-          <div style="text-align: center;">May 14</div>
-        </div>
-        <div style="font-family: sans-serif !important;
-        font-size: small;
-        color: #f5f6f9 !important;
-        font-weight: 700;">
-          <div style="font-size: 19px;text-align: center;">12:15 PM</div>
-          <div style="text-align: center;">May 14</div>
-        </div>
+        <ion-row style="height: 100%;">
+         <ion-item lines="none" style="    --padding-start: 6px;
+         width: 100%;">
+          <div>
+            <div style="    width: -webkit-fill-available;
+            display: inline-flex;">
+              <ion-label color="light" style="font-size: 12px;
+              margin-right: 9px;
+              align-self: center;">Start</ion-label>
+              <ion-icon style="font-size: 20px;
+              align-self: center;" color="light" name="stopwatch-outline"></ion-icon>
+            </div>
+            <ion-label color="light" style="font-weight: 600;">10:40 AM</ion-label>
+          </div>
+         </ion-item>
+         <ion-item lines="none" style="    --padding-start: 6px;
+         width: 100%;">
+          <div>
+            <div style="    width: -webkit-fill-available;
+            display: inline-flex;">
+              <ion-label color="light" style="font-size: 12px;
+              margin-right: 9px;
+              align-self: center;">End</ion-label>
+              <ion-icon style="font-size: 20px;
+              align-self: center;" color="light" name="stopwatch-outline"></ion-icon>
+            </div>
+            <ion-label color="light" style="font-weight: 600;">12:40 AM</ion-label>
+          </div>
+         </ion-item>
+        </ion-row>
       </ion-col>
       <ion-col size="6" style="padding-bottom: 0px;">
         <div class="div-apt-center">
-          <ion-icon slot="start" name="person-outline" class="apt-text-icons"></ion-icon>
+          <ion-icon slot="start" name="person-outline" color="primary" class="apt-text-icons"></ion-icon>
           <p class="apt-center-title">Mohamad</p>
         </div>
 
         <div class="div-apt-center">
-          <ion-icon slot="start" name="call-outline" class="apt-text-icons"></ion-icon>
+          <ion-icon slot="start" name="call-outline" color="primary" class="apt-text-icons"></ion-icon>
           <p class="apt-center-subtitle">+63 8796453212</p>
         </div>
 
         <div class="div-apt-center">
-          <ion-icon slot="start" name="people-outline" class="apt-text-icons"></ion-icon>
+          <ion-icon slot="start" name="people-outline" color="primary" class="apt-text-icons"></ion-icon>
           <p class="apt-center-subtitle">Ahamad</p>
         </div>
 
         <div class="div-apt-center">
-          <ion-icon slot="start" name="car-sport-outline" class="apt-text-icons"></ion-icon>
+          <ion-icon slot="start" name="car-sport-outline" color="primary" class="apt-text-icons"></ion-icon>
           <p class="apt-center-subtitle">PFQ 5217</p>
         </div>
 
         <div class="div-apt-center">
-          <ion-icon slot="start" name="timer-outline" class="apt-text-icons" style="color: red;"></ion-icon>
-          <p class="apt-center-subtitle" style="color: red;">04:20 PM May 20</p>
+          <ion-icon slot="start" name="timer-outline" class="apt-text-icons" color="danger"></ion-icon>
+          <p class="apt-center-subtitle" style=" color: #f44336; font-weight: bold;">04:20 PM May 20</p>
         </div>
       </ion-col>
 
       <ion-col size="2" class="colIcons">
-
-        <!-- <div>
-                  <div class="outer-circle2">
-                    <div class="inner-circle2">
-                      <span id="inside-content">5</span>
-                    </div>
-                  </div>
-                </div> -->
-        <!-- <div>
-                  <div class="outer-circle2">
-                    <div class="inner-circle2">
-                      <span id="inside-content">
-                        <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
-                      </span>
-                    </div>
-                  </div>
-
-                </div> -->
-
-        <img src="https://habib.al-mawali.com/wp-content/uploads/IMG_4838-1-768x768.jpg" class="visitorImage" style="width: 60px;
+        <img src="../../../assets/images/user.png" class="visitorImage" style="width: 60px;
             height: 60px;
             max-width: 60px;
-            border-radius: 50%;
-            border: 1px solid black;">
-
-
-        <!-- <div class="">
-                  <div class="outer-circle">
-                    <div class="inner-circle">
-                      <span id="inside-content">
-                        A
-                      </span>
-                    </div>
-                  </div>
-                </div> -->
-        
+            border-radius: 50%;">
                 <div class="statuswithBadge">
                   <div class="outer circle shapeborder">
                     <div class="inner circle shapeborder">
-                      <ion-icon name="timer-outline" style="color: #f5f6f9 !important;"></ion-icon>
+                      <ion-icon color="light" name="timer-outline"></ion-icon>
                     </div>
                   </div>
-                  
+
                   <div class="insideBadge">
                     <ion-badge style="border-radius: 50%;
                   padding-top: 4px;
-                  border: 1px solid black;
-                  background-color: white;color: black;">55</ion-badge>
+                  border: 1px solid var(--ion-color-primary);
+                  background-color: white;
+                  color: var(--ion-color-primary);
+                  width: 25px;
+                  height: 25px;
+                  padding: 6px !important;">2</ion-badge>
                   </div>
                 </div>
 
 
       </ion-col>
     </ion-row>
-    <!-- </ion-grid> -->
-
-    <!-- </ion-item>
-        <ion-item-options side="end" slide-right-width>
-        </ion-item-options>
-        <ion-item-options side="start" slide-right-width>
-        </ion-item-options>
-      </ion-item-sliding> -->
   </ion-card>
-  <!-- </ion-list> -->
 
 </ion-content>

@@ -1120,7 +1120,21 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
         }
       }
     };
-    this.router.navigate(['security-check-out-page'], navigationExtras);
+    switch (type) {
+      case '10':
+      case '20':
+      case '30':
+      case '40':
+      case '60':
+        this.router.navigate(['security-check-out-page'], navigationExtras);
+        break;
+      case '50':
+        this.router.navigate(['security-appointment-list'], navigationExtras);
+        break;
+      default:
+        break;
+    }
+
   }
 
   ngOnInit() {

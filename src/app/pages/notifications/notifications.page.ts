@@ -190,8 +190,9 @@ export class NotificationsPage implements OnInit {
 
 	}
 
-	filterTechnologies(searchtext) : void
+	filterTechnologies(event) : void
 	{
+    const searchtext = event.target.value;
 		 let val : string 	= searchtext;
      this.queryText = val;
 		 // DON'T filter the technologies IF the supplied input is an empty string

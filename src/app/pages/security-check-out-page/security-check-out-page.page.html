@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-toolbar color="danger">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{title}}</ion-title>
      <ion-buttons slot="end" *ngIf="Type == '60' || Type == '50'">
           <ion-button slot="icon-only" (click)="scanQR()" style="padding: 5px;">
@@ -17,7 +17,7 @@
      </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="danger">
-    <ion-searchbar (ionChange)="getVisitorsBySearch($event.target.value)"
+    <ion-searchbar (ionChange)="getVisitorsBySearch($event)"
     placeholder="{{'SECURITY_APP.SEARCH_VISITOR' | translate}}" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
         <!-- (ionChange)="updateSchedule()" -->
     </ion-searchbar>

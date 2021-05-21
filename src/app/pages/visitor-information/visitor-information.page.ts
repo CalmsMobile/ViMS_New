@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ModalController,AlertController} from '@ionic/angular';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-visitor-information',
@@ -9,7 +10,7 @@ import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup
   styleUrls: ['./visitor-information.page.scss'],
 })
 export class VisitorInformationPage implements OnInit {
-  
+
   appointment : any;
 
   T_SVC:any;
@@ -19,10 +20,16 @@ export class VisitorInformationPage implements OnInit {
 
   constructor(public apiProvider: RestProvider,
     public modalCtrl: ModalController,
-    private alertCtrl: AlertController,) { 
+    private router: Router,
+    private alertCtrl: AlertController,) {
   }
 
   ngOnInit() {
+  }
+
+  goBack() {
+    this.router.navigateByUrl('security-dash-board-page');
+    console.log('goBack ');
   }
 
   async showAlert(msg) {
