@@ -1,0 +1,31 @@
+<ion-content class="background">
+
+  <!-- background: none;
+  border: none;
+  box-shadow: none;-->
+  <img src="assets/images/login/calms_logo.png" alt="logo">
+
+  <h4 style="color: #f5f6f9;
+  margin-top: 0px;
+  font-weight: bold;font-size: 24px;">Calms Technology</h4>
+  <h6 text-muted style="color: #f5f6f9;
+  font-size: 12px;">Welcome to Security App</h6>
+  <br>
+  <ion-card style="margin: 20px;
+  padding: 20px;
+  margin-top: 0px;
+  border-radius: 15px;">
+    <div class="input-with-icon">
+      <input type="text" placeholder="Enter Username">
+      <ion-icon name="person" color="medium" slot="end"></ion-icon>
+    </div>
+    
+    <div class="input-with-icon">
+      <input type="text" placeholder="Enter Password">
+      <ion-icon name="eye-off" color="medium" slot="end"></ion-icon>
+    </div>
+    <ion-button  expand="block" class="login" [routerLink]="['/tabs/tab1']" (click)="login()">Login</ion-button>
+  </ion-card>
+  
+  
+</ion-content>
