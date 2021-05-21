@@ -178,7 +178,12 @@ const routes: Routes = [
   {
     path: 'admin-login',
     loadChildren: () => import('./pages/admin-login/admin-login.module').then( m => m.AdminLoginPageModule)
+  },
+  {
+    path: 'visitor-information',
+    loadChildren: () => import('./pages/visitor-information/visitor-information.module').then( m => m.VisitorInformationPageModule)
   }
+
 ];
 
 @NgModule({
