@@ -298,3 +298,20 @@
   .new-background-color{
     --background: #f4b41a;
   }
+
+  .statuswithBadge {
+    position: relative;
+    display: inline-block;
+    margin-top: 30px;
+    margin-left: 20%;
+  }
+  
+  .insideBadge {
+    position: absolute;
+    left: 0;
+    top: 0;
+    //opacity: 0.5;
+    margin-left: 37%;
+    border-radius: 50%;
+    margin-top: -25px;
+  }
