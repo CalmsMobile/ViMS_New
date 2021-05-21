@@ -43,7 +43,6 @@
           <ion-icon name="{{(notification.IsRead === true || notification.IsRead === 'true') ? 'mail-open-outline': 'mail-unread-outline'}}" slot="start"></ion-icon>
           <ion-label text-wrap [innerHTML]="notification.HtmlContent.trim()">
 
-
             <p class="text-muted">{{(notification.CreatedOn| date : 'MMM dd') + ' at ' +
               (notification.CreatedOn| date : 'hh:mm a')}} April 28 at 3:23 PM</p>
           </ion-label>
