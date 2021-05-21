@@ -1,0 +1,300 @@
+.booking-main {
+    .fixed-content,
+    .scroll-content1 {
+      display: flex;
+      align-items: center;
+  
+      ion-list {
+        max-width: 300px;
+        width: 100%;
+        margin: auto;
+        text-align: center;
+      }
+    }
+    .item-inner,
+    .input-wrapper {
+      padding: 0px;
+      border-bottom: 0px !important;
+    }
+    // ion-label {
+    //   margin: 0px;
+    // }
+  
+    button {
+      ion-badge {
+        position: absolute;
+        top: -0.2rem;
+        right: -0.2rem;
+        opacity: 0.9;
+  
+        & ~ ion-icon {
+          margin-right: 1.2rem;
+        }
+      }
+    }
+  
+    .apt-left {
+      background-color: #eb445a;
+      max-width: 100px;
+      padding: 0px;
+      text-align: center;
+      // border-radius: 10px;
+    }
+    .text-white {
+      color: white;
+      text-align: center;
+    }
+    .booking-status {
+      padding: 5px;
+      color: #ffffff;
+      font-size: 16px;
+      padding: 8px;
+    }
+    .booking-status.pending {
+      background: rgb(252, 170, 170);
+    }
+    .booking-status.canceled {
+      background: #f2f2f2;
+      color: #aaa;
+    }
+    .booking-status.approved {
+      background: #90d3a3;
+      color: #ffffff;
+    }
+  }
+  
+  ion-icon {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: contain;
+    background-size: 18px;
+    
+  }
+  ion-toolbar {
+    ion-title {
+      text-align: left;
+      font-weight: 600;
+      font-family: monospace;
+    }
+  }
+  
+  .item-native {
+    padding: 0px !important;
+  }
+  
+  .outer-circle {
+    position: relative;
+    //background: #385a94;
+    border-radius: 50%;
+    border: 1px solid #ffeb3b;
+    height: 25px;
+    width: 25px;
+    margin-bottom: 3px;
+    margin-left: 30%;
+  }
+  .inner-circle {
+    position: absolute;
+    background: #ffeb3b;
+    border-radius: 50%;
+    right: 2px;
+    left: 2px;
+    top: 2px;
+    bottom: 2px;
+    padding: 0px;
+    text-align: center;
+    color: #000000;
+    font-weight: bold;
+  }
+  
+  .outer-circle1 {
+    position: relative;
+    //background: #385a94;
+    border-radius: 50%;
+    border: 1px solid #17be17;
+    height: 25px;
+    width: 25px;
+    margin-bottom: 3px;
+  }
+  
+  .inner-circle1 {
+    position: absolute;
+    background: #17be17;
+    border-radius: 50%;
+    right: 2px;
+    left: 2px;
+    top: 2px;
+    bottom: 2px;
+    padding: 0px;
+    text-align: center;
+    color: #ffffff;
+  }
+  
+  .outer-circle2 {
+    position: relative;
+    //background: #385a94;
+    border-radius: 50%;
+    border: 1px solid #eb445a;
+    height: 25px;
+    width: 25px;
+    margin-bottom: 3px;
+  }
+  
+  .inner-circle2 {
+    position: absolute;
+    background: #eb445a;
+    border-radius: 50%;
+    right: 2px;
+    left: 2px;
+    top: 2px;
+    bottom: 2px;
+    padding: 0px;
+    text-align: center;
+    color: #ffffff;
+  }
+  
+  .colIcons {
+    display: grid;
+    justify-content: end;
+    padding-bottom: 0px;
+  }
+  .card_appointment {
+    margin: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    border: 1px solid #dedede;
+    padding: 0px;
+  }
+  .col_apt_left {
+    max-width: 100px;
+    padding: 0px;
+    text-align: center;
+  }
+  .div-date {
+    width: -webkit-fill-available;
+    padding-top: 5px;
+  }
+  .div-left-middle {
+    display: flex;
+    padding: 5px;
+    justify-content: center;
+  }
+  
+  .div-left-middle-text {
+    font-size: 15px;
+    padding: 0px;
+    margin-bottom: 0px;
+    margin-top: 3px;
+  }
+  
+  .div-left-bottom-text {
+    font-size: 15px;
+    padding: 6px;
+    margin: 0px;
+    margin-top: 5px;
+  }
+  
+  .div-apt-center {
+    display: flex;
+    padding-bottom: 3px;
+  }
+  
+  .apt-center-title {
+    margin: 0px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 3px;
+  }
+  
+  .apt-center-subtitle {
+    margin: 0px;
+    font-size: 12px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    color: #989aa2;
+  }
+  ion-icon {
+    color: #4c8dff;
+  }
+  
+  .apt-text-icons {
+    font-size: 16px;
+    padding: 0px;
+    padding-right: 3px;
+  }
+  
+  .apt-right-icon {
+    font-size: 13px;
+    padding: 1px;
+    color: #ffffff;
+    padding-top: 0px;
+  }
+  
+  .apt-item {
+    --padding-start: 0px;
+    --padding-end: 0px;
+    --padding-top: 0px;
+    --padding-bottom: 0px;
+  }
+  
+  .slideIcons {
+    border: 2px solid white;
+    border-radius: 50%;
+    padding: 7px;
+    display: flex;
+  }
+  
+  .visitorImage {
+    width: 70px;
+    height: 63px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 1px;
+    img {
+        max-width: 46px;
+        border: 2px solid green;
+        border-radius: 50px;
+        width: 46px;
+        height: 46px;
+        object-fit: cover;
+    }
+  }
+  
+  .shapeborder {
+    border: 1px solid black;
+  }
+  .circle {
+    border-radius: 50%;
+  }
+  
+  .outer {
+    position: relative;
+    //background: #385a94;
+    border-radius: 50%;
+    border: 1px solid blue;
+    height: 25px;
+    width: 25px;
+    margin-bottom: 3px;
+    margin-top: -15px;
+  }
+  .inner {
+    position: absolute;
+    background: orange;
+    border-radius: 50%;
+    right: 2px;
+    left: 2px;
+    top: 2px;
+    bottom: 2px;
+    padding: 1px;
+    text-align: center;
+    color: #000000;
+    font-weight: bold;
+  }
+  .status {
+    padding-top: 3px;
+    margin-left: 20%;
+  }
+  .new-background-color{
+    --background: #f4b41a;
+  }
