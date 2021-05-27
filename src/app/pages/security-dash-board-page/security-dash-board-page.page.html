@@ -40,7 +40,7 @@
         <ion-grid *ngIf="segment === 'Summary'">
           <ion-row style="padding-top: 5px;">
             <ion-col size="6">
-              <ion-card class="card1" (click)= "statesClicked('10')" style="color: #236348;">
+              <ion-card class="card1" (click)="statesClicked('50')" style="color: #236348;">
 
                 <ion-grid>
                   <ion-row>
@@ -59,7 +59,7 @@
               </ion-card>
             </ion-col>
             <ion-col size="6">
-              <ion-card class="card1" (click)= "statesClicked('20')" style="color: #418FC0;">
+              <ion-card class="card1" (click)="statesClicked('60')" style="color: #418FC0;">
                 <ion-grid>
                   <ion-row>
                     <ion-col size="1">
@@ -77,7 +77,7 @@
               </ion-card>
             </ion-col>
             <ion-col size="6">
-              <ion-card class="card1" style="color: #3836BD;">
+              <ion-card class="card1" style="color: #3836BD;" (click)="statesClicked('10')">
                 <ion-grid>
                   <ion-row>
                     <ion-col size="1">
@@ -95,11 +95,10 @@
               </ion-card>
             </ion-col>
             <ion-col size="6">
-              <ion-card class="card1" style="color: #90CC64;">
+              <ion-card class="card1" style="color: #90CC64;" (click)="statesClicked('20')">
                 <ion-grid>
                   <ion-row>
                     <ion-col size="1">
-
                     </ion-col>
                     <ion-col size="3">
                       <ion-icon name="trending-down-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
@@ -113,9 +112,9 @@
               </ion-card>
             </ion-col>
             <ion-col size="6">
-              <ion-card class="card1" (click)= "statesClicked('40')" style="color: #CA203D;">
-                <ion-fab vertical="top" horizontal="end" >
-                  <ion-fab-button class="heart-beat animated infinite pulse delay-1s" style="width: 5px;height: 5px;margin-top: 7px;margin-right: 10px;">
+              <ion-card class="card1" style="color: #CA203D;"  (click)="statesClicked('40')">
+                <ion-fab vertical="top" color="danger" horizontal="end" *ngIf="statsCountData.OverstayVisitor">
+                  <ion-fab-button color="danger" class="heart-beat animated infinite pulse delay-1s">
                   </ion-fab-button>
                   <!-- <div id="buttonOverstay" class="heart-beat animated pulse delay-1s"></div> -->
                 </ion-fab>
@@ -136,7 +135,7 @@
               </ion-card>
             </ion-col>
             <ion-col size="6">
-              <ion-card class="card1" (click)= "statesClicked('30')" style="color: #006A5C;">
+              <ion-card class="card1" (click)="statesClicked('30')" style="color: #006A5C;">
                 <ion-grid>
                   <ion-row>
                     <ion-col size="1">
@@ -238,25 +237,25 @@
         <ion-tab-button
         (click)="proceedNext('QUICK_PASS')" mode="ios">
         <ion-icon class="tabIcon" name="trending-up-outline"></ion-icon>
-          <ion-label style="font-size: 10px; text-transform: none;">Check-In</ion-label>
+          <ion-label style="font-size: 10px; text-transform: none;font-weight: bold;">Check-In</ion-label>
           </ion-tab-button>
 
           <ion-tab-button
           (click)="proceedNext('QUICK_PASS_OUT')" mode="ios">
             <ion-icon class="tabIcon" name="trending-down-outline"></ion-icon>
-            <ion-label style="font-size: 10px; text-transform: none;">Check-Out</ion-label>
+            <ion-label style="font-size: 10px; text-transform: none;font-weight: bold;">Check-Out</ion-label>
           </ion-tab-button>
 
           <ion-tab-button
           (click)="proceedNext('IN')" mode="ios">
             <ion-icon class="tabIcon" name="qr-code-outline"></ion-icon>
-            <ion-label style="font-size: 10px; text-transform: none;">Appointment</ion-label>
+            <ion-label style="font-size: 10px; text-transform: none;font-weight: bold;">Appointment</ion-label>
           </ion-tab-button>
 
           <ion-tab-button
           (click)="proceedNext('IN')" mode="ios">
             <ion-icon class="tabIcon" name="barcode-outline"></ion-icon>
-            <ion-label style="font-size: 10px; text-transform: none;">Quick Pass</ion-label>
+            <ion-label style="font-size: 10px; text-transform: none;font-weight: bold;">Quick Pass</ion-label>
           </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>

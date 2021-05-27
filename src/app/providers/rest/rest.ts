@@ -2193,8 +2193,8 @@ export class RestProvider {
     });
   }
 
-  async UpdateReadNotificationStatus(data){
-    data  = this.setAuthorizedInfo(data, '');
+  async UpdateReadNotificationStatus(data, WEB){
+    data  = this.setAuthorizedInfo(data, WEB);
     var loading = await this.presentLoading();
 
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateReadNotificationStatus';

@@ -5,10 +5,9 @@
   Ionic pages and navigation.
 -->
 <ion-header lines="none" class="ion-no-border">
-  <ion-toolbar color="primary"  lines="none" class="ion-no-border">
-    <ion-buttons slot="start">
-      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
-    </ion-buttons>
+  <ion-toolbar color="primary">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"
+      style="font-size: x-large;color: #FFF;"></ion-icon>
     <ion-label class="ion-padding" style="font-weight: 500;">Visitor Name<br></ion-label>
     <ion-icon slot="end" class="headerIcon" name="settings-sharp"></ion-icon>
   </ion-toolbar>

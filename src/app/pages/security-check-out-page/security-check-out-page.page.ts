@@ -155,7 +155,8 @@ export class SecurityCheckOutPagePage implements OnInit {
   ngAfterViewInit() {
 	}
 
-  getVisitorsBySearch(queryText){
+  getVisitorsBySearch(event){
+    const queryText = event.target.value;
     if(queryText){
       var showList = [];
       for(var i= 0 ; i < this.appointments.length ; i++){

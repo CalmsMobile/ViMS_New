@@ -216,7 +216,8 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
     this.VM.visitors = [];
   }
 
-  getVisitorsBySearch(queryText, typing, refresher){
+  getVisitorsBySearch(event, typing, refresher){
+    const queryText = event.target.value;
     if(typing){
       this.OffSet = 0;
       this.VM.queryText = queryText;

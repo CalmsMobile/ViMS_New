@@ -1,11 +1,11 @@
 <ion-header>
-  <ion-toolbar color="danger">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
+  <ion-toolbar color="primary">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title> &nbsp;&nbsp;&nbsp;{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
   </ion-toolbar>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-searchbar mode="ios"
-    placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch($event.target.value)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
+    placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch($event)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
         <!-- (ionChange)="updateSchedule()" -->
     </ion-searchbar>
   </ion-toolbar>
