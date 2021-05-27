@@ -1,0 +1,270 @@
+<!--
+  Generated template for the SecurityDashBoardPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header lines="none" class="ion-no-border">
+  <ion-toolbar color="primary"  lines="none" class="ion-no-border">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-label class="ion-padding" style="font-weight: 500;">Visitor Name<br></ion-label>
+    <ion-icon slot="end" class="headerIcon" name="settings-sharp"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="ion-no-border">
+  <div class="main">
+    <ion-grid>
+      <ion-card style="margin: 0px;padding: 0px;">
+        <ion-row>
+          <ion-col size="3" style="display: flex;justify-content: center;align-items: center;">
+            <img src="../../../assets/images/user.png" style="width: 50px;height: 50px; display: flex;justify-content: center">
+          </ion-col>
+          <ion-col size="9">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="12" class="bDets">
+                    <ion-icon name="person-sharp" class="bDets"></ion-icon>
+                    <input type="text" placeholder="Name"/>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" class="bDets">
+                    <ion-icon name="id-card-sharp" class="bDets"></ion-icon>
+                    <input type="text" placeholder="ID"/>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" class="bDets">
+                    <ion-icon name="mail-sharp" class="bDets"></ion-icon>
+                    <input type="text" placeholder="Email"/>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" class="bDets">
+                    <ion-icon name="phone-portrait-sharp" class="bDets"></ion-icon>
+                    <input type="text" placeholder="Phone"/>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-grid>
+    <div class="section">
+      <div class="visitorInfo">
+        <ion-item>
+          <ion-label>Visitor Additional Information</ion-label>
+        </ion-item>
+        <ion-grid style="font-size: 15px;">
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Address</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-textarea placeholder="Address"></ion-textarea>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Category</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-select placeholder="Category">
+                <ion-select-option value="1">Contractor</ion-select-option>
+                <ion-select-option value="2">Delivery</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Gender</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-select placeholder="Gender">
+                <ion-select-option value="f">Female</ion-select-option>
+                <ion-select-option value="m">Male</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Country</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-select placeholder="Country">
+                <ion-select-option value="1">Malaysia</ion-select-option>
+                <ion-select-option value="2">Indonesia</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Vehicle No</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-textarea placeholder="Vehicle No"></ion-textarea>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Company</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-textarea placeholder="Company"></ion-textarea>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text style="font-size: 90%;">Temperature</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-textarea placeholder="Temperature"></ion-textarea>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+    <div class="section">
+      <div class="appointmentInfo">
+        <ion-item>
+          <ion-label>Appointment Information</ion-label>
+        </ion-item>
+        <ion-grid style="font-size: 15px;">
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Start Date</ion-text>
+            </ion-col>
+            <ion-col size="7">
+              <ion-datetime displayFormat="DD MMMM YYYY" #startDate (ionChange)="startTime.open()" placeholder="Start Date" title="heh"></ion-datetime>
+            </ion-col>
+            <ion-col size="2">
+              <ion-icon name="calendar-number-outline" class="calanderinput" (click)="startDate.open()"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Start Time</ion-text>
+            </ion-col>
+            <ion-col size="7">
+              <ion-datetime displayFormat="hh:mm A" #startTime minuteValues="0,15,30,45" (ionChange)="endDate.open()" placeholder="Start Time"></ion-datetime>
+            </ion-col>
+            <ion-col size="2">
+              <ion-icon name="time-outline" class="calanderinput" (click)="startTime.open()"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>End Date</ion-text>
+            </ion-col>
+            <ion-col size="7">
+              <ion-datetime displayFormat="DD MMMM YYYY" #endDate (ionChange)="endTime.open()" placeholder="End Date"></ion-datetime>
+            </ion-col>
+            <ion-col size="2">
+              <ion-icon name="calendar-number-outline" class="calanderinput" (click)="endDate.open()"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>End Time</ion-text>
+            </ion-col>
+            <ion-col size="7">
+              <ion-datetime displayFormat="hh:mm A" #endTime minuteValues="0,15,30,45" placeholder="End Time"></ion-datetime>
+            </ion-col>
+            <ion-col size="2">
+              <ion-icon name="time-outline" class="calanderinput" (click)="endTime.open()"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Purpose</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-select placeholder="Purpose">
+                <ion-select-option value="1">Collect Document</ion-select-option>
+                <ion-select-option value="2">Delivery</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Host Name</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-select placeholder="Host Name">
+                <ion-select-option value="1">Kharti</ion-select-option>
+                <ion-select-option value="2">Nandha</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Floor</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-select placeholder="Floor">
+                <ion-select-option value="1">1</ion-select-option>
+                <ion-select-option value="2">2</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Meeting Location</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-select placeholder="Meeting Location">
+                <ion-select-option value="1">Bilik Meeting</ion-select-option>
+                <ion-select-option value="2">Training Academy</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
+              <ion-text>Remarks</ion-text>
+            </ion-col>
+            <ion-col size="9">
+              <ion-textarea placeholder="Remarks"></ion-textarea>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+    <div class="section">
+      <div class="additional">
+        <ion-item>
+          <ion-label>Additional Information</ion-label>
+        </ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+              padding-left: 0px;" (click)= "capture()">
+                <ion-item lines="none">
+                  <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+                  <ion-label>Additional Document</ion-label>
+                  <ion-icon name="chevron-forward-outline"></ion-icon>
+                </ion-item>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+              padding-left: 0px;" (click)= "capture()">
+                <ion-item lines="none">
+                  <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+                  <ion-label>ID Image</ion-label>
+                  <ion-icon name="chevron-forward-outline"></ion-icon>
+                </ion-item>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+    <ion-button expand="block">Check-In</ion-button>
+  </div>
+</ion-content>
