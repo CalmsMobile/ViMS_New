@@ -142,7 +142,7 @@ export class ManageHostsPage implements OnInit {
   }
 
   getVisitorsBySearch(event, typing, refresher){
-    const queryText = event.target.value;
+    const queryText = event? event.target.value: '';
     if(typing){
       this.OffSet = 0;
       this.VM.queryText = queryText;

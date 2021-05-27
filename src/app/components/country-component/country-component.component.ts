@@ -43,7 +43,7 @@ selectedCountryValue = '';
 
 
    filterTechnologies(event, code) {
-     const value = event.target.value;
+     let value = event?event.target.value: "";
      console.log(value);
      if (value || code) {
       this.countryListFiltered = [];

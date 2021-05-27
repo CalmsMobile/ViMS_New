@@ -64,11 +64,16 @@ ion-content {
   align-items: center;
   background-color: #f6f6f6;
   text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .cardtitle {
-  padding-top: 3vh;
   text-align: center;
+}
+
+.cardCol {
+  align-self: center;
 }
 
 .ion-tittle {
@@ -82,11 +87,9 @@ ion-content {
   justify-content: center;
   text-transform: capitalize;
   color: inherit;
-  padding-bottom: 3vh;
 }
 .para {
   font-size: 32px;
-  padding-top: 4vh;
 }
 #bar-chart-container {
   height: 400px;
@@ -142,6 +145,7 @@ ion-content {
 }
 
 .mainsegments ion-segment-button {
-  --color-checked: #06beb6;
+  --color-checked: var(--ion-color-primary);
+  padding: 5px;
   // --background-checked: blue;
 }

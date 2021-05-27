@@ -384,7 +384,9 @@ export class FacilityBookingPage implements OnInit {
 
   }
 
-  onChangeFacility(FacilityCode){
+  onChangeFacility(event: any){
+
+    const FacilityCode = event.FacilityCode ? event.FacilityCode: event.detail.value;
     var str = JSON.stringify(this.VM);
     var data = JSON.parse(str);
     console.log(""+ FacilityCode);

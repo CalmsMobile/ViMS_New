@@ -202,7 +202,7 @@ export class AccountMappingPage {
             // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmvsXGxqidWW1oDwCCbeG7M0xYw+SnR7J6F5RAATHeqKnA==';
 
             //SeCurity
-            var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWAMkGMm2Ls9krDV2SASum5GR/F9VbHfNxtnz6iJQRe1/RztruYth9NED/fwI4E5kD0+dt+G/p45qvctDRxDoY3DKYv0aEx8NxTjVcwkz/Kvsg==';
+            var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWBguTQh2iFt4pFxIAn0BC2zNrbsSmo9Get0lhq7/gvrOUhbFGch0bLyC2Am/LEJu7G0AjEDTrjrvBaWhy0mJqdXmRf7W+zxjVm/NQhKjBD1aw==';
             this.processJson(qrCodeString);
           }
         } else{

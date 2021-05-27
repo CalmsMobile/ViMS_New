@@ -23,20 +23,20 @@
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
               <ion-icon name="id-card-outline" slot="start" color="danger"></ion-icon>
-              {{visitor.VISITOR_IC? visitor.VISITOR_IC: '--'}}
+              {{visitor.VISITOR_IC? visitor.VISITOR_IC: '&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
               <ion-icon name="copy-outline" slot="start" color="danger"></ion-icon>
-              {{(visitor.Visitor_category ? visitor.Visitor_category : visitor.VisitorCategory?visitor.VisitorCategory:'--') }}
+              {{(visitor.Visitor_category ? visitor.Visitor_category : visitor.VisitorCategory?visitor.VisitorCategory:'&nbsp;&nbsp;--') }}
             </ion-label>
           </ion-col>
 
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
               <ion-icon name="locate-outline" slot="start" color="danger"></ion-icon>
-              {{visitor.Country?visitor.Country: '--'}}
+              {{visitor.Country?visitor.Country: '&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
 

@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { BarcodeScannerOptions, BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
-import { NavController, AlertController, Platform, IonContent } from '@ionic/angular';
+import { NavController, AlertController, Platform, IonContent, ModalController, IonItemSliding } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { QuickPassVisitorPopupComponent } from 'src/app/components/quickpass-visitor-popup/quickpass-visitor-popup';
+import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 
@@ -15,13 +17,15 @@ export class SecurityCheckOutPagePage implements OnInit {
 
   @ViewChild(IonContent)	content:IonContent;
 
-  OffSet = 0;
   isFetching = false;
   appointments = [];
   appointmentsClone = [];
   T_SVC:any;
   Type : any = 0;
+  showDelete = false;
   title = "Visitor Check-Out";
+  visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
+  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
   options :BarcodeScannerOptions;
   constructor(public navCtrl: NavController,
     private translate: TranslateService,
@@ -29,11 +33,13 @@ export class SecurityCheckOutPagePage implements OnInit {
      public apiProvider: RestProvider,
      private barcodeScanner: BarcodeScanner,
      private platform: Platform,
+     private modalCtrl: ModalController,
+     private dateformat: DateFormatPipe,
      private router: Router,
      private route: ActivatedRoute) {
     this.translate.get([
-      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'ACC_MAPPING.INVALID_QR', 'COMMON.OK',
-      'ALERT_TEXT.CHECKOUT_MESSAGE1', 'ALERT_TEXT.CONFIRMATION',
+      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'ACC_MAPPING.INVALID_QR', 'COMMON.OK', 'ALERT_TEXT.INVALID_QR',
+      'ALERT_TEXT.CHECKOUT_MESSAGE1', 'ALERT_TEXT.CONFIRMATION', 'ALERT_TEXT.QR_EXPIRED',
       'ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']).subscribe(t => {
         this.T_SVC = t;
     });
@@ -58,7 +64,9 @@ export class SecurityCheckOutPagePage implements OnInit {
               this.title = "Today Overstay"
             break;
             case '50':
-              this.title = "Quick Pass Check-Out"
+              this.title = "Quick Pass"
+            case '60':
+              this.title = "Total Check-In"
             break;
           }
         }
@@ -75,14 +83,25 @@ export class SecurityCheckOutPagePage implements OnInit {
     console.log('goBack ');
    }
 
+   moveToDetailsPage(item) {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        passData: {
+          data: item
+        }
+      }
+    };
+    this.router.navigate(['visitor-information'], navigationExtras);
+  }
+
   ionViewWillEnter() {
 		console.log('ionViewWillEnter SecurityCheckOutPage');
-    this.OffSet = 0;
     switch(this.Type){
       case "10":
       case "20":
       case "30":
       case "40":
+      case "60":
         this.VimsAppGetStatesList(this.Type, null, true);
       break
       case "50":
@@ -97,6 +116,27 @@ export class SecurityCheckOutPagePage implements OnInit {
 
   }
 
+  ondrag(event, slideDOM:IonItemSliding, item: any) {
+    let percent = event.detail.ratio;
+    if (percent > 0) {
+      this.closeSlide(slideDOM);
+      if(this.showDelete){
+        return;
+        }
+        this.showDelete = true;
+        this.checkoutVisitor(item);
+    }
+    if (Math.abs(percent) > 1) {
+      // console.log('overscroll');
+    }
+	  }
+
+    closeSlide(slideDOM) {
+      setTimeout(() => {
+        slideDOM.close();
+      }, 100);
+    }
+
   getDayofDate(dateString){
 		let dateObject = new Date(dateString);
 		let weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -104,8 +144,6 @@ export class SecurityCheckOutPagePage implements OnInit {
 	}
 
 	doRefresh(refresher) {
-    // this.OffSet = this.OffSet + 20;
-    this.OffSet = 0;
     this.appointments = [];
     this.appointmentsClone = [];
     switch(this.Type){
@@ -113,6 +151,7 @@ export class SecurityCheckOutPagePage implements OnInit {
       case "20":
       case "30":
       case "40":
+      case "60":
         this.VimsAppGetStatesList(this.Type, refresher, true);
       break;
       case "50":
@@ -138,13 +177,12 @@ export class SecurityCheckOutPagePage implements OnInit {
             case "20":
             case "30":
             case "40":
+            case "60":
               currentClass.VimsAppGetStatesList(currentClass.Type, null, true);
             break;
             case "50":
               currentClass.GetQuickPassVisitorList(null, true);
             break;
-            case "60":
-              currentClass.VimsAppGetCheckInVisitorList(null, true);
             break;
           }
       //  },1000)
@@ -156,7 +194,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 	}
 
   getVisitorsBySearch(event){
-    const queryText = event.target.value;
+    const queryText = event?event.target.value: '';
     if(queryText){
       var showList = [];
       for(var i= 0 ; i < this.appointments.length ; i++){
@@ -183,7 +221,7 @@ export class SecurityCheckOutPagePage implements OnInit {
       var MAppDevSeqId = JSON.parse(hostData).MAppDevSeqId;
 			var params = {
       "MAppDevSeqId":MAppDevSeqId,
-			"OffSet": ""+ this.OffSet,
+			"OffSet": ""+ this.appointments.length,
 			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
@@ -200,7 +238,6 @@ export class SecurityCheckOutPagePage implements OnInit {
             a.att_check_in_date <= b.att_check_in_date ? -1 : 1
           );
           this.appointments.reverse();
-					this.OffSet = this.OffSet + aList.length;
           this.appointmentsClone = this.appointments;
 				},
 				async (err) => {
@@ -238,7 +275,7 @@ export class SecurityCheckOutPagePage implements OnInit {
       var MAppDevSeqId = JSON.parse(hostData).MAppDevSeqId;
 			var params = {
       "MAppDevSeqId":MAppDevSeqId,
-			"OffSet": ""+ this.OffSet,
+			"OffSet": ""+ this.appointments.length,
 			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
@@ -256,7 +293,6 @@ export class SecurityCheckOutPagePage implements OnInit {
             a.att_check_in_date <= b.att_check_in_date ? -1 : 1
           );
           this.appointments.reverse();
-					this.OffSet = this.OffSet + aList.length;
           this.appointmentsClone = this.appointments;
 				},
 				async (err) => {
@@ -296,8 +332,8 @@ export class SecurityCheckOutPagePage implements OnInit {
 			var params = {
         "Type": Type,
         "MAppDevSeqId":MAppDevSeqId,
-        "OffSet": ""+ this.OffSet,
-        "Rows":"20000"
+        "OffSet": ""+ this.appointments.length,
+        "Rows":"5"
       };
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.VimsAppGetSecurityStatsDetail(params, showLoading).then(
@@ -309,16 +345,55 @@ export class SecurityCheckOutPagePage implements OnInit {
 					var aList = JSON.parse(val.toString());
 
 					if(refresher){
-            this.appointments = aList;
+            this.appointments = aList.Table2;
 						refresher.target.complete();
 					}else {
-						this.appointments = aList.concat(this.appointments);
+            if (aList.Table2) {
+              this.appointments = aList.Table2.concat(this.appointments);
+            } else {
+              this.appointments = this.appointments;
+            }
+
           }
           this.appointments.sort((a, b) =>
             a.att_check_in_date <= b.att_check_in_date ? -1 : 1
           );
           this.appointments.reverse();
-					this.OffSet = this.OffSet + aList.length;
+          this.appointments.forEach(element => {
+            element.START_TIME = element.att_check_in_time;
+            element.END_TIME = element.att_ExpiryTime;
+            element.STAFF_NAME = element.HostName;
+            element.VISITOR_NAME = element.visitor_name;
+            element.WorkPermitExpiry = element.att_ExpiryTime;
+            element.TELEPHONE_NO = element.visitor_mobile_no ? element.visitor_mobile_no: element.visitor_tel_no;
+            element.visitor_email = element.visitor_email;
+            element.PLATE_NUM = element.PLATE_NUM;
+          });
+
+          if (aList.Table3) {
+            aList.Table3.filter((item) =>{
+              this.appointments.forEach(element => {
+                if(item.att_hex_no ===  element.att_hex_no) {
+                  element.no_of_time_utilized = item.no_of_time_utilized;
+                }
+              });
+            });
+          }
+
+          if (aList.Table4) {
+            aList.Table4.filter((item) =>{
+              this.appointments.forEach(element => {
+                if(item.att_hex_no ===  element.att_hex_no) {
+                  element.att_check_in = item.att_check_in;
+                  element.att_check_out = item.att_check_out;
+                  element.att_check_in_time = item.att_check_in_time;
+                  element.att_check_out_time = item.att_check_out_time;
+                }
+              });
+            });
+          }
+
+
           this.appointmentsClone = this.appointments;
 				},
 				async (err) => {
@@ -416,126 +491,108 @@ export class SecurityCheckOutPagePage implements OnInit {
     }
   }
   async checkoutVisitorByQR(HexCode: string) {
+    let alert = this.alertCtrl.create({
+      header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
+      cssClass:"alert-danger",
+      message: this.T_SVC['ALERT_TEXT.CHECKOUT_MESSAGE1'],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Ok',
+          handler: () => {
+            console.log('Delete clicked');
+            var params = {
+              "HexCode":HexCode,
+              "IsCheckIn": false,
+              "VisitorImg": ""
+            };
+            // this.VM.host_search_id = "adam";
+            if(this.Type == '50') {
+              this.apiProvider.UpdateQPVisitorCheckOutTime(params).then(
+                async (val) => {
+                  this.doRefresh(null);
+                  this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
 
-        let alert = this.alertCtrl.create({
-          header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
-          cssClass:"alert-danger",
-          message: this.T_SVC['ALERT_TEXT.CHECKOUT_MESSAGE1'],
-          buttons: [
-            {
-              text: 'Cancel',
-              role: 'cancel',
-              handler: () => {
-                console.log('Cancel clicked');
-              }
-            },
-            {
-              text: 'Ok',
-              handler: () => {
-                console.log('Delete clicked');
-                var params = {
-                  "HexCode":HexCode,
-                  "IsCheckIn": false,
-                  "VisitorImg": ""
-                };
-                // this.VM.host_search_id = "adam";
-                if(this.Type == '50') {
-                  this.apiProvider.UpdateQPVisitorCheckOutTime(params).then(
-                    async (val) => {
-                      this.doRefresh(null);
-                      let alert = this.alertCtrl.create({
-                        header: 'Success',
-                        cssClass:'alert-danger',
-                        message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS'],
-                        buttons: ['Okay']
-                        });
-                        (await alert).present();
-
-                    },
-                    async (err) => {
-                      if(err && err.message == "No Internet"){
-                        return;
-                      }
-                      var message = "";
-                      if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-                        message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-                      } else if(err && JSON.parse(err) && JSON.parse(err).message){
-                        message =JSON.parse(err).message;
-                      }
-                      if(message){
-                        // message = " Unknown"
-                        let alert = this.alertCtrl.create({
-                          header: 'Error !',
-                          cssClass:'alert-danger',
-                          message: message,
-                          buttons: ['Okay']
-                          });
-                          (await alert).present();
-                      }
-                    }
-                  );
-                }else{
-                  var params1 = {
-                    "hexcode":HexCode,
-                    "CheckOutCounter": "admin"
-                  };
-                  this.apiProvider.VimsAppUpdateVisitorQRCheckOut(params1).then(
-                    async (val) => {
-                      this.doRefresh(null);
-                      let alert = this.alertCtrl.create({
-                        header: 'Success',
-                        cssClass:'alert-danger',
-                        message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS'],
-                        buttons: ['Okay']
-                        });
-                        (await alert).present();
-
-                    },
-                    async (err) => {
-                      if(err && err.message == "No Internet"){
-                        return;
-                      }
-                      var message = "";
-                      if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-                        message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-                      } else if(err && JSON.parse(err) && JSON.parse(err).message){
-                        message =JSON.parse(err).message;
-                      }
-                      if(message){
-                        // message = " Unknown"
-                        let alert = this.alertCtrl.create({
-                          header: 'Error !',
-                          cssClass:'alert-danger',
-                          message: message,
-                          buttons: ['Okay']
-                          });
-                          (await alert).present();
-                      }
-                    }
-                  );
+                },
+                async (err) => {
+                  if(err && err.message == "No Internet"){
+                    return;
+                  }
+                  var message = "";
+                  if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                    message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+                  } else if(err && JSON.parse(err) && JSON.parse(err).message){
+                    message =JSON.parse(err).message;
+                  }
+                  if(message){
+                    this.apiProvider.showAlert(message);
+                  }
                 }
-              }
+              );
+            }else{
+              var params1 = {
+                "hexcode":HexCode,
+                "CheckOutCounter": "admin"
+              };
+              this.apiProvider.VimsAppUpdateVisitorQRCheckOut(params1).then(
+                async (val) => {
+                  this.doRefresh(null);
+                  this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
+
+                },
+                async (err) => {
+                  if(err && err.message == "No Internet"){
+                    return;
+                  }
+                  var message = "";
+                  if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                    message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+                  } else if(err && JSON.parse(err) && JSON.parse(err).message){
+                    message =JSON.parse(err).message;
+                  }
+                  if(message){
+                    // message = " Unknown"
+                    this.apiProvider.showAlert(message);
+                  }
+                }
+              );
             }
-          ]
-        });
-        (await alert).present();
+          }
+        }
+      ]
+    });
+    (await alert).present();
+    (await alert).onDidDismiss().then(() => {
+      this.showDelete = false;
+    })
    }
 
-  async checkoutVisitor(slideDOM, item){
-    if(slideDOM){
-      slideDOM.close();
-    }
-
+  async checkoutVisitor(item){
     if(this.Type == "50"){
       this.checkoutVisitorByQR(item.HexCode);
       return;
     }
-
-
+    if (item.att_check_in === 1 && item.att_check_out === 1) {
+      this.showDelete = false;
+      return;
+    }
+    let message1 = "Do you wish to checkout ";
+    if (item.att_check_in === 1 && (!item.att_check_out || item.att_check_out === 0)) {
+      message1 = "Do you wish to checkout ";
+    } else {
+      this.showDelete = false;
+      return;
+    }
     let alert = this.alertCtrl.create({
       header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
       cssClass:"alert-danger",
-      message: "Do you wish to checkout "+(item.visitor_name? item.visitor_name : " this visitor")+" now?",
+      message: message1+(item.visitor_name? item.visitor_name : " this visitor")+" now?",
       buttons: [
         {
           text: 'Cancel',
@@ -555,7 +612,6 @@ export class SecurityCheckOutPagePage implements OnInit {
             // this.VM.host_search_id = "adam";
             this.apiProvider.VimsAppUpdateVisitorCheckOut(params).then(
               async (val) => {
-                this.OffSet = 0;
                 this.appointments = [];
                 this.appointmentsClone = [];
                 switch(this.Type){
@@ -563,6 +619,7 @@ export class SecurityCheckOutPagePage implements OnInit {
                 case "20":
                 case "30":
                 case "40":
+                case "60":
                   this.VimsAppGetStatesList(this.Type, null, false);
                 break;
                 case "50":
@@ -573,13 +630,7 @@ export class SecurityCheckOutPagePage implements OnInit {
                 break;
                 }
 
-                let alert = this.alertCtrl.create({
-                  header: 'Success',
-                  cssClass:'alert-danger',
-                  message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS'],
-                  buttons: ['Okay']
-                  });
-                  (await alert).present();
+                this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
 
               },
               async (err) => {
@@ -594,13 +645,7 @@ export class SecurityCheckOutPagePage implements OnInit {
                 }
                 if(message){
                   // message = " Unknown"
-                  let alert = this.alertCtrl.create({
-                    header: 'Error !',
-                    cssClass:'alert-danger',
-                    message: message,
-                    buttons: ['Okay']
-                    });
-                    (await alert).present();
+                  this.apiProvider.showAlert(message);
                 }
               }
             );
@@ -609,9 +654,185 @@ export class SecurityCheckOutPagePage implements OnInit {
       ]
     });
     (await alert).present();
+    (await alert).onDidDismiss().then(() => {
+      this.showDelete = false;
+    })
   }
 
   ngOnInit() {
+  }
+
+  scanQuickPassQR(){
+    let invalidQRCode = false;
+
+    var loadinWeb = true;
+    if(!this.platform.is('cordova')) {
+      loadinWeb = true;
+    } else {
+      loadinWeb = false;
+    }
+    if (loadinWeb) {
+      var data = "2459252558";
+      var params = {"HexCode":""+ data};
+      this.apiProvider.GetQuickPassVisitorDetail(params).then(
+        async (val) => {
+         console.log("val : "+JSON.stringify(val));
+         var visitorDetail = val+"";
+         var vOb = JSON.parse(visitorDetail);
+          if(vOb){
+            var eDateTime = this.dateformat.transform(vOb.ExpiryTime+"", "yyyy-MM-ddTHH:mm:ss");
+            var eDTime = new Date(eDateTime).getTime();
+
+            var cDateTime = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");
+            var cDTime = new Date(cDateTime).getTime();
+            if(eDTime > cDTime){
+              this.showPassDetails(vOb);
+            }else{
+              this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.QR_EXPIRED']);
+            }
+
+          }
+
+
+        },
+        async (err) => {
+          console.log("error : "+JSON.stringify(err));
+          if(err && err.message == "No Internet"){
+            return;
+          }
+
+          if(err.Table1 && err.Table1.length == 0){
+            var message  = this.T_SVC['ALERT_TEXT.INVALID_QR'];
+            this.apiProvider.showAlert(message);
+              return;
+          }
+
+          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+            message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+            this.apiProvider.showAlert(message);
+              return;
+          }
+          message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
+
+          if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
+            message = JSON.parse(err).Table[0].description;
+          }
+          this.apiProvider.showAlert(message);
+        }
+      );
+    }else{
+      this.options = {
+        prompt : "Scan your QR Code ",
+        preferFrontCamera : false, // iOS and Android
+        showFlipCameraButton : true, // iOS and Android
+        showTorchButton : true, // iOS and Android
+        torchOn: false, // Android, launch with the torch switched on (if available)
+        resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+        formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+        disableAnimations : false, // iOS
+        disableSuccessBeep: false // iOS and Android
+      }
+      this.barcodeScanner.scan(this.options).then(async (barcodeData) => {
+        var data = barcodeData.text;
+        console.log("barcodeScanner data: "+data);
+        // console.log(scanData); D20A6A48
+        if(data == ""){
+          invalidQRCode = true;
+        }
+
+        if(!invalidQRCode){
+
+            var params = {"HexCode":""+ data};
+            this.apiProvider.GetQuickPassVisitorDetail(params).then(
+              async (val) => {
+                if(val){
+                  console.log("val : "+JSON.stringify(val));
+                  var visitorDetail = val+"";
+                  var vOb = JSON.parse(visitorDetail);
+                  if(vOb){
+
+                    var eDateTime = this.dateformat.transform(vOb.ExpiryTime+"", "yyyy-MM-ddTHH:mm:ss");
+                    var eDTime = new Date(eDateTime).getTime();
+
+                    var cDateTime = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");
+                    var cDTime = new Date(cDateTime).getTime();
+                     if(eDTime > cDTime){
+                      const navigationExtras: NavigationExtras = {
+                      state: {
+                        passData: {
+                          QPAppointment : visitorDetail,
+                          CheckIn : true
+                        }
+                      }
+                      };
+                      this.router.navigate(['quick-pass-details-page'], navigationExtras);
+                    }else{
+                      this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.QR_EXPIRED']);
+                    }
+                  }
+                }else{
+                  this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.INVALID_QR']);
+                }
+
+
+
+
+              },
+              async (err) => {
+                console.log("error : "+JSON.stringify(err));
+                if(err && err.message == "No Internet"){
+                  return;
+                }
+
+                if(err.Table1 && err.Table1.length == 0){
+                  var message  = this.T_SVC['ALERT_TEXT.INVALID_QR'];
+                  this.apiProvider.showAlert(message);
+                    return;
+                }
+
+                if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                  message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+                  this.apiProvider.showAlert(message);
+                    return;
+                }
+
+                message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
+
+                if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
+                  message = JSON.parse(err).Table[0].description;
+                }
+                this.apiProvider.showAlert(message);
+              }
+            );
+
+        } else{
+          this.apiProvider.showAlert("<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>');
+        }
+    }, async (err) => {
+        console.log("Error occured : " + err);
+        this.apiProvider.showAlert("<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>');
+    });
+    }
+  }
+
+  async showPassDetails(item) {
+    const presentModel = await this.modalCtrl.create({
+      component: QuickPassVisitorPopupComponent,
+      componentProps: {
+        data: {
+          QPAppointment : JSON.stringify(item),
+          CheckIn: true
+        }
+      },
+      showBackdrop: true,
+      mode: 'ios',
+      cssClass: 'visitorPopupModal1'
+    });
+    presentModel.onWillDismiss().then((data) => {
+      this.GetQuickPassVisitorList(null, true);
+    });
+    return await presentModel.present();
+
   }
 
 }

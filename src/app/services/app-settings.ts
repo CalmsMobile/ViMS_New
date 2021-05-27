@@ -30,6 +30,135 @@ export const AppSettings = Object.freeze({
 
     },
 
+    DEFAULT_SETTINGS: {
+      "showQuickPass": true,
+      "showPreAppointment": true,
+      "QuickPass": {
+        "ImageCaptureEnabled": true,
+        "ImageCaptureRequired": false,
+        "ShowVisitorExpiryTime": true,
+        "ShowVehicleNo": false,
+        "ShowRemarks": false
+      },
+      "addVisitor": {
+        "NameEnabled": true,
+        "NameRequired": true,
+        "NameLable": "Name",
+        "IdProofEnabled": true,
+        "IdProofRequired": true,
+        "IdProofLable": "NRIC",
+        "EmailEnabled": false,
+        "EmailRequired": false,
+        "EmailLable": "Email",
+        "CompanyEnabled": false,
+        "CompanyRequired": false,
+        "CompanyLable": "Company",
+        "CategoryEnabled": false,
+        "CategoryRequired": false,
+        "CategoryLable": "Category",
+        "ContactNumberEnabled": true,
+        "ContactNumberRequired": false,
+        "ContactNumberLable": "ContactNumber",
+        "VehicleNumberEnabled": true,
+        "VehicleNumberRequired": false,
+        "VehicleNumberLable": "VehicleNumber",
+        "GenderEnabled": false,
+        "GenderRequired": false,
+        "GenderLable": "Gender",
+        "AddressEnabled": false,
+        "AddressRequired": false,
+        "AddressLable": "Address",
+        "CountryEnabled": false,
+        "CountryRequired": false,
+        "CountryLable": "Country",
+        "ImageUploadEnabled": false,
+        "ImageUploadRequired": false,
+        "VerificationDocEnabled": true,
+        "VerificationDocRequired": false,
+        "VerificationDocLabel": "Verification document upload",
+        "additionalDocLimit": 3
+      },
+      "Header": {
+        "HeaderTitle": "Calms technology",
+        "HeaderSize": 18,
+        "HeaderColor": "#fbf7f8",
+        "HeaderFontWeight": "Regular",
+        "FontWeight": "Bold"
+      },
+      "SubHeader": {
+        "SubHeaderSize": 10,
+        "SubHeaderColor": "#f8f6f6",
+        "SubHeaderFontWeight": "Regular"
+      },
+      "FooterTab": {
+        "FooterSize": 10,
+        "FooterColor": "#f9f7f7",
+        "FooterFontWeight": "Bold",
+        "IconSize": 22
+      },
+      "LogoImg": "",
+      "OCR_Enabled": false,
+      "MyKad_Enabled": false,
+      "Sync_Interval": 10,
+      "LogoImgUrl": "",
+      "customStyle": {
+        "AppTheme": "#dc1c79",
+        "buttonStyle": {
+          "btnColor1": "#FF512F",
+          "btnColor2": "#DD2476",
+          "btnTextColor": "#ffffff",
+          "btnTextSize": 16,
+          "btnBorderRadius": 10
+        },
+        "Cards": {
+          "Card1": {
+            "title": "Today Appointment",
+            "fontSize": 10,
+            "fontColor": "#2f7933",
+            "countFontSize": 32,
+            "countColor": "#2d733f"
+          },
+          "Card2": {
+            "title": "OverAll Check-In",
+            "fontSize": 10,
+            "fontColor": "#1dd7ce",
+            "countFontSize": 32,
+            "countColor": "#31cfc7"
+          },
+          "Card3": {
+            "title": "Today Check-In",
+            "fontSize": 10,
+            "fontColor": "#374ab7",
+            "countFontSize": 32,
+            "countColor": "#3a4e9f"
+          },
+          "Card4": {
+            "title": "Today Check-Out",
+            "fontSize": 10,
+            "fontColor": "#31b545",
+            "countFontSize": 32,
+            "countColor": "#43b941"
+          },
+          "Card5": {
+            "title": "Overstayed",
+            "fontSize": 10,
+            "fontColor": "#eb445a",
+            "countFontSize": 14,
+            "countColor": "#eb445a",
+            "HeaderColor": "#e7646d",
+            "FontSize": 32
+          },
+          "Card6": {
+            "title": "Currently Check-In",
+            "fontSize": 10,
+            "fontColor": "#18b097",
+            "countFontSize": 32,
+            "countColor": "#1cb093"
+          }
+        }
+      }
+    },
+
     // -------- SQlite DB Setup ------------
     LOCAL_SQLITE_DB_NAME:"ViMS-HOST-01.db",
     LOCAL_USER_SETUP:{

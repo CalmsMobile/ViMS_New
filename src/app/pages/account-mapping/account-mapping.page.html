@@ -109,7 +109,7 @@
                   border-radius: 50%;" [src]="hostImage" onError="this.src='../../../assets/images/user.png';">
                 <div>
                   <ion-label class="sticky">{{hostInfo.HOSTNAME}}</ion-label>
-                  <p style="margin-top: 5px;"><b>Department : </b>{{hostInfo.DEPARTMENT_REFID ? hostInfo.DEPARTMENT_REFID : '--'}}</p>
+                  <p style="margin-top: 5px;"><b>Department : </b>{{hostInfo.DEPARTMENT_REFID ? hostInfo.DEPARTMENT_REFID : '&nbsp;&nbsp;--'}}</p>
                 </div>
               </ion-item>
               <ion-card-content>
@@ -242,7 +242,7 @@
                 <!-- <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p> -->
                 <ion-card sp-card-map-acc-org>
                   <ion-item no-margin>
-                    <ion-label style="margin: 0 auto;" class="ion-padding sticky">This device already used by another account. Do you want to proceed?</ion-label>
+                    <ion-text style="margin: 0 auto;" class="ion-padding sticky">This device already used by another account. Do you want to proceed?</ion-text>
                   </ion-item>
                 </ion-card>
               </div>

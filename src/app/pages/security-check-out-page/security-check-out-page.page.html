@@ -6,17 +6,17 @@
 -->
 <ion-header>
 
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
-    <ion-title>{{title}}</ion-title>
-     <ion-buttons slot="end" *ngIf="Type == '60' || Type == '50'">
-          <ion-button slot="icon-only" (click)="scanQR()" style="padding: 5px;">
+    <ion-title style="font-size: 16px;">{{title}}</ion-title>
+     <ion-buttons slot="end" *ngIf="Type == '50'">
+          <ion-button slot="icon-only" (click)="scanQuickPassQR()" style="padding: 5px;">
               <ion-icon name="qr-code-outline"></ion-icon>
               <!-- <img slot="end" style="width: 25px;height: 25px;" src="../../assets/images/qrcodescan.png"> -->
           </ion-button>
      </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-searchbar (ionChange)="getVisitorsBySearch($event)"
     placeholder="{{'SECURITY_APP.SEARCH_VISITOR' | translate}}" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
         <!-- (ionChange)="updateSchedule()" -->
@@ -36,52 +36,155 @@
           </ion-col>
     </ion-row>
     <!-- <h5 style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
-    <ion-list   class="no-margin" style="width: 100%;" >
-      <ion-card *ngFor="let list of appointmentsClone" style="margin-bottom: 5px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    <ion-list   class="no-margin" style="width: 100%;" *ngIf="Type == '50'">
+      <ion-card *ngFor="let list of appointmentsClone" style="    margin: 8px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);border: 1px solid #dedede;">
-    <ion-item-sliding #slideDOM >
+    <ion-item-sliding #slideDOM (ionDrag)="ondrag($event, slideDOM, list)">
         <ion-item sp-visitor-item lines="none"  style="--padding-start: 0px;">
           <ion-row class="row no-padding" style="width: -webkit-fill-available;">
               <ion-col size="4" class="col apt-left" style="max-width:100px;padding:5px 0px 0px 0px;text-align: center;;">
                   <div class="row text-white no-padding" style="display:flex">
-                      <div class="col no-padding" style="display:contents"><h2 class="text-white" style="font-size: 25px;display:flex">{{list.att_check_in_date | date : 'dd'}}</h2></div>
+                      <div class="col no-padding"><h2 class="text-white" style="font-size: 25px;display:flex;margin: 8px;">{{list.att_check_in_date | date : 'dd'}}</h2></div>
                       <div class="col">
-                          <h3 class="text-white" style="font-size: 15px;">{{getDayofDate(list.att_check_in_date)}}</h3>
+                          <h3 class="text-white" style="    margin-bottom: 0px;
+                          margin-top: 8px;">{{getDayofDate(list.att_check_in_date)}}</h3>
                           <h3 class="text-white" style="font-size: 12px;    margin: 0px;">{{(list.att_check_in_time? list.att_check_in_time : list.att_check_in_date) | date:'hh:mm a'}}</h3>
                       </div>
                   </div>
                   <div class="row" style="background:rgba(0,0,0,0.1);">
-                      <div class="col"><h3 class="text-white" style="font-size: 15px;">{{list.att_check_in_date | date : 'MMM' | uppercase}} - {{list.att_check_in_date | date : 'yyyy'}}</h3></div>
+                      <div class="col"><h3 class="text-white" style="font-size: 15px;    margin-top: 0px;    margin-bottom: 0px;
+                        padding: 5px;">{{list.att_check_in_date | date : 'MMM' | uppercase}} - {{list.att_check_in_date | date : 'yyyy'}}</h3></div>
                   </div>
               </ion-col>
               <ion-col size="8" style="padding:5px 0px 0px 0px;;">
                   <div>
-                    <ion-item style="--padding-start: 5px; font-size: 20px; text-transform: capitalize;">
+                    <div style="display: flex;margin-left: 4px;    padding: 3px;">
+                      <ion-icon color="primary" style="align-self: center;" name="person-outline"></ion-icon>
                       <ion-label><b>{{(list.visitor_name? list.visitor_name : list.VisitorName)}}</b></ion-label>
-                      <ion-button slot="end" color="danger" shape="round" style="font-size: 14px;">
-                        1
-                      </ion-button>
-                    </ion-item>
-                    <ion-label style="padding-left: 5px;text-align: left !important" *ngIf="Type == '50'">{{list.Purpose ? list.Purpose : '--'}}</ion-label>
-                    <ion-label *ngIf="Type == '60'" style="padding-left: 5px;text-align: left !important">{{list.att_reason ? list.att_reason: '--'}}</ion-label>
-                    <ion-label text-right style="padding-left: 5px;text-align: left !important">
-                      Staff : {{list.HostName? list.HostName: '--'}}
-                    </ion-label>
+                    </div>
+
+                    <div style="display: flex;margin-left: 4px;    padding: 3px;">
+                      <ion-icon color="primary" style="align-self: center;" name="reader-outline"></ion-icon>
+                      <ion-label style="padding-left: 5px;text-align: left !important;color: gray;    font-size: 12px;" *ngIf="Type == '50'">{{list.Purpose ? list.Purpose : '&nbsp;&nbsp;--'}}</ion-label>
+                      <ion-label *ngIf="Type == '60'" style="padding-left: 5px;text-align: left !important;color: gray;    font-size: 12px;">{{list.att_reason ? list.att_reason: '&nbsp;&nbsp;--'}}</ion-label>
+                    </div>
+                    <div style="display: flex;margin-left: 4px;    padding: 3px;">
+                      <ion-icon color="primary" style="align-self: center;" name="id-card-outline"></ion-icon>
+                      <ion-label text-right style="padding-left: 5px;text-align: left !important; font-size: 12px; color: gray;">
+                        {{list.HostName? list.HostName: '&nbsp;&nbsp;--'}}
+                      </ion-label>
+                    </div>
+
                   </div>
           </ion-col>
           </ion-row>
           </ion-item>
-          <ion-item-options side="end" *ngIf="Type == '60' || Type == '50'">
-              <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM)">
-              <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
-          </ion-button> -->
-          <ion-button no-padding style="margin-right: 5px;padding-left: 20px !important;align-self: center;" color="danger" no-border (click)="checkoutVisitor(slideDOM, list)">
-              <ion-icon style="padding-left: 10px;" slot="end" name="walk"></ion-icon>Out
-          </ion-button>
+          <ion-item-options side="end" >
           </ion-item-options>
       </ion-item-sliding>
       </ion-card>
     </ion-list>
+    <div *ngIf="Type != '50'">
+      <ion-card class="card_appointment" *ngFor="let item of appointmentsClone" no-padding no-border (click)="moveToDetailsPage(item)">
+        <ion-item-sliding #slideDOM (ionDrag)="ondrag($event, slideDOM, item)">
+          <ion-item lines="none" class="ion-no-padding">
+        <ion-row lines="none" no-padding full-width>
+          <ion-col size="4" class="col apt-left" no-padding>
+            <ion-row style="height: 100%;">
+             <ion-item lines="none" style="    --padding-start: 6px;
+             width: 100%;">
+              <div>
+                <div style="    width: -webkit-fill-available;
+                display: inline-flex;">
+                <ion-icon style="font-size: 20px;
+                align-self: center;" color="light" name="stopwatch-outline"></ion-icon>
+                  <ion-label color="light" style="font-size: 10px;
+                  align-self: center;">START</ion-label>
+
+                </div>
+                <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
+                text-align: center;
+                display: inline-block;">{{item.START_TIME | date : 'hh:mm a'}}</ion-label>
+              </div>
+             </ion-item>
+             <ion-item lines="none" style="    --padding-start: 6px;
+             width: 100%;">
+              <div>
+                <div style="    width: -webkit-fill-available;
+                display: inline-flex;">
+                <ion-icon style="font-size: 20px;
+                align-self: center;" color="light" name="stopwatch-outline"></ion-icon>
+                  <ion-label color="light" style="font-size: 10px;
+                  align-self: center;">END</ion-label>
+
+                </div>
+                <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
+                text-align: center;
+                display: inline-block;">{{item.END_TIME | date : 'hh:mm a'}}</ion-label>
+              </div>
+             </ion-item>
+            </ion-row>
+          </ion-col>
+          <ion-col size="6" style="padding-bottom: 0px;">
+            <div class="div-apt-center">
+              <ion-icon slot="start" name="person-outline" color="primary" class="apt-text-icons"></ion-icon>
+              <ion-label class="apt-center-title">{{item.VISITOR_NAME}}</ion-label>
+            </div>
+
+            <div class="div-apt-center">
+              <ion-icon slot="start" name="call-outline" color="primary" class="apt-text-icons"></ion-icon>
+              <ion-label class="apt-center-subtitle">{{item.TELEPHONE_NO? item.TELEPHONE_NO: '&nbsp;&nbsp;--'}}</ion-label>
+            </div>
+
+            <div class="div-apt-center">
+              <ion-icon slot="start" name="people-outline" color="primary" class="apt-text-icons"></ion-icon>
+              <ion-label class="apt-center-subtitle">{{item.STAFF_NAME ? item.STAFF_NAME: '&nbsp;&nbsp;--'}}</ion-label>
+            </div>
+
+            <div class="div-apt-center">
+              <ion-icon slot="start" name="car-sport-outline" color="primary" class="apt-text-icons"></ion-icon>
+              <ion-label class="apt-center-subtitle">{{item.PLATE_NUM ? item.PLATE_NUM: '&nbsp;&nbsp;--'}}</ion-label>
+            </div>
+
+            <div class="div-apt-center">
+              <ion-icon slot="start" name="timer-outline" class="apt-text-icons" color="danger"></ion-icon>
+              <ion-label class="apt-center-subtitle" style=" color: #f44336; font-weight: bold;">{{item.WorkPermitExpiry? (item.WorkPermitExpiry | date : 'dd MMM yyyy hh:mm a'): '&nbsp;&nbsp;--' }}</ion-label>
+            </div>
+          </ion-col>
+
+          <ion-col size="2" class="colIcons">
+            <img src="{{item.SEQ_ID ? visitorImagePath + item.att_visitor_id + imageURLType: '../../../assets/images/user.png'}}" class="visitorImage" style="width: 60px;
+                height: 60px;
+                max-width: 60px;
+                border-radius: 50%;">
+                    <div class="statuswithBadge">
+                      <div class="outer circle shapeborder">
+                        <div class="inner circle shapeborder">
+                          <ion-icon *ngIf="(!item.att_check_in || item.att_check_in == 0) && (!item.att_check_out || item.att_check_out == 0)" color="light" name="timer-outline"></ion-icon>
+                          <ion-icon *ngIf="item.att_check_in == 1 && (!item.att_check_out || item.att_check_out == 0)" color="light" name="trending-down-outline"></ion-icon>
+                          <ion-icon *ngIf="item.att_check_in == 1 && item.att_check_out == 1" color="light" name="trending-up-outline"></ion-icon>
+                        </div>
+                      </div>
+
+                      <div class="insideBadge">
+                        <ion-badge style="border-radius: 50%;
+                      padding-top: 4px;
+                      border: 1px solid var(--ion-color-primary);
+                      background-color: white;
+                      color: var(--ion-color-primary);
+                      width: 25px;
+                      height: 25px;
+                      padding: 6px !important;">{{item.no_of_time_utilized ? item.no_of_time_utilized: 0}}</ion-badge>
+                      </div>
+                    </div>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          <ion-item-options side="end" >
+          </ion-item-options>
+      </ion-item-sliding>
+      </ion-card>
+    </div>
     <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
       <ion-infinite-scroll-content
         loadingSpinner="bubbles"

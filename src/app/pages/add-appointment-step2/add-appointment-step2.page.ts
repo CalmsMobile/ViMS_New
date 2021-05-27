@@ -266,7 +266,8 @@ export class AddAppointmentStep2Page implements OnInit {
     );
   }
 
-  onChangePurpose(PurposeCode){
+  onChangePurpose(event){
+    const PurposeCode = event?event.detail.value: '';
     console.log(""+ PurposeCode);
     this.PurposeCode = PurposeCode;
     this.VM.FACILITYPURPOSELIST.forEach(element => {
@@ -282,7 +283,8 @@ export class AddAppointmentStep2Page implements OnInit {
     console.log('goBack ');
   }
 
-  onChangeFacility(FacilityCode){
+  onChangeFacility(event: any){
+    const FacilityCode = event?event.detail.value: '';
     console.log(""+ FacilityCode);
     this.FacilityCode = FacilityCode;
 

@@ -965,8 +965,8 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     this._getVisitorCategory();
   }
 
-  onChangeCategory(visitor_ctg_id, allowCheck){
-
+  onChangeCategory(event, allowCheck){
+    const visitor_ctg_id = event.detail.value
     if (this.VM.visitors) {
       this.VM.visitors.forEach(element => {
         element.VisitorCategory = visitor_ctg_id;

@@ -431,8 +431,12 @@ export class RestProvider {
         this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
-          resolve(output);
+        if(output.Table && output.Table.length > 0){
+          if(output.Table[0].Code == 10) {
+            resolve(output);
+          } else {
+            reject(JSON.stringify({message: output.Table[0].Description ? output.Table[0].Description: output.Table1[0].Description}));
+          }
         }else{
           reject(output);
         }
@@ -1658,7 +1662,7 @@ export class RestProvider {
         }
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
-            resolve(JSON.stringify(output.Table2));
+            resolve(JSON.stringify(output));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1706,8 +1710,13 @@ export class RestProvider {
           return;
         }
         if(output){
-          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
-            resolve(JSON.stringify(output.Table));
+          if(output.Table != undefined &&  output.Table.length > 0){
+            if(output.Table[0].Code == 10) {
+              resolve(JSON.stringify(output.Table));
+            } else {
+              reject(JSON.stringify({message: output.Table[0].description}));
+            }
+
           }else{
             reject(JSON.stringify(output));
           }
@@ -3137,16 +3146,21 @@ export class RestProvider {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
-        var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
-          return;
+        if (response[0].Data) {
+          var output = JSON.parse(response[0].Data);
+          if(this.validateUser(output)){
+            return;
+          }
+          if(output != undefined && output.Table){
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        } else {
+          reject(JSON.stringify({message: response[0].ErrorLog[0].Error}));
         }
-        if(output != undefined && output.Table){
-          resolve(JSON.stringify(output));
-        }else{
-          reject(JSON.stringify(output));
-        }
+
 
       }, (err) => {
         this.dismissLoading();

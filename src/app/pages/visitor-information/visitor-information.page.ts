@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ModalController,AlertController} from '@ionic/angular';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-visitor-information',
@@ -17,14 +17,22 @@ export class VisitorInformationPage implements OnInit {
   autoApproval: any = false;
   showOption = false;
   isPastAppointment = false;
+  appointmentInfo: any;
 
   constructor(public apiProvider: RestProvider,
     public modalCtrl: ModalController,
     private router: Router,
+    private route: ActivatedRoute,
     private alertCtrl: AlertController,) {
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.appointmentInfo = this.router.getCurrentNavigation().extras.state.passData;
+        console.log('passData : ' + JSON.stringify(this.appointmentInfo));
+      }
+    });
   }
 
   goBack() {

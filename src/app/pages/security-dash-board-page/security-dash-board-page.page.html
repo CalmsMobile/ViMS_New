@@ -5,15 +5,17 @@
   Ionic pages and navigation.
 -->
 <ion-header lines="none" class="ion-no-border">
-  <ion-toolbar lines="none" class="ion-no-border" color="primary">
+  <ion-toolbar lines="none" class="ion-no-border" color="primary" *ngIf="appSettings.Header">
     <ion-item lines="none" class="no-border" style="--padding-start: 0px;">
       <img src="../../../assets/images/user.png" slot="start" class="ion-text-left"  style="width: 52px;
       height: 52px;
       margin-right: 5px;
       padding: 8px;">
       <div style="line-height: 22px;">
-        <ion-label style="font-weight: 800;color:white">{{userInfoObj.UserName}}<br></ion-label>
-        <ion-label style="font-size: 11px;color:white">last logged in: {{lastLoggedIn? lastLoggedIn: ''}}</ion-label>
+        <ion-label [ngStyle]="{'color': appSettings.Header.HeaderColor, 'font-size': appSettings.Header.HeaderSize + 'px',
+      'font-weight': appSettings.Header.FontWeight}">{{userInfoObj.UserName}}<br></ion-label>
+        <ion-label [ngStyle]="{'color': appSettings.SubHeader.SubHeaderColor, 'font-size': appSettings.SubHeader.SubHeaderSize + 'px',
+        'font-weight': appSettings.SubHeader.SubHeaderFontWeight}">last logged in: {{lastLoggedIn? lastLoggedIn: ''}}</ion-label>
       </div>
     </ion-item>
 
@@ -27,18 +29,20 @@
 <ion-content padding class="ion-no-border" line="none">
   <div class="main">
     <ion-segment mode="ios" [(ngModel)]="segment" class="mainsegments" (ionChange)="segmentChanged($event)">
-
       <ion-segment-button value="Summary" layout="icon-start">
-        <ion-icon style=" font-size: 14px;" name="document-text-outline"></ion-icon><ion-label style="font-size: 12px;">Summary</ion-label>
+        <ion-icon style=" font-size: 16px;" name="copy-outline"></ion-icon>
+        <ion-label style="margin: 0 auto;font-weight: 600;">Summary</ion-label>
       </ion-segment-button>
       <ion-segment-button value="Graph" layout="icon-start">
-        <ion-label style="font-size: 12px;">Graph</ion-label><ion-icon style="font-size: 14px;" name="stats-chart-sharp"></ion-icon>
+        <ion-icon style="font-size: 16px;" name="bar-chart-sharp"></ion-icon>
+        <ion-label style="margin: 0 auto;font-weight: 600;">Graph</ion-label>
+
       </ion-segment-button>
   </ion-segment>
     <!-- <ion-slides #slides pager style="padding-bottom: 150px" (ionSlideDidChange)="slideChanged()" scrollbar="true">
       <ion-slide> -->
         <ion-grid *ngIf="segment === 'Summary'">
-          <ion-row style="padding-top: 5px;">
+          <ion-row style="padding-top: 5px;" *ngIf="appSettings.customStyle">
             <ion-col size="6">
               <ion-card class="card1" (click)="statesClicked('50')" style="color: #236348;">
 
@@ -47,15 +51,15 @@
                     <ion-col size="1">
 
                     </ion-col>
-                    <ion-col size="3">
-                      <ion-icon name="calendar-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="calendar-outline" style="font-size: 45px;" class="cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card1.fontColor}"></ion-icon>
                     </ion-col>
-                    <ion-col size="8">
-                      <div class="para cardtitle">{{statsCountData.TodayAppointmentCount ? statsCountData.TodayAppointmentCount: '0'}}</div>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card1.countColor, 'font-size': appSettings.customStyle.Cards.Card1.countFontSize + 'px'}">{{statsCountData.TodayAppointmentCount ? statsCountData.TodayAppointmentCount: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
-                <ion-card-subtitle class="ion-tittle">Today Appointment</ion-card-subtitle>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card1.fontColor, 'font-size': appSettings.customStyle.Cards.Card1.fontSize + 'px'}">{{appSettings.customStyle.Cards.Card1.title}}</ion-card-subtitle>
               </ion-card>
             </ion-col>
             <ion-col size="6">
@@ -65,49 +69,49 @@
                     <ion-col size="1">
 
                     </ion-col>
-                    <ion-col size="3">
-                      <ion-icon name="book-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="book-outline" style="font-size: 45px;" class="cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card2.fontColor}"></ion-icon>
                     </ion-col>
-                    <ion-col size="8">
-                      <div class="para cardtitle">{{statsCountData.TotalCheckInCount ? statsCountData.TotalCheckInCount: '0'}}</div>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card2.countColor, 'font-size': appSettings.customStyle.Cards.Card2.countFontSize + 'px'}">{{statsCountData.TotalCheckInCount ? statsCountData.TotalCheckInCount: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
-                <ion-card-subtitle class="ion-tittle">Overall Check-In</ion-card-subtitle>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card2.fontColor, 'font-size': appSettings.customStyle.Cards.Card2.fontSize + 'px'}">{{appSettings.customStyle.Cards.Card2.title}}</ion-card-subtitle>
               </ion-card>
             </ion-col>
-            <ion-col size="6">
+            <ion-col size="6" >
               <ion-card class="card1" style="color: #3836BD;" (click)="statesClicked('10')">
                 <ion-grid>
                   <ion-row>
                     <ion-col size="1">
 
                     </ion-col>
-                    <ion-col size="3">
-                      <ion-icon name="trending-up-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="trending-up-outline" style="font-size: 45px;" [ngStyle]="{'color': appSettings.customStyle.Cards.Card3.fontColor}" class="cardtitle"></ion-icon>
                     </ion-col>
-                    <ion-col size="8">
-                      <div class="para cardtitle">{{statsCountData.TotalVisitorsIn ? statsCountData.TotalVisitorsIn: '0'}}</div>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card3.countColor, 'font-size': appSettings.customStyle.Cards.Card3.countFontSize + 'px'}">{{statsCountData.TotalVisitorsIn ? statsCountData.TotalVisitorsIn: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
-                <ion-card-subtitle class="ion-tittle">Today Check-In</ion-card-subtitle>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card3.fontColor, 'font-size': appSettings.customStyle.Cards.Card3.fontSize + 'px'}">{{appSettings.customStyle.Cards.Card3.title}}</ion-card-subtitle>
               </ion-card>
             </ion-col>
             <ion-col size="6">
               <ion-card class="card1" style="color: #90CC64;" (click)="statesClicked('20')">
                 <ion-grid>
                   <ion-row>
-                    <ion-col size="1">
+                    <ion-col size="1" >
                     </ion-col>
-                    <ion-col size="3">
-                      <ion-icon name="trending-down-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="trending-down-outline" style="font-size: 45px;" [ngStyle]="{'color': appSettings.customStyle.Cards.Card4.fontColor}" class="cardtitle"></ion-icon>
                     </ion-col>
-                    <ion-col size="8">
-                      <div class="para cardtitle">{{statsCountData.TotalVisitorsOut? statsCountData.TotalVisitorsOut: '0'}}</div>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card4.countColor, 'font-size': appSettings.customStyle.Cards.Card4.countFontSize + 'px'}">{{statsCountData.TotalVisitorsOut? statsCountData.TotalVisitorsOut: '0'}}</div>
                     </ion-col>
                   </ion-row>
-                  <ion-card-subtitle class="ion-tittle">Today Check-Out</ion-card-subtitle>
+                  <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card4.fontColor, 'font-size': appSettings.customStyle.Cards.Card4.fontSize + 'px'}">{{appSettings.customStyle.Cards.Card4.title}}</ion-card-subtitle>
                 </ion-grid>
               </ion-card>
             </ion-col>
@@ -123,15 +127,15 @@
                     <ion-col size="1">
 
                     </ion-col>
-                    <ion-col size="3">
-                      <ion-icon name="alert-circle-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="alert-circle-outline" style="font-size: 45px;" [ngStyle]="{'color': appSettings.customStyle.Cards.Card5.fontColor}" class="cardtitle"></ion-icon>
                     </ion-col>
-                    <ion-col size="8">
-                      <div class="para cardtitle">{{statsCountData.OverstayVisitor? statsCountData.OverstayVisitor: '0'}}</div>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card5.countColor, 'font-size': appSettings.customStyle.Cards.Card5.countFontSize + 'px'}">{{statsCountData.OverstayVisitor? statsCountData.OverstayVisitor: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
-                <ion-card-subtitle class="ion-tittle">Overstay</ion-card-subtitle>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card5.fontColor, 'font-size': appSettings.customStyle.Cards.Card5.fontSize + 'px'}">{{appSettings.customStyle.Cards.Card5.title}}</ion-card-subtitle>
               </ion-card>
             </ion-col>
             <ion-col size="6">
@@ -141,15 +145,15 @@
                     <ion-col size="1">
 
                     </ion-col>
-                    <ion-col size="3">
-                      <ion-icon name="podium-outline" style="font-size: 45px;" class="cardtitle"></ion-icon>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="podium-outline" style="font-size: 45px;" [ngStyle]="{'color': appSettings.customStyle.Cards.Card6.fontColor}" class="cardtitle"></ion-icon>
                     </ion-col>
-                    <ion-col size="8">
-                      <div class="para cardtitle">{{statsCountData.VisitorsInside? statsCountData.VisitorsInside: '0'}}</div>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card6.countColor, 'font-size': appSettings.customStyle.Cards.Card6.countFontSize + 'px'}">{{statsCountData.VisitorsInside? statsCountData.VisitorsInside: '0'}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
-                <ion-card-subtitle class="ion-tittle">Currently Check-In</ion-card-subtitle>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card6.fontColor, 'font-size': appSettings.customStyle.Cards.Card6.fontSize + 'px'}">{{appSettings.customStyle.Cards.Card6.title}}</ion-card-subtitle>
               </ion-card>
             </ion-col>
           </ion-row>
@@ -232,30 +236,34 @@
 </ion-content>
 <ion-footer class="ion-no-border">
   <ion-toolbar class="ion-no-border" color="primary">
-    <ion-tabs>
+    <ion-tabs *ngIf="appSettings.FooterTab">
       <ion-tab-bar slot="bottom" color="primary">
         <ion-tab-button
-        (click)="proceedNext('QUICK_PASS')" mode="ios">
-        <ion-icon class="tabIcon" name="trending-up-outline"></ion-icon>
-          <ion-label style="font-size: 10px; text-transform: none;font-weight: bold;">Check-In</ion-label>
+        (click)="proceedNext('IN')" mode="ios">
+        <ion-icon class="tabIcon" name="trending-up-outline" style="margin: 0px;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
+          <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
+          'font-weight': appSettings.FooterTab.FooterFontWeight}">Check-In</ion-label>
           </ion-tab-button>
 
           <ion-tab-button
-          (click)="proceedNext('QUICK_PASS_OUT')" mode="ios">
-            <ion-icon class="tabIcon" name="trending-down-outline"></ion-icon>
-            <ion-label style="font-size: 10px; text-transform: none;font-weight: bold;">Check-Out</ion-label>
+          (click)="statesClicked('30')" mode="ios">
+            <ion-icon class="tabIcon" name="trending-down-outline" style="margin: 0px;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
+            <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
+            'font-weight': appSettings.FooterTab.FooterFontWeight}">Check-Out</ion-label>
           </ion-tab-button>
 
           <ion-tab-button
-          (click)="proceedNext('IN')" mode="ios">
-            <ion-icon class="tabIcon" name="qr-code-outline"></ion-icon>
-            <ion-label style="font-size: 10px; text-transform: none;font-weight: bold;">Appointment</ion-label>
+          (click)="proceedNext('APPOINTMENT')" mode="ios">
+            <ion-icon class="tabIcon" name="qr-code-outline"[ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
+            <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
+            'font-weight': appSettings.FooterTab.FooterFontWeight}">Appointment</ion-label>
           </ion-tab-button>
 
           <ion-tab-button
-          (click)="proceedNext('IN')" mode="ios">
-            <ion-icon class="tabIcon" name="barcode-outline"></ion-icon>
-            <ion-label style="font-size: 10px; text-transform: none;font-weight: bold;">Quick Pass</ion-label>
+          (click)="proceedNext('QUICK_PASS')" mode="ios">
+            <ion-icon class="tabIcon" name="barcode-outline"[ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
+            <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
+            'font-weight': appSettings.FooterTab.FooterFontWeight}">Quick Pass</ion-label>
           </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>

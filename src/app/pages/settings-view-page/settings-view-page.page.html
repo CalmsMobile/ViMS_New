@@ -74,6 +74,11 @@
           <ion-label>{{'SETTINGS.APP_VERSION' | translate}}</ion-label>
           <ion-note slot="end">{{'APP_VERSION' | translate}}</ion-note>
         </ion-item>
+        <ion-item style="padding: 10px;    --padding-start: 15px;" *ngIf="isSecurityApp">
+          <ion-icon class='siva-icon-info-circled-1' slot="start" color="primary"></ion-icon>
+          <ion-label>{{'ACC_MAPPING.DEVICE_NAME' | translate}}</ion-label>
+          <ion-note slot="end">{{'APP_VERSION' | translate}}</ion-note>
+        </ion-item>
         <ion-item (click)="goToUserProfile()" style="padding: 10px;    --padding-start: 15px;" *ngIf="!isSecurityApp">
           <ion-icon class='siva-icon-user-circle-o' slot="start" color="primary"></ion-icon>
           <ion-label>{{'SETTINGS.PROFILE' | translate}}</ion-label>

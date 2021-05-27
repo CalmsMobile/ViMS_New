@@ -8,8 +8,7 @@
   <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"
       style="font-size: x-large;color: #FFF;"></ion-icon>
-    <ion-label class="ion-padding" style="font-weight: 500;">Visitor Name<br></ion-label>
-    <ion-icon slot="end" class="headerIcon" name="settings-sharp"></ion-icon>
+    <ion-title>{{'ALERT_TEXT.APPOINTMENT_DETAILS' | translate }}<br></ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -18,32 +17,32 @@
     <ion-grid>
       <ion-card style="margin: 0px;padding: 0px;">
         <ion-row>
-          <ion-col size="3" style="display: flex;justify-content: center;align-items: center;">
-            <img src="../../../assets/images/user.png" style="width: 50px;height: 50px; display: flex;justify-content: center">
-          </ion-col>
           <ion-col size="9">
               <ion-grid>
                 <ion-row>
                   <ion-col size="12" class="bDets">
-                    <ion-icon name="person-sharp" class="bDets"></ion-icon>Nandha Kumar
+                    <ion-icon name="person-outline" class="bDets"></ion-icon>{{appointmentInfo.VISITOR_NAME}}
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
-                    <ion-icon name="id-card-sharp" class="bDets"></ion-icon>A827395284
+                    <ion-icon name="id-card-outline" class="bDets"></ion-icon>A827395284
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
-                    <ion-icon name="mail-sharp" class="bDets"></ion-icon>nandha@calms.com.my
+                    <ion-icon name="mail-outline" class="bDets"></ion-icon>nandha@calms.com.my
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
-                    <ion-icon name="phone-portrait-sharp" class="bDets"></ion-icon>+6017-2346657
+                    <ion-icon name="call-outline" class="bDets"></ion-icon>+6017-2346657
                   </ion-col>
                 </ion-row>
               </ion-grid>
+          </ion-col>
+          <ion-col size="3" style="display: flex;justify-content: center;align-items: center;">
+            <img src="../../../assets/images/user.png" style="width: 50px;height: 50px; display: flex;justify-content: center">
           </ion-col>
         </ion-row>
       </ion-card>
@@ -59,7 +58,7 @@
               <ion-text>Address</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: Universiti Putra Malaysia (UPM), Block DC3, Server Farm, UPM-MTDC Technology Centre, 43400 Seri , Selangor</ion-text>
+              <ion-text class="ansColor">: Universiti Putra Malaysia (UPM), Block DC3, Server Farm, UPM-MTDC Technology Centre, 43400 Seri , Selangor</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -67,13 +66,13 @@
               <ion-text>Category</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text>: Catagory</ion-text>
+              <ion-text  class="ansColor">: Catagory</ion-text>
             </ion-col>
             <ion-col size="3" class="ion-text-right">
               <ion-text >Gender</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text>: Male</ion-text>
+              <ion-text class="ansColor">: Male</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -81,7 +80,7 @@
               <ion-text>Country</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: Malaysia</ion-text>
+              <ion-text class="ansColor">: Malaysia</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -89,7 +88,7 @@
               <ion-text>Vehicle No</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: WXF 4382</ion-text>
+              <ion-text class="ansColor">: WXF 4382</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -97,7 +96,7 @@
               <ion-text>Company</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: Calms Technology Sdn Bhd</ion-text>
+              <ion-text class="ansColor">: Calms Technology Sdn Bhd</ion-text>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -114,13 +113,13 @@
               <ion-text>Start Date</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text>: 18/5/2021</ion-text>
+              <ion-text class="ansColor">: 18/5/2021</ion-text>
             </ion-col>
             <ion-col size="3" class="ion-text-right">
               <ion-text>End Date</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text>: 18/5/2021</ion-text>
+              <ion-text class="ansColor">: 18/5/2021</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -128,7 +127,7 @@
               <ion-text>Purpose</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: Document Collection</ion-text>
+              <ion-text class="ansColor">: Document Collection</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -136,7 +135,7 @@
               <ion-text>Host Name</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: Karthi</ion-text>
+              <ion-text class="ansColor">: Karthi</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -144,7 +143,7 @@
               <ion-text>Check-In Status</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: Checked-In</ion-text>
+              <ion-text class="ansColor">: Checked-In</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -152,7 +151,7 @@
               <ion-text>Check-Out Status</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: Checked-Out</ion-text>
+              <ion-text class="ansColor">: Checked-Out</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -160,7 +159,7 @@
               <ion-text>Expiry Time</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: Expired</ion-text>
+              <ion-text class="ansColor">: Expired</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -168,7 +167,7 @@
               <ion-text>Floor</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: 3</ion-text>
+              <ion-text class="ansColor">: 3</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -176,7 +175,7 @@
               <ion-text>Meeting Location</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: Bilik Meeting</ion-text>
+              <ion-text class="ansColor">: Bilik Meeting</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -184,7 +183,7 @@
               <ion-text>Remarks</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text>: test123</ion-text>
+              <ion-text class="ansColor">: test123</ion-text>
             </ion-col>
           </ion-row>
         </ion-grid>

@@ -70,7 +70,7 @@ export class QuickPassVisitorPopupComponent {
         this.fromCreate = navParams.data.data.fromCreate;
       }
       this.CheckIn = navParams.data.data.CheckIn;
-
+      console.log("Visitor Popup :" + JSON.stringify(QPAppointment))
       this.qrCodeString = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/ImageHandler.ashx?RefSlno=' + this.QPAppointment["HexCode"] + '&RefType=QR&Refresh=' + new Date().getTime();
 
 
@@ -80,7 +80,7 @@ export class QuickPassVisitorPopupComponent {
       if (QRObj.MAppId == AppSettings.LOGINTYPES.SECURITYAPP) {
         var ackSeettings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
         if (ackSeettings) {
-          this.securitySettings = JSON.parse(JSON.parse(ackSeettings).SettingDetail);
+          this.securitySettings = JSON.parse(ackSeettings);
         }
       } else {
         var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
@@ -248,13 +248,7 @@ export class QuickPassVisitorPopupComponent {
 
       if (this.CheckIn) {
         if (this.securitySettings && this.securitySettings.QuickPass && this.securitySettings.QuickPass.ImageCaptureEnabled && this.securitySettings.QuickPass.ImageCaptureRequired && !this.data.profile) {
-          let alert = await this.alertCtrl.create({
-            header: 'Error !',
-            message: this.T_SVC['ALERT_TEXT.QUICKPASS_USER_PROFILE_REQUIRED'],
-            cssClass: 'alert-danger',
-            buttons: ['Okay']
-          });
-          alert.present();
+          this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.QUICKPASS_USER_PROFILE_REQUIRED']);
           return
         }
         var params = {
@@ -269,18 +263,8 @@ export class QuickPassVisitorPopupComponent {
               this.presentToast(this.T_SVC['ALERT_TEXT.VISITOR_CHECKED_IN']);
 
             } else {
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_FAIL'],
-                cssClass: 'alert-danger',
-                buttons: ['Okay']
-              });
-              alert.present();
+              this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_FAIL']);
             }
-
-
-
-
           },
           async (err) => {
             console.log("error : " + JSON.stringify(err));
@@ -290,52 +274,21 @@ export class QuickPassVisitorPopupComponent {
 
             if (err.Table1 && err.Table1.length == 0) {
               var message = this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_FAIL'];
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: message,
-                cssClass: 'alert-danger',
-                buttons: ['Okay']
-              });
-              alert.present();
+              this.apiProvider.showAlert(message);
               return;
             }
 
             if (err && err.message == "Http failure response for (unknown url): 0 Unknown Error") {
               message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: message,
-                cssClass: 'alert-danger',
-                buttons: ['Okay']
-              });
-              alert.present();
+              this.apiProvider.showAlert(message);
               return;
             }
 
             if (err && JSON.parse(err) && JSON.parse(err).message) {
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: JSON.parse(err).message,
-                cssClass: 'alert-danger',
-                buttons: ['Okay']
-              });
-              alert.present();
+              this.apiProvider.showAlert(JSON.parse(err).message);
               return;
             }
-            let invalidORGConfirm = await this.alertCtrl.create({
-              header: 'Error !',
-              message: "<span class='failed'>" + this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_FAIL'] + '</span>',
-              cssClass: 'alert-danger',
-              buttons: [
-                {
-                  text: this.T_SVC['COMMON.OK'],
-                  role: 'cancel',
-                  handler: () => {
-                  }
-                }
-              ]
-            });
-            invalidORGConfirm.present();
+            this.apiProvider.showAlert("<span class='failed'>" + this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_FAIL'] + '</span>');
           }
         );
       } else {

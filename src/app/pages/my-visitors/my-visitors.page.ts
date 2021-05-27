@@ -169,7 +169,7 @@ export class MyVisitorsPage implements OnInit {
   }
 
   getVisitorsBySearch(event){
-    const queryText = event.target.value;
+    const queryText = event? event.target.value: '';
     this.VM.queryText = queryText;
     if(this.VM.queryText){
       var fList = [];

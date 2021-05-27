@@ -110,9 +110,8 @@ export class SecurityVisitorListPagePage implements OnInit {
 
     var ackSeettings =  window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
     if(ackSeettings && JSON.parse(ackSeettings)){
-      var result1 = JSON.parse(ackSeettings);
-      if(result1){
-        var result = JSON.parse(result1.SettingDetail);
+      var result = JSON.parse(ackSeettings);
+      if(result){
         this.hostSettings = result;
         if(this.hostSettings.PurposeEnabled == undefined){
           this.hostSettings.PurposeEnabled = true;

@@ -8,7 +8,7 @@
 <ion-header>
 <ion-toolbar color="danger">
   <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
-  <ion-title>&nbsp;&nbsp;&nbsp;Appointment Approval</ion-title>
+  <ion-title>Appointment Approval</ion-title>
 
     <ion-buttons slot="end">
         <ion-button color="light" shape="round" *ngIf="selectedTap == 'pending' && checkAll && pendingList && pendingList.length > 0" slot="icon-only" style="margin: 0px;font-size: 12px;margin-right: 7px;max-width: 80px;text-transform: capitalize;" (click)= "showChangeAppointmentStatusAlert('All', '')">
@@ -74,17 +74,17 @@
 
                     <div class="div-apt-center">
                       <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
-                      <ion-label class="apt-center-subtitle">{{list.value[0].REASON ? list.value[0].REASON:'--'}}</ion-label>
+                      <ion-label class="apt-center-subtitle">{{list.value[0].REASON ? list.value[0].REASON:'&nbsp;&nbsp;--'}}</ion-label>
                     </div>
 
                     <div class="div-apt-center">
                       <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
-                      <ion-label class="apt-center-subtitle">{{list.value[0].TELEPHONE_NO ? list.value[0].TELEPHONE_NO:'--'}}</ion-label>
+                      <ion-label class="apt-center-subtitle">{{list.value[0].TELEPHONE_NO ? list.value[0].TELEPHONE_NO:'&nbsp;&nbsp;--'}}</ion-label>
                     </div>
 
                     <div class="div-apt-center">
                       <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
-                      <ion-label class="apt-center-subtitle">{{list.value[0].EMAIL ? list.value[0].EMAIL:'--'}}</ion-label>
+                      <ion-label class="apt-center-subtitle">{{list.value[0].EMAIL ? list.value[0].EMAIL:'&nbsp;&nbsp;--'}}</ion-label>
                     </div>
                   </ion-col>
 

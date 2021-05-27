@@ -96,6 +96,7 @@
 		"YES_THIS_IS_MY": "Yes, my details are correct",
 		"ACC_ALREADY_MAPPED": "Oops.. Your account already registered on below device. If you proceed now, previous device will be disconnected",
 		"DEVICE_DETAILS": "Registered Device Details",
+    "DEVICE_NAME": "Device Name",
 		"I_AGREE_DISCONCT_OLD_DEVICE": "Yes, this is my details and I agree to disconnect my account in previous device",
 		"I_AGREE_DISCONCT_OLD_ACCOUNT": "Yes, this is my details and I agree to proceed with this account",
 		"ACC_CONCT_CONFIRM": "Are you sure want to connect your account with this device?",
@@ -436,6 +437,7 @@
 		}
 	},
 	"ALERT_TEXT": {
+    "APPOINTMENT_DETAILS": "Appointment Details",
 		"ON_BACK": "Do you want to exit now?",
 		"QRSHARE_SUCCESS": "QR code has been shared successfully",
 		"IMAGE_SELECT_ERROR": "Oops.. something went wrong on gallery selection",

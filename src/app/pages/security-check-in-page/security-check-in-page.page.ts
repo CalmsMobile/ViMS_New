@@ -101,7 +101,7 @@ export class SecurityCheckInPagePage implements OnInit {
       if(ackSeettings && JSON.parse(ackSeettings)){
         var result1 = JSON.parse(ackSeettings);
         if(result1){
-          var result = JSON.parse(result1.SettingDetail);
+          var result = JSON.parse(ackSeettings);
           this.OCR_Enabled = result.OCR_Enabled;
           this.MyKad_Enabled = result.MyKad_Enabled;
           this.hostSettings = result.addVisitor;

@@ -82,7 +82,7 @@ export class QuickPassDetailsPagePage implements OnInit {
       if (QRObj.MAppId == AppSettings.LOGINTYPES.SECURITYAPP) {
         var ackSeettings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
         if (ackSeettings) {
-          this.securitySettings = JSON.parse(JSON.parse(ackSeettings).SettingDetail);
+          this.securitySettings = JSON.parse(ackSeettings);
         }
       } else {
         var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);

@@ -2,7 +2,7 @@
 
     <ion-toolbar color="danger">
         <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
-        <ion-title>&nbsp;&nbsp;&nbsp;Appointment Details</ion-title>
+        <ion-title>{{'ALERT_TEXT.APPOINTMENT_DETAILS' | translate }}</ion-title>
     </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
@@ -138,7 +138,7 @@
                         </span>
                     </ion-col>
                     <ion-col>
-                      <p no-margin>{{appointment[0].REASON_DESC ? appointment[0].REASON_DESC : (appointment[0].REASON? appointment[0].REASON: '--')}}</p>
+                      <p no-margin>{{appointment[0].REASON_DESC ? appointment[0].REASON_DESC : (appointment[0].REASON? appointment[0].REASON: '&nbsp;&nbsp;--')}}</p>
                         <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                     </ion-col>
                 </ion-row>
