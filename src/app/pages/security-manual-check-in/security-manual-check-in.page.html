@@ -138,13 +138,13 @@
               <ion-text>Start Date</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="DD MMMM YYYY" #startDate (ionChange)="startTime.open()" placeholder="Start Date" title="heh"></ion-datetime>
+              <ion-datetime displayFormat="YYYY-MM-DDTHH:mm" #startDate (ionChange)="endDate.open()" placeholder="Start Date" title="heh"></ion-datetime>
             </ion-col>
             <ion-col size="2">
               <ion-icon name="calendar-number-outline" class="calanderinput" (click)="startDate.open()"></ion-icon>
             </ion-col>
           </ion-row>
-          <ion-row>
+          <!-- <ion-row>
             <ion-col size="3">
               <ion-text>Start Time</ion-text>
             </ion-col>
@@ -154,19 +154,19 @@
             <ion-col size="2">
               <ion-icon name="time-outline" class="calanderinput" (click)="startTime.open()"></ion-icon>
             </ion-col>
-          </ion-row>
+          </ion-row> -->
           <ion-row>
             <ion-col size="3">
               <ion-text>End Date</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="DD MMMM YYYY" #endDate (ionChange)="endTime.open()" placeholder="End Date"></ion-datetime>
+              <ion-datetime displayFormat="YYYY-MM-DDTHH:mm" #endDate placeholder="End Date"></ion-datetime>
             </ion-col>
             <ion-col size="2">
-              <ion-icon name="calendar-number-outline" class="calanderinput" (click)="endDate.open()"></ion-icon>
+              <ion-icon name="calendar-number-outline" class="calanderinput"></ion-icon>
             </ion-col>
           </ion-row>
-          <ion-row>
+          <!-- <ion-row>
             <ion-col size="3">
               <ion-text>End Time</ion-text>
             </ion-col>
@@ -176,7 +176,7 @@
             <ion-col size="2">
               <ion-icon name="time-outline" class="calanderinput" (click)="endTime.open()"></ion-icon>
             </ion-col>
-          </ion-row>
+          </ion-row> -->
           <ion-row>
             <ion-col size="3">
               <ion-text>Purpose</ion-text>
