@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Additional Document</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+  <div class="main">
+    <ion-card no-margin style="padding: 10px;margin-top: 15px !important;
+    padding-left: 0px;" (click)= "capture()">
+      <ion-thumbnail>
+        <img src="../../../assets/images/user.png">
+      </ion-thumbnail>
+      <ion-item>
+        <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+        <ion-label>Document 1</ion-label>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-button color="primary" size="large" class="Remove">Remove</ion-button>
+      </ion-item>
+    </ion-card>
+    <ion-card no-margin style="padding: 10px;margin-top: 15px !important;
+    padding-left: 0px;" (click)= "capture()">
+      <ion-thumbnail>
+        <img src="../../../assets/images/user.png">
+      </ion-thumbnail>
+      <ion-item>
+        <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+        <ion-label>Document 2</ion-label>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-button color="primary" size="large" class="Remove">Remove</ion-button>
+      </ion-item>
+    </ion-card>
+    <ion-card no-margin style="padding: 10px;margin-top: 15px !important;
+    padding-left: 0px;" (click)= "capture()">
+      <ion-thumbnail>
+        <img src="../../../assets/images/user.png">
+      </ion-thumbnail>
+      <ion-item>
+        <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+        <ion-label>Document 3</ion-label>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-button color="primary" size="large" class="Remove">Remove</ion-button>
+      </ion-item>
+    </ion-card>
+    <ion-button expand="block" color="success" class="save">Save</ion-button>
+    
+  </div>
+</ion-content>

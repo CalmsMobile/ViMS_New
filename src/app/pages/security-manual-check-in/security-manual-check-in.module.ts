@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { SecurityManualCheckInPageRoutingModule } from './security-manual-check-in-routing.module';
 
 import { SecurityManualCheckInPage } from './security-manual-check-in.page';
+import { DocumentModalComponent } from 'src/app/components/document-modal/document-modal.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { SecurityManualCheckInPage } from './security-manual-check-in.page';
     IonicModule,
     SecurityManualCheckInPageRoutingModule
   ],
-  declarations: [SecurityManualCheckInPage]
+  declarations: [SecurityManualCheckInPage, DocumentModalComponent],
+  entryComponents:[DocumentModalComponent] 
 })
 export class SecurityManualCheckInPageModule {}
