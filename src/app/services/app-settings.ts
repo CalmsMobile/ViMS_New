@@ -199,7 +199,7 @@ export const AppSettings = Object.freeze({
         //Samsung
         // SAMPLE_DEVICE_ID : "9f2b72d35e1b64a6",
         // Redmi
-        SAMPLE_DEVICE_ID : "b3e4f63b8f6b7043"
+        SAMPLE_DEVICE_ID : "c3e4f63b8f6b7043"
 
     },
     APPOINTMENT_BufferTime : 120,

@@ -142,7 +142,16 @@
               <ion-text>Company</ion-text>
             </ion-col>
             <ion-col size="9">
-              <input type="text" mode="ios" class="inputCountry" placeholder="Company" [(ngModel)]="appointmentInfo.visitor_comp_name"/>
+              <ion-select mode="ios"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="appointmentInfo.visitor_comp_code"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_VISITORS.LAB_USER_COMPANY' | translate}}">
+              <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_COMPANY' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let company of COMPANYLIST"
+                [value]="company.visitor_comp_code">
+                {{company.visitor_comp_name}}
+              </ion-select-option>
+            </ion-select>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -167,7 +176,7 @@
               <ion-text>Start Date</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="YYYY-MM-DDTHH:mm" #startDate [(ngModel)]="appointmentInfo.START_DATE" (ionChange)="startDate.open()" placeholder="Start Date" title="heh"></ion-datetime>
+              <ion-datetime displayFormat="YYYY-MM-DDTHH:mm" #startDate [(ngModel)]="appointmentInfo.START_TIME" (ionChange)="startDate.open()" placeholder="Start Date" title="heh"></ion-datetime>
             </ion-col>
             <ion-col size="2">
               <ion-icon name="calendar-number-outline" class="calanderinput" (click)="startDate.open()"></ion-icon>
@@ -178,7 +187,7 @@
               <ion-text>Start Time</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="hh:mm A" #startTime minuteValues="0,15,30,45" [(ngModel)]="appointmentInfo.START_DATE" (ionChange)="endDate.open()" placeholder="Start Time"></ion-datetime>
+              <ion-datetime displayFormat="hh:mm A" #startTime minuteValues="0,15,30,45" [(ngModel)]="appointmentInfo.START_TIME" (ionChange)="endDate.open()" placeholder="Start Time"></ion-datetime>
             </ion-col>
             <ion-col size="2">
               <ion-icon name="time-outline" class="calanderinput" (click)="startTime.open()"></ion-icon>
@@ -189,7 +198,7 @@
               <ion-text>End Date</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="YYYY-MM-DDTHH:mm" #endDate [(ngModel)]="appointmentInfo.END_DATE" (ionChange)="endDate.open()" placeholder="End Date"></ion-datetime>
+              <ion-datetime displayFormat="YYYY-MM-DDTHH:mm" #endDate [(ngModel)]="appointmentInfo.END_TIME" (ionChange)="endDate.open()" placeholder="End Date"></ion-datetime>
             </ion-col>
             <ion-col size="2">
               <ion-icon name="calendar-number-outline" class="calanderinput"></ion-icon>
@@ -200,7 +209,7 @@
               <ion-text>End Time</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="hh:mm A" #endTime [(ngModel)]="appointmentInfo.END_DATE" minuteValues="0,15,30,45" placeholder="End Time"></ion-datetime>
+              <ion-datetime displayFormat="hh:mm A" #endTime [(ngModel)]="appointmentInfo.END_TIME" minuteValues="0,15,30,45" placeholder="End Time"></ion-datetime>
             </ion-col>
             <ion-col size="2">
               <ion-icon name="time-outline" class="calanderinput" (click)="endTime.open()"></ion-icon>

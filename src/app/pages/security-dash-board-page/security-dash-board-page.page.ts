@@ -464,16 +464,15 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   getAppointmentByQR(params) {
     this.apiProvider.VimsAppGetAppointmentByHexCode(params).then(
       async (val) => {
-        console.log("val : "+JSON.stringify(val));
         var visitorDetail = val+"";
         var vOb1 = JSON.parse(visitorDetail);
         var message = this.T_SVC['ALERT_TEXT.APPOINTMENT_NOT_FOUND'];
         if(vOb1 && vOb1.Table1 && vOb1.Table1.length > 0) {
           var vOb = vOb1.Table1[0];
-          var startDate = vOb.START_DATE.split("T")[0];
+          var startDate = vOb.START_TIME.split("T")[0];
           var fDate = this.dateformat.transform(startDate+"", "yyyy-MM-dd");
           var fTime = new Date(fDate).getTime();
-          var endDate = vOb.END_DATE.split("T")[0];
+          var endDate = vOb.END_TIME.split("T")[0];
           var eDate = this.dateformat.transform(endDate+"", "yyyy-MM-dd");
           var eTime = new Date(eDate).getTime();
           var cDate = this.dateformat.transform(new Date()+"", "yyyy-MM-dd");

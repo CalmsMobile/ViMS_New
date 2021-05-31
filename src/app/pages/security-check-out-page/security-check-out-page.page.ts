@@ -86,7 +86,8 @@ export class SecurityCheckOutPagePage implements OnInit {
    moveToDetailsPage(item) {
     const navigationExtras: NavigationExtras = {
       state: {
-        passData: item
+        passData: item,
+        fromAppointment: false
       }
     };
     this.router.navigate(['visitor-information'], navigationExtras);

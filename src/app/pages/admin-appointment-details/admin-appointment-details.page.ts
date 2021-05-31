@@ -199,10 +199,10 @@ export class AdminAppointmentDetailsPage implements OnInit {
         this.autoApproval = passData.autoApproval;
         this.showOption = passData.showOption;
         if (this.appointment && this.appointment[0] && this.appointment[0].REASON) {
-          this.appointment[0].REASON_DESC = commonUtil.getPurposeName(this.appointment[0].REASON);
+          this.appointment[0].REASON_DESC = commonUtil.getPurposeName(this.appointment[0].REASON, false);
         }
         if (this.appointment && this.appointment[0] && this.appointment[0].Room) {
-          this.appointment[0].Room_Name = commonUtil.getRoomName(this.appointment[0].Room);
+          this.appointment[0].Room_Name = commonUtil.getRoomName(this.appointment[0].Room, false);
         }
 
         if(this.appointment && this.appointment[0] && !this.appointment[0].isFacilityAlone){

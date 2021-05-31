@@ -102,9 +102,9 @@
                     <div class="statuswithBadge">
                       <div class="outer circle shapeborder">
                         <div class="inner circle shapeborder">
-                          <ion-icon *ngIf="!item.att_check_in && !item.att_check_out" color="light" name="timer-outline"></ion-icon>
-                          <ion-icon *ngIf="item.att_check_in && !item.att_check_out" color="light" name="trending-up-outline"></ion-icon>
-                          <ion-icon *ngIf="item.att_check_in && item.att_check_out" color="light" name="trending-down-outline"></ion-icon>
+                          <ion-icon *ngIf="item.att_check_in === 0 && item.att_check_in === 0" color="light" name="timer-outline"></ion-icon>
+                          <ion-icon *ngIf="item.att_check_in === 1 && item.att_check_out === 1" color="light" name="trending-up-outline"></ion-icon>
+                          <ion-icon *ngIf="item.att_check_in === 1 && item.att_check_out === 0" color="light" name="trending-down-outline"></ion-icon>
                         </div>
                       </div>
 

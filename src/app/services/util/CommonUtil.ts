@@ -24,14 +24,21 @@ export class CommonUtil{
       return decryptedValue;
   }
 
-  getRoomName(code) {
+  getRoomName(code, isReturnID) {
     let result = code;
+    if (!code) {
+      return '';
+    }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
     if(masterDetails){
       const ROOMS = JSON.parse(masterDetails).Table8;
       for (var i = 0; i <= ROOMS.length - 1; i++) {
-        if(ROOMS[i].MeetingRoomSeqId == code){
-          result = ROOMS[i].MeetingRoomDesc;
+        if(ROOMS[i].MeetingRoomSeqId === code || ROOMS[i].MeetingRoomDesc === code){
+          if (isReturnID) {
+            result = ROOMS[i].MeetingRoomSeqId;
+          } else {
+            result = ROOMS[i].MeetingRoomDesc;
+          }
           break;
         }
       }
@@ -39,14 +46,22 @@ export class CommonUtil{
     return result;
   }
 
-  getPurposeName(code) {
+  getPurposeName(code, isReturnID) {
     let result = code;
+    if (!code) {
+      return '';
+    }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
     if(masterDetails){
       const REASONS = JSON.parse(masterDetails).Table3;
       for (var i = 0; i <= REASONS.length - 1; i++) {
-        if(REASONS[i].visitpurpose_id == code){
-          result = REASONS[i].visitpurpose_desc;
+        if(REASONS[i].visitpurpose_id === code || REASONS[i].visitpurpose_desc === code){
+          if (isReturnID) {
+            result = REASONS[i].visitpurpose_id;
+          } else {
+            result = REASONS[i].visitpurpose_desc;
+          }
+
           break;
         }
       }
@@ -54,31 +69,83 @@ export class CommonUtil{
     return result;
   }
 
-  getGender(code) {
+  getCategory(code, isReturnID) {
     let result = code;
-    switch (code) {
-      case 0:
-        result = "Male";
-        break;
-      case 1:
-        result = "FeMale";
-        break;
-      case 2:
-        result = "Other";
-        break;
-      default:
-        break;
+    if (!code) {
+      return '';
     }
+    var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+    if(masterDetails){
+      const CATEGORY = JSON.parse(masterDetails).Table4;
+      for (var i = 0; i <= CATEGORY.length - 1; i++) {
+        if(CATEGORY[i].visitor_ctg_id === code || CATEGORY[i].visitor_ctg_desc === code){
+          if (isReturnID) {
+            result = CATEGORY[i].visitor_ctg_id;
+          } else {
+            result = CATEGORY[i].visitor_ctg_desc;
+          }
+
+          break;
+        }
+      }
+    }
+    return result;
   }
 
-  getPurposeCode(code) {
+  getFloor(code, isReturnID) {
     let result = code;
+    if (!code) {
+      return '';
+    }
+    var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+    if(masterDetails){
+      const FLOOR = JSON.parse(masterDetails).Table2;
+      for (var i = 0; i <= FLOOR.length - 1; i++) {
+        if(FLOOR[i].floor_id === code || FLOOR[i].floor_desc === code){
+          if (isReturnID) {
+            result = FLOOR[i].floor_id;
+          } else {
+            result = FLOOR[i].floor_desc;
+          }
+
+          break;
+        }
+      }
+    }
+    return result;
+  }
+
+  getGender(code, isReturnID) {
+    let result = code;
+    if (!code) {
+      return '';
+    }
+    if (code === "Male" || code === "MALE" || code === "0" || code === 0) {
+      result = isReturnID ? 0: 'Male';
+    } else if (code === "FeMale" || code === "Female" || code === "FEMALE" || code === 1 || code === "1") {
+      result = isReturnID ? 1: 'Female';
+    } else if (code === "Other" || code === 2 || code === "2") {
+      result = isReturnID ? 2: 'Other';
+    }
+    return result;
+  }
+
+  getPurposeCode(code, isReturnID) {
+    let result = code;
+    if (!code) {
+      return '';
+    }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
     if(masterDetails){
       const REASONS = JSON.parse(masterDetails).Table3;
       for (var i = 0; i <= REASONS.length - 1; i++) {
-        if(REASONS[i].visitpurpose_id == code || REASONS[i].visitpurpose_desc == code){
-          result = REASONS[i].visitpurpose_id;
+        if(REASONS[i].visitpurpose_id === code || REASONS[i].visitpurpose_desc === code){
+          if (isReturnID) {
+            result = REASONS[i].visitpurpose_id;
+          } else {
+            result = REASONS[i].visitpurpose_desc;
+          }
+
           break;
         }
       }
@@ -86,27 +153,31 @@ export class CommonUtil{
     return result;
   }
 
-  getCountry(name, code) {
+  getCountry(name, isReturnID) {
     let result;
+    if (!name) {
+      return '';
+    }
     CommonUtil.countryList.forEach(element => {
-      if (element.name.toLowerCase() === name.toLowerCase() || element.code.toLowerCase() === code.toLowerCase()) {
-        result = element;
+      if (element.name.toLowerCase() === name.toLowerCase() || element.code.toLowerCase() === name.toLowerCase()) {
+        result = isReturnID? element.code: element.name;
         return;
       }
     });
     return result;
   }
 
-  getCompany(code) {
+  getCompany(code, isReturnID) {
     let result = code;
+    if (!code) {
+      return '';
+    }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
     if(masterDetails){
       const COMPANY_LIST = JSON.parse(masterDetails).Table7;
       for (var i = 0; i < COMPANY_LIST.length; i++) {
-        if(COMPANY_LIST[i].visitor_comp_code == code){
-          if (COMPANY_LIST[i].visitor_comp_name) {
-            result = COMPANY_LIST[i].visitor_comp_name;
-          }
+        if(COMPANY_LIST[i].visitor_comp_code === code || COMPANY_LIST[i].visitor_comp_name === code){
+          result = isReturnID ? COMPANY_LIST[i].visitor_comp_code : COMPANY_LIST[i].visitor_comp_name;
           break;
         }
       }

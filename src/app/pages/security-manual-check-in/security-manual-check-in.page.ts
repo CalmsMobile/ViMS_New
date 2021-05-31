@@ -33,6 +33,7 @@ export class SecurityManualCheckInPage implements OnInit {
   MEETINGLIST = [];
   HOSTLIST = [];
   FLOORLIST = [];
+  COMPANYLIST = [];
   CATEGORYLIST = [];
   GENDERLIST = [{
     code: 0,
@@ -45,7 +46,6 @@ export class SecurityManualCheckInPage implements OnInit {
     name: 'Other'
   }];
   COUNTRYLIST = CommonUtil.countryList;
-  btnBackground = '';
   QuestionnaireEnabled = false;
   MaterialDeclareEnabled = false;
   AttachmentUploadEnabled = false;
@@ -64,14 +64,13 @@ export class SecurityManualCheckInPage implements OnInit {
         this.PURPOSELIST = JSON.parse(masterDetails).Table3;
         this.CATEGORYLIST = JSON.parse(masterDetails).Table4;
         this.HOSTLIST = JSON.parse(masterDetails).Table6;
+        this.COMPANYLIST = JSON.parse(masterDetails).Table7;
         this.MEETINGLIST = JSON.parse(masterDetails).Table8;
       }
 
       const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
       if (ackSeettings) {
         this.appSettings = JSON.parse(ackSeettings);
-        this.btnBackground = 'linear-gradient(to right, ' + this.appSettings.customStyle.buttonStyle.btnColor1
-        +' 0%, '+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%);';
       }
   }
 
@@ -90,13 +89,12 @@ export class SecurityManualCheckInPage implements OnInit {
 
           console.log('passData : ' + JSON.stringify(this.appointmentInfo));
           if (this.appointmentInfo.VISITOR_COMPANY) {
-            this.appointmentInfo.visitor_comp_name = this.appointmentInfo.VISITOR_COMPANY;
+            this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(this.appointmentInfo.VISITOR_COMPANY, true);
           } else if (this.appointmentInfo.visitor_comp_code) {
-            this.appointmentInfo.visitor_comp_name = this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code);
+            this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, true);
           }
-          this.appointmentInfo.REASON = this.commonUtil.getPurposeCode(this.appointmentInfo.REASON);
-          this.appointmentInfo.VISITOR_GENDER = +this.appointmentInfo.VISITOR_GENDER;
-          console.log("this.appointmentInfo.REASON : " + this.appointmentInfo.REASON);
+          this.appointmentInfo.REASON = this.commonUtil.getPurposeCode(this.appointmentInfo.REASON, true);
+          this.appointmentInfo.VISITOR_GENDER = this.commonUtil.getGender(this.appointmentInfo.VISITOR_GENDER, true);
         }
 
       }

@@ -58,7 +58,7 @@
               <ion-text>Address</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: {{appointmentInfo.visitor_address?appointmentInfo.visitor_address: (appointmentInfo.Address? appointmentInfo.Address: "&nbsp;&nbsp;--")}}</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.visitor_address_1?appointmentInfo.visitor_address_1: (appointmentInfo.Address? appointmentInfo.Address: "&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -72,7 +72,7 @@
               <ion-text >Gender</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text class="ansColor">: {{appointmentInfo.visitor_gender?appointmentInfo.visitor_gender: (appointmentInfo.VISITOR_GENDER? appointmentInfo.VISITOR_GENDER : "&nbsp;&nbsp;--")}}</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.visitor_gender?appointmentInfo.visitor_gender: (appointmentInfo.VISITOR_GENDER_NAME? appointmentInfo.VISITOR_GENDER_NAME : "&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -80,7 +80,7 @@
               <ion-text>Country</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: {{appointmentInfo.visitor_country?appointmentInfo.visitor_country: (appointmentInfo.Country? appointmentInfo.Country: "&nbsp;&nbsp;--")}}</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.VISITOR_COUNTRY_NAME? appointmentInfo.VISITOR_COUNTRY_NAME: "&nbsp;&nbsp;--"}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -113,13 +113,13 @@
               <ion-text>Start Date</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text class="ansColor">: {{(appointmentInfo.att_check_in_date ?appointmentInfo.att_check_in_date: appointmentInfo.START_DATE) | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
+              <ion-text class="ansColor">: {{(appointmentInfo.att_check_in_time ?appointmentInfo.att_check_in_time: appointmentInfo.START_TIME) | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
             </ion-col>
             <ion-col size="3" class="ion-text-right">
               <ion-text>End Date</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text class="ansColor">: {{(appointmentInfo.att_check_out_date ?appointmentInfo.att_check_out_date: appointmentInfo.END_DATE)  | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
+              <ion-text class="ansColor">: {{(appointmentInfo.att_check_out_time ?appointmentInfo.att_check_out_time: appointmentInfo.END_TIME)  | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -127,7 +127,7 @@
               <ion-text>Purpose</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: {{appointmentInfo.att_reason?appointmentInfo.att_reason: (appointmentInfo.REASON? appointmentInfo.REASON:"&nbsp;&nbsp;--")}}</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.att_reason?appointmentInfo.att_reason: (appointmentInfo.REASON_NAME? appointmentInfo.REASON_NAME:"&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -167,7 +167,7 @@
               <ion-text>Floor</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: {{appointmentInfo.att_floor_no?appointmentInfo.att_floor_no: (appointmentInfo.Floor?appointmentInfo.Floor:"&nbsp;&nbsp;--")}}</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.att_floor_no?appointmentInfo.att_floor_no: (appointmentInfo.Floor?appointmentInfo.FloorName:"&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -175,7 +175,7 @@
               <ion-text>Meeting Location</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: {{appointmentInfo.Room?appointmentInfo.Room: "&nbsp;&nbsp;--"}}</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.RoomName?appointmentInfo.RoomName: "&nbsp;&nbsp;--"}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -183,19 +183,22 @@
               <ion-text>Remarks</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: {{appointmentInfo.Remarks?appointmentInfo.Remarks: "&nbsp;&nbsp;--"}}</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.Remarks?appointmentInfo.Remarks: (appointmentInfo.att_remark? appointmentInfo.att_remark:"&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
         </ion-grid>
       </div>
     </div>
-    <div class="section">
+    <div class="section" >
       <div class="additional">
         <ion-item>
           <ion-label>Additional Information</ion-label>
         </ion-item>
         <ion-grid>
-          <ion-row>
+          <ion-row *ngIf="!AttachmentUploadEnabled && !MaterialDeclareEnabled && !QuestionnaireEnabled">
+            <ion-label style="    width: -webkit-fill-available;text-align: center;margin: 20px;">No documents enabled</ion-label>
+          </ion-row>
+          <ion-row *ngIf="AttachmentUploadEnabled">
             <ion-col size="12">
               <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
               padding-left: 0px;" (click)="openCustomDialog('doc')">
@@ -207,7 +210,7 @@
               </ion-card>
             </ion-col>
           </ion-row>
-          <ion-row>
+          <ion-row *ngIf="MaterialDeclareEnabled">
             <ion-col size="12">
               <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
               padding-left: 0px;" (click)="openCustomDialog('declaration')">
@@ -219,7 +222,7 @@
               </ion-card>
             </ion-col>
           </ion-row>
-          <ion-row>
+          <ion-row *ngIf="QuestionnaireEnabled">
             <ion-col size="12">
               <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
               padding-left: 0px;" (click)="openCustomDialog('question')">
@@ -234,6 +237,7 @@
         </ion-grid>
       </div>
     </div>
-    <ion-button expand="block">Check-In / Check-Out</ion-button>
+    <ion-button color="transparent" *ngIf="appSettings.customStyle && validQRCode" class="btn-grad" [ngStyle]="{'font-size': appSettings.customStyle.buttonStyle.btnTextSize + 'px', 'border-radius': appSettings.customStyle.buttonStyle.btnBorderRadius + 'px', 'color': appSettings.customStyle.buttonStyle.btnTextColor, 'background': 'linear-gradient(to right, ' + this.appSettings.customStyle.buttonStyle.btnColor1
+    +' 0%,'+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%)'}" expand="block" (click)="checkInOutProcess()">{{((this.appointmentInfo.att_check_in === null || this.appointmentInfo.att_check_in === 0) || (this.appointmentInfo.att_check_in === 1 && this.appointmentInfo.att_check_out === 1))? 'Check-In': 'Check-Out'}}</ion-button>
   </div>
 </ion-content>

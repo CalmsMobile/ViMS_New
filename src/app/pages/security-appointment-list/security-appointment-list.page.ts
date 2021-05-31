@@ -59,7 +59,8 @@ export class SecurityAppointmentListPage implements OnInit {
   moveToDetailsPage(item) {
     const navigationExtras: NavigationExtras = {
       state: {
-        passData: item
+        passData: item,
+        fromAppointment: true
       }
     };
     this.router.navigate(['visitor-information'], navigationExtras);
@@ -86,83 +87,83 @@ export class SecurityAppointmentListPage implements OnInit {
       }, 100);
     }
 
-    async checkInOutVisitor(item) {
-      let message1 = "";
-        if ((item.att_check_in === 0 && item.att_check_out === 0) || item.att_check_in === 1 && item.att_check_out === 1) {
-          message1 = "Do you wish to check-in ";
-        } else if (item.att_check_in === 1 && (!item.att_check_out || item.att_check_out === 0)) {
-          message1 = "Do you wish to check-out ";
-        } else {
-          this.showAlert = false;
-          return;
-        }
-        let alert = this.alertCtrl.create({
-          header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
-          cssClass:"alert-danger",
-          message: message1+(item.visitor_name? item.visitor_name : " this visitor")+" now?",
-          buttons: [
-            {
-              text: 'Cancel',
-              role: 'cancel',
-              handler: () => {
-                console.log('Cancel clicked');
-              }
-            },
-            {
-              text: 'Ok',
-              handler: () => {
-                console.log('Ok clicked');
-                if ((item.att_check_in === 0 && item.att_check_out === 0) || item.att_check_in === 1 && item.att_check_out === 1) {
-                  const navigationExtras: NavigationExtras = {
-                    state: {
-                      passData: {
-                        PreAppointment : item
-                      }
-                    }
-                  };
-                  this.router.navigate(['security-manual-check-in'], navigationExtras);
-                  return;
-                }
-                var params = {
-                  "att_id":item.att_id,
-                  "CheckOutCounter":"admin"
-                };
-                // this.VM.host_search_id = "adam";
-                this.apiProvider.VimsAppUpdateVisitorCheckOut(params).then(
-                  async (val) => {
-                    this.appointments = [];
-                    this.appointmentsCone = [];
-                    this.getBranchAppointments(null, false);
-
-                    this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
-
-                  },
-                  async (err) => {
-                    if(err && err.message == "No Internet"){
-                      return;
-                    }
-                    var message = "";
-                    if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-                      message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-                    } else if(err && JSON.parse(err) && JSON.parse(err).message){
-                      message =JSON.parse(err).message;
-                    }
-                    if(message){
-                      // message = " Unknown"
-                      this.apiProvider.showAlert(message);
+  async checkInOutVisitor(item) {
+    let message1 = "";
+      if ((item.att_check_in === 0 && item.att_check_out === 0) || (item.att_check_in === 1 && item.att_check_out === 1)) {
+        message1 = "Do you wish to check-in ";
+      } else if (item.att_check_in === 1 && (!item.att_check_out || item.att_check_out === 0)) {
+        message1 = "Do you wish to check-out ";
+      } else {
+        this.showAlert = false;
+        return;
+      }
+      let alert = this.alertCtrl.create({
+        header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
+        cssClass:"alert-danger",
+        message: message1+(item.visitor_name? item.visitor_name : " this visitor")+" now?",
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+              console.log('Cancel clicked');
+            }
+          },
+          {
+            text: 'Ok',
+            handler: () => {
+              console.log('Ok clicked');
+              if ((item.att_check_in === 0 && item.att_check_out === 0) || (item.att_check_in === 1 && item.att_check_out === 1)) {
+                const navigationExtras: NavigationExtras = {
+                  state: {
+                    passData: {
+                      PreAppointment : item
                     }
                   }
-                );
+                };
+                this.router.navigate(['security-manual-check-in'], navigationExtras);
+                return;
               }
-            }
-          ]
-        });
-        (await alert).present();
-        (await alert).onDidDismiss().then(() => {
-          this.showAlert = false;
-        })
+              var params = {
+                "att_id":item.att_id,
+                "CheckOutCounter":"admin"
+              };
+              // this.VM.host_search_id = "adam";
+              this.apiProvider.VimsAppUpdateVisitorCheckOut(params).then(
+                async (val) => {
+                  this.appointments = [];
+                  this.appointmentsCone = [];
+                  this.getBranchAppointments(null, false);
 
-    }
+                  this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
+
+                },
+                async (err) => {
+                  if(err && err.message == "No Internet"){
+                    return;
+                  }
+                  var message = "";
+                  if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                    message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+                  } else if(err && JSON.parse(err) && JSON.parse(err).message){
+                    message =JSON.parse(err).message;
+                  }
+                  if(message){
+                    // message = " Unknown"
+                    this.apiProvider.showAlert(message);
+                  }
+                }
+              );
+            }
+          }
+        ]
+      });
+      (await alert).present();
+      (await alert).onDidDismiss().then(() => {
+        this.showAlert = false;
+      })
+
+  }
 
   showCalender(picker) {
     picker.open();
@@ -215,6 +216,7 @@ export class SecurityAppointmentListPage implements OnInit {
             element.att_check_out = list1[0].att_check_out;
             element.att_check_in_time = list1[0].att_check_in_time;
             element.att_check_out_time = list1[0].att_check_out_time;
+            element.att_id = list1[0].att_id;
           }
         });
         this.filterTechnologies("");
