@@ -649,7 +649,7 @@ export class RestProvider {
       "AuDeviceUID": (this.device && this.device.uuid) ? this.device.uuid: AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
       "AuMAppDevSeqId": MAppDevSeqId ? JSON.parse(MAppDevSeqId).MAppDevSeqId: ''
     }
-    data.Branch = MAppDevSeqId ? JSON.parse(MAppDevSeqId).RefBranchSeqId: ''
+    data.Branch = MAppDevSeqId ? JSON.parse(MAppDevSeqId).RefBranchSeqid: ''
     return data;
   }
 
@@ -911,7 +911,7 @@ export class RestProvider {
   }
 
   GetMasterDetails(){
-    var data  = this.setAuthorizedInfo({}, '');
+    var data  = this.setAuthorizedInfo({}, 'WEB');
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetMasterDetails');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
@@ -1987,7 +1987,6 @@ export class RestProvider {
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         // this.dismissLoading();
         if(this.validateUser(output)){

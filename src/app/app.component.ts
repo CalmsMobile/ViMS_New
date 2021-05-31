@@ -246,7 +246,6 @@ export class AppComponent {
               console.log("calling login Page: " + hostData);
               return;
             }
-            this.getSecuritySettings();
             this.navCtrl.navigateRoot("security-dash-board-page");
             break;
         }
@@ -284,32 +283,6 @@ export class AppComponent {
       (err) => {
       }
     );
-  }
-
-  getSecuritySettings() {
-    var QrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    if (QrInfo && JSON.parse(QrInfo)) {
-      var QRObj = JSON.parse(QrInfo);
-      var params = {
-        "RefSchoolSeqId": "",
-        "RefBranchSeqId": "",
-        "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
-        "MAppDevSeqId": QRObj.MAppDevSeqId
-      }
-
-      this.apiProvider.GetSecurityAppSettings(params).then(
-        (val) => {
-          var result = JSON.parse(val + "");
-          if (result) {
-            console.log(val + "");
-            var result = JSON.parse(result.SettingDetail);
-            localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, JSON.stringify(result));
-          }
-        },
-        (err) => {
-        }
-      );
-    }
   }
 
   getAcknowledgementSettings() {

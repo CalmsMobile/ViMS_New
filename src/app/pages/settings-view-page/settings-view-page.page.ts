@@ -235,6 +235,19 @@ export class SettingsViewPagePage implements OnInit {
   ngOnInit() {
   }
 
+  getMasterdetails(){
+    this.apiProvider.GetMasterDetails().then(
+      (result: any) => {
+        if(result){
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+        }
+      },
+      (err) => {
+
+      }
+    );
+  }
+
   syncSettings() {
     var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (!qrInfo) {
@@ -256,6 +269,7 @@ export class SettingsViewPagePage implements OnInit {
             if(result1){
               var result = JSON.parse(result1.SettingDetail);
               console.log(val+"");
+              this.getMasterdetails();
               this.composeRunTimeCss(result);
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, JSON.stringify(result));
             }
@@ -286,16 +300,7 @@ export class SettingsViewPagePage implements OnInit {
                   title: "ReloadMenu",
                   message: "ReloadMenu"
                 });
-                this.apiProvider.GetMasterDetails().then(
-                  (val) => {
-                    var result = JSON.parse(JSON.stringify(val));
-                    if(result){
-                      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
-                    }
-                  },
-                  (err) => {
-                  }
-                );
+                this.getMasterdetails();
                 this.apiProvider.showAlert('Device sync successfully.');
               }
             }catch(e){

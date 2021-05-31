@@ -6,11 +6,10 @@
 -->
 <ion-header lines="none" class="ion-no-border">
   <ion-toolbar color="primary"  lines="none" class="ion-no-border">
-    <ion-buttons slot="start">
-      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
-    </ion-buttons>
-    <ion-label class="ion-padding" style="font-weight: 500;">Visitor Name<br></ion-label>
-    <ion-icon slot="end" class="headerIcon" name="settings-sharp"></ion-icon>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"
+      style="font-size: x-large;color: #FFF;"></ion-icon>
+    <ion-title>{{(!preAppointmentInfo || !preAppointmentInfo.SEQ_ID) ? 'Manual Check-In': 'Pre-Appointment Check-In'}}</ion-title>
+    <ion-icon slot="end" class="headerIcon"  name="image-outline"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -19,33 +18,33 @@
     <ion-grid>
       <ion-card style="margin: 0px;padding: 0px;">
         <ion-row>
-          <ion-col size="3" style="display: flex;justify-content: center;align-items: center;">
+          <ion-col size="2" style="display: flex;justify-content: center;align-items: center;">
             <img src="../../../assets/images/user.png" style="width: 50px;height: 50px; display: flex;justify-content: center">
           </ion-col>
-          <ion-col size="9">
+          <ion-col size="10">
               <ion-grid>
                 <ion-row>
                   <ion-col size="12" class="bDets">
                     <ion-icon name="person-sharp" class="bDets"></ion-icon>
-                    <input type="text" placeholder="Name"/>
+                    <input type="text" [(ngModel)]="appointmentInfo.VISITOR_NAME" placeholder="Name"/>
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
                     <ion-icon name="id-card-sharp" class="bDets"></ion-icon>
-                    <input type="text" placeholder="ID"/>
+                    <input type="text" [(ngModel)]="appointmentInfo.VISITOR_IC" [disabled]="preAppointmentInfo.VISITOR_IC" placeholder="ID"/>
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
                     <ion-icon name="mail-sharp" class="bDets"></ion-icon>
-                    <input type="text" placeholder="Email"/>
+                    <input type="text" [(ngModel)]="appointmentInfo.EMAIL" placeholder="Email"/>
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
                     <ion-icon name="phone-portrait-sharp" class="bDets"></ion-icon>
-                    <input type="text" placeholder="Phone"/>
+                    <input type="text" [(ngModel)]="appointmentInfo.TELEPHONE_NO" placeholder="Phone"/>
                   </ion-col>
                 </ion-row>
               </ion-grid>
@@ -64,7 +63,7 @@
               <ion-text>Address</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-textarea placeholder="Address"></ion-textarea>
+              <ion-textarea [(ngModel)]="appointmentInfo.VISITOR_ADDRESS" placeholder="Address"></ion-textarea>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -72,10 +71,16 @@
               <ion-text>Category</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-select placeholder="Category">
-                <ion-select-option value="1">Contractor</ion-select-option>
-                <ion-select-option value="2">Delivery</ion-select-option>
-              </ion-select>
+              <ion-select mode="ios"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="appointmentInfo.VisitorCategory"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_VISITORS.LAB_USER_CATE' | translate}}">
+              <ion-label position="stacked">{{'ADD_VISITORS.LAB_PH_USER_CATE' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let avl_reason of CATEGORYLIST"
+                [value]="avl_reason.visitor_ctg_id">
+                {{avl_reason.visitor_ctg_desc}}
+              </ion-select-option>
+            </ion-select>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -83,10 +88,16 @@
               <ion-text>Gender</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-select placeholder="Gender">
-                <ion-select-option value="f">Female</ion-select-option>
-                <ion-select-option value="m">Male</ion-select-option>
-              </ion-select>
+              <ion-select mode="ios"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="appointmentInfo.VISITOR_GENDER"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}">
+              <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_GENDER' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let gender of GENDERLIST"
+                [value]="gender.code">
+                {{gender.name}}
+              </ion-select-option>
+            </ion-select>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -94,10 +105,17 @@
               <ion-text>Country</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-select placeholder="Country">
-                <ion-select-option value="1">Malaysia</ion-select-option>
-                <ion-select-option value="2">Indonesia</ion-select-option>
-              </ion-select>
+              <!-- <input type="text" mode="ios" (ngModelChange)="onChangeInput($event, 'country')" class="inputCountry" [(ngModel)]="appointmentInfo.VISITOR_COUNTRY" placeholder="{{'ADD_VISITORS.LAB_COUNTRY' | translate}}"/> -->
+              <ion-select mode="ios"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="appointmentInfo.VISITOR_COUNTRY"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_VISITORS.LAB_COUNTRY' | translate}}">
+              <ion-label position="stacked">{{'ADD_VISITORS.LAB_COUNTRY' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let country of COUNTRYLIST"
+                [value]="country.code">
+                {{country.name}}
+              </ion-select-option>
+            </ion-select>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -105,7 +123,7 @@
               <ion-text>Vehicle No</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-textarea placeholder="Vehicle No"></ion-textarea>
+              <input type="text" mode="ios" class="inputCountry" placeholder="Vehicle No" [(ngModel)]="appointmentInfo.PLATE_NUM"/>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -113,7 +131,7 @@
               <ion-text>Company</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-textarea placeholder="Company"></ion-textarea>
+              <input type="text" mode="ios" class="inputCountry" placeholder="Company" [(ngModel)]="appointmentInfo.visitor_comp_name"/>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -121,7 +139,7 @@
               <ion-text style="font-size: 90%;">Temperature</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-textarea placeholder="Temperature"></ion-textarea>
+              <input type="text" mode="ios" class="inputCountry" placeholder="Temperature"/>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -138,7 +156,7 @@
               <ion-text>Start Date</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="DD MMMM YYYY" #startDate (ionChange)="startTime.open()" placeholder="Start Date" title="heh"></ion-datetime>
+              <ion-datetime displayFormat="DD MMMM YYYY" #startDate [(ngModel)]="appointmentInfo.START_DATE" (ionChange)="startTime.open()" placeholder="Start Date" title="heh"></ion-datetime>
             </ion-col>
             <ion-col size="2">
               <ion-icon name="calendar-number-outline" class="calanderinput" (click)="startDate.open()"></ion-icon>
@@ -149,7 +167,7 @@
               <ion-text>Start Time</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="hh:mm A" #startTime minuteValues="0,15,30,45" (ionChange)="endDate.open()" placeholder="Start Time"></ion-datetime>
+              <ion-datetime displayFormat="hh:mm A" #startTime minuteValues="0,15,30,45" [(ngModel)]="appointmentInfo.START_DATE" (ionChange)="endDate.open()" placeholder="Start Time"></ion-datetime>
             </ion-col>
             <ion-col size="2">
               <ion-icon name="time-outline" class="calanderinput" (click)="startTime.open()"></ion-icon>
@@ -160,7 +178,7 @@
               <ion-text>End Date</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="DD MMMM YYYY" #endDate (ionChange)="endTime.open()" placeholder="End Date"></ion-datetime>
+              <ion-datetime displayFormat="DD MMMM YYYY" #endDate [(ngModel)]="appointmentInfo.END_DATE" (ionChange)="endTime.open()" placeholder="End Date"></ion-datetime>
             </ion-col>
             <ion-col size="2">
               <ion-icon name="calendar-number-outline" class="calanderinput" (click)="endDate.open()"></ion-icon>
@@ -171,7 +189,7 @@
               <ion-text>End Time</ion-text>
             </ion-col>
             <ion-col size="7">
-              <ion-datetime displayFormat="hh:mm A" #endTime minuteValues="0,15,30,45" placeholder="End Time"></ion-datetime>
+              <ion-datetime displayFormat="hh:mm A" #endTime [(ngModel)]="appointmentInfo.END_DATE" minuteValues="0,15,30,45" placeholder="End Time"></ion-datetime>
             </ion-col>
             <ion-col size="2">
               <ion-icon name="time-outline" class="calanderinput" (click)="endTime.open()"></ion-icon>
@@ -182,10 +200,16 @@
               <ion-text>Purpose</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-select placeholder="Purpose">
-                <ion-select-option value="1">Collect Document</ion-select-option>
-                <ion-select-option value="2">Delivery</ion-select-option>
-              </ion-select>
+               <ion-select mode="ios"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="appointmentInfo.REASON"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}">
+              <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let avl_reason of PURPOSELIST"
+                [value]="avl_reason.visitpurpose_id">
+                {{avl_reason.visitpurpose_desc}}
+              </ion-select-option>
+            </ion-select>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -193,10 +217,16 @@
               <ion-text>Host Name</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-select placeholder="Host Name">
-                <ion-select-option value="1">Kharti</ion-select-option>
-                <ion-select-option value="2">Nandha</ion-select-option>
-              </ion-select>
+              <ion-select mode="ios"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="appointmentInfo.Host_IC"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'SECURITY_APP.SELECT_HOST' | translate}}">
+              <ion-label position="stacked">{{'SECURITY_APP.SELECT_HOST' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let host of HOSTLIST"
+                [value]="host.HOSTIC">
+                {{host.HOSTNAME}}
+              </ion-select-option>
+            </ion-select>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -204,10 +234,16 @@
               <ion-text>Floor</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-select placeholder="Floor">
-                <ion-select-option value="1">1</ion-select-option>
-                <ion-select-option value="2">2</ion-select-option>
-              </ion-select>
+              <ion-select mode="ios"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="appointmentInfo.Floor"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}">
+              <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let floor of FLOORLIST"
+                [value]="floor.floor_id">
+                {{floor.floor_desc}}
+              </ion-select-option>
+            </ion-select>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -215,10 +251,16 @@
               <ion-text>Meeting Location</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-select placeholder="Meeting Location">
-                <ion-select-option value="1">Bilik Meeting</ion-select-option>
-                <ion-select-option value="2">Training Academy</ion-select-option>
-              </ion-select>
+              <ion-select mode="ios"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="appointmentInfo.MEETING_LOCATION"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}">
+              <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let meeting of MEETINGLIST"
+                [value]="meeting.MeetingRoomSeqId">
+                {{meeting.MeetingRoomDesc}}
+              </ion-select-option>
+            </ion-select>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -226,7 +268,7 @@
               <ion-text>Remarks</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-textarea placeholder="Remarks"></ion-textarea>
+              <ion-textarea placeholder="Remarks" [(ngModel)]="appointmentInfo.Remarks"></ion-textarea>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -238,14 +280,44 @@
           <ion-label>Additional Information</ion-label>
         </ion-item>
         <ion-grid>
+
+          <ion-card no-margin mode="ios" style="margin-top: 15px !important;
+          padding: 10px;
+          padding-left: 0px;" (click)="openCustomDialog('question')" *ngIf="QuestionnaireEnabled">
+            <ion-item lines="none">
+              <ion-icon color="primary" slot="start" name="document-text-outline"></ion-icon>
+              <ion-label>Questionaries</ion-label>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-card>
+
+
+          <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+          padding-left: 0px;" (click)="openCustomDialog('doc')" *ngIf="AttachmentUploadEnabled">
+            <ion-item lines="none">
+              <ion-icon color="primary" slot="start" name="document-attach-outline"></ion-icon>
+              <ion-label>Verification Documents</ion-label>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-card>
+
+          <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+          padding-left: 0px;" (click)="openCustomDialog('declaration')" *ngIf="MaterialDeclareEnabled">
+            <ion-item lines="none">
+              <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+              <ion-label>Item Checklist</ion-label>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-card>
+
           <ion-row>
             <ion-col size="12">
               <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
               padding-left: 0px;" (click)= "capture()">
                 <ion-item lines="none">
-                  <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+                  <ion-icon color="primary" slot="start" name="document-attach-outline"></ion-icon>
                   <ion-label>Additional Document</ion-label>
-                  <ion-icon name="chevron-forward-outline"></ion-icon>
+                  <ion-icon name="add-circle-outline"></ion-icon>
                 </ion-item>
               </ion-card>
             </ion-col>
@@ -253,10 +325,10 @@
           <ion-row>
             <ion-col size="12">
               <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
-              padding-left: 0px;" (click)= "capture()">
+              padding-left: 0px;" (click)= "capture()" *ngIf="!preAppointmentInfo || !preAppointmentInfo.SEQ_ID">
                 <ion-item lines="none">
                   <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
-                  <ion-label>ID Image</ion-label>
+                  <ion-label>Item Checklist</ion-label>
                   <ion-icon name="chevron-forward-outline"></ion-icon>
                 </ion-item>
               </ion-card>
@@ -265,6 +337,7 @@
         </ion-grid>
       </div>
     </div>
-    <ion-button expand="block">Check-In</ion-button>
+    <ion-button color="transparent" *ngIf="appSettings.customStyle" class="btn-grad" [ngStyle]="{'font-size': appSettings.customStyle.buttonStyle.btnTextSize + 'px', 'border-radius': appSettings.customStyle.buttonStyle.btnBorderRadius + 'px', 'color': appSettings.customStyle.buttonStyle.btnTextColor, 'background': 'linear-gradient(to right, ' + this.appSettings.customStyle.buttonStyle.btnColor1
+    +' 0%,'+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%)'}" expand="block">Check-In</ion-button>
   </div>
 </ion-content>

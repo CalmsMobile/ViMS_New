@@ -117,12 +117,12 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     console.log('ionViewDidEnter SecurityDashBoardPage');
     this.enableMyKad();
     const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
-      if (ackSeettings) {
-        this.appSettings = JSON.parse(ackSeettings);
-        this.composeRunTimeCss();
-        this.getSecurityStats();
-        this.updateSyncInterval();
-      }
+    if (ackSeettings) {
+      this.appSettings = JSON.parse(ackSeettings);
+      this.composeRunTimeCss();
+      this.getSecurityStats();
+      this.updateSyncInterval();
+    }
   }
 
   composeRunTimeCss(){
@@ -172,6 +172,16 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, JSON.stringify(this.appSettings));
           this.composeRunTimeCss();
           this.updateSyncInterval();
+          this.apiProvider.GetMasterDetails().then(
+            (result: any) => {
+              if(result){
+                window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+              }
+            },
+            (err) => {
+
+            }
+          );
         }
       },
       (err) => {
@@ -214,7 +224,13 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
 
   proceedNext(type){
     if(type == 'IN'){
-      this.scanPreAppointmentQR();
+      const navigationExtras: NavigationExtras = {
+        state: {
+          passData: {
+          }
+        }
+      };
+      this.router.navigate(['security-manual-check-in'], navigationExtras);
       // this.enableMyKad();
     } else if(type == 'OUT'){
       const navigationExtras: NavigationExtras = {
@@ -383,7 +399,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "0024897275" //"C4B9F365";
+      var data = "0037042496" //"C4B9F365";
       var params = {"hexcode":""+ data};
       this.getAppointmentByQR(params);
     }else{
@@ -466,11 +482,11 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
             const navigationExtras: NavigationExtras = {
               state: {
                 passData: {
-                  PreAppointment : JSON.stringify(vOb)
+                  PreAppointment : vOb
                 }
               }
             };
-            this.router.navigate(['security-check-in-page'], navigationExtras);
+            this.router.navigate(['security-manual-check-in'], navigationExtras);
           }else{
             message = this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY'];
             if(fTime < cTime && eTime < cTime){
@@ -566,7 +582,6 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     }
     this.apiProvider.VimsAppGetSecurityStats(params).then(
       (data: any) => {
-       console.log("Stats : "+ data);
        const result = JSON.parse(data);
        this.statsCountData = result.Table1[0];
        this.dataSets1.labels = [];

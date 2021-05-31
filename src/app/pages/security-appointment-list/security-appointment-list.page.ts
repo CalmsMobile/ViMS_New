@@ -59,9 +59,7 @@ export class SecurityAppointmentListPage implements OnInit {
   moveToDetailsPage(item) {
     const navigationExtras: NavigationExtras = {
       state: {
-        passData: {
-          data: item
-        }
+        passData: item
       }
     };
     this.router.navigate(['visitor-information'], navigationExtras);
@@ -89,13 +87,11 @@ export class SecurityAppointmentListPage implements OnInit {
     }
 
     async checkInOutVisitor(item) {
-        if (item.att_check_in === 1 && item.att_check_out === 1) {
-          this.showAlert = false;
-          return;
-        }
-        let message1 = "Do you wish to checkout ";
-        if (item.att_check_in === 1 && (!item.att_check_out || item.att_check_out === 0)) {
-          message1 = "Do you wish to checkout ";
+      let message1 = "";
+        if ((item.att_check_in === 0 && item.att_check_out === 0) || item.att_check_in === 1 && item.att_check_out === 1) {
+          message1 = "Do you wish to check-in ";
+        } else if (item.att_check_in === 1 && (!item.att_check_out || item.att_check_out === 0)) {
+          message1 = "Do you wish to check-out ";
         } else {
           this.showAlert = false;
           return;
@@ -115,7 +111,18 @@ export class SecurityAppointmentListPage implements OnInit {
             {
               text: 'Ok',
               handler: () => {
-                console.log('Delete clicked');
+                console.log('Ok clicked');
+                if ((item.att_check_in === 0 && item.att_check_out === 0) || item.att_check_in === 1 && item.att_check_out === 1) {
+                  const navigationExtras: NavigationExtras = {
+                    state: {
+                      passData: {
+                        PreAppointment : item
+                      }
+                    }
+                  };
+                  this.router.navigate(['security-manual-check-in'], navigationExtras);
+                  return;
+                }
                 var params = {
                   "att_id":item.att_id,
                   "CheckOutCounter":"admin"

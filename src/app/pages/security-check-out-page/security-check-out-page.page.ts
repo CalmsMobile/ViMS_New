@@ -86,9 +86,7 @@ export class SecurityCheckOutPagePage implements OnInit {
    moveToDetailsPage(item) {
     const navigationExtras: NavigationExtras = {
       state: {
-        passData: {
-          data: item
-        }
+        passData: item
       }
     };
     this.router.navigate(['visitor-information'], navigationExtras);
@@ -178,7 +176,7 @@ export class SecurityCheckOutPagePage implements OnInit {
             case "30":
             case "40":
             case "60":
-              currentClass.VimsAppGetStatesList(currentClass.Type, null, true);
+              currentClass.VimsAppGetStatesList(currentClass.Type, null, false);
             break;
             case "50":
               currentClass.GetQuickPassVisitorList(null, true);
@@ -338,7 +336,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.VimsAppGetSecurityStatsDetail(params, showLoading).then(
 				(val) => {
-
+          this.isFetching = false;
           if(!val){
             return;
           }
@@ -349,16 +347,12 @@ export class SecurityCheckOutPagePage implements OnInit {
 						refresher.target.complete();
 					}else {
             if (aList.Table2) {
-              this.appointments = aList.Table2.concat(this.appointments);
+              this.appointments = this.appointments.concat(aList.Table2);
             } else {
               this.appointments = this.appointments;
             }
 
           }
-          this.appointments.sort((a, b) =>
-            a.att_check_in_date <= b.att_check_in_date ? -1 : 1
-          );
-          this.appointments.reverse();
           this.appointments.forEach(element => {
             element.START_TIME = element.att_check_in_time;
             element.END_TIME = element.att_ExpiryTime;
@@ -397,6 +391,7 @@ export class SecurityCheckOutPagePage implements OnInit {
           this.appointmentsClone = this.appointments;
 				},
 				async (err) => {
+          this.isFetching = false;
 					if(refresher){
 						refresher.target.complete();
 					}

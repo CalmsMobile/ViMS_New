@@ -238,13 +238,13 @@ ion-icon {
   flex-wrap: wrap;
   align-items: center;
   padding: 1px;
+  object-fit: cover;
   img {
     max-width: 46px;
     border: 2px solid green;
     border-radius: 50px;
     width: 46px;
     height: 46px;
-    object-fit: cover;
   }
 }
 

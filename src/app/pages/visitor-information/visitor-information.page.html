@@ -20,29 +20,29 @@
           <ion-col size="9">
               <ion-grid>
                 <ion-row>
-                  <ion-col size="12" class="bDets">
-                    <ion-icon name="person-outline" class="bDets"></ion-icon>{{appointmentInfo.VISITOR_NAME}}
+                  <ion-col size="12" class="bDets" style="font-weight: 600;">
+                    <ion-icon name="person-outline" class="bDets" ></ion-icon>{{appointmentInfo.VISITOR_NAME}}
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
-                    <ion-icon name="id-card-outline" class="bDets"></ion-icon>A827395284
+                    <ion-icon name="id-card-outline" class="bDets"></ion-icon>{{appointmentInfo.visitor_id? appointmentInfo.visitor_id: (appointmentInfo.VISITOR_IC? appointmentInfo.VISITOR_IC: '&nbsp;&nbsp;--')}}
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
-                    <ion-icon name="mail-outline" class="bDets"></ion-icon>nandha@calms.com.my
+                    <ion-icon name="mail-outline" class="bDets"></ion-icon>{{appointmentInfo.visitor_email? appointmentInfo.visitor_email: (appointmentInfo.EMAIL? appointmentInfo.EMAIL: '&nbsp;&nbsp;--')}}
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
-                    <ion-icon name="call-outline" class="bDets"></ion-icon>+6017-2346657
+                    <ion-icon name="call-outline" class="bDets"></ion-icon>{{appointmentInfo.TELEPHONE_NO? appointmentInfo.TELEPHONE_NO: '&nbsp;&nbsp;--'}}
                   </ion-col>
                 </ion-row>
               </ion-grid>
           </ion-col>
           <ion-col size="3" style="display: flex;justify-content: center;align-items: center;">
-            <img src="../../../assets/images/user.png" style="width: 50px;height: 50px; display: flex;justify-content: center">
+            <img src="{{appointmentInfo.SEQ_ID ? visitorImagePath + appointmentInfo.att_visitor_id + imageURLType: '../../../assets/images/user.png'}}" style="width: 50px;height: 50px; display: flex;justify-content: center; border-radius: 50%;">
           </ion-col>
         </ion-row>
       </ion-card>
@@ -58,7 +58,7 @@
               <ion-text>Address</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: Universiti Putra Malaysia (UPM), Block DC3, Server Farm, UPM-MTDC Technology Centre, 43400 Seri , Selangor</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.visitor_address?appointmentInfo.visitor_address: (appointmentInfo.Address? appointmentInfo.Address: "&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -66,13 +66,13 @@
               <ion-text>Category</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text  class="ansColor">: Catagory</ion-text>
+              <ion-text  class="ansColor">: {{appointmentInfo.visitor_ctg_desc?appointmentInfo.visitor_ctg_desc: (appointmentInfo.VisitorCategory ? appointmentInfo.VisitorCategory: "&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
             <ion-col size="3" class="ion-text-right">
               <ion-text >Gender</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text class="ansColor">: Male</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.visitor_gender?appointmentInfo.visitor_gender: (appointmentInfo.VISITOR_GENDER? appointmentInfo.VISITOR_GENDER : "&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -80,7 +80,7 @@
               <ion-text>Country</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: Malaysia</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.visitor_country?appointmentInfo.visitor_country: (appointmentInfo.Country? appointmentInfo.Country: "&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -88,7 +88,7 @@
               <ion-text>Vehicle No</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: WXF 4382</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.PLATE_NUM?appointmentInfo.PLATE_NUM: "&nbsp;&nbsp;--"}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -96,7 +96,7 @@
               <ion-text>Company</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: Calms Technology Sdn Bhd</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.VisitorCompany?appointmentInfo.VisitorCompany: (appointmentInfo.VISITOR_COMPANY? appointmentInfo.VISITOR_COMPANY: "&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -113,13 +113,13 @@
               <ion-text>Start Date</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text class="ansColor">: 18/5/2021</ion-text>
+              <ion-text class="ansColor">: {{(appointmentInfo.att_check_in_date ?appointmentInfo.att_check_in_date: appointmentInfo.START_DATE) | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
             </ion-col>
             <ion-col size="3" class="ion-text-right">
               <ion-text>End Date</ion-text>
             </ion-col>
             <ion-col size="3">
-              <ion-text class="ansColor">: 18/5/2021</ion-text>
+              <ion-text class="ansColor">: {{(appointmentInfo.att_check_out_date ?appointmentInfo.att_check_out_date: appointmentInfo.END_DATE)  | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -127,7 +127,7 @@
               <ion-text>Purpose</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: Document Collection</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.att_reason?appointmentInfo.att_reason: (appointmentInfo.REASON? appointmentInfo.REASON:"&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -135,7 +135,7 @@
               <ion-text>Host Name</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: Karthi</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.HostName?appointmentInfo.HostName: (appointmentInfo.STAFF_NAME?appointmentInfo.STAFF_NAME:"&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -143,7 +143,7 @@
               <ion-text>Check-In Status</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: Checked-In</ion-text>
+              <ion-text class="ansColor">: {{this.appointmentInfo.att_check_in === 1? 'Checked-In': 'Yet to Check-In'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -151,7 +151,7 @@
               <ion-text>Check-Out Status</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: Checked-Out</ion-text>
+              <ion-text class="ansColor">: {{this.appointmentInfo.att_check_out === 1? 'Checked-Out': 'Yet to Check-Out'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -159,7 +159,7 @@
               <ion-text>Expiry Time</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: Expired</ion-text>
+              <ion-text class="ansColor">: {{(appointmentInfo.WorkPermitExpiry? appointmentInfo.WorkPermitExpiry : appointmentInfo.END_TIME) | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -167,7 +167,7 @@
               <ion-text>Floor</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: 3</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.att_floor_no?appointmentInfo.att_floor_no: (appointmentInfo.Floor?appointmentInfo.Floor:"&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -175,7 +175,7 @@
               <ion-text>Meeting Location</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: Bilik Meeting</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.Room?appointmentInfo.Room: "&nbsp;&nbsp;--"}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -183,7 +183,7 @@
               <ion-text>Remarks</ion-text>
             </ion-col>
             <ion-col size="9">
-              <ion-text class="ansColor">: test123</ion-text>
+              <ion-text class="ansColor">: {{appointmentInfo.Remarks?appointmentInfo.Remarks: "&nbsp;&nbsp;--"}}</ion-text>
             </ion-col>
           </ion-row>
         </ion-grid>

@@ -3,6 +3,7 @@ import {ModalController,AlertController} from '@ionic/angular';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AppSettings } from 'src/app/services/app-settings';
 
 @Component({
   selector: 'app-visitor-information',
@@ -18,7 +19,8 @@ export class VisitorInformationPage implements OnInit {
   showOption = false;
   isPastAppointment = false;
   appointmentInfo: any;
-
+  visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
+  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
   constructor(public apiProvider: RestProvider,
     public modalCtrl: ModalController,
     private router: Router,
@@ -40,14 +42,16 @@ export class VisitorInformationPage implements OnInit {
     console.log('goBack ');
   }
 
-  async showAlert(msg) {
-    let alert = this.alertCtrl.create({
-      header: 'Notification',
-      message: msg,
-      cssClass:'alert-danger',
-      buttons: ['Okay']
-      });
-      (await alert).present();
+  getCheckinStatus() {
+    if (this.appointmentInfo.att_check_in === 1&& this.appointmentInfo.att_check_out === 1) {
+      return 'Checked-Out';
+    }
+    if (this.appointmentInfo.att_check_in === 1&& this.appointmentInfo.att_check_out === 0) {
+      return 'Checked-In';
+    }
+    if (this.appointmentInfo.att_check_in === 0&& this.appointmentInfo.att_check_out === 0) {
+      return 'Yet to Check-In';
+    }
   }
 
   async openCustomDialog(action) {
@@ -91,7 +95,7 @@ export class VisitorInformationPage implements OnInit {
         } else if (action === 'declaration'){
           msg = 'Declaration not added.';
         }
-        this.showAlert(msg);
+        this.apiProvider.showAlert(msg);
       }
       },
     async (err) => {

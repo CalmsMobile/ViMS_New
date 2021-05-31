@@ -17,14 +17,16 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar mode="ios" (ionChange)="filterTechnologies($event)" placeholder="  Search" animated>
+    </ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 <ion-content class="booking-main">
   <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-searchbar  mode="ios" (ionChange)="filterTechnologies($event)"
-  color="primary" placeholder="  Search" animated>
-  </ion-searchbar>
+
   <ion-card class="card_appointment" *ngFor="let item of appointmentsCone" no-padding no-border (click)="moveToDetailsPage(item)">
     <ion-item-sliding #slideDOM (ionDrag)="ondrag($event, slideDOM, item)">
       <ion-item lines="none" class="ion-no-padding">

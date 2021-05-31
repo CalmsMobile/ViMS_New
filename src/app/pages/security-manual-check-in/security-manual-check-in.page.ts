@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {ModalController,AlertController,ToastController} from '@ionic/angular';
+import {ModalController,AlertController,ToastController, PopoverController} from '@ionic/angular';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
 import { Camera } from '@ionic-native/camera/ngx';
 import {AppSettings} from '../../services/app-settings';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonUtil } from 'src/app/services/util/CommonUtil';
+import { ToolTipComponent } from 'src/app/components/tool-tip/tool-tip.component';
 
 @Component({
   selector: 'app-security-manual-check-in',
@@ -11,9 +14,6 @@ import {AppSettings} from '../../services/app-settings';
   styleUrls: ['./security-manual-check-in.page.scss'],
 })
 export class SecurityManualCheckInPage implements OnInit {
-  
-  appointment : any;
-
   T_SVC:any;
   autoApproval: any = false;
   showOption = false;
@@ -25,26 +25,119 @@ export class SecurityManualCheckInPage implements OnInit {
     "profile": ""
   };
   visitor_RemoveImg = true;
-  hostSettings : any = {};
-
-  
+  appSettings: any = {};
+  appointmentInfo: any = {};
+  preAppointmentInfo: any = {};
+  PURPOSELIST = [];
+  MEETINGLIST = [];
+  HOSTLIST = [];
+  FLOORLIST = [];
+  CATEGORYLIST = [];
+  GENDERLIST = [{
+    code: 0,
+    name: 'Male'
+  },{
+    code: 1,
+    name: 'FeMale'
+  },{
+    code: 2,
+    name: 'Other'
+  }];
+  COUNTRYLIST = CommonUtil.countryList;
+  btnBackground = '';
+  QuestionnaireEnabled = false;
+  MaterialDeclareEnabled = false;
+  AttachmentUploadEnabled = false;
   constructor(public apiProvider: RestProvider,
     public modalCtrl: ModalController,
+    private router: Router,
+    private route: ActivatedRoute,
+    private popoverController: PopoverController,
     private alertCtrl: AlertController,
+    private commonUtil: CommonUtil,
     private camera: Camera,
-    public toastCtrl: ToastController,) { }
+    public toastCtrl: ToastController,) {
+      var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+      if(masterDetails){
+        this.FLOORLIST = JSON.parse(masterDetails).Table2;
+        this.PURPOSELIST = JSON.parse(masterDetails).Table3;
+        this.CATEGORYLIST = JSON.parse(masterDetails).Table4;
+        this.HOSTLIST = JSON.parse(masterDetails).Table6;
+        this.MEETINGLIST = JSON.parse(masterDetails).Table8;
+      }
 
-  ngOnInit() {
+      const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
+      if (ackSeettings) {
+        this.appSettings = JSON.parse(ackSeettings);
+        this.btnBackground = 'linear-gradient(to right, ' + this.appSettings.customStyle.buttonStyle.btnColor1
+        +' 0%, '+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%);';
+      }
   }
 
-  async showAlert(msg) {
-    let alert = this.alertCtrl.create({
-      header: 'Notification',
-      message: msg,
-      cssClass:'alert-danger',
-      buttons: ['Okay']
-      });
-      (await alert).present();
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        const passData = this.router.getCurrentNavigation().extras.state.passData;
+        if (passData && passData.PreAppointment) {
+          this.preAppointmentInfo = passData.PreAppointment;
+          this.appointmentInfo = passData.PreAppointment;
+          if (this.appointmentInfo.SettingDetail) {
+            this.QuestionnaireEnabled = JSON.parse(this.appointmentInfo.SettingDetail).QuestionnaireEnabled;
+            this.MaterialDeclareEnabled = JSON.parse(this.appointmentInfo.SettingDetail).MaterialDeclareEnabled
+            this.AttachmentUploadEnabled = JSON.parse(this.appointmentInfo.SettingDetail).AttachmentUploadEnabled
+          }
+
+          console.log('passData : ' + JSON.stringify(this.appointmentInfo));
+          if (this.appointmentInfo.VISITOR_COMPANY) {
+            this.appointmentInfo.visitor_comp_name = this.appointmentInfo.VISITOR_COMPANY;
+          } else if (this.appointmentInfo.visitor_comp_code) {
+            this.appointmentInfo.visitor_comp_name = this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code);
+          }
+          this.appointmentInfo.REASON = this.commonUtil.getPurposeCode(this.appointmentInfo.REASON);
+          this.appointmentInfo.VISITOR_GENDER = +this.appointmentInfo.VISITOR_GENDER;
+          console.log("this.appointmentInfo.REASON : " + this.appointmentInfo.REASON);
+        }
+
+      }
+    });
+  }
+
+  onChangePurpose(event){
+    const PurposeCode = event?event.detail.value: '';
+    console.log(""+ PurposeCode);
+    this.appointmentInfo.REASON = PurposeCode;
+  }
+
+  goBack() {
+    this.router.navigateByUrl('security-dash-board-page');
+    console.log('goBack ');
+   }
+
+   onChangeInput($event, type) {
+    this.presentPopover($event, type);
+   }
+
+   async presentPopover(ev: any, type) {
+    const popover = await this.popoverController.create({
+      component: ToolTipComponent,
+      componentProps: {
+        data: {
+          title : '',
+          action: type
+        }
+      },
+      cssClass: 'my-tooltip',
+      event: ev,
+      animated: true,
+      backdropDismiss: true,
+      mode: 'ios',
+      translucent: true
+    });
+    await popover.present().then(() => {
+      setTimeout(() => {
+        popover.dismiss();
+      }, 2000);
+    });
   }
 
   async openCustomDialog(action) {
@@ -56,11 +149,11 @@ export class SecurityManualCheckInPage implements OnInit {
     }
 
     var params = {
-      "SEQ_ID": this.appointment[0].VisitorBookingSeqId,
-      "STAFF_IC": this.appointment[0].STAFF_IC
+      "SEQ_ID": this.preAppointmentInfo.SEQ_ID,
+      "STAFF_IC": this.preAppointmentInfo.STAFF_IC
   };
   // this.VM.host_search_id = "adam";
-  this.apiProvider.requestApi(params, api, true, '').then(
+  this.apiProvider.requestApi(params, api, true, 'WEB').then(
     async (val) => {
       var result = JSON.parse(val.toString());
       if (result.Table && result.Table.length > 0) {
@@ -68,7 +161,7 @@ export class SecurityManualCheckInPage implements OnInit {
           component: QuestionDocPopupComponent,
           componentProps: {
             data: {
-              seqId: this.appointment[0].VisitorBookingSeqId,
+              seqId: this.preAppointmentInfo.SEQ_ID,
               result: result.Table,
               type: action
             }
@@ -88,7 +181,7 @@ export class SecurityManualCheckInPage implements OnInit {
         } else if (action === 'declaration'){
           msg = 'Declaration not added.';
         }
-        this.showAlert(msg);
+        this.apiProvider.showAlert(msg);
       }
       },
     async (err) => {

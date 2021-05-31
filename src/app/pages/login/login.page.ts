@@ -108,7 +108,6 @@ export class LoginPage implements OnInit {
           sDObj.userID = this.loginData.userID;
           sDObj.UserName = val.Table1[0].UserName;
           sDObj.userImage = val.Table1[0].userImage;
-          sDObj.RefBranchSeqId = val.Table1[0].RefBranchSeqId;
           localStorage.setItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS, JSON.stringify(sDObj));
         }
         window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO, JSON.stringify(this.scannedJson));
