@@ -7,6 +7,7 @@ import {AppSettings} from '../../services/app-settings';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonUtil } from 'src/app/services/util/CommonUtil';
 import { ToolTipComponent } from 'src/app/components/tool-tip/tool-tip.component';
+import { DocumentModalComponent } from 'src/app/components/document-modal/document-modal.component';
 
 @Component({
   selector: 'app-security-manual-check-in',
@@ -139,7 +140,6 @@ export class SecurityManualCheckInPage implements OnInit {
       }, 2000);
     });
   }
-
   async openCustomDialog(action) {
     let api = '/api/Vims/GetVisitorQuestionariesByAppointmentId';
     if (action === 'doc') {
@@ -211,6 +211,7 @@ export class SecurityManualCheckInPage implements OnInit {
   );
   }
 
+
   private async presentToast(text) {
     let toast = await this.toastCtrl.create({
       message: text,
@@ -248,5 +249,13 @@ export class SecurityManualCheckInPage implements OnInit {
       this.visitor_RemoveImg = false;
     }, (err) => {
     });
+  }
+
+  async documentModal(){
+    const modal = await this.modalCtrl.create({
+      component: DocumentModalComponent
+    });
+
+    await modal.present();
   }
 }

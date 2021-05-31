@@ -196,7 +196,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/security-manual-check-in/security-manual-check-in.module').then( m => m.SecurityManualCheckInPageModule)
   }
 
-
 ];
 
 @NgModule({
