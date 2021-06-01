@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonUtil } from 'src/app/services/util/CommonUtil';
 import { ToolTipComponent } from 'src/app/components/tool-tip/tool-tip.component';
 import { DocumentModalComponent } from 'src/app/components/document-modal/document-modal.component';
+import { ItemChecklistModalComponent } from 'src/app/components/item-checklist-modal/item-checklist-modal.component';
 
 @Component({
   selector: 'app-security-manual-check-in',
@@ -70,8 +71,6 @@ export class SecurityManualCheckInPage implements OnInit {
       const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
       if (ackSeettings) {
         this.appSettings = JSON.parse(ackSeettings);
-        this.btnBackground = 'linear-gradient(to right, ' + this.appSettings.customStyle.buttonStyle.btnColor1
-        +' 0%, '+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%);';
       }
   }
 
@@ -254,6 +253,14 @@ export class SecurityManualCheckInPage implements OnInit {
   async documentModal(){
     const modal = await this.modalCtrl.create({
       component: DocumentModalComponent
+    });
+
+    await modal.present();
+  }
+
+  async checklistmodal(){
+    const modal = await this.modalCtrl.create({
+      component: ItemChecklistModalComponent
     });
 
     await modal.present();
