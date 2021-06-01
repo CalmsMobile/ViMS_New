@@ -26,7 +26,7 @@ export class CommonUtil{
 
   getRoomName(code, isReturnID) {
     let result = code;
-    if (!code) {
+    if (code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
@@ -48,7 +48,7 @@ export class CommonUtil{
 
   getPurposeName(code, isReturnID) {
     let result = code;
-    if (!code) {
+    if (code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
@@ -71,7 +71,7 @@ export class CommonUtil{
 
   getCategory(code, isReturnID) {
     let result = code;
-    if (!code) {
+    if (code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
@@ -94,7 +94,7 @@ export class CommonUtil{
 
   getFloor(code, isReturnID) {
     let result = code;
-    if (!code) {
+    if (code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
@@ -117,7 +117,7 @@ export class CommonUtil{
 
   getGender(code, isReturnID) {
     let result = code;
-    if (!code) {
+    if (code === null || code === '') {
       return '';
     }
     if (code === "Male" || code === "MALE" || code === "0" || code === 0) {
@@ -132,7 +132,7 @@ export class CommonUtil{
 
   getPurposeCode(code, isReturnID) {
     let result = code;
-    if (!code) {
+    if (code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
@@ -169,7 +169,7 @@ export class CommonUtil{
 
   getCompany(code, isReturnID) {
     let result = code;
-    if (!code) {
+    if (code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);

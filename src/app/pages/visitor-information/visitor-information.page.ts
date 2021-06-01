@@ -56,8 +56,8 @@ export class VisitorInformationPage implements OnInit {
       this.getAddVisitorSettings();
       return;
     }
-    var data = this.appointmentInfo.HexCode;//"C4B9F365";
-    var params = {"hexcode":""+ data};
+    var hexData = this.appointmentInfo.HexCode;//"C4B9F365";
+    var params = {"hexcode":""+ hexData};
     this.apiProvider.VimsAppGetAppointmentByHexCode(params).then(
       async (val) => {
         var visitorDetail = val+"";
@@ -78,6 +78,7 @@ export class VisitorInformationPage implements OnInit {
             this.validQRCode = false;
           }
           this.appointmentInfo = vOb;
+          this.appointmentInfo.Hexcode = hexData;
           if (this.appointmentInfo.SettingDetail) {
             this.QuestionnaireEnabled = JSON.parse(this.appointmentInfo.SettingDetail).QuestionnaireEnabled;
             this.MaterialDeclareEnabled = JSON.parse(this.appointmentInfo.SettingDetail).MaterialDeclareEnabled

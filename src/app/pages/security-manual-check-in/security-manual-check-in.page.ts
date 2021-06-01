@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ModalController,AlertController,ToastController, PopoverController} from '@ionic/angular';
+import {ModalController,AlertController,ToastController, PopoverController, NavController} from '@ionic/angular';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
 import { Camera } from '@ionic-native/camera/ngx';
@@ -8,6 +8,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonUtil } from 'src/app/services/util/CommonUtil';
 import { ToolTipComponent } from 'src/app/components/tool-tip/tool-tip.component';
 import { DocumentModalComponent } from 'src/app/components/document-modal/document-modal.component';
+import { TranslateService } from '@ngx-translate/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 
 @Component({
   selector: 'app-security-manual-check-in',
@@ -29,6 +32,8 @@ export class SecurityManualCheckInPage implements OnInit {
   appSettings: any = {};
   appointmentInfo: any = {};
   preAppointmentInfo: any = {};
+  visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
+  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
   PURPOSELIST = [];
   MEETINGLIST = [];
   HOSTLIST = [];
@@ -49,6 +54,7 @@ export class SecurityManualCheckInPage implements OnInit {
   QuestionnaireEnabled = false;
   MaterialDeclareEnabled = false;
   AttachmentUploadEnabled = false;
+  imageType = '';
   constructor(public apiProvider: RestProvider,
     public modalCtrl: ModalController,
     private router: Router,
@@ -56,8 +62,22 @@ export class SecurityManualCheckInPage implements OnInit {
     private popoverController: PopoverController,
     private alertCtrl: AlertController,
     private commonUtil: CommonUtil,
+    private navCtrl: NavController,
     private camera: Camera,
-    public toastCtrl: ToastController,) {
+    private dateformat : DateFormatPipe,
+    public toastCtrl: ToastController,
+    private translate : TranslateService,
+    public sanitizer: DomSanitizer) {
+    this.translate.get([
+      'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
+      'ALERT_TEXT.VISITOR_CHECKED_IN',
+      'ALERT_TEXT.ALERT_TEXT.SELECT_PURPOSE',
+      'ADD_APPOIN.NO_VISITROS',
+      'ALERT_TEXT.WISH_TO_REMOVE_VISITOR',
+      'ALERT_TEXT.SELECT_STAFF',
+      'ALERT_TEXT.IMAGE_SELECT_ERROR']).subscribe(t => {
+        this.T_SVC = t;
+    });
       var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
       if(masterDetails){
         this.FLOORLIST = JSON.parse(masterDetails).Table2;
@@ -220,7 +240,8 @@ export class SecurityManualCheckInPage implements OnInit {
     toast.present();
   }
 
-  public capture(){
+  public capture(action){
+    this.imageType = action;
     this.takePicture(this.camera.PictureSourceType.CAMERA);
   }
 
@@ -242,18 +263,169 @@ export class SecurityManualCheckInPage implements OnInit {
     // Get the data of an image
     this.camera.getPicture(options).then((imageData) => {
 
-      this.base64Image = 'data:image/jpeg;base64,' + imageData;
-      this.data.profile = imageData;
-      this.visitor_RemoveImg = false;
+      if (this.imageType === 'PROFILE_IMAGE') {
+        this.base64Image = 'data:image/jpeg;base64,' + imageData;
+        this.data.profile = imageData;
+        this.visitor_RemoveImg = false;
+        this.appointmentInfo.visitorImage = imageData;
+      } else {
+        this.appointmentInfo.visitorIDImage = imageData;
+      }
+
     }, (err) => {
     });
   }
 
   async documentModal(){
     const modal = await this.modalCtrl.create({
-      component: DocumentModalComponent
+      component: DocumentModalComponent,
+      componentProps: {
+        data: this.appointmentInfo.additionalDocList
+      },
     });
 
     await modal.present();
+    modal.onDidDismiss().then((response)=> {
+      if (response) {
+        console.log("data:" + JSON.stringify(response.data));
+        this.appointmentInfo.additionalDocList = response.data ? response.data: [];
+      }
+    })
+  }
+
+  onChangeID($event) {
+    const value = $event.target.value;
+    if (value.length > 2) {
+      let api = '/api/Vims/SearchExistVisitor';
+      var params = {
+        "SearchString": value,
+        "OffSet": "0",
+        "Rows": "1"
+      };
+      // this.VM.host_search_id = "adam";
+      this.apiProvider.requestApi(params, api, false, 'WEB').then(
+        async (val) => {
+          var result = JSON.parse(val.toString());
+          if (result.Table && result.Table.length > 0 && result.Table2 && result.Table2.length > 0) {
+            console.log(JSON.stringify(result.Table2[0]));
+            const visitorData = result.Table2[0];
+            this.appointmentInfo.VISITOR_IC = value;
+            this.appointmentInfo.VisitorCategory = visitorData.VisitorCategory;
+            this.appointmentInfo.VisitorCategory_ID = visitorData.VisitorCategory;
+            this.appointmentInfo.TELEPHONE_NO = visitorData.TELEPHONE_NO;
+            this.appointmentInfo.EMAIL = visitorData.EMAIL;
+            this.appointmentInfo.VISITOR_NAME = visitorData.VISITOR_NAME;
+            this.appointmentInfo.VISITOR_COMPANY = visitorData.VISITOR_COMPANY;
+            this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(visitorData.VISITOR_COMPANY_ID, true);
+            this.appointmentInfo.VISITOR_COMPANY_ID = this.appointmentInfo.visitor_comp_code;
+            this.appointmentInfo.VISITOR_GENDER = this.commonUtil.getGender(visitorData.VISITOR_GENDER, true);
+            this.appointmentInfo.VISITOR_ADDRESS = visitorData.visitor_address_1;
+            this.appointmentInfo.VISITOR_COUNTRY = visitorData.visitor_country;
+            this.appointmentInfo.PLATE_NUM = visitorData.PLATE_NUM;
+          }
+          },
+        async (err) => {
+        }
+      );
+    }
+  }
+
+  processCheckIn() {
+    var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+    var MAppDevSeqId = "";
+    if(ackData && JSON.parse(ackData)){
+      MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
+    }
+
+    if(!this.preAppointmentInfo.Hexcode) {
+      this.preAppointmentInfo.Hexcode = this.preAppointmentInfo.HexCode;
+    }
+    if(!this.appointmentInfo.Hexcode) {
+      this.appointmentInfo.Hexcode = this.appointmentInfo.HexCode;
+    }
+
+    const visitor = [{
+      VISITOR_NAME: this.appointmentInfo.VISITOR_NAME? this.appointmentInfo.VISITOR_NAME: '',
+      VISITOR_IC : this.appointmentInfo.VISITOR_IC? this.appointmentInfo.VISITOR_IC: '',
+      EMAIL: this.appointmentInfo.EMAIL? this.appointmentInfo.EMAIL: '',
+      TELEPHONE_NO:this.appointmentInfo.TELEPHONE_NO? this.appointmentInfo.TELEPHONE_NO: '',
+      VISITOR_COMPANY:this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: '',
+      VISITOR_COMPANY_ID:this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: '',
+      VISITOR_ADDRESS:this.appointmentInfo.VISITOR_ADDRESS? this.appointmentInfo.VISITOR_ADDRESS: '',
+      VisitorCategory:this.appointmentInfo.VisitorCategory? this.appointmentInfo.VisitorCategory: '',
+      VisitorCategory_ID: this.appointmentInfo.VisitorCategory? this.appointmentInfo.VisitorCategory: '',
+      VISITOR_GENDER: (this.appointmentInfo.VISITOR_GENDER != null && this.appointmentInfo.VISITOR_GENDER != '')? this.appointmentInfo.VISITOR_GENDER: 0,
+      VISITOR_COUNTRY: this.appointmentInfo.VISITOR_COUNTRY? this.appointmentInfo.VISITOR_COUNTRY: '',
+      VisitorDesignation: "",
+      VISITOR_TEMPERATURE: this.appointmentInfo.att_bodytemperature? this.appointmentInfo.att_bodytemperature: '',
+      VISITOR_IMG: this.appointmentInfo.visitorImage?this.appointmentInfo.visitorImage: '',
+      VISITOR_ID_IMG:this.appointmentInfo.visitorIDImage? this.appointmentInfo.visitorIDImage: '',
+      PLATE_NUM: this.appointmentInfo.PLATE_NUM?this.appointmentInfo.PLATE_NUM: '',
+      SEQ_ID: this.preAppointmentInfo.SEQ_ID ? this.preAppointmentInfo.SEQ_ID: (this.appointmentInfo.SEQ_ID? this.appointmentInfo.SEQ_ID: ''),
+      Hexcode :  this.preAppointmentInfo.Hexcode ? this.preAppointmentInfo.Hexcode:  (this.appointmentInfo.Hexcode? this.appointmentInfo.Hexcode: '')
+    }];
+
+    var params  = {
+      DEV_SEQID: MAppDevSeqId,
+      VISITOR_ARRAY: visitor,
+      START_DATE: this.appointmentInfo.START_TIME? this.dateformat.transform(this.appointmentInfo.START_TIME, "yyyy-MM-ddTHH:mm:ss"): '',
+      END_DATE: this.appointmentInfo.END_TIME? this.dateformat.transform(this.appointmentInfo.END_TIME, "yyyy-MM-ddTHH:mm:ss"): '',
+      Purpose: this.appointmentInfo.REASON? this.appointmentInfo.REASON: '',
+      HOST_NAME: this.appointmentInfo.Host_IC? this.appointmentInfo.Host_IC: '',
+      HOST_IC: this.appointmentInfo.Host_IC? this.appointmentInfo.Host_IC: '',
+      FLOOR: this.appointmentInfo.Floor? this.appointmentInfo.Floor: '',
+      MEETING_LOCATION: this.appointmentInfo.MEETING_LOCATION? this.appointmentInfo.MEETING_LOCATION: '',
+      Remarks: this.appointmentInfo.Remarks? this.appointmentInfo.Remarks: '',
+      AdditionalDocs: this.appointmentInfo.additionalDocList ? this.appointmentInfo.additionalDocList: '',
+      Declaration: this.appointmentInfo.declarationList ? JSON.stringify(this.appointmentInfo.declarationList): ''
+    }
+
+    this.apiProvider.VimsAppSecurityCheckIn(params).then(
+      async (val) => {
+        var result = JSON.parse(val.toString());
+        if(result  && result[0].Code == 10){
+
+          let toast = await this.toastCtrl.create({
+            message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKED_IN'],
+            duration: 3000,
+            color: 'primary',
+            position: 'bottom'
+          });
+          toast.present();
+          this.navCtrl.navigateRoot('security-dash-board-page');
+          return;
+        }
+        let toast = await this.toastCtrl.create({
+          message: 'Server Error',
+          duration: 3000,
+          color: 'primary',
+          position: 'bottom'
+        });
+        toast.present();
+
+      },
+      async (err) => {
+
+        if(err && err.message == "No Internet"){
+          return;
+        }
+        var message = "Error in server";
+        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        } else {
+          var result = JSON.parse(err.toString());
+          if(result  && result["Table"] != undefined){
+            message = result["Table"][0].description? result["Table"][0].description : result["Table"][0].Description;
+          }else if(result  && result["Table1"] != undefined){
+            message = result["Table1"][0].Status? result["Table1"][0].Status : result["Table1"][0].Description;
+          }
+        }
+        if(err.message){
+          message = err.message;
+        }
+        this.apiProvider.showAlert(message);
+
+      }
+    );
   }
 }

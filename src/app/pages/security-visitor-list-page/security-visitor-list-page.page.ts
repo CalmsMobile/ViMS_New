@@ -392,10 +392,10 @@ export class SecurityVisitorListPagePage implements OnInit {
     }
 
     var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
-      var MAppDevSeqId = "";
-      if(ackData && JSON.parse(ackData)){
-        MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
-      }
+    var MAppDevSeqId = "";
+    if(ackData && JSON.parse(ackData)){
+      MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
+    }
 
     var params  = {
       "DEV_SEQID":MAppDevSeqId,

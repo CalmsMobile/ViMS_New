@@ -469,6 +469,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
         var message = this.T_SVC['ALERT_TEXT.APPOINTMENT_NOT_FOUND'];
         if(vOb1 && vOb1.Table1 && vOb1.Table1.length > 0) {
           var vOb = vOb1.Table1[0];
+          vOb.Hexcode = params.hexcode;
           var startDate = vOb.START_TIME.split("T")[0];
           var fDate = this.dateformat.transform(startDate+"", "yyyy-MM-dd");
           var fTime = new Date(fDate).getTime();
