@@ -4,10 +4,13 @@ import {AppSettings} from './../../services/app-settings'
 import { NetworkProvider } from '../network/network';
 import { File } from '@ionic-native/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
-import { AlertController, LoadingController, Platform } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, Platform, PopoverController, ToastController } from '@ionic/angular';
 import { Network } from '@ionic-native/network/ngx';
 import { EventsService } from 'src/app/services/EventsService';
 import { Device } from '@ionic-native/device/ngx';
+import { ToolTipComponent } from 'src/app/components/tool-tip/tool-tip.component';
+import { DecimalPipe } from '@angular/common';
+import { ViewImageComponent } from 'src/app/components/view-image/view-image.component';
 
 /*
   Generated class for the RestProvider provider.
@@ -25,9 +28,13 @@ export class RestProvider {
     public platform: Platform,
     private device: Device,
     private file : File,
+    private toastCtrl: ToastController,
     private eventsService:EventsService,
     public network: Network,
     // private http1: Http,
+    private decimalPipe: DecimalPipe,
+    private popoverController: PopoverController,
+    private modalContrl: ModalController,
     private alertCtrl: AlertController,
     private translate:TranslateService,
     public loadingCtrl: LoadingController) {
@@ -63,6 +70,16 @@ export class RestProvider {
         this.showAlert(this.T_SVC['ALERT_TEXT.NETWORK_ERROR']);
     }
     return result;
+  }
+
+  async showToast(mesg) {
+    let toast = await this.toastCtrl.create({
+      message: mesg,
+      duration: 3000,
+      color: 'primary',
+      position: 'bottom',
+    });
+    toast.present();
   }
 
   async showAlert(msg) {
@@ -103,6 +120,45 @@ export class RestProvider {
     });
   }
 
+  async viewImage(image) {
+    const presentModel = await this.modalContrl.create({
+      component: ViewImageComponent,
+      componentProps: {
+        data: image
+      },
+      showBackdrop: true,
+      mode: 'ios',
+      cssClass: 'imageViewModal'
+    });
+    presentModel.onWillDismiss().then((data) => {
+      this.GetQuickPassVisitorList(null, true);
+    });
+    return await presentModel.present();
+
+  }
+
+  async presentPopover(ev: any, message) {
+    const popover = await this.popoverController.create({
+      component: ToolTipComponent,
+      componentProps: {
+        data: {
+          title : message
+        }
+      },
+      cssClass: 'my-tooltip',
+      event: ev,
+      animated: true,
+      backdropDismiss: true,
+      mode: 'ios',
+      translucent: true
+    });
+    await popover.present().then(() => {
+      setTimeout(() => {
+        popover.dismiss();
+      }, 2000);
+    });
+  }
+
   async dismissLoading() {
     setTimeout(async () => {
       try {
@@ -131,14 +187,12 @@ export class RestProvider {
     if(!data){
       return;
     }
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     if (loading) {
       this.presentLoading();
     }
     // var loading = this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetHostAppSettings';
-    console.log("API: "+ url);
-    console.log("Params: "+ JSON.stringify(data));
 
     return new Promise((resolve, reject) => {
 
@@ -150,7 +204,6 @@ export class RestProvider {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         this.dismissLoading();
-        console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         if(this.validateUser(output)){
           return;
@@ -375,9 +428,9 @@ export class RestProvider {
     });
   }
 
-  SaveSecurityAppDeviceInfo(data, ApiUrl){
+  securityUserLogin(data, ApiUrl){
     var loading = this.presentLoading();
-    var Api = ApiUrl + '/api/SecurityApp/SaveSecurityAppDeviceInfo';
+    var Api = ApiUrl + '/api/SecurityApp/userLogin';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
 
@@ -394,8 +447,12 @@ export class RestProvider {
         this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
-          resolve(output.Table);
+        if(output.Table && output.Table.length > 0){
+          if(output.Table[0].Code == 10) {
+            resolve(output);
+          } else {
+            reject(JSON.stringify({message: output.Table[0].Description ? output.Table[0].Description: output.Table1[0].Description}));
+          }
         }else{
           reject(output);
         }
@@ -509,7 +566,7 @@ export class RestProvider {
   }
 
   async VimsAdminLogin(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAdminLogin');
     console.log("Params: "+ JSON.stringify(data));
@@ -595,24 +652,24 @@ export class RestProvider {
     });
   }
 
-  setAuthorizedSecurityInfo(data){
-    var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
-    var MAppDevSeqId = "";
-    if(ackData && JSON.parse(ackData)){
-      MAppDevSeqId = JSON.parse(ackData).MAppDevSeqId;
-    }
-    if(!this.platform.is('cordova')) {
-      data.Authorize = {
-        "AuDeviceUID": AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
-        "AuMAppDevSeqId": MAppDevSeqId
-      }
-    }else{
+  twoDecimals(number) {
+    // number = ""+number;
+    return number.toFixed(0);
+}
 
-      data.Authorize = {
-        "AuDeviceUID": this.device.uuid,
-        "AuMAppDevSeqId": MAppDevSeqId
-      }
+  setAuthorizedSecurityInfo(data){
+    var MAppDevSeqId = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+
+    data.Authorize = {
+      "userID": MAppDevSeqId ? JSON.parse(MAppDevSeqId).userID: '',
+      "AuDeviceUID": (this.device && this.device.uuid) ? this.device.uuid: AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
+      "AuMAppDevSeqId": MAppDevSeqId ? JSON.parse(MAppDevSeqId).MAppDevSeqId: ''
     }
+    let branchID = MAppDevSeqId ? JSON.parse(MAppDevSeqId).RefBranchSeqid: '';
+    if (!branchID) {
+      branchID = MAppDevSeqId ? JSON.parse(MAppDevSeqId).RefBranchSeqId: '';
+    }
+    data.Branch = branchID;
     return data;
   }
 
@@ -672,26 +729,20 @@ export class RestProvider {
     return data;
   }
 
-  setAuthorizedInfo(data, IsWEB){
+  setAuthorizedInfo(data, IsWEB, branchID){
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
       var AuHostSeqId = IsWEB;
+      let branchId = '';
       if(hostData && JSON.parse(hostData) && !IsWEB){
         AuHostSeqId = JSON.parse(hostData).SEQID;
+        branchId = JSON.parse(hostData).BRANCH_ID;
       }
-    if(!this.platform.is('cordova')) {
       data.Authorize = {
-        "AuDeviceUID": IsWEB? IsWEB : AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
+        "AuDeviceUID": IsWEB? IsWEB : (this.device && this.device.uuid) ? this.device.uuid : AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
         "AuHostSeqId": AuHostSeqId,
         "AuMAppDevSeqId":''
-      }
-    }else{
-
-      data.Authorize = {
-        "AuDeviceUID": IsWEB? IsWEB : this.device.uuid,
-        "AuHostSeqId": AuHostSeqId,
-        "AuMAppDevSeqId":''
-      }
-    }
+      };
+      data.Branch = branchID? (branchID === 'All' ? '' :branchID): branchId;
     return data;
   }
 
@@ -753,7 +804,7 @@ export class RestProvider {
 
   SearchHost(data){
 
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
 
     //var loading = this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SearchHost';
@@ -793,7 +844,7 @@ export class RestProvider {
   }
 
   SearchExistVisitor(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     //var loading = this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SearchExistVisitor');
     console.log("Params: "+ JSON.stringify(data));
@@ -830,7 +881,7 @@ export class RestProvider {
   }
 
   GetVisitorsListByHost(data, showLoading){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading;
     if(showLoading){
       loading = this.presentLoading();
@@ -874,7 +925,7 @@ export class RestProvider {
   }
 
   GetMasterDetails(){
-    var data  = this.setAuthorizedInfo({}, '');
+    var data  = this.setAuthorizedInfo({}, 'WEB', '');
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetMasterDetails');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
@@ -907,13 +958,11 @@ export class RestProvider {
   }
 
   GetAddVisitorSettings(data){
-    data  = this.setAuthorizedInfo(data, '');
-    var loading = this.presentLoading();
+    data  = this.setAuthorizedInfo(data, '', '');
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAddVisitorSettings');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
-        this.dismissLoading();
         reject({
           "message":"No Internet"
         });
@@ -924,7 +973,6 @@ export class RestProvider {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
@@ -934,7 +982,6 @@ export class RestProvider {
           reject(output);
         }
       }, (err) => {
-        this.dismissLoading();
         reject(err);
       });
     });
@@ -1048,7 +1095,7 @@ export class RestProvider {
   }
 
   async AddVisitor(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddVisitor');
     console.log("Params: "+ JSON.stringify(data));
@@ -1097,7 +1144,7 @@ export class RestProvider {
 
 
   async UpdateVisitor(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateVisitor');
     console.log("Params: "+ JSON.stringify(data));
@@ -1145,7 +1192,7 @@ export class RestProvider {
 
 
   async CreateQuickPassVisitor(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/CreateQuickPassVisitor';
     console.log("API: "+ url);
@@ -1191,7 +1238,7 @@ export class RestProvider {
   }
 
   async addVisitorCompany(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/addVisitorCompany');
     console.log("Params: "+ JSON.stringify(data));
@@ -1230,7 +1277,7 @@ export class RestProvider {
 
 
   async AddAppointment(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddAppointment');
@@ -1278,7 +1325,7 @@ export class RestProvider {
   }
 
   async RemindAppointment(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemindAppointment');
@@ -1332,16 +1379,12 @@ export class RestProvider {
   }
 
   syncAppointment(data, upcoming, showLoading){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     data.IsMobile = true;
     var loading ;
     if(showLoading){
       loading = this.presentLoading();
     }
-
-    console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/syncAppointment');
-    console.log("Params: "+ JSON.stringify(data));
-
     return new Promise(async (resolve, reject) => {
 
       // alert("data: "+ JSON.stringify(data));
@@ -1356,7 +1399,6 @@ export class RestProvider {
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/syncAppointment', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(async response => {
-        console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
         if(this.validateUser(output)){
@@ -1389,7 +1431,7 @@ export class RestProvider {
   }
 
   AppointmentApprovalList(data,showLoading){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     data.IsMobile = true;
     var loading ;
     if(showLoading){
@@ -1443,7 +1485,7 @@ export class RestProvider {
   }
 
   GetAllQuickPassVisitorsHistory(data, showLoading){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = null
     if(showLoading){
       loading = this.presentLoading();
@@ -1625,7 +1667,7 @@ export class RestProvider {
         }
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
-            resolve(JSON.stringify(output.Table2));
+            resolve(JSON.stringify(output));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1673,8 +1715,13 @@ export class RestProvider {
           return;
         }
         if(output){
-          if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
-            resolve(JSON.stringify(output.Table));
+          if(output.Table != undefined &&  output.Table.length > 0){
+            if(output.Table[0].Code == 10) {
+              resolve(JSON.stringify(output.Table));
+            } else {
+              reject(JSON.stringify({message: output.Table[0].description}));
+            }
+
           }else{
             reject(JSON.stringify(output));
           }
@@ -1694,7 +1741,7 @@ export class RestProvider {
   }
 
   async DeleteQuickPassVisitor(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     data.IsMobile = true;
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/DeleteQuickPassVisitor';
@@ -1926,34 +1973,24 @@ export class RestProvider {
   VimsAppGetSecurityStats(data){
     data  = this.setAuthorizedSecurityInfo(data);
     data.IsMobile = true;
-    // var loading = this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetSecurityStats';
-
-    console.log("API: "+ url);
-    console.log("Params: "+ JSON.stringify(data));
-
     return new Promise((resolve, reject) => {
-
-      // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
           reject({
             "message":"No Internet"
           });
-          // this.dismissLoading();
           return;
       }
       this.http.post(url, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        // this.dismissLoading();
         if(this.validateUser(output)){
           return;
         }
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
-            resolve(JSON.stringify(output.Table1[0]));
+            resolve(JSON.stringify(output));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1966,13 +2003,12 @@ export class RestProvider {
         }
       }, (err) => {
         reject(err);
-        // this.dismissLoading();
       });
     });
   }
 
   async AppointmentApprovalByVisitor(data) {
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
 
     var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AppointmentApprovalByVisitor';
@@ -2019,7 +2055,7 @@ export class RestProvider {
   }
 
   async ChangeAppointmentStatus(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
 
     var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeAppointmentStatus';
@@ -2066,7 +2102,7 @@ export class RestProvider {
   }
 
   async ChangeApppointmentApprovalSettings(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeApppointmentApprovalSettings');
@@ -2113,8 +2149,8 @@ export class RestProvider {
     });
   }
 
-  async getHostNotification(data){
-    data  = this.setAuthorizedInfo(data, '');
+  async getHostNotification(data, WEB){
+    data  = this.setAuthorizedInfo(data, WEB, '');
     var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/getHostNotification');
@@ -2160,8 +2196,8 @@ export class RestProvider {
     });
   }
 
-  async UpdateReadNotificationStatus(data){
-    data  = this.setAuthorizedInfo(data, '');
+  async UpdateReadNotificationStatus(data, WEB){
+    data  = this.setAuthorizedInfo(data, WEB, '');
     var loading = await this.presentLoading();
 
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateReadNotificationStatus';
@@ -2209,7 +2245,7 @@ export class RestProvider {
   }
 
   async DeleteNotification(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemovePushNotification';
     console.log("API: "+ url);
@@ -2257,7 +2293,7 @@ export class RestProvider {
 
   GetPreAppointmentSettings(data){
    // var loading = this.presentLoading();
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetPreAppointmentSettings');
     console.log("Params: "+ JSON.stringify(data));
 
@@ -2303,7 +2339,7 @@ export class RestProvider {
 
 
   async GetAppointmentByGroupId(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     data.IsMobile = true;
     var loading = await this.presentLoading();
 
@@ -2351,10 +2387,12 @@ export class RestProvider {
     });
   }
 
-  async VimsAppGetAppointmentByHexCode(data){
+  async VimsAppGetAppointmentByHexCode(data, loading){
     data  = this.setAuthorizedSecurityInfo(data);
     data.IsMobile = true;
-    var loading = await this.presentLoading();
+    if (loading) {
+      await this.presentLoading();
+    }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetAppointmentByHexCode';
 
     console.log("API: "+ url);
@@ -2401,7 +2439,7 @@ export class RestProvider {
   }
 
   async EditAppointment(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/EditAppointment');
@@ -2449,7 +2487,7 @@ export class RestProvider {
   }
 
   async UpdateHostInfo(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateHostInfo');
@@ -2498,7 +2536,7 @@ export class RestProvider {
   }
 
   async RemoveAppointment(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemoveAppointment');
@@ -2546,7 +2584,7 @@ export class RestProvider {
 
 
   async FBBookingEndSession(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/FBBookingEndSession';
     console.log("API: "+ url);
@@ -2646,7 +2684,7 @@ export class RestProvider {
   }
 
   async VimsAppFBBookingCancel(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFBBookingCancel';
     console.log("API: "+ url);
@@ -2696,7 +2734,7 @@ export class RestProvider {
   }
 
   async VimsAppUpdateFacilityBookings(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppUpdateFacilityBookings';
 
@@ -2746,7 +2784,7 @@ export class RestProvider {
   }
 
   async VimsAppDeleteFBFacilityBooking(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppDeleteFBFacilityBooking');
@@ -2797,7 +2835,7 @@ export class RestProvider {
 
 
   VimsAppFacilityBookingSetting(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityBookingSetting';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
@@ -2829,7 +2867,7 @@ export class RestProvider {
   }
 
   async VimsAppFacilityMasterList(data, edit){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     if(edit){
       var loading = await this.presentLoading();
     }
@@ -2872,7 +2910,7 @@ export class RestProvider {
   }
 
   VimsAppFacilityPurposeList(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityPurposeList';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
@@ -2904,7 +2942,7 @@ export class RestProvider {
   }
 
   async VimsAppGetBookingSlot(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetBookingSlot';
     console.log("API: "+ url);
@@ -2939,7 +2977,7 @@ export class RestProvider {
   }
 
   async VimsAppFacilityBookingSave(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityBookingSave';
     console.log("API: "+ url);
@@ -2974,7 +3012,7 @@ export class RestProvider {
   }
 
   VimsAppGetHostFacilityBookingList(data, showLoaading){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading;
     if(showLoaading){
       loading = this.presentLoading();
@@ -3019,7 +3057,7 @@ export class RestProvider {
   }
 
   GetDynamicQRCodeForVisitor(data) {
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetDynamicQRCodeForVisitor';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
@@ -3052,8 +3090,8 @@ export class RestProvider {
   }
 
   GetAppointmentDetailBySeqId(data) {
-    data  = this.setAuthorizedInfo(data, '');
-    this.presentLoading();
+    data  = this.setAuthorizedInfo(data, '', '');
+    // this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppointmentDetailBySeqId';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
@@ -3086,8 +3124,8 @@ export class RestProvider {
     });
   }
 
-  requestApi(data, API, loading, IsWEB) {
-    data  = this.setAuthorizedInfo(data, IsWEB);
+  requestSecurityApi(data, API, loading) {
+    data  = this.setAuthorizedSecurityInfo(data);
     if (loading) {
       this.presentLoading();
     }
@@ -3103,7 +3141,49 @@ export class RestProvider {
       this.http.post(url, params, {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        console.log("Result: "+ JSON.stringify(response));
+        console.log(API + " --> Result : "+ JSON.stringify(response));
+        this.dismissLoading();
+        if (response[0].Data) {
+          var output = JSON.parse(response[0].Data);
+          if(this.validateUser(output)){
+            return;
+          }
+          if(output != undefined && output.Table){
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify(output));
+          }
+        } else {
+          reject(JSON.stringify({message: response[0].ErrorLog[0].Error}));
+        }
+
+
+      }, (err) => {
+        this.dismissLoading();
+        reject(err);
+
+      });
+    });
+  }
+
+   requestApi(data, API, loading, IsWEB, branchID) {
+    data  = this.setAuthorizedInfo(data, IsWEB, branchID);
+    if (loading) {
+      this.presentLoading();
+    }
+    var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + API;
+    console.log("API: "+ url);
+    var params = JSON.stringify(data);
+    console.log("params: "+ params);
+    return new Promise((resolve, reject) => {
+      if (this.checkConnection()) {
+          this.dismissLoading();
+          return;
+      }
+      this.http.post(url, params, {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+      }).subscribe(response => {
+        console.log(API+ " Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
         if(this.validateUser(output)){
@@ -3124,7 +3204,7 @@ export class RestProvider {
   }
 
   async VimsAppGetFacilityBookingDetails(data){
-    data  = this.setAuthorizedInfo(data, '');
+    data  = this.setAuthorizedInfo(data, '', '');
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetFacilityBookingDetails';
     console.log("API: "+ url);

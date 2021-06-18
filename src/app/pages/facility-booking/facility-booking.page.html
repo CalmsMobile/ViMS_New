@@ -1,7 +1,7 @@
 
 <ion-header tra *ngIf = "true">
   <ion-toolbar color="danger">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{edit? ('FACILITY_BOOKING.U_TITLE' | translate): ('FACILITY_BOOKING.TITLE' | translate)}}</ion-title>
     <ion-buttons slot="end">
       <ion-button slot="icon-only" (click)="checkFacilityAvailability()">
@@ -85,7 +85,7 @@
     <!-- <h2>{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</h2> -->
     <ion-label *ngIf="false" style="    font-size: 16px;    margin-left: 5px;" color="danger">{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</ion-label>
     <ion-item *ngIf="false" no-lines no-padding transparent>
-      <ion-select mode="ios" class="ionSelect" interface="action-sheet" (ionChange)="onChangeFacility($event.detail.value)"
+      <ion-select mode="ios" class="ionSelect" interface="action-sheet" (ionChange)="onChangeFacility($event)"
       style="font-size: 16px;" [(ngModel)]="FacilityCode" interface="action-sheet" placeholder="{{'FACILITY_BOOKING.STEP2.LAB_FACILITY_NAME' | translate}}">
         <ion-label>{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</ion-label>
         <ion-select-option text-left *ngFor="let avl_reason of FACILITYMASTERLIST" [value]="avl_reason.FacilityCode">

@@ -263,13 +263,15 @@ export class FacilityBookingPage2Page implements OnInit {
     );
   }
 
-  onChangePurpose(PurposeCode){
+  onChangePurpose(event){
+    const PurposeCode = event.detail.value;
     console.log(""+ PurposeCode);
     this.PurposeCode = PurposeCode;
 
   }
 
-  onChangeFacility(FacilityCode){
+  onChangeFacility(event){
+    const FacilityCode = event.detail.value;
     console.log(""+ FacilityCode);
     this.VM.FACILITYMASTERLIST.forEach(element => {
       if (element.FacilityCode === FacilityCode) {
@@ -722,10 +724,6 @@ export class FacilityBookingPage2Page implements OnInit {
       buttons: ['Okay']
     });
     alert.present();
-  }
-
-  ionViewWillEnter(){
-    // this.content.scrollToTop();
   }
 
   ngOnInit() {

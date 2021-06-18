@@ -5,7 +5,7 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { StreamingMedia, StreamingVideoOptions } from '@ionic-native/streaming-media/ngx';
-import { NavController, AlertController, LoadingController, ToastController, ModalController, Platform, ActionSheetController } from '@ionic/angular';
+import { NavController, AlertController, ToastController, ModalController, Platform, ActionSheetController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -22,7 +22,6 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
    base64Image = "";
   HostImage = "";
   visitor : any = {};
-  loading : any;
   logo = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   coverImage = "assets/images/profile_bg.jpg";
   appSettings : any;
@@ -67,7 +66,6 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
   isProceedClicked : any = false;
   constructor(public navCtrl: NavController,
     private alertCtrl : AlertController,
-    private loadingCtrl : LoadingController,
     private apiProvider : RestProvider,
     private androidPermissions: AndroidPermissions,
     private toastCtrl : ToastController,
@@ -289,9 +287,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter SignPadVisitorDetailsPage');
-  }
 
-  ionViewWillEnter(){
     this.getVideoOptionAvailable();
     this.checkAppointmentFinished();
   }
@@ -544,20 +540,14 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
         {
           text: 'Gallery',
           handler: () => {
-            this.loading = this.loadingCtrl.create({
-              message: 'Please wait...'
-            });
-            this.loading.present();
+            this.apiProvider.presentLoading();
             this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
           }
         },
         {
           text: 'Camera',
           handler: () => {
-            this.loading = this.loadingCtrl.create({
-              message: 'Please wait...'
-            });
-            this.loading.present();
+            this.apiProvider.presentLoading();
             this.takePicture(this.camera.PictureSourceType.CAMERA);
           }
         },
@@ -575,10 +565,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
       if(result.hasPermission){
         this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(
           result =>{
-            currClass.loading = currClass.loadingCtrl.create({
-              message: 'Please wait...'
-            });
-            currClass.loading.present();
+            currClass.apiProvider.presentLoading();
             currClass.alertShowing = false;
             currClass.isProceedClicked = true;
             currClass.takePicture(currClass.camera.PictureSourceType.CAMERA);
@@ -618,11 +605,11 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
 
       this.base64Image = 'data:image/jpeg;base64,' + imageData;
       this.HostImage = imageData;
-      this.loading.dismiss();
+      this.apiProvider.dismissLoading();
 
     }, (err) => {
       this.presentToast(this.T_SVC['ALERT_TEXT.IMAGE_SELECT_ERROR']);
-      this.loading.dismiss();
+      this.apiProvider.dismissLoading();
     });
   }
 

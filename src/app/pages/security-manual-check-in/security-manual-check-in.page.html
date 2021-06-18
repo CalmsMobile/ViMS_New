@@ -1,0 +1,389 @@
+<!--
+  Generated template for the SecurityDashBoardPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header lines="none" class="ion-no-border">
+  <ion-toolbar color="primary"  lines="none" class="ion-no-border">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"
+    style="font-size: x-large;color: #FFF;"></ion-icon>
+    <ion-title>{{(!preAppointmentInfo || !preAppointmentInfo.SEQ_ID) ? 'Manual Check-In': 'Pre-Appointment Check-In'}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="ion-no-border">
+  <div class="main" *ngIf="appSettings.addVisitor">
+    <ion-grid>
+      <ion-card style="margin: 0px;padding: 0px;">
+        <ion-row>
+          <ion-col *ngIf="appSettings.addVisitor.ImageUploadEnabled" size="3" style="padding-right: 0px;justify-content: center;align-items: center;">
+            <img src="{{appointmentInfo.visitorImage ? ('data:image/jpeg;base64,'+ appointmentInfo.visitorImage) : (appointmentInfo && (appointmentInfo.SEQ_ID || appointmentInfo.att_visitor_id) ? visitorImagePath + (appointmentInfo.SEQ_ID? appointmentInfo.SEQ_ID: appointmentInfo.att_visitor_id) + imageURLType: '../../../assets/images/user.png')}}" style="width: 80px;height: 80px; display: flex;justify-content: center; border-radius: 50%;
+            object-fit: cover;    margin: 0 auto;" (click)="viewImage(appointmentInfo.visitorImage ? ('data:image/jpeg;base64,'+ appointmentInfo.visitorImage) : (appointmentInfo && (appointmentInfo.SEQ_ID || appointmentInfo.att_visitor_id) ? visitorImagePath + (appointmentInfo.SEQ_ID? appointmentInfo.SEQ_ID: appointmentInfo.att_visitor_id) + imageURLType: '../../../assets/images/user.png'))">
+            <div style="text-align: center;">
+              <ion-icon class="classCamIcon" (click)="capture('PROFILE_IMAGE')" name="camera-outline"></ion-icon>
+            </div>
+          </ion-col>
+          <ion-col size="{{appSettings.addVisitor.ImageUploadEnabled? '9': '12'}}">
+              <ion-grid>
+                <ion-row *ngIf="appSettings.addVisitor.NameEnabled">
+                  <ion-col size="12" class="bDets">
+                    <ion-icon name="person-sharp" class="bDets"></ion-icon>
+                    <input type="text" (input)="onInputChange($event, 'Name')" [(ngModel)]="appointmentInfo.VISITOR_NAME"
+                    placeholder="{{appSettings.addVisitor.NameLable}}" [ngStyle]="{'border-left': appSettings.addVisitor.showVisitorNameError? '3px solid red': ''}"/>
+                  </ion-col>
+                </ion-row>
+                <ion-row *ngIf="appSettings.addVisitor.IdProofEnabled">
+                  <ion-col size="12" class="bDets">
+                    <ion-icon name="id-card-sharp" class="bDets"></ion-icon>
+                    <input type="text" (input)='onChangeID($event)' [(ngModel)]="appointmentInfo.VISITOR_IC"
+                    [disabled]="preAppointmentInfo.VISITOR_IC"
+                    [ngStyle]="{'border-left': appSettings.addVisitor.showVisitorICError? '3px solid red': ''}"
+                    placeholder="{{appSettings.addVisitor.IdProofLable}}"/>
+                  </ion-col>
+                </ion-row>
+                <ion-row *ngIf="appSettings.addVisitor.EmailEnabled">
+                  <ion-col size="12" class="bDets">
+                    <ion-icon name="mail-sharp" class="bDets"></ion-icon>
+                    <input type="text" (input)="onInputChange($event, 'Email')" [(ngModel)]="appointmentInfo.EMAIL"
+                    placeholder="{{appSettings.addVisitor.EmailLable}}"
+                    [ngStyle]="{'border-left': appSettings.addVisitor.showEmailError? '3px solid red': ''}"/>
+                  </ion-col>
+                </ion-row>
+                <ion-row *ngIf="appSettings.addVisitor.ContactNumberEnabled">
+                  <ion-col size="12" class="bDets">
+                    <ion-icon name="phone-portrait-sharp" class="bDets"></ion-icon>
+                    <input type="text" (input)="onInputChange($event, 'Contact')" [(ngModel)]="appointmentInfo.TELEPHONE_NO"
+                    placeholder="{{appSettings.addVisitor.ContactNumberLable}}"
+                    [ngStyle]="{'border-left': appSettings.addVisitor.showPhoneNumberError? '3px solid red': ''}"/>
+                  </ion-col>
+                </ion-row>
+               </ion-grid>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-grid>
+    <div class="section">
+      <div class="visitorInfo">
+        <ion-item>
+          <ion-label>Visitor Information</ion-label>
+        </ion-item>
+        <ion-grid style="font-size: 15px;">
+          <ion-row *ngIf="appSettings.addVisitor.AddressEnabled">
+            <ion-col size="4">
+              <ion-text>{{appSettings.addVisitor.AddressLable}}</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-textarea (input)="onInputChange($event, 'Address')" [(ngModel)]="appointmentInfo.VISITOR_ADDRESS"
+              placeholder="{{appSettings.addVisitor.AddressLable}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showAddressError? '3px solid red': ''}"></ion-textarea>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="appSettings.addVisitor.CategoryEnabled">
+            <ion-col size="4">
+              <ion-text>{{appSettings.addVisitor.CategoryLable}}</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-select mode="ios"
+              (ionChange)="onSelectChange($event, 'Category')" [(ngModel)]="appointmentInfo.VisitorCategory"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{appSettings.addVisitor.CategoryLable}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showCategoryError? '3px solid red': ''}">
+              <ion-label position="stacked">{{appSettings.addVisitor.CategoryLable}}</ion-label>
+              <ion-select-option text-left *ngFor="let avl_reason of CATEGORYLIST"
+                [value]="avl_reason.visitor_ctg_id">
+                {{avl_reason.visitor_ctg_desc}}
+              </ion-select-option>
+            </ion-select>
+           </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.addVisitor.GenderEnabled">
+            <ion-col size="4">
+              <ion-text>{{appSettings.addVisitor.GenderLable}}</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-select mode="ios"
+              (ionChange)="onSelectChange($event, 'Gender')" [(ngModel)]="appointmentInfo.VISITOR_GENDER"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{appSettings.addVisitor.GenderLable}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showGenderError? '3px solid red': ''}">
+              <ion-label position="stacked">{{appSettings.addVisitor.GenderLable}}</ion-label>
+              <ion-select-option text-left *ngFor="let gender of GENDERLIST"
+                [value]="gender.code">
+                {{gender.name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.addVisitor.CountryEnabled">
+            <ion-col size="4">
+              <ion-text>{{appSettings.addVisitor.CountryLable}}</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <!-- <input type="text" mode="ios" (ngModelChange)="onChangeInput($event, 'country')" class="inputCountry" [(ngModel)]="appointmentInfo.VISITOR_COUNTRY" placeholder="{{'ADD_VISITORS.LAB_COUNTRY' | translate}}"/> -->
+              <ion-select mode="ios"
+              (ionChange)="onSelectChange($event, 'Country')" [(ngModel)]="appointmentInfo.VISITOR_COUNTRY"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{appSettings.addVisitor.CountryLable}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showCountryError? '3px solid red': ''}">
+              <ion-label position="stacked">{{appSettings.addVisitor.CountryLable}}</ion-label>
+              <ion-select-option text-left *ngFor="let country of COUNTRYLIST"
+                [value]="country.code">
+                {{country.name}}
+              </ion-select-option>
+            </ion-select>
+           </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.addVisitor.VehicleNumberEnabled">
+            <ion-col size="4">
+              <ion-text>{{appSettings.addVisitor.VehicleNumberLable}}</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <input type="text" (input)="onInputChange($event, 'VehicleNumber')" mode="ios" class="inputCountry"
+              placeholder="{{appSettings.addVisitor.VehicleNumberLable}}" [(ngModel)]="appointmentInfo.PLATE_NUM"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showVehicleNumberError? '3px solid red': ''}"/>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.addVisitor.CompanyEnabled">
+            <ion-col size="4">
+              <ion-text>{{appSettings.addVisitor.CompanyLable}}</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-select mode="ios"
+              (ionChange)="onSelectChange($event, 'Company')" [(ngModel)]="appointmentInfo.visitor_comp_code"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{appSettings.addVisitor.CompanyLable}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showCompanyError? '3px solid red': ''}">
+              <ion-label position="stacked">{{appSettings.addVisitor.CompanyLable}}</ion-label>
+              <ion-select-option text-left *ngFor="let company of COMPANYLIST"
+                [value]="company.visitor_comp_code">
+                {{company.visitor_comp_name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.addVisitor.TemperatureEnabled">
+            <ion-col size="4">
+              <ion-text style="font-size: 90%;">{{appSettings.addVisitor.TemperatureLable}}</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <input (input)="onInputChange($event, 'Temperature')" type="text" mode="ios"
+              [(ngModel)]="appointmentInfo.att_bodytemperature" class="inputCountry"
+              placeholder="{{appSettings.addVisitor.TemperatureLable}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showTemperatureError? '3px solid red': ''}"/>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+    <div class="section">
+      <div class="appointmentInfo">
+        <ion-item>
+          <ion-label>Additional Information</ion-label>
+        </ion-item>
+        <ion-grid style="font-size: 15px;">
+          <ion-row *ngIf="preAppointmentInfo.START_TIME">
+            <ion-col size="4">
+              <ion-text>Start Date</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-datetime displayFormat="YYYY-MM-DD HH:mm" #startDate
+              [(ngModel)]="appointmentInfo.START_TIME" [disabled]="preAppointmentInfo.START_TIME"
+              (ionChange)="startDate.open()" placeholder="Start Date">
+              </ion-datetime>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="preAppointmentInfo.START_TIME">
+            <ion-col size="4" >
+              <ion-text>End Date</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-datetime displayFormat="YYYY-MM-DD HH:mm" #endDate
+              [(ngModel)]="appointmentInfo.END_TIME" [disabled]="preAppointmentInfo.END_TIME"
+              (ionChange)="endDate.open()" placeholder="End Date"></ion-datetime>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.General.ShowHost">
+            <ion-col size="4">
+              <ion-text>Host Name</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-select mode="ios"
+              (ionChange)="onSelectChange($event, 'Host')" [(ngModel)]="appointmentInfo.Host_IC"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'SECURITY_APP.SELECT_HOST' | translate}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showHostError? '3px solid red': ''}">
+              <ion-label position="stacked">{{'SECURITY_APP.SELECT_HOST' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let host of HOSTLIST"
+                [value]="host.HOSTIC">
+                {{host.HOSTNAME}}
+              </ion-select-option>
+            </ion-select>
+           </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.General.ShowPurpose">
+            <ion-col size="4">
+              <ion-text>Purpose</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+               <ion-select mode="ios"
+              (ionChange)="onSelectChange($event, 'Purpose')" [(ngModel)]="appointmentInfo.REASON"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showPurposeError? '3px solid red': ''}">
+              <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let avl_reason of PURPOSELIST"
+                [value]="avl_reason.visitpurpose_id">
+                {{avl_reason.visitpurpose_desc}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.General.ShowFloor">
+            <ion-col size="4">
+              <ion-text>Floor</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-select mode="ios" (ionChange)="onSelectChange($event, 'Floor')" [(ngModel)]="appointmentInfo.Floor"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showFloorError? '3px solid red': ''}">
+              <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let floor of FLOORLIST"
+                [value]="floor.floor_id">
+                {{floor.floor_desc}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.General.ShowRoom">
+            <ion-col size="4">
+              <ion-text>Meeting Location</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-select mode="ios"
+              (ionChange)="onSelectChange($event, 'Room')" [(ngModel)]="appointmentInfo.MEETING_LOCATION"
+              interface="action-sheet" [disabled]="false"
+              placeholder="{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showRoomError? '3px solid red': ''}">
+              <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}</ion-label>
+              <ion-select-option text-left *ngFor="let meeting of MEETINGLIST"
+                [value]="meeting.MeetingRoomSeqId + ''">
+                {{meeting.MeetingRoomDesc}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          </ion-row>
+          <ion-row *ngIf="appSettings.General.ShowRemarks">
+            <ion-col size="4">
+              <ion-text>Remarks</ion-text>
+            </ion-col>
+            <ion-col size="8" class="classCol">
+              <ion-textarea (input)="onInputChange($event, 'Remarks')" placeholder="Remarks"
+              [(ngModel)]="appointmentInfo.Remarks" [ngStyle]="{'border-left': appSettings.addVisitor.showRemarksError? '3px solid red': ''}"></ion-textarea>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+    <div class="section">
+      <div class="additional" *ngIf="appSettings.addVisitor.ApptDeclarationEnabled && (QuestionnaireEnabled || AttachmentUploadEnabled || MaterialDeclareEnabled)">
+        <ion-item>
+          <ion-label>{{appSettings.addVisitor.ApptDeclarationLabel}}</ion-label>
+        </ion-item>
+        <ion-grid>
+
+          <ion-card no-margin mode="ios" style="margin-top: 15px !important;
+          padding: 10px;
+          padding-left: 0px;" (click)="openCustomDialog('question')" *ngIf="QuestionnaireEnabled">
+            <ion-item lines="none">
+              <ion-icon color="primary" slot="start" name="document-text-outline"></ion-icon>
+              <ion-label>Questionaries</ion-label>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-card>
+
+
+          <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+          padding-left: 0px;" (click)="openCustomDialog('doc')" *ngIf="AttachmentUploadEnabled">
+            <ion-item lines="none">
+              <ion-icon color="primary" slot="start" name="document-attach-outline"></ion-icon>
+              <ion-label>Verification Documents</ion-label>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-card>
+
+          <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+          padding-left: 0px;" (click)="openCustomDialog('declaration')" *ngIf="MaterialDeclareEnabled">
+            <ion-item lines="none">
+              <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+              <ion-label>Item Checklist</ion-label>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-card>
+
+
+        </ion-grid>
+      </div>
+
+      <div class="additional">
+        <ion-item>
+          <ion-label>Additional Documents</ion-label>
+        </ion-item>
+
+        <ion-row *ngIf="appSettings.addVisitor.IdImgUploadEnabled">
+          <ion-col size="12">
+            <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+            padding-left: 0px;">
+              <ion-item lines="none">
+                <ion-icon color="primary" (click)="capture('ID_IMAGE')" slot="start" style="font-size: 22px;" name="camera-outline"></ion-icon>
+                <ion-label (click)="capture('ID_IMAGE')">ID Image</ion-label>
+                <ion-buttons slot="end">
+                  <img *ngIf="appointmentInfo.visitorIDImage" src="{{'data:image/jpeg;base64,' + appointmentInfo.visitorIDImage}}" style="width: 65px;height: 65px; padding: 6px;display: flex;justify-content: center; border-radius: 50%;
+                  object-fit: cover;" (click)="viewImage('data:image/jpeg;base64,' + appointmentInfo.visitorIDImage)">
+                </ion-buttons>
+              </ion-item>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="appSettings.addVisitor.additionalDocEnabled">
+          <ion-col size="12">
+            <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+            padding-left: 0px;" (click)="documentModal()">
+              <ion-item lines="none">
+                <div slot="start">
+                  <ion-icon color="primary" style="    font-size: 22px;" name="document-attach-outline"></ion-icon>
+                <div class="insideBadge">
+                  <ion-badge style="background: var(--ion-color-primary);
+                  color: white;
+                  width: 22px;
+                  height: 22px;
+                  padding: 5px !important;">{{appointmentInfo.additionalDocList? appointmentInfo.additionalDocList.length: '0'}}</ion-badge>
+                </div>
+                </div>
+                <ion-label>Additional Document</ion-label>
+                <ion-icon name="add-circle-outline"></ion-icon>
+              </ion-item>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="false">
+          <ion-col size="12">
+            <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+            padding-left: 0px;" (click)="checklistmodal()" *ngIf="!preAppointmentInfo || !preAppointmentInfo.SEQ_ID">
+              <ion-item lines="none">
+                <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+                <ion-label>Item Checklist</ion-label>
+                <ion-icon name="add-circle-outline"></ion-icon>
+              </ion-item>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+      </div>
+    </div>
+    <ion-button *ngIf="appSettings.customStyle" color="transparent" class="btn-grad" [ngStyle]="{'font-size': appSettings.customStyle.buttonStyle.btnTextSize + 'px', 'border-radius': appSettings.customStyle.buttonStyle.btnBorderRadius + 'px', 'color': appSettings.customStyle.buttonStyle.btnTextColor, 'background': 'linear-gradient(to right, ' + this.appSettings.customStyle.buttonStyle.btnColor1
+    +' 0%,'+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%)'}" expand="block" (click)="processCheckIn()">Check-In</ion-button>
+  </div>
+</ion-content>

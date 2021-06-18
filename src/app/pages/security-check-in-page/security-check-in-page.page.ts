@@ -79,8 +79,7 @@ export class SecurityCheckInPagePage implements OnInit {
     private dateformat : DateFormatPipe,
     private barcodeScanner: BarcodeScanner,
     private sanitizer: DomSanitizer,
-    private _zone : NgZone,
-    public loadingCtrl: LoadingController) {
+    private _zone : NgZone) {
       this.translate.get([
         'ACC_MAPPING.INVALID_QR', 'ACC_MAPPING.INVALID_ORG_TITLE',
         'ACC_MAPPING.INVALID_FCM_TITLE',
@@ -101,7 +100,7 @@ export class SecurityCheckInPagePage implements OnInit {
       if(ackSeettings && JSON.parse(ackSeettings)){
         var result1 = JSON.parse(ackSeettings);
         if(result1){
-          var result = JSON.parse(result1.SettingDetail);
+          var result = JSON.parse(ackSeettings);
           this.OCR_Enabled = result.OCR_Enabled;
           this.MyKad_Enabled = result.MyKad_Enabled;
           this.hostSettings = result.addVisitor;
@@ -277,7 +276,7 @@ export class SecurityCheckInPagePage implements OnInit {
     if (loadinWeb) {
       var data = "0012764311" //"C4B9F365";
       var params = {"hexcode":""+ data};
-      this.apiProvider.VimsAppGetAppointmentByHexCode(params).then(
+      this.apiProvider.VimsAppGetAppointmentByHexCode(params, true).then(
         async (val) => {
          console.log("val : "+JSON.stringify(val));
          var visitorDetail = val+"";
@@ -292,16 +291,6 @@ export class SecurityCheckInPagePage implements OnInit {
                     //    vOb = null;
                     //  }
                    }
-            //        if(!vOb){
-            //          let alert = this.alertCtrl.create({
-            //            header: 'Error !',
-            //            message: message,
-            //            cssClass:'alert-danger',
-            //            buttons: ['Okay']
-            //            });
-            //            alert.present();
-            //          return;
-            // }
             var startDate = vOb.START_DATE.split("T")[0];
             var fDate = this.dateformat.transform(startDate+"", "yyyy-MM-dd");
             var fTime = new Date(fDate).getTime();
@@ -441,7 +430,7 @@ export class SecurityCheckInPagePage implements OnInit {
         if(!invalidQRCode){
 
             var params = {"hexcode":""+ data};
-            this.apiProvider.VimsAppGetAppointmentByHexCode(params).then(
+            this.apiProvider.VimsAppGetAppointmentByHexCode(params, true).then(
               async (val) => {
                 if(val){
                   console.log("val : "+JSON.stringify(val));
@@ -915,10 +904,6 @@ ionViewDidEnter() {
       }
     };
     this.router.navigate(['visitor-company-page'], navigationExtras);
-  }
-
-  ionViewWillEnter(){
-
   }
 
   getCompanyList(company){

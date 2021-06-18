@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="danger">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
-    <ion-title>&nbsp;&nbsp;&nbsp;{{"CREATE_QUICK_PASS.TITLE" | translate}}</ion-title>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-title>{{"CREATE_QUICK_PASS.TITLE" | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding" style="--padding-top: 0px;">
@@ -19,7 +19,7 @@
               formControlName="username"
               ></ion-input> -->
               <ion-label position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}} <span style="color: #cf3c4f;">*</span></ion-label>
-              <ion-input  formControlName="username" placeholder="{{'ADD_VISITORS.LAB_USER_NAME' | translate}}" required type="text" [(ngModel)]="visitorInfoModal.visitor_name"></ion-input>
+              <ion-input  formControlName="username" style="border: 3px solid #cf3c4f;" placeholder="{{'ADD_VISITORS.LAB_USER_NAME' | translate}}" required type="text" [(ngModel)]="visitorInfoModal.visitor_name"></ion-input>
 
           </ion-item>
 
@@ -87,7 +87,7 @@
       </ion-item> -->
 
           <ion-item lines="none" no-padding transparent style="--padding-start: 0px;" *ngIf= "hostSettings && hostSettings.VehicleNoEnabled && hostSettings.VehicleNoRequired">
-            <ion-label position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}</ion-label>
+            <ion-label position="stacked">{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}} <span style="color: #cf3c4f;">*</span> </ion-label>
             <ion-input type="text" placeholder="{{'ADD_APPOIN.STEP2.VECHILE_NO' | translate}}" required [ngStyle]="{'border': hostSettings.VehicleNoRequired ? '3px solid #cf3c4f': '3px solid #eee'}" formControlName="vechile" [(ngModel)]="visitorInfoModal.vehicle_no"
             ></ion-input>
           </ion-item>
@@ -98,7 +98,7 @@
           </ion-item>
 
        <ion-item lines="none" no-padding transparent style="--padding-start: 0px;" *ngIf= "hostSettings && hostSettings.RemarksEnabled && hostSettings.RemarksRequired">
-          <ion-label position="stacked">{{'CREATE_QUICK_PASS.NOTES' | translate}}</ion-label>
+          <ion-label position="stacked">{{'CREATE_QUICK_PASS.NOTES' | translate}} <span style="color: #cf3c4f;">*</span></ion-label>
           <ion-input type="text" placeholder="{{'CREATE_QUICK_PASS.NOTES' | translate}}" required formControlName="notes" [ngStyle]="{'border': hostSettings.RemarksRequired ? '3px solid #cf3c4f': '3px solid #eee'}" [(ngModel)]="visitorInfoModal.notes"
           ></ion-input>
         </ion-item>
@@ -112,6 +112,7 @@
         style="margin: 0 auto;
         display: table;
         margin-top: 20px;"
+        [disabled]="visitorProfile.invalid"
         type="submit">
         {{'ACC_MAPPING.CREATE' | translate}}</ion-button>
       </ion-col>

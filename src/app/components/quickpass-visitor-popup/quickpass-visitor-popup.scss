@@ -5,7 +5,10 @@
   display: block;
   border-radius: 20px;
 }
-
+.labelClass {
+  align-items: center;
+  display: flex;
+}
 .profile-imageTabLand {
   border-radius: 50%;
   width: 60px !important;

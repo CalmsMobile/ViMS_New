@@ -9,7 +9,7 @@ import { SecurityDashBoardPagePageRoutingModule } from './security-dash-board-pa
 import { SecurityDashBoardPagePage } from './security-dash-board-page.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { LongPressModule } from 'ionic-long-press';
-
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 @NgModule({
   imports: [
     CommonModule,
@@ -17,7 +17,8 @@ import { LongPressModule } from 'ionic-long-press';
     IonicModule,
     SecurityDashBoardPagePageRoutingModule,
     TranslateModule.forChild(),
-    LongPressModule
+    LongPressModule,
+    Ng2GoogleChartsModule
   ],
   declarations: [SecurityDashBoardPagePage]
 })

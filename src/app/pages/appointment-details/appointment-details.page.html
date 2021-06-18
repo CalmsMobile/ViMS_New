@@ -1,8 +1,8 @@
 <ion-header>
 
     <ion-toolbar color="danger">
-        <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
-        <ion-title>&nbsp;&nbsp;&nbsp;Appointment Details</ion-title>
+        <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+        <ion-title>{{'ALERT_TEXT.APPOINTMENT_DETAILS' | translate }}</ion-title>
     </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
@@ -20,12 +20,11 @@
                 <img class="animated fadeInDown delay-1s" slot="start" (click)="openVisitorDetails(visitors)" style="margin: 0 auto;
                 width: 62px;
                 height: 62px;
-                padding: 4px;
+                padding: 10px;
                 border-radius: 50%;
                 justify-content: center;
                 display: block;
-                align-items: center;
-                padding-left: 4px;" onError="this.src='../../assets/images/user.png';"
+                align-items: center;" onError="this.src='../../assets/images/user.png';"
                     [src]="data.logo+visitors.SEQID + imageURLTypeHOST">
 
             <div>
@@ -33,7 +32,7 @@
               <ion-label style="font-size: 14px;
               padding-top: 2px;" (click)="openVisitorDetails(visitors)">{{visitors.Email}}</ion-label>
             </div>
-            <div slot="end" *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)"
+            <div slot="end" *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone) && visitors.Approval_Status === 'Approved'"
                 style="margin: 0px;">
                 <ion-icon color="secondary" class="iconiconClass" name="qr-code-outline"
                     (click)="openVisitorDetails(visitors)"></ion-icon>
@@ -50,12 +49,11 @@
             <img class="animated fadeInDown delay-1s" slot="start" (click)="openVisitorDetails(visitors)" style="margin: 0 auto;
             width: 62px;
             height: 62px;
-            padding: 4px;
+            padding: 10px;
             border-radius: 50%;
             justify-content: center;
             display: block;
-            align-items: center;
-            padding-left: 4px;" onError="this.src='../../assets/images/user.png';"
+            align-items: center;" onError="this.src='../../assets/images/user.png';"
                     [src]="data.logo+visitors.VisitorBookingSeqId + imageURLType"/>
             <div>
                 <ion-label (click)="openVisitorDetails(visitors)">{{visitors.VISITOR_NAME}}</ion-label>
@@ -65,9 +63,16 @@
             <div slot="end" *ngIf="(appointment && appointment.length > 0 && !appointment[0].isFacilityAlone)"
                 style="margin: 0px;">
                 <ion-icon color="secondary" class="iconiconClass" name="qr-code-outline"
-                    (click)="openVisitorDetails(visitors)"></ion-icon>
-                <ion-icon color="success" class="iconiconClass" name="share-social-outline" (click)="shareQR(visitors)">
+                    (click)="openVisitorDetails(visitors)" *ngIf="visitors.Approval_Status === 'Approved'"></ion-icon>
+                <ion-icon color="success" class="iconiconClass" name="share-social-outline" (click)="shareQR(visitors)" *ngIf="visitors.Approval_Status === 'Approved'">
                 </ion-icon>
+                <div *ngIf="visitors.Approval_Status !== 'Approved'" [ngClass]="{'outer-circle':visitors.Approval_Status=='Pending','outer-circle2':(visitors.Approval_Status ==='Canceled' || visitors.Approval_Status ==='Cancelled')}">
+                  <div [ngClass]="{'inner-circle':visitors.Approval_Status=='Pending','inner-circle2':(visitors.Approval_Status ==='Canceled' || visitors.Approval_Status ==='Cancelled')}">
+                    <span id="inside-content">
+                      {{visitors.Approval_Status.charAt(0)}}
+                    </span>
+                  </div>
+                </div>
             </div>
 
         </ion-item>
@@ -127,7 +132,7 @@
               </ion-row>
           </ion-grid>
       </ion-item-divider>
-        <ion-item-divider transparent *ngIf="appointment[0].REASON || appointment[0].REASON_DESC" style="padding: 0px;">
+        <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
@@ -138,13 +143,13 @@
                         </span>
                     </ion-col>
                     <ion-col>
-                      <p no-margin>{{appointment[0].REASON_DESC ? appointment[0].REASON_DESC : (appointment[0].REASON? appointment[0].REASON: '--')}}</p>
+                      <p no-margin>{{appointment[0].REASON_DESC ? appointment[0].REASON_DESC : (appointment[0].REASON? appointment[0].REASON: '&nbsp;&nbsp;--')}}</p>
                         <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                     </ion-col>
                 </ion-row>
             </ion-grid>
         </ion-item-divider>
-        <ion-item-divider transparent *ngIf="appointment[0].Booked_By" style="padding: 0px;">
+        <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
@@ -155,13 +160,13 @@
                         </span>
                     </ion-col>
                     <ion-col>
-                        <p no-margin>{{appointment[0].Booked_By}}</p>
+                        <p no-margin>{{appointment[0].Booked_by?appointment[0].Booked_by: '&nbsp;&nbsp;--'}}</p>
                         <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                     </ion-col>
                 </ion-row>
             </ion-grid>
         </ion-item-divider>
-        <ion-item-divider transparent *ngIf="appointment[0].Floor" style="padding: 0px;">
+        <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
@@ -172,13 +177,13 @@
                       </span>
                     </ion-col>
                     <ion-col>
-                        <p no-margin>{{appointment[0].Floor}}</p>
+                        <p no-margin>{{appointment[0].Floor ? appointment[0].Floor: '&nbsp;&nbsp;--'}}</p>
                         <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                     </ion-col>
                 </ion-row>
             </ion-grid>
         </ion-item-divider>
-        <ion-item-divider transparent *ngIf="appointment[0].Room" style="padding: 0px;">
+        <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
@@ -189,13 +194,13 @@
                       </span>
                     </ion-col>
                     <ion-col>
-                        <p no-margin>{{appointment[0].Room}}</p>
+                        <p no-margin>{{appointment[0].Room_Name? appointment[0].Room_Name : (appointment[0].Room? appointment[0].Room: '&nbsp;&nbsp;--')}}</p>
                         <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                     </ion-col>
                 </ion-row>
             </ion-grid>
         </ion-item-divider>
-        <ion-item-divider transparent *ngIf="appointment[0].PLATE_NUM" style="padding: 0px;">
+        <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
@@ -206,13 +211,13 @@
                       </span>
                     </ion-col>
                     <ion-col>
-                        <p no-margin>{{appointment[0].PLATE_NUM}}</p>
+                        <p no-margin>{{appointment[0].PLATE_NUM?appointment[0].PLATE_NUM: '&nbsp;&nbsp;--'}}</p>
                         <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                     </ion-col>
                 </ion-row>
             </ion-grid>
         </ion-item-divider>
-        <ion-item-divider transparent *ngIf="appointment[0].Remarks" style="padding: 0px;">
+        <ion-item-divider transparent style="padding: 0px;">
             <ion-grid style="--padding-end: 0px;
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
@@ -223,7 +228,7 @@
                         </span>
                     </ion-col>
                     <ion-col>
-                        <p no-margin>{{appointment[0].Remarks}}</p>
+                        <p no-margin>{{appointment[0].Remarks?appointment[0].Remarks: '&nbsp;&nbsp;--'}}</p>
                         <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                     </ion-col>
                 </ion-row>
@@ -398,7 +403,7 @@
     </ion-card>
     <ion-card no-margin mode="ios"
         style="width:100%;    padding: 0px;margin-top:14px !important;"
-        (click)="selectNotifyAppointment()">
+        (click)="selectNotifyAppointment()" *ngIf="!isPastAppointment && appointment[0].Approval_Status === 'Approved'">
         <ion-item lines="none" style="padding: 10px; --padding-start: 0px">
             <i slot="start" theme-text-color class="siva-icon-clock" style="font-size: 35px;margin: 0px;"></i>
             <div>
@@ -411,12 +416,53 @@
         </ion-item>
     </ion-card>
 
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" #fab *ngIf="Editable">
+    <div *ngIf="showQuestion && showQuestion && showQuestion">
+      <div *ngFor="let visitors of appointment" style="    padding-top: 18px;">
+        <ion-label style="
+        width: 100%;
+        background: lightgray;
+        display: block;
+        padding: 8px;
+        border-radius: 10px;
+        text-align: start;" *ngIf="appointment.length > 1">{{visitors.VISITOR_NAME}}</ion-label>
+        <ion-card no-margin mode="ios" style="margin-top: 15px !important;
+        padding: 10px;
+        padding-left: 0px;" (click)="openCustomDialog('question', visitors)" *ngIf="showQuestion">
+          <ion-item lines="none">
+            <ion-icon color="primary" slot="start" name="document-text-outline"></ion-icon>
+            <ion-label>Questionaries</ion-label>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+        </ion-card>
+
+
+        <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+        padding-left: 0px;" (click)="openCustomDialog('doc', visitors)" *ngIf="showDocument">
+          <ion-item lines="none">
+            <ion-icon color="primary" slot="start" name="document-attach-outline"></ion-icon>
+            <ion-label>Verification Documents</ion-label>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+        </ion-card>
+
+        <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+        padding-left: 0px;" (click)="openCustomDialog('declaration', visitors)" *ngIf="showDelaration">
+          <ion-item lines="none">
+            <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+            <ion-label>Item Checklist</ion-label>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+        </ion-card>
+      </div>
+    </div>
+
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" #fab *ngIf="Editable && !isPastAppointment">
         <ion-fab-button ion-fab color="danger"><i class="siva-icon-ellipsis-vert" style="font-size: 22px;"></i>
         </ion-fab-button>
         <ion-fab-list side="top">
             <ion-fab-button color="danger"
-                *ngIf="appointment && appointment[0] && !appointment[0].isFacilityAlone && !isPastAppointment"
+                *ngIf="appointment && appointment[0] && !appointment[0].isFacilityAlone && appointment[0].Approval_Status === 'Approved'"
                 (click)="remindAppintment(fab)"><i class="siva-icon-calendar-1"></i></ion-fab-button>
             <ion-fab-button color="primary" (click)="editAppintment(fab)"><i class="siva-icon-pencil"></i>
             </ion-fab-button>

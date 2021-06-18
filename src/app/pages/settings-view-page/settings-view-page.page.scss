@@ -13,6 +13,8 @@ ion-icon {
   background-size: contain;
   background-size: 18px;
   padding: 5px;
+  margin: 0px;
+  margin-right: 6px;
   &[ng-reflect-name="customicon"] {
     background-image: url("../../../assets/images/x-icon/admin.png");
     &[ng-reflect-is-active="true"] {
@@ -21,4 +23,14 @@ ion-icon {
     width: 2.4rem;
     height: 2.4rem;
   }
+}
+
+.itemClass {
+  padding: 10px;
+  --padding-start: 7px;
+  padding-left: 0px;
+}
+
+.labelClassLeft {
+  font-size: 14px;
 }

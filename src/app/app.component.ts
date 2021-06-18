@@ -1,6 +1,6 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Firebase } from '@ionic-native/firebase/ngx';
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AlertController, MenuController, ModalController, NavController, Platform } from '@ionic/angular';
@@ -35,11 +35,10 @@ export class AppComponent {
     private menuService: MenuService,
     public statusBar: StatusBar,
     public events: EventsService,
-    // private app : App,
+    private fcm: FCM,
     // private ionicApp: IonicApp,
     private navCtrl: NavController,
     private apiProvider: RestProvider,
-    private firebase: Firebase,
     public alertCtrl: AlertController,
     public splashScreen: SplashScreen,
     private translate: TranslateService,
@@ -51,32 +50,23 @@ export class AppComponent {
 
 
     events.observeDataCompany().subscribe(async (data: any) => {
-      const user = data.title;
-      const time = data.message;
-      // user and time are the same arguments passed in `events.publish(user, time)`
-      console.log('Welcome', user, 'at', time);
-      // this.params.hostImage = "assets/images/logo/2.png";
-      // alert(this.params.hostImage);
-      if (user == "addAppointment") {
+      if (data.title === "addAppointment") {
         this.navCtrl.navigateRoot('home-view');
         setTimeout(() => {
           this.navCtrl.navigateRoot('home-view');
         }, 1000);
-      } else if (user == "ReloadMenu") {
+      } else if (data.title === "ReloadMenu") {
         this.loadMenuData(true);
-      } else if (user == "Update Profile Picture") {
-        var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/ImageHandler.ashx?RefSlno=' + time + "&RefType=HP&Refresh=" + new Date().getTime();
+      } else if (data.title === "Update Profile Picture") {
+        var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/ImageHandler.ashx?RefSlno=' + data.message + "&RefType=HP&Refresh=" + new Date().getTime();
         this.params.hostImage = tempImage;
-      } else if (user == "AdminEnabled") {
+      } else if (data.title === "AdminEnabled") {
         this.navCtrl.navigateRoot("admin-home");
-        // this.navCtrl.setRoot('AdminHomePage');
-      } else if (user == "SignPad") {
-        // this.navCtrl.navigateRoot("sign-pad-idle-page");;
+      } else if (data.title === "SignPad") {
         this.navCtrl.navigateRoot('sign-pad-idle-page');
-      } else if (user == "CheckIn Acknowledgment") {
+      } else if (data.title === "CheckIn Acknowledgment") {
         this.navCtrl.navigateRoot('sign-pad-idle-page');
-      } else if (user == "UserInActive") {
-        // this.rootPage = "AccountMappingPage";
+      } else if (data.title === "UserInActive") {
         this.navCtrl.navigateRoot('account-mapping');
         let alert = this.alertCtrl.create({
           header: 'Alert',
@@ -91,28 +81,14 @@ export class AppComponent {
           }]
         });
         (await alert).present();
-
-      } else if (user == "InValidDeviceUIDOrUnAuthorized") {
-        // this.rootPage = "AccountMappingPage";
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.LOGIN_TYPE, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFY_TIME, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.PREAPPOINTMENTAUTOAPPROVE, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.SIGN_PAD, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
+      } else if (data.title === "InValidDeviceUIDOrUnAuthorized") {
+        localStorage.clear();
         if (!this.alertShowing) {
           this.alertShowing = true;
           this.navCtrl.navigateRoot('account-mapping');
           let alert = this.alertCtrl.create({
             header: 'Alert',
-            message: time,
+            message: data.message,
             cssClass: 'alert-warning-largemsg',
             buttons: [{
               text: 'Okay',
@@ -164,12 +140,14 @@ export class AppComponent {
 
           if (this.menu.isOpen()) {
             this.menu.close();
-            console.log("closing menu");
-            return;
           }
 
           try {
-            if (this.router.url === '/account-mapping' || this.router.url === '/home') {
+            if (this.router.url === '/security-manual-check-in' || this.router.url === '/security-appointment-list' || this.router.url === '/security-check-out-page') {
+              this.router.navigateByUrl('security-dash-board-page');
+              return;
+            }
+            if (this.router.url === '/account-mapping' || this.router.url === '/home' || this.router.url === 'security-dash-board-page') {
               if (!this.alertShown) {
                 this.presentConfirm();
               }
@@ -192,7 +170,6 @@ export class AppComponent {
         try {
           this.initializeFirebase();
         } catch (error) {
-          this.firebase.logError(error);
         }
       }
 
@@ -202,14 +179,6 @@ export class AppComponent {
       if (qrCodeInfo && JSON.parse(qrCodeInfo) && JSON.parse(qrCodeInfo).ApiUrl) {
         AppSettings.APP_API_SETUP.live.api_url = JSON.parse(qrCodeInfo).ApiUrl;
       }
-
-      // var loginType = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.LOGIN_TYPE);
-      // if(loginType){
-      //   this.menu.enable(false,"myLeftMenu");
-      //   this.navCtrl.navigateRoot("admin-home");;
-
-      // } else {
-
       var scannedJson1 = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
       if (scannedJson1 && JSON.parse(scannedJson1).MAppId) {
         switch (JSON.parse(scannedJson1).MAppId) {
@@ -253,13 +222,14 @@ export class AppComponent {
             this.navCtrl.navigateRoot("sign-pad-idle-page");
             break;
           case AppSettings.LOGINTYPES.SECURITYAPP:
-            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS);
             if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).MAppDevSeqId) {
               console.log("calling login Page: " + hostData);
-              return;
+              this.navCtrl.navigateRoot("login");
+            } else {
+              this.navCtrl.navigateRoot("security-dash-board-page");
             }
-            this.getSecuritySettings();
-            this.navCtrl.navigateRoot("security-dash-board-page");
+
             break;
         }
         // }
@@ -274,7 +244,6 @@ export class AppComponent {
       "HostIc": ""
     }
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-    console.log("calling GetHostAppSettings App Component: " + hostData);
     if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
       return;
     }
@@ -284,7 +253,6 @@ export class AppComponent {
         try {
           var result = JSON.parse(JSON.stringify(val));
           if (result) {
-            console.log(JSON.stringify(val));
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, JSON.stringify(val));
             this.loadMenuData(true);
           }
@@ -296,31 +264,6 @@ export class AppComponent {
       (err) => {
       }
     );
-  }
-
-  getSecuritySettings() {
-    var QrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    if (QrInfo && JSON.parse(QrInfo)) {
-      var QRObj = JSON.parse(QrInfo);
-      var params = {
-        "RefSchoolSeqId": "",
-        "RefBranchSeqId": "",
-        "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
-        "MAppDevSeqId": QRObj.MAppDevSeqId
-      }
-
-      this.apiProvider.GetSecurityAppSettings(params).then(
-        (val) => {
-          var result = JSON.parse(val + "");
-          if (result) {
-            console.log(val + "");
-            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, val + "");
-          }
-        },
-        (err) => {
-        }
-      );
-    }
   }
 
   getAcknowledgementSettings() {
@@ -351,36 +294,28 @@ export class AppComponent {
 
   initializeFirebase() {
     if (this.platform.is("cordova")) {
-      this.firebase.subscribe("all");
       this.platform.is('android') ? this.initializeFirebaseAndroid() : this.initializeFirebaseIOS();
     }
   }
   initializeFirebaseAndroid() {
-    this.firebase.getToken().then(token => {
+    this.fcm.getToken().then(token => {
       window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
       console.log("Token:" + token);
     });
-    this.firebase.onTokenRefresh().subscribe(token => {
+    this.fcm.onTokenRefresh().subscribe(token => {
       console.log("RefreshToken:" + token);
       window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
     })
   }
   initializeFirebaseIOS() {
-    this.firebase.grantPermission()
-      .then(() => {
-        this.firebase.getToken().then(token => {
-          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-          console.log("Token:" + token);
-        });
-        this.firebase.onTokenRefresh().subscribe(token => {
-          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-          console.log("Token:" + token);
-        })
-        // this.subscribeToPushNotifications();
-      })
-      .catch((error) => {
-        this.firebase.logError(error);
-      });
+    this.fcm.getToken().then(token => {
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+      console.log("Token:" + token);
+    });
+    this.fcm.onTokenRefresh().subscribe(token => {
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+      console.log("Token:" + token);
+    });
   }
 
   async presentConfirm() {

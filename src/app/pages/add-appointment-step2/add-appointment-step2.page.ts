@@ -266,7 +266,8 @@ export class AddAppointmentStep2Page implements OnInit {
     );
   }
 
-  onChangePurpose(PurposeCode){
+  onChangePurpose(event){
+    const PurposeCode = event?event.detail.value: '';
     console.log(""+ PurposeCode);
     this.PurposeCode = PurposeCode;
     this.VM.FACILITYPURPOSELIST.forEach(element => {
@@ -282,7 +283,8 @@ export class AddAppointmentStep2Page implements OnInit {
     console.log('goBack ');
   }
 
-  onChangeFacility(FacilityCode){
+  onChangeFacility(event: any){
+    const FacilityCode = event?event.detail.value: '';
     console.log(""+ FacilityCode);
     this.FacilityCode = FacilityCode;
 
@@ -392,33 +394,13 @@ export class AddAppointmentStep2Page implements OnInit {
       // console.log(JSON.stringify(neePurpose));
       this.VM.AVAIL_REASONS = neePurpose;
 
-      if(this.VM.appointment&& this.VM.appointment[0]){
-        this.addAppointmentModel.Room = this.VM.appointment[0].Room;
-        this.addAppointmentModel.REASON = this.VM.appointment[0].REASON;
-        this.addAppointmentModel.Floor = this.VM.appointment[0].Floor;
-      }
-    }
-    {
-      this.apiProvider.GetMasterDetails().then(
-        (val) => {
-          var result = JSON.parse(JSON.stringify(val));
-          if(result){
-            this.VM.AVAIL_ROOMS = result.Table8;
-            this.VM.AVAIL_FLOOR = result.Table2;
-            this.VM.AVAIL_REASONS = result.Table3;
-            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
-
-
-            if(this.VM.appointment && this.VM.appointment[0]){
-              this.addAppointmentModel.Room = this.VM.appointment[0].Room;
-              this.addAppointmentModel.REASON = this.VM.appointment[0].REASON;
-              this.addAppointmentModel.Floor = this.VM.appointment[0].Floor;
-            }
-          }
-        },
-        (err) => {
+      setTimeout(() => {
+        if(this.VM.appointment&& this.VM.appointment[0]){
+          this.addAppointmentModel.Room = +this.VM.appointment[0].Room;
+          this.addAppointmentModel.REASON = this.VM.appointment[0].REASON;
+          this.addAppointmentModel.Floor = this.VM.appointment[0].Floor;
         }
-      );
+      }, 100);
     }
   }
 
@@ -730,11 +712,13 @@ export class AddAppointmentStep2Page implements OnInit {
           });
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
           this.navCtrl.navigateRoot('home-view').then((data)=>{
-            this.events.publishDataCompany({
-              action:'RefreshUpcoming',
-              title: 'RefreshUpcoming',
-              message: 0
-            });
+            setTimeout(() => {
+              this.events.publishDataCompany({
+                action:'RefreshUpcoming',
+                title: 'RefreshUpcoming',
+                message: 0
+              });
+            }, 1000);
             this.apiProvider.dismissLoading();
           });
 
@@ -820,10 +804,6 @@ export class AddAppointmentStep2Page implements OnInit {
         alert.present();
       }
     );
-  }
-
-  ionViewWillEnter(){
-    // this.content.scrollToTop();
   }
 
   ngOnInit() {

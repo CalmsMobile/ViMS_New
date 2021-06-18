@@ -17,7 +17,7 @@ export class NotiificationViewPage implements OnInit {
   notification : any ;
   db : SQLiteObject = null;
   T_SVC:any;
-
+  isSecurityApp = false;
   constructor(public navCtrl: NavController,
     private sqlite: SQLite,
     private alertCtrl: AlertController,
@@ -34,7 +34,11 @@ export class NotiificationViewPage implements OnInit {
           this.notification = passData.notification
         }
       });
-
+      const qrinfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+      if (qrinfo) {
+        const qrCodeInfo = JSON.parse(qrinfo);
+        this.isSecurityApp = (qrCodeInfo.MAppId === AppSettings.LOGINTYPES.SECURITYAPP);
+      }
     this.translate.get([
 			'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
 				this.T_SVC = t;
@@ -43,17 +47,14 @@ export class NotiificationViewPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter NotiificationViewPage');
-    this.UpdateReadNotificationStatus();
-
-  }
-
-  ionViewWillEnter(){
-		this.events.publishDataCompany({
+    this.events.publishDataCompany({
       action:"page",
       title:  "notifications",
       message: ''
     });
-	}
+    this.UpdateReadNotificationStatus();
+
+  }
 
   UpdateReadNotificationStatus(){
 
@@ -62,7 +63,7 @@ export class NotiificationViewPage implements OnInit {
     "PNHistory":this.notification.PNHistory
     };
     // this.VM.host_search_id = "adam";
-    this.apiProvider.UpdateReadNotificationStatus(params).then(
+    this.apiProvider.UpdateReadNotificationStatus(params, this.isSecurityApp? 'WEB': '').then(
       (val) => {
 
         if(!this.platform.is('cordova')) {

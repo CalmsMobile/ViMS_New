@@ -4,13 +4,14 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Camera } from '@ionic-native/camera/ngx';
 import { Contacts } from '@ionic-native/contacts/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { NavController, AlertController, ActionSheetController, ToastController, Platform, LoadingController, IonContent, PopoverController, ModalController } from '@ionic/angular';
+import { NavController, AlertController, ActionSheetController, ToastController, Platform, IonContent, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CountryComponentComponent } from 'src/app/components/country-component/country-component.component';
 import { VisitorInfoModal } from 'src/app/model/visitorInfoModal';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
+import { CommonUtil } from 'src/app/services/util/CommonUtil';
 declare var cordova: any;
 @Component({
   selector: 'app-add-visitors',
@@ -18,7 +19,7 @@ declare var cordova: any;
   styleUrls: ['./add-visitors.page.scss'],
 })
 export class AddVisitorsPage implements OnInit, OnDestroy {
-  countryList = [{name:"Afghanistan",code:"AF"},{name:"Åland Islands",code:"AX"},{name:"Albania",code:"AL"},{name:"Algeria",code:"DZ"},{name:"American Samoa",code:"AS"},{name:"AndorrA",code:"AD"},{name:"Angola",code:"AO"},{name:"Anguilla",code:"AI"},{name:"Antarctica",code:"AQ"},{name:"Antigua and Barbuda",code:"AG"},{name:"Argentina",code:"AR"},{name:"Armenia",code:"AM"},{name:"Aruba",code:"AW"},{name:"Australia",code:"AU"},{name:"Austria",code:"AT"},{name:"Azerbaijan",code:"AZ"},{name:"Bahamas",code:"BS"},{name:"Bahrain",code:"BH"},{name:"Bangladesh",code:"BD"},{name:"Barbados",code:"BB"},{name:"Belarus",code:"BY"},{name:"Belgium",code:"BE"},{name:"Belize",code:"BZ"},{name:"Benin",code:"BJ"},{name:"Bermuda",code:"BM"},{name:"Bhutan",code:"BT"},{name:"Bolivia",code:"BO"},{name:"Bosnia and Herzegovina",code:"BA"},{name:"Botswana",code:"BW"},{name:"Bouvet Island",code:"BV"},{name:"Brazil",code:"BR"},{name:"British Indian Ocean Territory",code:"IO"},{name:"Brunei Darussalam",code:"BN"},{name:"Bulgaria",code:"BG"},{name:"Burkina Faso",code:"BF"},{name:"Burundi",code:"BI"},{name:"Cambodia",code:"KH"},{name:"Cameroon",code:"CM"},{name:"Canada",code:"CA"},{name:"Cape Verde",code:"CV"},{name:"Cayman Islands",code:"KY"},{name:"Central African Republic",code:"CF"},{name:"Chad",code:"TD"},{name:"Chile",code:"CL"},{name:"China",code:"CN"},{name:"Christmas Island",code:"CX"},{name:"Cocos (Keeling) Islands",code:"CC"},{name:"Colombia",code:"CO"},{name:"Comoros",code:"KM"},{name:"Congo",code:"CG"},{name:"Congo, The Democratic Republic of the",code:"CD"},{name:"Cook Islands",code:"CK"},{name:"Costa Rica",code:"CR"},{name:"Cote D'Ivoire",code:"CI"},{name:"Croatia",code:"HR"},{name:"Cuba",code:"CU"},{name:"Cyprus",code:"CY"},{name:"Czech Republic",code:"CZ"},{name:"Denmark",code:"DK"},{name:"Djibouti",code:"DJ"},{name:"Dominica",code:"DM"},{name:"Dominican Republic",code:"DO"},{name:"Ecuador",code:"EC"},{name:"Egypt",code:"EG"},{name:"El Salvador",code:"SV"},{name:"Equatorial Guinea",code:"GQ"},{name:"Eritrea",code:"ER"},{name:"Estonia",code:"EE"},{name:"Ethiopia",code:"ET"},{name:"Falkland Islands (Malvinas)",code:"FK"},{name:"Faroe Islands",code:"FO"},{name:"Fiji",code:"FJ"},{name:"Finland",code:"FI"},{name:"France",code:"FR"},{name:"French Guiana",code:"GF"},{name:"French Polynesia",code:"PF"},{name:"French Southern Territories",code:"TF"},{name:"Gabon",code:"GA"},{name:"Gambia",code:"GM"},{name:"Georgia",code:"GE"},{name:"Germany",code:"DE"},{name:"Ghana",code:"GH"},{name:"Gibraltar",code:"GI"},{name:"Greece",code:"GR"},{name:"Greenland",code:"GL"},{name:"Grenada",code:"GD"},{name:"Guadeloupe",code:"GP"},{name:"Guam",code:"GU"},{name:"Guatemala",code:"GT"},{name:"Guernsey",code:"GG"},{name:"Guinea",code:"GN"},{name:"Guinea-Bissau",code:"GW"},{name:"Guyana",code:"GY"},{name:"Haiti",code:"HT"},{name:"Heard Island and Mcdonald Islands",code:"HM"},{name:"Holy See (Vatican City State)",code:"VA"},{name:"Honduras",code:"HN"},{name:"Hong Kong",code:"HK"},{name:"Hungary",code:"HU"},{name:"Iceland",code:"IS"},{name:"India",code:"IN"},{name:"Indonesia",code:"ID"},{name:"Iran, Islamic Republic Of",code:"IR"},{name:"Iraq",code:"IQ"},{name:"Ireland",code:"IE"},{name:"Isle of Man",code:"IM"},{name:"Israel",code:"IL"},{name:"Italy",code:"IT"},{name:"Jamaica",code:"JM"},{name:"Japan",code:"JP"},{name:"Jersey",code:"JE"},{name:"Jordan",code:"JO"},{name:"Kazakhstan",code:"KZ"},{name:"Kenya",code:"KE"},{name:"Kiribati",code:"KI"},{name:"Korea, Democratic People'S Republic of",code:"KP"},{name:"Korea, Republic of",code:"KR"},{name:"Kuwait",code:"KW"},{name:"Kyrgyzstan",code:"KG"},{name:"Lao People'S Democratic Republic",code:"LA"},{name:"Latvia",code:"LV"},{name:"Lebanon",code:"LB"},{name:"Lesotho",code:"LS"},{name:"Liberia",code:"LR"},{name:"Libyan Arab Jamahiriya",code:"LY"},{name:"Liechtenstein",code:"LI"},{name:"Lithuania",code:"LT"},{name:"Luxembourg",code:"LU"},{name:"Macao",code:"MO"},{name:"Macedonia, The Former Yugoslav Republic of",code:"MK"},{name:"Madagascar",code:"MG"},{name:"Malawi",code:"MW"},{name:"Malaysia",code:"MY"},{name:"Maldives",code:"MV"},{name:"Mali",code:"ML"},{name:"Malta",code:"MT"},{name:"Marshall Islands",code:"MH"},{name:"Martinique",code:"MQ"},{name:"Mauritania",code:"MR"},{name:"Mauritius",code:"MU"},{name:"Mayotte",code:"YT"},{name:"Mexico",code:"MX"},{name:"Micronesia, Federated States of",code:"FM"},{name:"Moldova, Republic of",code:"MD"},{name:"Monaco",code:"MC"},{name:"Mongolia",code:"MN"},{name:"Montserrat",code:"MS"},{name:"Morocco",code:"MA"},{name:"Mozambique",code:"MZ"},{name:"Myanmar",code:"MM"},{name:"Namibia",code:"NA"},{name:"Nauru",code:"NR"},{name:"Nepal",code:"NP"},{name:"Netherlands",code:"NL"},{name:"Netherlands Antilles",code:"AN"},{name:"New Caledonia",code:"NC"},{name:"New Zealand",code:"NZ"},{name:"Nicaragua",code:"NI"},{name:"Niger",code:"NE"},{name:"Nigeria",code:"NG"},{name:"Niue",code:"NU"},{name:"Norfolk Island",code:"NF"},{name:"Northern Mariana Islands",code:"MP"},{name:"Norway",code:"NO"},{name:"Oman",code:"OM"},{name:"Pakistan",code:"PK"},{name:"Palau",code:"PW"},{name:"Palestinian Territory, Occupied",code:"PS"},{name:"Panama",code:"PA"},{name:"Papua New Guinea",code:"PG"},{name:"Paraguay",code:"PY"},{name:"Peru",code:"PE"},{name:"Philippines",code:"PH"},{name:"Pitcairn",code:"PN"},{name:"Poland",code:"PL"},{name:"Portugal",code:"PT"},{name:"Puerto Rico",code:"PR"},{name:"Qatar",code:"QA"},{name:"Reunion",code:"RE"},{name:"Romania",code:"RO"},{name:"Russian Federation",code:"RU"},{name:"RWANDA",code:"RW"},{name:"Saint Helena",code:"SH"},{name:"Saint Kitts and Nevis",code:"KN"},{name:"Saint Lucia",code:"LC"},{name:"Saint Pierre and Miquelon",code:"PM"},{name:"Saint Vincent and the Grenadines",code:"VC"},{name:"Samoa",code:"WS"},{name:"San Marino",code:"SM"},{name:"Sao Tome and Principe",code:"ST"},{name:"Saudi Arabia",code:"SA"},{name:"Senegal",code:"SN"},{name:"Serbia and Montenegro",code:"CS"},{name:"Seychelles",code:"SC"},{name:"Sierra Leone",code:"SL"},{name:"Singapore",code:"SG"},{name:"Slovakia",code:"SK"},{name:"Slovenia",code:"SI"},{name:"Solomon Islands",code:"SB"},{name:"Somalia",code:"SO"},{name:"South Africa",code:"ZA"},{name:"South Georgia and the South Sandwich Islands",code:"GS"},{name:"Spain",code:"ES"},{name:"Sri Lanka",code:"LK"},{name:"Sudan",code:"SD"},{name:"Suriname",code:"SR"},{name:"Svalbard and Jan Mayen",code:"SJ"},{name:"Swaziland",code:"SZ"},{name:"Sweden",code:"SE"},{name:"Switzerland",code:"CH"},{name:"Syrian Arab Republic",code:"SY"},{name:"Taiwan, Province of China",code:"TW"},{name:"Tajikistan",code:"TJ"},{name:"Tanzania, United Republic of",code:"TZ"},{name:"Thailand",code:"TH"},{name:"Timor-Leste",code:"TL"},{name:"Togo",code:"TG"},{name:"Tokelau",code:"TK"},{name:"Tonga",code:"TO"},{name:"Trinidad and Tobago",code:"TT"},{name:"Tunisia",code:"TN"},{name:"Turkey",code:"TR"},{name:"Turkmenistan",code:"TM"},{name:"Turks and Caicos Islands",code:"TC"},{name:"Tuvalu",code:"TV"},{name:"Uganda",code:"UG"},{name:"Ukraine",code:"UA"},{name:"United Arab Emirates",code:"AE"},{name:"United Kingdom",code:"GB"},{name:"United States",code:"US"},{name:"United States Minor Outlying Islands",code:"UM"},{name:"Uruguay",code:"UY"},{name:"Uzbekistan",code:"UZ"},{name:"Vanuatu",code:"VU"},{name:"Venezuela",code:"VE"},{name:"Viet Nam",code:"VN"},{name:"Virgin Islands, British",code:"VG"},{name:"Virgin Islands, U.S.",code:"VI"},{name:"Wallis and Futuna",code:"WF"},{name:"Western Sahara",code:"EH"},{name:"Yemen",code:"YE"},{name:"Zambia",code:"ZM"},{name:"Zimbabwe",code:"ZW"}];
+
   @ViewChild(IonContent) content: IonContent;
   active: boolean = true;
   loaded = false;
@@ -65,14 +66,14 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
     private popoverController: ModalController,
     private camera: Camera,
     private _zone : NgZone,
+    private commonUtil: CommonUtil,
     private file: File,
     public actionSheetCtrl: ActionSheetController,
     public toastCtrl: ToastController,
     public platform: Platform,
     public events: EventsService,
     private contacts: Contacts,
-    private router: Router,
-    public loadingCtrl: LoadingController) {
+    private router: Router) {
       this.translate.get([
         'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
         'ALERT_TEXT.IMAGE_SELECT_ERROR', 'ALERT_TEXT.SELECT_VISITOR_COUNTRY',
@@ -119,7 +120,7 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
             this.visitorInfoModal.visitor_address = this.visitor.Address;
             this.visitorInfoModal.visitor_country = this.visitor.Country;
             if (this.visitorInfoModal.visitor_country) {
-              this.countryList.forEach(element => {
+              CommonUtil.countryList.forEach(element => {
                 if (element.code === this.visitorInfoModal.visitor_country) {
                   this.visitorInfoModal.visitor_country_name = element.name;
                   return;
@@ -156,9 +157,7 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
             contact: new FormControl('', (this.hostSettings && this.hostSettings.ContactNumberEnabled && this.hostSettings.ContactNumberRequired) ? ([Validators.required]) : []),
             vechile: new FormControl('', (this.hostSettings && this.hostSettings.VehicleNumberEnabled && this.hostSettings.VehicleNumberRequired) ? ([Validators.required]) : []),
             address: new FormControl('', (this.hostSettings && this.hostSettings.AddressEnabled && this.hostSettings.AddressRequired) ? ([Validators.required]) : []),
-            country: new FormControl('', (this.hostSettings && this.hostSettings.CountryEnabled && this.hostSettings.CountryRequired) ? ([Validators.required]) : []),
-            gender: new FormControl('', (this.hostSettings && this.hostSettings.GenderEnabled && this.hostSettings.GenderRequired) ? ([Validators.required]) : []),
-            vistorCompany:new FormControl('', [])
+            gender: new FormControl('', (this.hostSettings && this.hostSettings.GenderEnabled && this.hostSettings.GenderRequired) ? ([Validators.required]) : [])
             //country: new FormControl('', [Validators.pattern('[a-zA-Z0-9 ]*')]),
             //city: new FormControl('', [Validators.pattern('[a-zA-Z0-9 ]*')]),
           });
@@ -251,15 +250,24 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
         if(resultOB._objectInstance.emails && resultOB._objectInstance.emails[0]){
           this.visitorInfoModal.visitor_email = resultOB._objectInstance.emails[0].value;
         }
-        this.visitorInfoModal.visitor_mobile_no = resultOB._objectInstance.phoneNumbers[0].value;
+        const phone = resultOB._objectInstance.phoneNumbers[0].value;
+        if (phone) {
+          this.visitorInfoModal.visitor_mobile_no = phone.replace(/[^\d.-]/g, '');
+        }
+
         if(resultOB._objectInstance.organizations && resultOB._objectInstance.organizations[0]){
           this.visitorInfoModal.visitor_comp_name = resultOB._objectInstance.organizations[0].name;
-          this.getCompanyList(this.visitorInfoModal.visitor_comp_name);
+          this.visitorInfoModal.visitor_comp_id = this.commonUtil.getCompany(this.visitorInfoModal.visitor_comp_name, true);;
+          this.visitorInfoModal.visitor_comp = this.visitorInfoModal.visitor_comp_id;
+          if (!this.visitorInfoModal.visitor_comp_id) {
+            this.addVisitorsNewCompany(this.visitorInfoModal.visitor_comp_name);
+          }
+
         }
 
         if(resultOB._objectInstance.addresses && resultOB._objectInstance.addresses[0]){
           this.visitorInfoModal.visitor_address = resultOB._objectInstance.addresses[0].formatted;
-          this.countryList.forEach(country => {
+          CommonUtil.countryList.forEach(country => {
             // if (country.name === 'Malaysia'){
             //   console.log(country.name);
             // }
@@ -631,7 +639,7 @@ ionViewDidEnter() {
       "AuMAppDevSeqId":'',
       "AuDeviceUID":'WEB'
     }
-    this.apiProvider.requestApi(params1, '/api/vims/CheckBlackList', true, 'WEB').then(
+    this.apiProvider.requestApi(params1, '/api/vims/CheckBlackList', true, 'WEB', '').then(
       async (val) => {
         var result = JSON.parse(val.toString());
         if(result["Table"] != undefined && result["Table"].length > 0){
@@ -884,55 +892,6 @@ ionViewDidEnter() {
       }
     };
     this.router.navigate(['visitor-company-page'], navigationExtras);
-  }
-
-  getCompanyList(company){
-
-      var params = {"SearchString":company,
-      "OffSet":"0",
-      "Rows":"20000"};
-      // this.VM.host_search_id = "adam";
-      this.apiProvider.GetVisitorCompany(params).then(
-        (val) => {
-          var allowAdd = true;
-            var companyList = JSON.parse(val.toString());
-            for(var i = 0 ; i < companyList.length ; i++){
-              if(company == companyList[i].visitor_comp_name){
-                this.visitorInfoModal.visitor_comp_name = company;
-                this.visitorInfoModal.visitor_comp_id = companyList[i].visitor_comp_code;
-                this.visitorInfoModal.visitor_comp = companyList[i].visitor_comp_code;
-                allowAdd = false;
-                break;
-              }
-            }
-
-            if(allowAdd){
-              this.addVisitorsNewCompany(company);
-            }
-        },
-        async (err) => {
-
-            this.addVisitorsNewCompany(company);
-            var companyList = [];
-
-            var message = "";
-            if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-              message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-            } else if(err && JSON.parse(err) && JSON.parse(err).message){
-              message =JSON.parse(err).message;
-            }
-            if(message){
-              // message = " Unknown"
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: message,
-                cssClass: 'alert-danger',
-                buttons: ['Okay']
-              });
-                alert.present();
-            }
-          }
-      );
   }
 
   addVisitorsNewCompany(company){

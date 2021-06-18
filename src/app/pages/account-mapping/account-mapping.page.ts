@@ -10,6 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import * as CryptoJS from 'crypto-js';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { NavigationExtras, Router } from '@angular/router';
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 @Component({
   selector: 'app-account-mapping',
   templateUrl: './account-mapping.page.html',
@@ -38,15 +40,17 @@ export class AccountMappingPage {
   }
   showUI : any = false;
 
-  constructor(public navCtrl: NavController,
+  constructor(private navCtrl: NavController,
      public platform : Platform,
     //  private googleVision : GoogleVision,
      public menu: MenuController,
      private file: File,
+     private router: Router,
     //  private crashlytics: Crashlytics,
      private alertCtrl: AlertController,
      private toastCtrl:ToastService,
      private device: Device,
+     private fcm: FCM,
      private barcodeScanner: BarcodeScanner,
      public apiProvider: RestProvider,
      private statusBar: StatusBar,
@@ -98,7 +102,7 @@ export class AccountMappingPage {
             }
           return;
         case AppSettings.LOGINTYPES.SECURITYAPP:
-            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS);
             if(hostData && JSON.parse(hostData) && JSON.parse(hostData).MAppDevSeqId){
               this.showUI = false;
               return;
@@ -117,17 +121,38 @@ export class AccountMappingPage {
 
   ionViewDidEnter() {
     this.menu.enable(false,"myLeftMenu");
-  }
-
-  ionViewWillEnter(){
-    this.menu.enable(false,"myLeftMenu");
+    this.initializeFirebase();
   }
 
   ionViewWillLeave() {
 
   }
 
-
+  initializeFirebase() {
+    if (this.platform.is("cordova")) {
+      this.platform.is('android') ? this.initializeFirebaseAndroid() : this.initializeFirebaseIOS();
+    }
+  }
+  initializeFirebaseAndroid() {
+    this.fcm.getToken().then(token => {
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+      console.log("Token:" + token);
+    });
+    this.fcm.onTokenRefresh().subscribe(token => {
+      console.log("RefreshToken:" + token);
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+    })
+  }
+  initializeFirebaseIOS() {
+    this.fcm.getToken().then(token => {
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+      console.log("Token:" + token);
+    });
+    this.fcm.onTokenRefresh().subscribe(token => {
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+      console.log("Token:" + token);
+    });
+  }
 
 
   onChangeLanguage(){
@@ -186,11 +211,13 @@ export class AccountMappingPage {
           });
             // var qrCodeString = "" + encrypted;
             // 1001 HOST APP
-            var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohZjEU6Evg3rcMxk+/Ugdcex2hFM6P4LE2zMmCF/XoF6kbtLZRrN6d2wZtKDKw7wzf5ZU6E1Ud9RSlXHW9nXhMnyNXs3gJR/8IT4DDzEQdmP+K6TVrX4YXzUbuP+qEN6/U=';
+            // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohZjEU6Evg3rcMxk+/Ugdcex2hFM6P4LE2zMmCF/XoF6kbtLZRrN6d2wZtKDKw7wzf5ZU6E1Ud9RSlXHW9nXhMnyNXs3gJR/8IT4DDzEQdmP+K6TVrX4YXzUbuP+qEN6/U=';
             //HOSTWF 1001
-           // var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
+          //  var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
+            //FAcility Display
+            // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmsOWXsylRj+rCMMx0EgAXhUReWw865+hTAeDCEKjxB1Ow==';
             //HOST 2001
-            // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5oiFeX7BsAqxUzljIRJdDWo7fjFdjd5CYtyMqUPAqE82J7INYJg3yt8iYa+5P2zoCB+8qNoUbmH80zVyCrzpZJobcHl1pkIWqja9wnesvEJzOw==';
+            var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5oiFeX7BsAqxUzljIRJdDWo7fjFdjd5CYtyMqUPAqE82J7INYJg3yt8iYa+5P2zoCB+8qNoUbmH80zVyCrzpZJobcHl1pkIWqja9wnesvEJzOw==';
             //ACK
             // var qrCodeString = 'qYNb75lXZms19Ri+u9GuOKEOnI+Bw2rOjRNRz3F3gK5yStsC7HV5d0FoZmKl97l5D/TzMTQCqKnahYPuTqZ6TrHijxnIJnXGCrbD93loR9n/96rUnC+77Vl8D/VZ3XTIwc3axSyZQ7DQC4g4NiQGJlH8pY7wGwxGkeDBwIRR7GA=';
 
@@ -199,8 +226,11 @@ export class AccountMappingPage {
             //Facility Display App 1001
             // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmvsXGxqidWW1oDwCCbeG7M0xYw+SnR7J6F5RAATHeqKnA==';
 
-            //SeCurity
-            //var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWA2FWpesNBQIHXTksM5p7Ic7CzOKYKHk4ldqHgNySH0+Zu438uZb0nPrSF3ezTkSN2TkCtUVFGpCmKnBV2TiW9DWO4iQYIQ6zS7+ADOKM5q2w==';
+            //SeCurity 1001
+            // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWDtgM55EUQmYhBsvTNChQlCXQQRiyNBiYsT0t4NO12QYz0oPttc41Ff950KHToVze5nrSu80C7kZkDIZeyhONnU4JQBGuE/gUdNMVci8mW0Sw==';
+
+            //Security 2001
+            // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWAq0MmJMwqMEnJN+/FqmOCBtUYX+1nAL+E2I+YaxcatPrwLlf/RgyvUhluRZaDnUGNL5t2YLmGq4DpPZkpyqVzG';
             this.processJson(qrCodeString);
           }
         } else{
@@ -987,7 +1017,14 @@ export class AccountMappingPage {
       this.SaveAckAppDeviceInfo();
       return;
     }else if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.SECURITYAPP){
-      this.SaveSecurityAppDeviceInfo();
+      localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
+      const navigationExtras: NavigationExtras = {
+        state: {
+          passData: { "QR_DETAIL": this.scannedJson,
+        }
+        }
+      };
+      this.router.navigate(['login'], navigationExtras);
       return;
     }else if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.DISPLAYAPP){
       this.SaveDisplayAppDeviceInfo();
@@ -1044,118 +1081,6 @@ export class AccountMappingPage {
             case AppSettings.LOGINTYPES.ACKAPPT:
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
               this.navCtrl.navigateRoot('sign-pad-idle-page');
-              break;
-          }
-
-        }else{
-          this.STOPS = 'STOP2';
-        }
-      },
-      async (err) => {
-
-        if(err && err.message == "No Internet"){
-          return;
-        }
-        try {
-          var result = JSON.parse(err.toString());
-          if(result.message){
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: result.message,
-              cssClass: 'alert-danger',
-              buttons: ['Okay']
-            });
-              alert.present();
-              return;
-          }
-        } catch (error) {
-
-        }
-
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-         var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-          let alert = await this.alertCtrl.create({
-            header: 'Error !',
-            message: message,
-            cssClass: 'alert-danger',
-            buttons: ['Okay']
-          });
-            alert.present();
-            return;
-        }
-
-
-        let invalidORGConfirm = await this.alertCtrl.create({
-          header: "Error",
-          message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
-          cssClass: 'alert-danger',
-          buttons: [
-            {
-              text: this.T_SVC['COMMON.OK'],
-              role: 'cancel',
-              handler: () => {
-              }
-            }
-          ]
-        });
-        invalidORGConfirm.present();
-      }
-    );
-  }
-
-
-  SaveSecurityAppDeviceInfo(){
-    var token = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.FCM_ID);
-      if(!this.platform.is('cordova')) {
-        token = "crINLpP4e9s:APA91bFQ7slN5VncMGZTdJJ49N3h1rZC0zYwpcv78xzO-sXG-NFTouko6v-yvnut9tkMm-YX5I0kAUlwCRaE7j5cJGYVeSgQy5UOj9TICLahItYkX70O0LwZpMTF5kD17iX2vLAiwl3g";
-      }else if(!token){
-        token = "";
-      }
-      var MAppSeqId = this.scannedJson.MAppDevSeqId;
-      if(!MAppSeqId){
-        MAppSeqId = this.scannedJson.MAppSeqId;
-      }
-      var params1 = {
-          "PushNotificationId":token,
-          "MAppDevSeqId": MAppSeqId,
-          "DeviceUID":AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
-          "DevicePlatform":"Android",
-          "DeviceDetails":JSON.stringify({
-           "manufacturer": "samsung",
-           "version": "6.0.1",
-           "model": "SM-G532G"
-          })
-      }
-      if(this.device.uuid){
-        params1 = {
-          "PushNotificationId":token,
-          "MAppDevSeqId": MAppSeqId,
-          "DeviceUID":this.device.uuid,
-          "DevicePlatform":this.device.platform,
-          "DeviceDetails":JSON.stringify({
-           "manufacturer": this.device.manufacturer,
-           "version": this.device.version,
-           "model": this.device.model
-          })
-        };
-      }
-
-    this.apiProvider.SaveSecurityAppDeviceInfo(params1, this.scannedJson.ApiUrl).then(
-      (val) => {
-        if(this.scannedJson.MAppId){
-          switch(this.scannedJson.MAppId){
-            case AppSettings.LOGINTYPES.DISPLAYAPP:
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              //this.STOPS = 'STOP3';
-              this.navCtrl.navigateRoot('facility-kiosk-display');
-              break;
-            case AppSettings.LOGINTYPES.ACKAPPT:
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              this.navCtrl.navigateRoot('sign-pad-idle-page');
-              break;
-            case AppSettings.LOGINTYPES.SECURITYAPP:
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-              this.navCtrl.navigateRoot('security-dash-board-page');
               break;
           }
 

@@ -37,18 +37,18 @@
                 margin-top: 10px;
                 margin-bottom: 10px;
                 width: 200px;
-            " src="assets/images/box.jpeg">
+            " src="assets/images/box.png">
                 <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
         </ion-col>
   </ion-row>
   <!-- <h5 style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
   <ion-list no-padding no-margin *ngFor="let list of appointments | groupBy:'appointment_group_id'">
-    <ion-card class="card_appointment" (click)="viewBooking(list.value)"
+    <ion-card class="card_appointment"
       no-padding no-border >
       <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, list.value, slideDOM)">
         <ion-item lines="none"  mode="ios" no-padding class="apt-item">
           <ion-row lines="none" no-padding full-width>
-            <ion-col size="4" class="col apt-left" no-padding>
+            <ion-col size="4" class="col apt-left" no-padding (click)="viewBooking(list.value)">
               <div class="div-date">
                 <h2 class="text-white" no-margin style="font-size: 18px;">{{list.value[0].START_DATE | date :'dd'}} {{getDayofDate(list.value[0].START_DATE)}}</h2>
               </div>
@@ -62,31 +62,31 @@
                 </div>
               </div>
             </ion-col>
-            <ion-col size="6" style="padding-bottom: 0px;">
+            <ion-col size="6" style="padding-bottom: 0px;" (click)="viewBooking(list.value)">
               <div class="div-apt-center">
                 <ion-icon slot="start" color="danger" name="person-outline" class="apt-text-icons"></ion-icon>
-                <p class="apt-center-title">{{list.value[0].VISITOR_NAME}}</p>
+                <ion-label class="apt-center-title">{{list.value[0].VISITOR_NAME}}</ion-label>
               </div>
 
               <div class="div-apt-center">
                 <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
-                <p class="apt-center-subtitle">{{list.value[0].REASON ? list.value[0].REASON:'--'}}</p>
+                <ion-label class="apt-center-subtitle">{{list.value[0].REASON ? list.value[0].REASON:'&nbsp;&nbsp;--'}}</ion-label>
               </div>
 
               <div class="div-apt-center">
                 <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
-                <p class="apt-center-subtitle">{{list.value[0].TELEPHONE_NO ? list.value[0].TELEPHONE_NO:'--'}}</p>
+                <ion-label class="apt-center-subtitle">{{list.value[0].TELEPHONE_NO ? list.value[0].TELEPHONE_NO:'&nbsp;&nbsp;--'}}</ion-label>
               </div>
 
               <div class="div-apt-center">
                 <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
-                <p class="apt-center-subtitle">{{list.value[0].EMAIL ? list.value[0].EMAIL:'--'}}</p>
+                <ion-label class="apt-center-subtitle">{{list.value[0].EMAIL ? list.value[0].EMAIL:'&nbsp;&nbsp;--'}}</ion-label>
               </div>
             </ion-col>
 
             <ion-col size="2" class="colIcons">
 
-              <div>
+              <div (click)="openTooltip($event, 'Visitors')">
                 <!-- <ion-badge color="danger">3</ion-badge> -->
                 <div class="outer-circle2">
                   <div class="inner-circle2">
@@ -94,7 +94,7 @@
                   </div>
                 </div>
               </div>
-              <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'">
+              <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" (click)="viewBooking(list.value)">
                 <div class="outer-circle2">
                   <div class="inner-circle2">
                     <span id="inside-content">
@@ -104,11 +104,12 @@
                 </div>
                 <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
               </div>
-              <div class="">
-                <div [ngClass]="{'outer-circle':list.value[0].Approval_Status=='Pending','outer-circle2':list.value[0].Approval_Status=='Canceled','outer-circle1':list.value[0].Approval_Status=='Approved'}">
-                  <div [ngClass]="{'inner-circle':list.value[0].Approval_Status=='Pending','inner-circle2':list.value[0].Approval_Status=='Canceled','inner-circle1':list.value[0].Approval_Status=='Approved'}">
+
+              <div class="" (click)="openTooltip($event, getAppointmentStatus(list.value))">
+                <div [ngClass]="{'outer-circle': getAppointmentStatus(list.value) === 'Pending','outer-circle2':getAppointmentStatus(list.value) === 'Canceled','outer-circle1': getAppointmentStatus(list.value) === 'Approved'}">
+                  <div [ngClass]="{'inner-circle':getAppointmentStatus(list.value) === 'Pending','inner-circle2':getAppointmentStatus(list.value)=== 'Canceled','inner-circle1': getAppointmentStatus(list.value) === 'Approved'}">
                     <span id="inside-content">
-                      {{list.value[0].Approval_Status.charAt(0)}}
+                      {{getAppointmentStatus(list.value).charAt(0)}}
                     </span>
                   </div>
                 </div>

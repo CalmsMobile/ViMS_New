@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="danger">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
-    <ion-title> &nbsp;&nbsp;&nbsp;{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-title>{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
     <ion-buttons slot="end" >
       <ion-fab-button color="light" shape="round" slot="icon-only" style="    width: 35px;
       height: 35px;
@@ -12,7 +12,7 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="danger">
-    <ion-searchbar mode="ios" placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch($event.target.value, true, null)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
+    <ion-searchbar mode="ios" placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch($event, true, null)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
         <!-- (ionChange)="updateSchedule()" -->
     </ion-searchbar>
   </ion-toolbar>
@@ -60,6 +60,11 @@
         </ion-item-sliding>
       </ion-item-group>
     </ion-list>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles"
+        loadingText="{{ 'COMMON.LOADER_MSG.LOADING_MORE_DATA' | translate }}">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </ion-content>
 
 <ion-footer >

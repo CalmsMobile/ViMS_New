@@ -53,7 +53,7 @@
                   height: 52px;
                   border-radius: 50%;" slot="start" [src]="companyImage" onError="this.src='../../assets/logo/2.png';">
                   <div>
-                    <h2 class="sticky">{{companyInfo.comp_name}}</h2>
+                    <ion-label class="sticky">{{companyInfo.comp_name}}</ion-label>
                     <p *ngIf="companyInfo.comp_fax_no"><b>Fax:</b>{{companyInfo.comp_fax_no}}</p>
                     <p *ngIf="companyInfo.comp_email"><b>Email:</b>{{companyInfo.comp_email}}</p>
                     <p *ngIf="companyInfo.comp_office_no"><b>Office:</b>{{companyInfo.comp_office_no}}</p>
@@ -109,7 +109,7 @@
                   border-radius: 50%;" [src]="hostImage" onError="this.src='../../../assets/images/user.png';">
                 <div>
                   <ion-label class="sticky">{{hostInfo.HOSTNAME}}</ion-label>
-                  <p style="margin-top: 5px;"><b>Department : </b>{{hostInfo.DEPARTMENT_REFID ? hostInfo.DEPARTMENT_REFID : '--'}}</p>
+                  <p style="margin-top: 5px;"><b>Department : </b>{{hostInfo.DEPARTMENT_REFID ? hostInfo.DEPARTMENT_REFID : '&nbsp;&nbsp;--'}}</p>
                 </div>
               </ion-item>
               <ion-card-content>
@@ -146,7 +146,7 @@
                   padding-bottom: 22px;">
                   </ion-icon>
                   <div>
-                    <h2 class="sticky">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
+                    <ion-label class="sticky">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</ion-label>
                     <p>{{VM.DeviceDetails['model']}}</p>
                   </div>
                 </ion-item>
@@ -231,7 +231,7 @@
                     <ion-icon *ngIf= "VM.DevicePlatform == 'Android'" slot="start" color='danger' class="icon siva-icon-android" style="font-size: 3.5rem;">
                     </ion-icon>
                     <div>
-                      <h2 class="sticky">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</h2>
+                      <ion-label class="sticky">{{VM.DevicePlatform}} {{VM.DeviceDetails['version']}}</ion-label>
                       <p>{{VM.DeviceDetails['model']}}</p>
                     </div>
                   </ion-item>
@@ -242,7 +242,7 @@
                 <!-- <p italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}}</p> -->
                 <ion-card sp-card-map-acc-org>
                   <ion-item no-margin>
-                    <h2 style="margin: 0 auto;" class="sticky">This device already used by another account. Do you want to proceed?</h2>
+                    <ion-text style="margin: 0 auto;" class="ion-padding sticky">This device already used by another account. Do you want to proceed?</ion-text>
                   </ion-item>
                 </ion-card>
               </div>
@@ -267,7 +267,7 @@
               </div>
 
               <div margin-vertical style="    margin-top: 40px;">
-                <div style="margin-top: 20px; display: flex;">
+                <div style="margin-top: 20px;">
 
                     <ion-button color="danger" shape="round" fill="outline"
                      (click)="takeActionForGoBack('STOP1')">

@@ -33,7 +33,6 @@ export class UserProfilePagePage implements OnInit {
   }
   translation: any = {};
   base64Image: any = "";
-  loading: any;
   T_SVC: any;
   constructor(public navCtrl: NavController,
 
@@ -45,8 +44,7 @@ export class UserProfilePagePage implements OnInit {
     private platform: Platform,
     private device: Device,
     public actionSheetCtrl: ActionSheetController,
-    private alertCtrl: AlertController,
-    public loadingCtrl: LoadingController) {
+    private alertCtrl: AlertController) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'USER_PROFILE.SUCCESS.REGISTER_TITLE',
@@ -133,20 +131,14 @@ export class UserProfilePagePage implements OnInit {
         {
           text: 'Gallery',
           handler: () => {
-            this.loading = this.loadingCtrl.create({
-              message: 'Please wait...'
-            });
-            this.loading.present();
+            this.apiProvider.presentLoading();
             this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
           }
         },
         {
           text: 'Camera',
           handler: () => {
-            this.loading = this.loadingCtrl.create({
-              message: 'Please wait...'
-            });
-            this.loading.present();
+            this.apiProvider.presentLoading();
             this.takePicture(this.camera.PictureSourceType.CAMERA);
           }
         },
@@ -179,11 +171,11 @@ export class UserProfilePagePage implements OnInit {
 
       this.base64Image = 'data:image/jpeg;base64,' + imageData;
       this.data.profile.HostImage = imageData;
-      this.loading.dismiss();
+      this.apiProvider.dismissLoading();
 
     }, (err) => {
       this.presentToast(this.T_SVC['ALERT_TEXT.IMAGE_SELECT_ERROR']);
-      this.loading.dismiss();
+      this.apiProvider.dismissLoading();
     });
   }
 
@@ -270,9 +262,6 @@ export class UserProfilePagePage implements OnInit {
       this.data.profile.PushToken = "";
     }
 
-
-
-
     this.apiProvider.UpdateHostInfo(this.data.profile).then(
       async (val) => {
         var result = JSON.parse(val.toString());
@@ -326,165 +315,8 @@ export class UserProfilePagePage implements OnInit {
   }
 
   onEvent = (event: string): void => {
-    // if (event == 'onUpdateProfile') {
-    //   let loder_msg:string;
-    //   this.translate.get('COMMON.LOADER_MSG.REGISTER_LODER').subscribe(t => {
-    //     loder_msg = t;
-    //   });
-    //   var register_loader = this.loadingCtrl.create({
-    //     spinner: 'bubbles',
-    //     content: loder_msg,
-    //     dismissOnPageChange:true,
-    //   });
-    //   register_loader.present();
-    //     this.producttagProvider.updateProfile(this.userUpdateModal).subscribe(
-    //       (result) => {
-    //         register_loader.dismiss();
-    //         this.translate.get(['USER_PROFILE.SUCCESS.REGISTER_TITLE','USER_PROFILE.SUCCESS.REGISTER_message','COMMON.OK','COMMON.CANCEL']).subscribe(t => {
-    //           let loginConfirm = this.alertCtrl.create({
-    //             header: "<span class='success'>" + t['USER_PROFILE.SUCCESS.REGISTER_TITLE'] + "</span>",
-    //             message: t['USER_PROFILE.SUCCESS.REGISTER_message'],
-    //             buttons: [
-    //               {
-    //                 text: t['COMMON.OK'],
-    //                 role: 'cancel',
-    //                 handler: () => {
-    //                 }
-    //               }
-    //             ]
-    //           });
-    //           loginConfirm.present();
-    //         });
-    //       },
-    //       (err) => {
-    //         register_loader.dismiss();
-    //         this.error = 'Registration failed ('+ err.error.message +')';
-    //         this.translate.get(['USER_PROFILE.ERROR.REG_FAILED_TITLE','USER_PROFILE.ERROR.REG_FAILED_SUB_TITLE','COMMON.OK','COMMON.CANCEL']).subscribe(t => {
-    //           let loginConfirm = this.alertCtrl.create({
-    //             header: "<span class='failed'>" + t['USER_PROFILE.ERROR.REG_FAILED_TITLE'] + "</span>",
-    //             message: t['USER_PROFILE.ERROR.REG_FAILED_SUB_TITLE']
-    //             +"<div>"+ err.error.message+ "</div>",
-    //             buttons: [
-    //               {
-    //                 text: t['COMMON.OK'],
-    //                 role: 'cancel',
-    //                 handler: () => {
-    //                 }
-    //               }
-    //             ]
-    //           });
-    //           loginConfirm.present();
-    //         });
-    //       }
-    //     );
-    // } else if (event == 'onChangePassword') {
-    //   this.translate.get(['USER_PROFILE.CHANGE_PASSWORD','USER_PROFILE.NEW_PASS','USER_PROFILE.OLD_PASS','USER_PROFILE.CHANGE',
-    //   'COMMON.OK','COMMON.CANCEL']).subscribe(t => {
-    //     let alert = this.alertCtrl.create({
-    //       header: '<span class="failed">' + t['USER_PROFILE.CHANGE_PASSWORD'] + '</span>',
-    //       inputs: [
-    //         {
-    //           name: 'currentPassword',
-    //           type: 'password',
-    //           placeholder: t['USER_PROFILE.OLD_PASS']
-    //         },
-    //         {
-    //           name: 'newPassword',
-    //           placeholder: t['USER_PROFILE.NEW_PASS'],
-    //           type: 'password'
-    //         }
-    //       ],
-    //       buttons: [
-    //         {
-    //           text: t['COMMON.CANCEL'],
-    //           role: 'cancel',
-    //           handler: data => {
-    //           }
-    //         },
-    //         {
-    //           text: t['USER_PROFILE.CHANGE'],
-    //           handler: data => {
-    //             let _newPassword = (data.newPassword).toString().trim();
-    //             let _oldPassword = (data.currentPassword).toString().trim();
-    //             if( _oldPassword.length == 0){
-    //               this.toastCtrl.create(this.translation['USER_PROFILE.ERROR.OLD_PASSWORD_REQUIRED']);
-    //               return false;
-    //             } else if( _oldPassword.length > 20){
-    //               this.toastCtrl.create(this.translation['USER_PROFILE.ERROR.OLD_PASSWORD_MAX20']);
-    //               return false;
-    //             } else if(_oldPassword.length < 4){
-    //               this.toastCtrl.create(this.translation['USER_PROFILE.ERROR.OLD_PASSWORD_MIN4']);
-    //               return false;
-    //             } else if( _newPassword.length == 0){
-    //               this.toastCtrl.create(this.translation['USER_PROFILE.ERROR.NEW_PASSWORD_REQUIRED']);
-    //               return false;
-    //             } else if( _newPassword.length > 20){
-    //               this.toastCtrl.create(this.translation['USER_PROFILE.ERROR.NEW_PASSWORD_MAX20']);
-    //               return false;
-    //             } else if(_newPassword.length < 4){
-    //               this.toastCtrl.create(this.translation['USER_PROFILE.ERROR.NEW_PASSWORD_MIN4']);
-    //               return false;
-    //             } else if(_oldPassword.length >= 4 && _oldPassword.length <= 20 &&
-    //               _newPassword.length >= 4 && _newPassword.length <= 20){
-    //               this.takeActionForChangePassword({currentPassword:_oldPassword, newPassword:_newPassword});
-    //             }
-    //           }
-    //         }
-    //       ]
-    //     });
-    //     alert.present();
-    //   });
-    // }
   }
   takeActionForChangePassword(passData) {
-    // let loder_msg:string;
-    // this.translate.get('COMMON.LOADER_MSG.LOADING').subscribe(t => {
-    //   loder_msg = t;
-    // });
-    // var changePass_loader = this.loadingCtrl.create({
-    //   spinner: 'bubbles',
-    //   content: loder_msg,
-    //   dismissOnPageChange:true,
-    // });
-    // changePass_loader.present();
-    // this.producttagProvider.changePassword(passData).subscribe(data => {
-    //   console.log(data);
-    //   changePass_loader.dismiss();
-    //   this.translate.get(['USER_PROFILE.SUCCESS.CHANGE_PASS_SUCCESS',
-    //   'COMMON.OK','COMMON.CANCEL']).subscribe(t => {
-    //     let loginConfirm = this.alertCtrl.create({
-    //       header: "<span class='success'>" + t['USER_PROFILE.SUCCESS.CHANGE_PASS_SUCCESS'] + "</span>",
-    //       buttons: [
-    //         {
-    //           text: t['COMMON.OK'],
-    //           role: 'cancel',
-    //           handler: () => {
-    //           }
-    //         }
-    //       ]
-    //     });
-    //     loginConfirm.present();
-    //   });
-    // },
-    // (err) => {
-    //   changePass_loader.dismiss();
-    //   this.translate.get(['USER_PROFILE.ERROR.CHANGE_PASS_ERROR',
-    //   'COMMON.OK','COMMON.CANCEL']).subscribe(t => {
-    //     let loginConfirm = this.alertCtrl.create({
-    //       header: "<span class='failed'>" + t['USER_PROFILE.ERROR.CHANGE_PASS_ERROR'] + "</span>",
-    //       message:"<div>"+ (err.error.message || "")+ "</div>",
-    //       buttons: [
-    //         {
-    //           text: t['COMMON.OK'],
-    //           role: 'cancel',
-    //           handler: () => {
-    //           }
-    //         }
-    //       ]
-    //     });
-    //     loginConfirm.present();
-    //   });
-    // });
   }
 
 

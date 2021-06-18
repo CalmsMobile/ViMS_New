@@ -25,17 +25,16 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
   visitors1 = [];
   tempContactArray = [];
   contactsArray = [];
-  OffSet = 0;
   newImage = "&tes='test'"
   isAnyoneSelected = false;
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   appSettings : any = {};
-
+  offSetCount = 0;
   ngOnDestroy(): void {
     this.events.clearObserve();
   }
-
+  isFetching = false;
   constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     private router: Router,
@@ -116,12 +115,6 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
 
   }
 
-  ionViewDidEnter() {
-
-  }
-  ionViewWillEnter() {
-  }
-
   goBack() {
     this.navCtrl.pop();
     console.log('goBack ');
@@ -164,6 +157,9 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
     };
     this.router.navigate(['add-visitors'], navigationExtras);
   }
+
+
+
 
   addVisitors(){
     var visitorTemp = [];
@@ -216,9 +212,9 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
     this.VM.visitors = [];
   }
 
-  getVisitorsBySearch(queryText, typing, refresher){
+  getVisitorsBySearch(event, typing, refresher){
+    const queryText = event? event.target.value: '';
     if(typing){
-      this.OffSet = 0;
       this.VM.queryText = queryText;
     }
 
@@ -226,8 +222,8 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
     if(this.VM.queryText.length >= 2){
       var params = {
         "SearchString":this.VM.queryText,
-        "OffSet":this.OffSet+"",
-        "Rows":"20000"
+        "OffSet": (typing || refresher) ? "0" : this.offSetCount,
+        "Rows":"20"
      }
      this.apiProvider.SearchExistVisitor(params).then(
        (val) => {
@@ -271,20 +267,23 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
            return groups;
          }, {});
          const result = Object.keys(grouped).map(key => ({key, contacts: grouped[key]}));
-
+         this.isFetching = false;
          if(refresher){
-          this.VM.visitors = result.concat(this.VM.visitors);
+          this.VM.visitors = this.VM.visitors.concat(result);
           refresher.target.complete();
          }else{
-          this.VM.visitors = result;
+           if (this.VM.visitors && this.VM.visitors.length > 0) {
+              this.VM.visitors = this.VM.visitors.concat(result);
+           } else {
+            this.VM.visitors = result;
+           }
+
          }
 
        },
        async (err) => {
          if(refresher){
           refresher.target.complete();
-         }else{
-          this.VM.visitors = [];
          }
          if(err && err.message == "No Internet"){
           return;
@@ -353,11 +352,32 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
   }
 
   doRefresh(refresher) {
-
-    this.OffSet = this.VM.searchContactsArray.length;
+    this.VM.searchContactsArray = [];
     this.getVisitorsBySearch(null, false, refresher);
     //setTimeout(()=>{refresher.target.complete();},2000)
   }
+
+  loadData(event) {
+    var currentClass = this;
+    setTimeout(() => {
+      console.log('Done');
+      event.target.complete();
+
+      // App logic to determine if all data is loaded
+      // and disable the infinite scroll
+      if(!currentClass.isFetching){
+        currentClass.isFetching = true;
+        currentClass.offSetCount = 0;
+        currentClass.VM.visitors.forEach(element => {
+          currentClass.offSetCount = currentClass.offSetCount + element.contacts.length;
+         });
+          currentClass.getVisitorsBySearch(null, false, null);
+      //  },1000)
+      }
+      // }
+    }, 500);
+  }
+
   editVisitors(slideDOM:IonItemSliding, type, visitor: any){
     slideDOM.close();
     if(type == 'edit'){

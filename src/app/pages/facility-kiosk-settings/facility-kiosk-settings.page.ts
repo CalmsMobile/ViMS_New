@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Device } from '@ionic-native/device/ngx';
 import { NavController, MenuController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,7 +23,7 @@ export class FacilityKioskSettingsPage implements OnInit {
   constructor(
     public navCtrl: NavController,
     private menuCtrl: MenuController,
-
+    private router: Router,
     private device: Device,
     private toastCtrl : ToastService,
     private alertCtrl : AlertController,
@@ -62,6 +63,11 @@ export class FacilityKioskSettingsPage implements OnInit {
 
   }
 
+  goBack() {
+    this.router.navigateByUrl('facility-kiosk-display');
+    console.log('goBack ');
+  }
+
   logoutMe(){
     this.translate.get(['SETTINGS.ARE_U_SURE_LOGOUT_TITLE','SETTINGS.ARE_U_SURE_LOGOUT',
      'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
@@ -76,23 +82,7 @@ export class FacilityKioskSettingsPage implements OnInit {
             handler: () => {
               //this._app.getRootNav().setRoot(LoginPage);
               this.toastCtrl.create(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.LOGIN_TYPE, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFY_TIME, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.PREAPPOINTMENTAUTOAPPROVE, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.SIGN_PAD, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.DISPLAY_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.ACK_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FASILITY_DISPLAY_KIOSK_SETUP, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.SEL_FASILITY_DISPLAY_KIOSK_FACILITY, "");
+              localStorage.clear();
 
               this.navCtrl.navigateRoot("account-mapping");
             }

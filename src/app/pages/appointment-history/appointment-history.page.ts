@@ -37,6 +37,9 @@ export class AppointmentHistoryPage implements OnInit {
           if (data.action === 'NotificationReceived') {
             console.log("Notification Received: " + data.title);
             this.showNotificationCount();
+          } else  if (data.action === 'delete') {
+            this.OffSet = 0;
+            this.getAppointmentHistory(null);
           }
 
 			});
@@ -46,21 +49,38 @@ export class AppointmentHistoryPage implements OnInit {
 
   ionViewDidEnter() {
 		console.log('ionViewDidEnter AppointmentHistoryPage');
-
-	}
-
-	ionViewWillEnter() {
-		this.events.publishDataCompany({
+    this.events.publishDataCompany({
       action: "page",
       title: "home-view",
       message: ''
     });
 		this.showNotificationCount();
-		console.log('ionViewWillEnter AppointmentHistoryPage');
 		this.OffSet = 0;
 		this.getAppointmentHistory(null);
-
 	}
+
+  openTooltip(event, message) {
+    this.apiProvider.presentPopover(event, message);
+  }
+
+  getAppointmentStatus(appointments1) {
+    let result = '';
+    let appointment = appointments1.find(item => item.Approval_Status === 'Approved');
+    if (appointment) {
+      result = 'Approved';
+    } else {
+      appointment = appointments1.find(item => item.Approval_Status === 'Pending');
+      if (appointment) {
+        result = 'Pending';
+      } else {
+        appointment = appointments1.find(item => (item.Approval_Status === 'Canceled' || item.Approval_Status === 'Cancelled'));
+        if (appointment) {
+          result = 'Canceled';
+        }
+      }
+    }
+    return result;
+  }
 
 	ionViewWillLeave(){
 		this.events.publishDataCompany({
@@ -89,7 +109,7 @@ export class AppointmentHistoryPage implements OnInit {
 
 	doRefresh(refresher) {
     // this.OffSet = this.OffSet + 20;
-
+    this.OffSet = 0;
     this.getAppointmentHistory(refresher);
     //setTimeout(()=>{refresher.target.complete();},2000)
 	}
@@ -111,10 +131,12 @@ export class AppointmentHistoryPage implements OnInit {
 					var aList = JSON.parse(val.toString());
 
 					if(refresher){
-						this.appointments = aList.concat(this.appointments);
-						refresher.target.complete();
-					}else{
 						this.appointments = aList;
+						refresher.target.complete();
+					}else if (this.OffSet === 0){
+            this.appointments = aList;
+          }else {
+            this.appointments = aList.concat(this.appointments);
 					}
 
 						this.OffSet = this.OffSet + aList.length;

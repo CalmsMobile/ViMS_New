@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { Firebase } from '@ionic-native/firebase/ngx';
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { NavController, Platform, MenuController, IonTabs, ModalController } from '@ionic/angular';
@@ -18,7 +18,6 @@ import { EventsService } from 'src/app/services/EventsService';
 export class HomeViewPage implements OnInit {
 
   @ViewChild("myTabs") myTabs: IonTabs;
-  private firstLoaded: boolean = false;
   tab1Root: any = 'upcoming-appointment-page';
   tab3Root: any = 'appointment-history';
   tab5Root: any = 'settings-view-page';
@@ -56,10 +55,10 @@ export class HomeViewPage implements OnInit {
   HOST_ACCESS_INTERVAL: any;
   constructor(public navCtrl: NavController,
     private localNotifications: LocalNotifications,
-    private firebase: Firebase,
     private platform : Platform,
     private modalCtrl: ModalController,
     private _zone : NgZone,
+    private fcm: FCM,
     public menu: MenuController,
     private router: Router,
     private datePipe: DatePipe,
@@ -80,7 +79,6 @@ export class HomeViewPage implements OnInit {
                 console.log('page changed' + data);
              });
             } catch (error) {
-              this.firebase.logError(error);
             }
           }
 
@@ -135,7 +133,7 @@ export class HomeViewPage implements OnInit {
     try{
       const settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
       var hostSettings = JSON.parse(settings).Table1[0];
-      this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
+      this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
     }catch(e){
     }
 
@@ -144,6 +142,38 @@ export class HomeViewPage implements OnInit {
       title: "ReloadMenu",
       message: "ReloadMenu"
     });
+    const settings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+    if (!settings) {
+      this.GetHostAppSettings(this.QRObj.MAppId);
+    }
+
+  }
+
+  GetHostAppSettings(MAppId) {
+    var params = {
+      "MAppId": MAppId,
+      "HostIc": ""
+    }
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+      return;
+    }
+    params.HostIc = JSON.parse(hostData).HOSTIC;
+    this.apiProvider.GetHostAppSettings(params, false).then(
+      (val) => {
+        try {
+          var result = JSON.parse(JSON.stringify(val));
+          if (result) {
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, JSON.stringify(val));
+          }
+        } catch (e) {
+
+        }
+
+      },
+      (err) => {
+      }
+    );
   }
 
   createBooking(){
@@ -158,6 +188,20 @@ export class HomeViewPage implements OnInit {
 
   }
   ionViewDidEnter() {
+    console.log("ionViewDidEnter");
+    this.showFab = true;
+
+    if(this.currentPage == "quick-pass-dash-board-page"){
+      this.events.publishDataCompany({
+        action: 'refreshQuickPass',
+        title: '',
+        message: ''
+      });
+    }else{
+      this.currentPage = "home-view";
+    }
+    this.menu.enable(true,"myLeftMenu");
+
     this.showFab = true;
 
     setTimeout(() => {
@@ -223,24 +267,6 @@ export class HomeViewPage implements OnInit {
     }, 500);
   }
 
-  ionViewWillEnter(){
-    this.showFab = true;
-
-    if(this.currentPage == "quick-pass-dash-board-page"){
-      this.events.publishDataCompany({
-        action: 'refreshQuickPass',
-        title: '',
-        message: ''
-      });
-    }else{
-      this.currentPage = "home-view";
-    }
-
-    // this.myTabs._tabs[this.myIndex].btn.onClick();
-    //alert("ionViewWillEnter Cuent Page: " + this.currentPage);
-    this.menu.enable(true,"myLeftMenu");
-	}
-
   showTabTitle(showTit){
     switch (showTit) {
       case 0:
@@ -281,42 +307,40 @@ export class HomeViewPage implements OnInit {
 
   initializeFirebase() {
     if(this.platform.is("cordova")) {
-      this.firebase.subscribe("all");
       this.platform.is('android') ? this.initializeFirebaseAndroid() : this.initializeFirebaseIOS();
     }
   }
 initializeFirebaseAndroid() {
-    this.firebase.getToken().then(token => {
+    this.fcm.getToken().then(token => {
       window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, ""+token);
       console.log("Token:"+ token);
     });
-    this.firebase.onTokenRefresh().subscribe(token => {
+    this.fcm.onTokenRefresh().subscribe(token => {
       console.log("RefreshToken:"+ token);
       window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, ""+token);
     })
     this.subscribeToPushNotifications();
 }
 initializeFirebaseIOS() {
-    this.firebase.grantPermission()
-    .then(() => {
-      this.firebase.getToken().then(token => {
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, ""+token);
-        console.log("Token:"+ token);
-      });
-      this.firebase.onTokenRefresh().subscribe(token => {
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, ""+token);
-        console.log("Token:"+ token);
-      })
-      this.subscribeToPushNotifications();
-
-    })
-    .catch((error) => {
-      this.firebase.logError(error);
+    this.fcm.getToken().then(token => {
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, ""+token);
+      console.log("Token:"+ token);
     });
+    this.fcm.onTokenRefresh().subscribe(token => {
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, ""+token);
+      console.log("Token:"+ token);
+    });
+    this.subscribeToPushNotifications();
   }
-subscribeToPushNotifications() {
-    this.firebase.onNotificationOpen().subscribe((response) => {
-      console.log(JSON.stringify(response));
+  subscribeToPushNotifications() {
+    this.fcm.onNotification().subscribe((response) => {
+      this.onMessageReceived(response);
+    });
+
+  }
+
+  onMessageReceived(response) {
+    console.log(JSON.stringify(response));
       var typeOfNotification = "Visitor"
       if (response.push_type != undefined && response.push_type === "10") {
         typeOfNotification = "General"
@@ -328,7 +352,7 @@ subscribeToPushNotifications() {
       }
       window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, ""+(count+1));
 
-      if(response.tap){
+      if(response.tap || response.wasTapped){
         var cClass = this;
         //alert('data was tapped');
         console.log("subscribeToPushNotifications:"+ response.body);
@@ -407,7 +431,6 @@ subscribeToPushNotifications() {
 
 
       }
-    });
   }
 
 
@@ -441,7 +464,7 @@ subscribeToPushNotifications() {
     }
     params.HostIc = JSON.parse(hostData).HOSTIC;
 
-    this.apiProvider.requestApi(params, '/api/vims/GetHostAccessSettings', false, '').then(
+    this.apiProvider.requestApi(params, '/api/vims/GetHostAccessSettings', false, '', '').then(
       (val) => {
         try{
           var result = JSON.parse(JSON.stringify(val));

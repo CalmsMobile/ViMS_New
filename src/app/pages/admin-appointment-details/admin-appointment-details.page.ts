@@ -3,7 +3,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
-import { NavController, Platform, ToastController, ModalController, LoadingController, AlertController } from '@ionic/angular';
+import { NavController, Platform, ToastController, ModalController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CustomVisitorPopupComponent } from 'src/app/components/custom-visitor-popup/custom-visitor-popup';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
@@ -15,6 +15,7 @@ import { FileTransferObject,  FileTransfer } from '@ionic-native/file-transfer/n
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
+import { CommonUtil } from 'src/app/services/util/CommonUtil';
 @Component({
   selector: 'app-admin-appointment-details',
   templateUrl: './admin-appointment-details.page.html',
@@ -164,12 +165,12 @@ export class AdminAppointmentDetailsPage implements OnInit {
     public modalCtrl: ModalController,
     private selector: WheelSelector,
     private androidPermissions: AndroidPermissions,
-    private loadingCtrl : LoadingController,
     private transfer: FileTransfer,
     private file: File,
     private dateformat : DateFormatPipe,
     private socialSharing: SocialSharing,
     private router: Router,
+    commonUtil: CommonUtil,
     private route: ActivatedRoute,
     private translate : TranslateService,
     private localNotifications: LocalNotifications, private alertCtrl: AlertController) {
@@ -196,6 +197,12 @@ export class AdminAppointmentDetailsPage implements OnInit {
         this.appointment = passData.appointment;
         this.autoApproval = passData.autoApproval;
         this.showOption = passData.showOption;
+        if (this.appointment && this.appointment[0] && this.appointment[0].REASON) {
+          this.appointment[0].REASON_DESC = commonUtil.getPurposeName(this.appointment[0].REASON, false);
+        }
+        if (this.appointment && this.appointment[0] && this.appointment[0].Room) {
+          this.appointment[0].Room_Name = commonUtil.getRoomName(this.appointment[0].Room, false);
+        }
 
         if(this.appointment && this.appointment[0] && !this.appointment[0].isFacilityAlone){
           var fTime = new Date(this.appointment[0].START_DATE).getTime();
@@ -206,7 +213,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
             this.isPastAppointment = true;
           }
         }
-
+        this.getRefVisitorCateg(this.appointment[0].VisitorCategory);
       // this.plt.ready().then((readySource) => {
         // this.localNotifications.on('click', (notification, state) => {
         //   let json = JSON.parse(notification.data);
@@ -222,6 +229,30 @@ export class AdminAppointmentDetailsPage implements OnInit {
       console.log(this.appointment);
       }
     });
+  }
+
+  getRefVisitorCateg(visitor_ctg_id) {
+    if (!visitor_ctg_id) {
+      return;
+    }
+    this.apiProvider.GetAddVisitorSettings({"RefVisitorCateg": visitor_ctg_id}).then(
+      (val) => {
+        var result = JSON.parse(JSON.stringify(val));
+        if(result){
+          if (result.Table.length > 0) {
+            if (result.Table[0].Code === 10 && result.Table1 && result.Table1[0]) {
+              const settingsDetails = JSON.parse(result.Table1[0].SettingDetail);
+              this.appointment.showQuestion = settingsDetails.QuestionnaireEnabled;
+              this.appointment.showDelaration = settingsDetails.MaterialDeclareEnabled;
+              this.appointment.showDocument = settingsDetails.AttachmentUploadEnabled;
+            }
+          }
+
+        }
+      },
+      (err) => {
+      }
+    );
   }
 
   getQREncryptedValue(appointment){
@@ -295,48 +326,26 @@ export class AdminAppointmentDetailsPage implements OnInit {
         if(result.hasPermission){
           this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(
             async result =>{
-              let loading = this.loadingCtrl.create({
-                message: 'Please wait...'
-              });
-              (await loading).present();
+              this.apiProvider.presentLoading();
 
               console.log('Has permission?',result.hasPermission);
               fileTransfer.download(url, targetPath).then(async (entry) => {
-                (await loading).dismiss();
+                this.apiProvider.dismissLoading();
                 console.log('download complete: ' + entry.toURL());
                 console.log("New encrypt: "+ encrypted);
                 var data = "Hi, I have shared the QR code for our appointment. Please use the QR code for your registration when you visit me."+
                 "\n"+" Thanks,"+"\n"+"["+hostName+"]";
                 this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(() => {
-                  // Success!
-                  // let toast = this.toastCtrl.create({
-                  //   message: this.T_SVC['ALERT_TEXT.QRSHARE_SUCCESS'],
-                  //   duration: 3000,
-                  //   position: 'bottom'
-                  // });
-                  // toast.present();
                 }).catch(async (error) => {
                   // Error!
-                  (await loading).dismiss();
+                  this.apiProvider.dismissLoading();
                   console.log(""+error);
-                  let toast = this.toastCtrl.create({
-                    message: 'Error',
-                    duration: 3000,
-                    color: 'primary',
-                    position: 'bottom'
-                  });
-                  (await toast).present();
+                  this.apiProvider.showToast('Error');
                 });
               }, async (error) => {
                 // handle error
-                (await loading).dismiss();
-                console.log(""+error);
-                let toast = this.toastCtrl.create({
-                  message: 'Download Error',
-                  duration: 3000,
-                  position: 'bottom'
-                });
-                (await toast).present();
+                this.apiProvider.dismissLoading();
+                this.apiProvider.showToast('Download Error');
                 console.log("Download Error: "+ error);
               });
             } ,
@@ -695,14 +704,22 @@ export class AdminAppointmentDetailsPage implements OnInit {
 
   async showChangeAppointmentStatusAlert(type, appointment_group_id, seqId){
     var status = "Cancel this appointment?";
-    // var buttonText = "Ok"
+    let inputsShow = [];
     if(type == "Approved"){
       status = this.T_SVC['ALERT_TEXT.APPROVE_APPOINTMENT'];
     }else if(type == "All"){
       status = this.T_SVC['ALERT_TEXT.APPROVE_APPOINTMENT_ALL'];
+    } else {
+      inputsShow = [
+        {
+          name: 'remarks',
+          type: 'text',
+          placeholder: 'Enter Cancellation Remarks'
+        }]
     }
     let alert = this.alertCtrl.create({
       header: 'Change Appointment Status',
+      inputs: inputsShow,
       cssClass:'alert-warning',
       message: status,
       buttons: [
@@ -715,9 +732,19 @@ export class AdminAppointmentDetailsPage implements OnInit {
         },
         {
           text: 'Proceed',
-          handler: () => {
+          handler: (result) => {
             if (seqId) {
-              this.AppointmentApprovalByVisitor(type, seqId);
+              if(type !== "Approved"){
+                if (result && result.remarks) {
+                  this.AppointmentApprovalByVisitor(type, seqId, (result && result.remarks)? result.remarks: '');
+                } else {
+                  return false;
+                }
+
+              } else {
+                this.AppointmentApprovalByVisitor(type, seqId, (result && result.remarks)? result.remarks: '');
+              }
+
             } else{
               this.ChangeAppointmentStatus(type, appointment_group_id);
             }
@@ -729,7 +756,15 @@ export class AdminAppointmentDetailsPage implements OnInit {
     (await alert).present();
   }
 
-
+  getShowRejectButton(appointment) {
+    appointment = appointment.approaver;
+    let result = true;
+    if (appointment && appointment.FirstLvlApproval !== null && appointment.SecondLvlApproval !== null && appointment.ApprovedOn1 !== null
+      && appointment.ApprovedOn2 === null && appointment.Approvar2Reject === false) {
+      result = false;
+    }
+    return result;
+  }
 
   ChangeAppointmentStatus(type, appointment_group_id){
     var hostDetails = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS));
@@ -768,13 +803,13 @@ export class AdminAppointmentDetailsPage implements OnInit {
     );
   }
 
-  AppointmentApprovalByVisitor(type, seqId){
+  AppointmentApprovalByVisitor(type, seqId, remarks){
     var hostDetails = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS));
     var params = {
       "SEQ_ID": + seqId,
       "Status": type,
       "HOSTIC" : hostDetails.HOSTIC,
-      "CancelRemarks": ''
+      "CancelRemarks": remarks
     }
 
     this.apiProvider.AppointmentApprovalByVisitor(params).then(
@@ -782,11 +817,13 @@ export class AdminAppointmentDetailsPage implements OnInit {
 
         // this.navCtrl.pop();
         this.navCtrl.navigateRoot('home-view');
-        this.events.publishDataCompany({
-          action: 'refreshApproveList',
-          title: 'refreshApproveList',
-          message: 'refreshApproveList'
-        })
+        setTimeout(() => {
+          this.events.publishDataCompany({
+            action: 'refreshApproveList',
+            title: 'refreshApproveList',
+            message: 'refreshApproveList'
+          })
+        }, 1000);
       },
       async (err) => {
         if(err && err.message == "No Internet"){
@@ -841,7 +878,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
       "STAFF_IC": this.appointment[0].STAFF_IC
   };
   // this.VM.host_search_id = "adam";
-  this.apiProvider.requestApi(params, api, true, '').then(
+  this.apiProvider.requestApi(params, api, true, '', '').then(
     async (val) => {
       var result = JSON.parse(val.toString());
       if (result.Table && result.Table.length > 0) {
@@ -863,11 +900,11 @@ export class AdminAppointmentDetailsPage implements OnInit {
         return await presentModel.present();
 
       } else {
-        let msg = 'Questionaries not added.';
+        let msg = 'There is no questionaries for this Visitor';
         if (action === 'doc') {
-          msg = 'Verification document not added.';
+          msg = 'There is no documents for this Visitor';
         } else if (action === 'declaration'){
-          msg = 'Declaration not added.';
+          msg = 'There is no self declaration answers for this Visitor';
         }
         this.showAlert(msg);
       }
@@ -924,6 +961,8 @@ export class AdminAppointmentDetailsPage implements OnInit {
         this.appointment[0].Purpose_Visit = result.Table1[0].Purpose_Visit;
         this.appointment[0].Visitor_category = result.Table1[0].Visitor_category;
         this.appointment[0].Room_Name = result.Table1[0].Room_Name;
+        this.appointment[0].START_TIME = result.Table1[0].START_TIME;
+        this.appointment[0].END_TIME = result.Table1[0].END_TIME;
       }
       },
     async (err) => {

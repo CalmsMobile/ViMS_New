@@ -151,6 +151,9 @@ export class PagesQuestionsPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter PagesQuestionsPage');
+
+    this.getVideoOptionAvailable();
+    this.checkAppointmentFinished();
   }
 
 callAnime() {
@@ -198,11 +201,6 @@ callAnime() {
       this.navCtrl.pop();
     }
 
-  }
-
-  ionViewWillEnter(){
-    this.getVideoOptionAvailable();
-    this.checkAppointmentFinished();
   }
 
   checkAppointmentFinished(){

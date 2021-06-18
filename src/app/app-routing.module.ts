@@ -80,10 +80,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/facility-upcoming/facility-upcoming.module').then( m => m.FacilityUpcomingPageModule)
   },
   {
-    path: 'intro-page',
-    loadChildren: () => import('./pages/intro-page/intro-page.module').then( m => m.IntroPagePageModule)
-  },
-  {
     path: 'manage-appointment',
     loadChildren: () => import('./pages/manage-appointment/manage-appointment.module').then( m => m.ManageAppointmentPageModule)
   },
@@ -178,7 +174,24 @@ const routes: Routes = [
   {
     path: 'admin-login',
     loadChildren: () => import('./pages/admin-login/admin-login.module').then( m => m.AdminLoginPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'visitor-information',
+    loadChildren: () => import('./pages/visitor-information/visitor-information.module').then( m => m.VisitorInformationPageModule)
+  },
+  {
+    path: 'security-appointment-list',
+    loadChildren: () => import('./pages/security-appointment-list/security-appointment-list.module').then( m => m.SecurityAppointmentListPageModule)
+  },
+  {
+    path: 'security-manual-check-in',
+    loadChildren: () => import('./pages/security-manual-check-in/security-manual-check-in.module').then( m => m.SecurityManualCheckInPageModule)
   }
+
 ];
 
 @NgModule({

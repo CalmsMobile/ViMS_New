@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="danger">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
-    <ion-title>&nbsp;&nbsp;&nbsp;Additional Details</ion-title>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-title>Additional Details</ion-title>
   </ion-toolbar>
   <!-- <ion-toolbar color="danger">
     <ion-title style="font-size: 14px">{{addAppointmentModel.START_DATE | date: "MMM dd, yyyy HH:mm a"}} to {{addAppointmentModel.END_DATE | date: "MMM dd, yyyy HH:mm a"}}</ion-title>
@@ -21,7 +21,7 @@
               <span style="color: #cf3c4f;">*</span>
             </ion-label>
             <ion-select mode="ios" required formControlName="facility"
-              (ionChange)="onChangeFacility($event.detail.value)"
+              (ionChange)="onChangeFacility($event)"
               [disabled]="onedit && addAppointmentModel.FacilityCode" style="font-size: 16px;"
               [(ngModel)]="addAppointmentModel.FacilityCode" interface="action-sheet"
               placeholder="{{'ADD_APPOIN.STEP2.LAB_FACILITY_NAME' | translate}}">
@@ -40,7 +40,7 @@
               <span style="color: #cf3c4f;">*</span>
             </ion-label>
             <ion-select mode="ios" required formControlName="purpose" style="font-size: 16px;"
-              (ionChange)="onChangePurpose($event.detail.value)" [(ngModel)]="addAppointmentModel.PurposeCode"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="addAppointmentModel.PurposeCode"
               interface="action-sheet" [disabled]="onedit && addAppointmentModel.PurposeCode"
               placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}">
               <ion-label position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>
@@ -54,7 +54,7 @@
             *ngIf="hostSettings && hostSettings.isFacility && hostSettings.PurposeEnabled && !hostSettings.PurposeRequired">
             <ion-label style="font-size: 16px;" position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>
             <ion-select mode="ios" formControlName="purpose" style="font-size: 16px;"
-              (ionChange)="onChangePurpose($event.detail.value)" [(ngModel)]="addAppointmentModel.PurposeCode"
+              (ionChange)="onChangePurpose($event)" [(ngModel)]="addAppointmentModel.PurposeCode"
               interface="action-sheet" [disabled]="onedit && addAppointmentModel.PurposeCode"
               placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}">
               <ion-label position="stacked">{{'FACILITY_BOOKING.STEP2.LAB_PURPOSE' | translate}}</ion-label>

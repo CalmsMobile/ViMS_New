@@ -1,8 +1,8 @@
 
 <ion-header>
   <ion-toolbar color="danger">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="arrow-back-outline"></ion-icon>
-    <ion-title>&nbsp;&nbsp;&nbsp;{{title}}</ion-title>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-title>{{title}}</ion-title>
   </ion-toolbar>
   <ion-toolbar color="danger">
     <ion-searchbar [(ngModel)]="queryText"
@@ -19,7 +19,7 @@
 
   <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">
     <ion-col size="12" size-sm size-md>
-            <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.jpeg">
+            <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.png">
             <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'SECURITY_APP.NO_LIST' | translate}}</h5> -->
     </ion-col>
 </ion-row>
@@ -40,11 +40,11 @@
                       </div>
                       <div class="row text-white div-left-middle">
                         <!-- <h3 class="text-white div-left-middle-text">{{getDayofDate(list.ExpiryTime)}}</h3> -->
-                        <h3 class="text-white div-left-middle-text">{{list.ExpiryTime | date:'h:mm a'}}</h3>
+                        <h3 class="text-white div-left-middle-text">{{list.ExpiryTime | date : 'MMM' | uppercase}} - {{list.ExpiryTime | date : 'yyyy'}}</h3>
                       </div>
                       <div class="row" style="background:rgba(0,0,0,0.1);">
                         <div class="col">
-                          <h3 class="text-white div-left-bottom-text">{{list.ExpiryTime | date : 'MMM' | uppercase}} - {{list.ExpiryTime | date : 'yyyy'}}</h3>
+                          <h3 class="text-white div-left-bottom-text">{{list.ExpiryTime | date:'h:mm a'}}</h3>
                         </div>
                       </div>
                     </ion-col>
@@ -57,49 +57,15 @@
                       <div class="div-apt-center">
                         <ion-icon slot="start" color="danger" name="car-outline" class="apt-text-icons"></ion-icon>
                         <p class="apt-center-subtitle" *ngIf="list.VehicleNo">Vehicle No : {{list.VehicleNo}}</p>
-                        <p class="apt-center-subtitle" *ngIf="!list.VehicleNo">- Vehicle No -</p>
+                        <p class="apt-center-subtitle" *ngIf="!list.VehicleNo">&nbsp;&nbsp;--</p>
                       </div>
 
                       <div class="div-apt-center">
                         <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
                         <p class="apt-center-subtitle" *ngIf="list.Purpose">{{list.Purpose}}</p>
-                        <p class="apt-center-subtitle" *ngIf="!list.Purpose">- Remarks -</p>
+                        <p class="apt-center-subtitle" *ngIf="!list.Purpose">&nbsp;&nbsp;--</p>
                       </div>
-
-                      <!-- <div class="div-apt-center">
-                        <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
-                        <p class="apt-center-subtitle">{{list.value[0].Email ? list.value[0].Email:'--'}}</p>
-                      </div> -->
                     </ion-col>
-
-                    <!-- <ion-col size="2" class="colIcons">
-
-                      <div>
-                        <div class="outer-circle2">
-                          <div class="inner-circle2">
-                            <span id="inside-content">{{list.value.length}}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'">
-                        <div class="outer-circle2">
-                          <div class="inner-circle2">
-                            <span id="inside-content">
-                              <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="">
-                        <div [ngClass]="{'outer-circle':list.value[0].Approval_Status=='Pending','outer-circle2':list.value[0].Approval_Status=='Canceled','outer-circle1':list.value[0].Approval_Status=='Approved'}">
-                          <div [ngClass]="{'inner-circle':list.value[0].Approval_Status=='Pending','inner-circle2':list.value[0].Approval_Status=='Canceled','inner-circle1':list.value[0].Approval_Status=='Approved'}">
-                            <span id="inside-content">
-                              {{list.value[0].Approval_Status.charAt(0)}}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </ion-col> -->
                   </ion-row>
                 </ion-item>
                 <ion-item-options side="end" slide-right-width>

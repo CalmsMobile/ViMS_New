@@ -168,7 +168,8 @@ export class MyVisitorsPage implements OnInit {
     console.log('goBack ');
   }
 
-  getVisitorsBySearch(queryText){
+  getVisitorsBySearch(event){
+    const queryText = event? event.target.value: '';
     this.VM.queryText = queryText;
     if(this.VM.queryText){
       var fList = [];

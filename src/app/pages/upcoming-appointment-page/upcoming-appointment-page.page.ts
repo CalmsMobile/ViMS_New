@@ -38,7 +38,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
       if (data1.action === "NotificationReceived") {
         console.log("Notification Received: " + data1.title);
         this.showNotificationCount();
-      } else if (data1.action === 'refreshApproveList' || data1.action === 'RefreshUpcoming') {
+      } else if (data1.action === 'refreshApproveList' || data1.action === 'delete' || data1.action === 'RefreshUpcoming') {
         this.OffSet = 0;
         this.appointments = [];
         this.getAppointmentHistory(null);
@@ -48,22 +48,41 @@ export class UpcomingAppointmentPagePage implements OnInit {
 
   }
 
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter UpcomingAppointmentPage');
+  getAppointmentStatus(appointments1) {
+    let result = '';
+    let appointment = appointments1.find(item => item.Approval_Status === 'Approved');
+    if (appointment) {
+      result = 'Approved';
+    } else {
+      appointment = appointments1.find(item => item.Approval_Status === 'Pending');
+      if (appointment) {
+        result = 'Pending';
+      } else {
+        appointment = appointments1.find(item => (item.Approval_Status === 'Canceled' || item.Approval_Status === 'Cancelled'));
+        if (appointment) {
+          result = 'Canceled';
+        }
+      }
+    }
+
+
+    return result;
   }
 
-  ionViewWillEnter() {
+  openTooltip(event, message) {
+    this.apiProvider.presentPopover(event, message);
+  }
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter UpcomingAppointmentPage');
     this.events.publishDataCompany({
       action: "page",
       title:   "home-view",
       message: ''
     });
     this.showNotificationCount();
-		console.log('ionViewWillEnter UpcomingAppointmentPage');
     this.OffSet = 0;
     // this.menu.enable(true,"myLeftMenu");
     this.getAppointmentHistory(null);
-
   }
 
   ionViewWillLeave(){
@@ -241,7 +260,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
 				(val) => {
           this.loadingFinished = true;
 					var aList = JSON.parse(val.toString());
-					if(refresher ){
+					if(refresher){
             // this.appointments = aList.concat(this.appointments);
             this.appointments = aList;
 						refresher.target.complete();

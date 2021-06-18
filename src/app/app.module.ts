@@ -14,7 +14,7 @@ import { PipesModule } from './pipes/pipes.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Network } from '@ionic-native/network/ngx';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { SQLite } from '@ionic-native/sqlite/ngx';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 import { HTTP } from '@ionic-native/http/ngx';
 import { EventsService } from './services/EventsService';
@@ -23,20 +23,19 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { RestProvider } from './providers/rest/rest';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
 import { NetworkProvider } from './providers/network/network';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
-import { Firebase } from '@ionic-native/firebase/ngx';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { VimsFacilityDisplay } from './services/vims-facility-display';
 import { DateFormatPipe } from './pipes/custom/DateFormat';
 import { CustomPipe } from './pipes/custom/custom';
-import { StreamingMedia, StreamingVideoOptions } from '@ionic-native/streaming-media/ngx';
-import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts/ngx';
+import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
+import { Contacts } from '@ionic-native/contacts/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
@@ -55,13 +54,20 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { PreviewAnyFile } from '@ionic-native/preview-any-file/ngx';
 import { HostAccessComponent } from './components/host-access/host-access.component';
 import { CountryComponentComponent } from './components/country-component/country-component.component';
+import { CommonUtil } from './services/util/CommonUtil';
+import { TooltipsModule } from 'ionic-tooltips';
+import { ToolTipComponent } from './components/tool-tip/tool-tip.component';
+import { ThemeSwitcherService } from './services/ThemeSwitcherService';
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
+import { ViewImageComponent } from './components/view-image/view-image.component';
 
 @NgModule({
-  declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent,
+  declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent, ToolTipComponent,
     CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent, CountryComponentComponent,
-    IntroPageWizardComponent, QuickPassVisitorPopupComponent],
+    IntroPageWizardComponent, QuickPassVisitorPopupComponent, ViewImageComponent],
   entryComponents: [],
   exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent, QuestionDocPopupComponent,HostAccessComponent,
+    ToolTipComponent,ViewImageComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent, CountryComponentComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [ BrowserModule,
@@ -70,6 +76,7 @@ import { CountryComponentComponent } from './components/country-component/countr
     CommonModule,
     SignaturePadModule,
     AppRoutingModule,
+    TooltipsModule.forRoot(),
     NgCalendarModule,
     TranslateModule.forRoot(),
     PipesModule.forRoot(),
@@ -97,11 +104,14 @@ import { CountryComponentComponent } from './components/country-component/countr
     File,
     Network,
     SQLite,
+    FCM,
     SpinnerDialog,
     HTTP,
     EventsService,
+    DecimalPipe,
     Device,
     RestProvider,
+    ThemeSwitcherService,
     LocalNotifications,
     FileOpener,
     FileTransfer,
@@ -113,7 +123,6 @@ import { CountryComponentComponent } from './components/country-component/countr
     Network,
     WheelSelector,
     PreviewAnyFile,
-    Firebase,
     DatePicker,
     DatePipe,
     VimsFacilityDisplay,
@@ -122,6 +131,7 @@ import { CountryComponentComponent } from './components/country-component/countr
     StreamingMedia,
     Contacts,
     AndroidPermissions,
+    CommonUtil,
     Base64],
   bootstrap: [AppComponent],
 })

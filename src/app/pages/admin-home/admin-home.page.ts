@@ -18,7 +18,6 @@ export class AdminHomePage implements OnInit {
   pendingList : any = [];
   approvedList : any = [];
   cancelledList : any = [];
-  OffSet = 0;
   appointments = [];
   checkAll = false;
   enableApproval = false;
@@ -26,6 +25,8 @@ export class AdminHomePage implements OnInit {
   T_SVC:any;
   showFab = true;
   loadingFinished = true;
+  branchList = [];
+  branch_id = '';
   constructor(public navCtrl: NavController,
     private toastCtrl:ToastController,
     private router: Router,
@@ -38,7 +39,7 @@ export class AdminHomePage implements OnInit {
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'ALERT_TEXT.APPROVE_APPOINTMENT',
       'ALERT_TEXT.APPROVE_APPOINTMENT_ALL',
-      'ALERT_TEXT.ENABLE_AUTO_APPROVE',
+      'ALERT_TEXT.ENABLE_AUTO_APPROVE', 'NOTIFICATION.TITLE',
       'ALERT_TEXT.DISABLE_AUTO_APPROVE',
       'SETTINGS.ARE_U_SURE_ADMIN_LOGOUT']).subscribe(t => {
         this.T_SVC = t;
@@ -54,23 +55,84 @@ export class AdminHomePage implements OnInit {
   }
 
   ionViewDidEnter() {
-
     console.log('ionViewDidEnter AdminHomePage');
+    this.appointments = [];
+    // this.getPreAppointmentenableApprovalSettings();
+    this.getMyBranches();
   }
 
   onSegmentChange(){
     console.log(this.selectedTap);
-    this.OffSet = 0;
     this.appointments = [];
     this.getAppointmentHistory(null);
   }
 
+  getShowRejectButton(appointment) {
+    let result = true;
+    if (appointment && appointment.FirstLvlApproval !== null && appointment.SecondLvlApproval !== null && appointment.ApprovedOn1 !== null
+      && appointment.ApprovedOn2 === null && appointment.Approvar2Reject === false) {
+      result = false;
+    }
+    return result;
+  }
 
-  ionViewWillEnter() {
-		console.log('ionViewWillEnter AdminHomePage');
-    this.OffSet = 0;
-    // this.getPreAppointmentenableApprovalSettings();
-		this.getAppointmentHistory(null);
+  getMyBranches() {
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if(hostData){
+      var HOSTIC = JSON.parse(hostData).HOSTIC;
+			var params = {
+			"SEQ_ID":HOSTIC
+		  };
+      this.apiProvider.requestApi(params, '/api/vims/GetUserBranchData', false, '', '').then(
+        (val) => {
+        },
+        async (err) => {
+
+          try {
+            const list = JSON.parse(err);
+            if (list && list.length > 1) {
+              this.branchList.push({
+                BranchSeqId: 'All',
+                Name: 'All'
+              });
+              list.forEach(element => {
+                this.branchList.push(element);
+              });
+              this.branch_id = 'All'
+            } else {
+              this.getAppointmentHistory(null);
+            }
+          } catch (error) {
+
+          }
+          if(err && err.message == "No Internet"){
+            return;
+          }
+          var message = "";
+          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+            message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+          } else if(err && JSON.parse(err) && JSON.parse(err).message){
+            message =JSON.parse(err).message;
+          }
+          if(message){
+            // message = " Unknown"
+            let alert = await this.alertCtrl.create({
+              header: 'Error !',
+              message: message,
+              cssClass: 'alert-danger',
+              buttons: ['Okay']
+            });
+              alert.present();
+          }
+        }
+      );
+    }
+  }
+
+  onChangeBranch(event : any){
+    this.branch_id = event.detail.value;
+    this.appointments = [];
+    this.getAppointmentHistory(null);
   }
 
   getDayofDate(dateString){
@@ -158,8 +220,8 @@ export class AdminHomePage implements OnInit {
       var hostId = JSON.parse(hostData).HOST_ID;
 			var params = {
       "hostID":hostId,
-			"OffSet": ""+ this.OffSet,
-      "Rows":"20000",
+			"OffSet": ""+ this.appointments.length,
+      "Rows":"20",
       "StatusType":"0"
     };
 
@@ -169,10 +231,10 @@ export class AdminHomePage implements OnInit {
       params.StatusType ="20";
     }
 			// this.VM.host_search_id = "adam";
-			this.apiProvider.AppointmentApprovalList(params, refresher? true : false).then(
+      this.apiProvider.requestApi(params, '/api/Vims/AppointmentApprovalList', refresher? false : true, '', this.branch_id).then(
 				(val) => {
           this.loadingFinished = true;
-					var aList = JSON.parse(val.toString());
+					var aList = JSON.parse(val.toString()).Table;
 					if(refresher){
             this.appointments = aList;
             refresher.target.complete();
@@ -184,7 +246,6 @@ export class AdminHomePage implements OnInit {
             }
 
 					}
-          this.OffSet = this.OffSet + aList.length;
           if(this.selectedTap == 'approved'){
             this.approvedList = this.appointments;
           }else if(this.selectedTap == 'canceled'){
@@ -256,30 +317,26 @@ export class AdminHomePage implements OnInit {
     }
   }
 
-  changeAllAppointmentStatus(){
-    var appointment_group_id = "";
-    for(var i = 0; i < this.pendingList.length; i++){
-      if(appointment_group_id){
-        appointment_group_id = appointment_group_id + "," + this.pendingList[i].appointment_group_id;
-      }else{
-        appointment_group_id = this.pendingList[i].appointment_group_id;
-      }
-    }
-    this.ChangeAppointmentStatus("Approved", appointment_group_id);
-  }
-
-  async showChangeAppointmentStatusAlert(type, appointment_group_id){
+  async showChangeAppointmentStatusAlert(type, appointment){
     var status = "Cancel this appointment?";
-    // var buttonText = "Ok"
+    let inputsShow = [];
     if(type == "Approved"){
       status = this.T_SVC['ALERT_TEXT.APPROVE_APPOINTMENT'];
     }else if(type == "All"){
       status = this.T_SVC['ALERT_TEXT.APPROVE_APPOINTMENT_ALL'];
+    } else {
+      inputsShow = [
+        {
+          name: 'remarks',
+          type: 'text',
+          placeholder: 'Enter Cancellation Remarks'
+        }]
     }
     let alert = this.alertCtrl.create({
-      header: 'Change Appointment Status',
+      header: this.T_SVC['NOTIFICATION.TITLE'],
       cssClass:'alert-warning',
       message: status,
+      inputs: inputsShow,
       buttons: [
         {
           text: 'No',
@@ -290,11 +347,15 @@ export class AdminHomePage implements OnInit {
         },
         {
           text: 'Yes',
-          handler: () => {
-            if(type == "All"){
-              this.changeAllAppointmentStatus();
-            }else{
-              this.ChangeAppointmentStatus(type, appointment_group_id)
+          handler: (result) => {
+            if(type !== "Approved" && type !== "All") {
+              if(result && result.remarks){
+                this.ChangeAppointmentStatus(type, appointment, (result && result.remarks)? result.remarks: '')
+              } else{
+                return false;
+              }
+            }else if(type !== "All"){
+              this.ChangeAppointmentStatus(type, appointment, (result && result.remarks)? result.remarks: '')
             }
 
           }
@@ -304,33 +365,35 @@ export class AdminHomePage implements OnInit {
     (await alert).present();
   }
 
-  ChangeAppointmentStatus(type, appointment_group_id){
+  AppointmentApprovalByVisitor(type, seqId, remarks){
     var hostDetails = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS));
     var params = {
-      "appointment_group_id":appointment_group_id,
+      "SEQ_ID": + seqId,
       "Status": type,
-      "HOSTIC" : hostDetails.HOSTIC
+      "HOSTIC" : hostDetails.HOSTIC,
+      "CancelRemarks": remarks
     }
-    this.apiProvider.ChangeAppointmentStatus(params).then(
+
+    this.apiProvider.AppointmentApprovalByVisitor(params).then(
       (val) => {
-        this.checkAll = false;
         this.appointments = [];
-        this.pendingList = [];
         this.approvedList = [];
+        this.pendingList = [];
         this.cancelledList = [];
-        this.OffSet = 0;
-        this.getAppointmentHistory(null);
-        this.navCtrl.navigateRoot('home-view');
-        this.eventService.publishDataCompany({
-          action: 'refreshApproveList',
-          title: 'refreshApproveList',
-          message: 'refreshApproveList'
-        });
+        this.getAppointmentHistory('')
+        setTimeout(() => {
+          this.eventService.publishDataCompany({
+            action: 'refreshApproveList',
+            title: 'refreshApproveList',
+            message: 'refreshApproveList'
+          })
+        }, 1000);
       },
       async (err) => {
         if(err && err.message == "No Internet"){
           return;
         }
+
         var message = "";
         if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
@@ -339,16 +402,62 @@ export class AdminHomePage implements OnInit {
         }
         if(message){
           // message = " Unknown"
-          let alert = await this.alertCtrl.create({
+          let alert = this.alertCtrl.create({
             header: 'Error !',
-            cssClass: 'alert-danger',
             message: message,
+            cssClass:'alert-danger',
             buttons: ['Okay']
-          });
-            alert.present();
+            });
+            (await alert).present();
         }
       }
     );
+  }
+
+  ChangeAppointmentStatus(type, appointment, remarks){
+
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if(hostData){
+      var HOSTIC = JSON.parse(hostData).HOSTIC;
+			var params = {
+			"STAFF_IC":HOSTIC,
+			"appointment_group_id": appointment.appointment_group_id,
+      "CurrentDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss')
+		  };
+      this.apiProvider.requestApi(params, '/api/vims/GetApprovalVisitorsByGroupId', false, '', '').then(
+        (val) => {
+          var aList1 = JSON.parse(val.toString()).Table;
+          for (let pos = 0; pos < aList1.length; pos++) {
+            const element = aList1[pos];
+            if (appointment.VISITOR_NAME === element.VISITOR_NAME) {
+              this.AppointmentApprovalByVisitor(type, element.SEQ_ID, remarks);
+              break;
+            }
+          }
+        },
+        async (err) => {
+          if(err && err.message == "No Internet"){
+            return;
+          }
+          var message = "";
+          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+            message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+          } else if(err && JSON.parse(err) && JSON.parse(err).message){
+            message =JSON.parse(err).message;
+          }
+          if(message){
+            // message = " Unknown"
+            let alert = await this.alertCtrl.create({
+              header: 'Error !',
+              message: message,
+              cssClass: 'alert-danger',
+              buttons: ['Okay']
+            });
+              alert.present();
+          }
+        }
+      );
+    }
   }
 
 
@@ -389,6 +498,7 @@ export class AdminHomePage implements OnInit {
   }
 
   viewBooking(list){
+    list = [list];
     if(list[0].isFacilityAlone){
       const navigationExtras: NavigationExtras = {
         state: {
@@ -412,11 +522,12 @@ export class AdminHomePage implements OnInit {
 		this.apiProvider.GetAppointmentByGroupId(params).then(
 			(val) => {
 				var aList = JSON.parse(val.toString());
-        this.apiProvider.requestApi(params, '/api/vims/GetApprovalVisitorsByGroupId', false, '').then(
+        this.apiProvider.requestApi(params, '/api/vims/GetApprovalVisitorsByGroupId', false, '', '').then(
           (val) => {
             var aList1 = JSON.parse(val.toString()).Table1;
             for (let pos = 0; pos < aList1.length; pos++) {
               const element = aList1[pos];
+              element.SEQ_ID= aList[pos].SEQ_ID;
               element.Applied_Date= aList[pos].Applied_Date;
               element.Approval_Status= aList[pos].Approval_Status;
               element.Booked_by= aList[pos].Booked_by;
@@ -447,6 +558,7 @@ export class AdminHomePage implements OnInit {
               element.appointment_group_id= aList[pos].appointment_group_id;
               element.bookedby_id= aList[pos].bookedby_id;
               element.cid= aList[pos].cid;
+              element.approaver = list[0];
             }
             const navigationExtras: NavigationExtras = {
               state: {

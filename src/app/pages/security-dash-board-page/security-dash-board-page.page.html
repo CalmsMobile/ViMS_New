@@ -4,229 +4,286 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-content>
-
-  <div class="ion-padding" profile-bg [ngStyle]="{'background-image': ''}" style="height:200px">
-      <!-- <div transparent class="versionP" (click)="gotoCountClickSettings()">V{{'APP_VERSION' | translate}}</div> -->
-      <button ion-button ion-long-press transparent interval="400"  style="width:100%;height:90px;background:transparent;    color: white;
-      font-weight: bold;
-      text-align: end;
-      vertical-align: text-bottom;font-size: 18px;
-    padding: 15px;
-      display: grid;" (pressed)="pressed()" (longPressed)="active()" (pressEnded)="released()">V{{'APP_VERSION' | translate}}</button>
-    <!-- <h1 slot="end" no-border style="text-align: center;background: linear-gradient(to bottom, #d82e2e 0%, #d82e2e 100%);margin: 0px;" (click)= "openSettings()">sfdg</h1> -->
-    <!-- <p class="versionP">{{'APP_NAME' | translate}} V{{'APP_VERSION' | translate}}</p> -->
-      <!-- <ion-thumbnail *ngIf="data && data.logo" class="ion-text-center" margin-top>
-        <img class="circle-pic" [src]="data.logo+visitorSEQID + imageType">
-      </ion-thumbnail> -->
-      <div class="ion-text-center" style="margin-top: -60px;">
-          <img *ngIf="companyData.LogoImgUrl && companyData.StorageURL" class="circle-pic" onError="this.src='../../assets/images/logo/2.png';" [src]="companyData.StorageURL + companyData.LogoImgUrl">
-          <img *ngIf="!companyData.LogoImgUrl || !companyData.StorageURL"  class="circle-pic" src="../../assets/images/logo/2.png"/>
+<ion-header lines="none" class="ion-no-border">
+  <ion-toolbar lines="none" class="ion-no-border" color="primary" *ngIf="appSettings.Header">
+    <ion-item lines="none" class="no-border" style="--padding-start: 0px;">
+      <img src="../../../assets/images/user.png" slot="start" class="ion-text-left"  style="width: 52px;
+      height: 52px;
+      margin-right: 5px;
+      padding: 8px;">
+      <div style="line-height: 22px;">
+        <ion-label [ngStyle]="{'color': appSettings.Header.HeaderColor, 'font-size': appSettings.Header.HeaderSize + 'px',
+      'font-weight': appSettings.Header.HeaderFontWeight}">{{userInfoObj.UserName}}<br></ion-label>
+        <ion-label [ngStyle]="{'color': appSettings.SubHeader.SubHeaderColor, 'font-size': appSettings.SubHeader.SubHeaderSize + 'px',
+        'font-weight': appSettings.SubHeader.SubHeaderFontWeight}">last logged in: {{lastLoggedIn? lastLoggedIn: ''}}</ion-label>
       </div>
+    </ion-item>
 
-      <h3 class="title" [style.font-size]="customStyle.WelcomePage.Title.fontSize + 'px'" [style.font-family] = "customStyle.WelcomePage.Title.fontFamily" text-wrap>{{companyData.HomeTitle}}</h3>
-      <h3 class="desc" [style.font-size]="customStyle.WelcomePage.WelcomeDescription.fontSize + 'px'" [style.font-family] = "customStyle.WelcomePage.WelcomeDescription.fontFamily" text-wrap>{{companyData.HomeContent}}</h3>
-  </div>
-  <ion-grid>
-    <ion-row>
+    <ion-buttons slot="end">
+      <ion-icon style="font-size: 26px;padding-right: 10px;" color="light" name="notifications-outline" (click)="gotoNotifiations()"></ion-icon>
+      <ion-icon style="font-size: 26px;padding-right: 10px;" name="settings-sharp" color="light" (click)="gotoSettings()"></ion-icon>
+      <ion-icon style="font-size: 26px;padding-right: 10px;" name="exit-outline" color="light" (click)="logout()"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-segment mode="ios" [(ngModel)]="segment" class="mainsegments" (ionChange)="segmentChanged($event)">
+    <ion-segment-button color="light" value="Summary" layout="icon-start">
+      <ion-icon style=" font-size: 16px;" name="copy-outline"></ion-icon>
+      <ion-label style="margin: 0 auto;font-weight: 600;">Summary</ion-label>
+    </ion-segment-button>
+    <ion-segment-button color="light" value="Graph" layout="icon-start">
+      <ion-icon style="font-size: 16px;" name="bar-chart-sharp"></ion-icon>
+      <ion-label style="margin: 0 auto;font-weight: 600;">Graph</ion-label>
 
-      <ion-col size="6">
-        <ion-card class="card1" (click)= "statesClicked('10')">
-            <ion-item lines="none">
-              <!-- <img style="width: 35px;margin:0 auto" slot="end" src="../../assets/images/checkin.png"/> -->
-              <ion-icon slot="end" name="man" color="danger" style="padding: 4px;
-              margin: 0px;
-              border: 1px solid #eb445a;
-              border-radius: 50%;"></ion-icon>
-              <div>
-                <h3 text-wrap class="itemText">Today Check-In</h3>
-                <p class="para">{{TotalVisitorsIn}}</p>
-              </div>
-            </ion-item>
-          </ion-card>
-      </ion-col>
-      <ion-col size="6">
-          <ion-card class="card1" (click)= "statesClicked('20')">
-            <ion-item lines="none">
-              <!-- <img style="width: 35px;margin:0 auto" slot="end" src="../../assets/images/overstay.png"/> -->
-              <ion-icon slot="end" name="walk" color="danger" style="padding: 4px;
-              margin: 0px;
-              border: 1px solid #eb445a;
-              border-radius: 50%;"></ion-icon>
-              <div>
-                <h3 text-wrap class="itemText">Today Check-Out</h3>
-                <p class="para">{{TotalVisitorsOut}}</p>
-              </div>
-            </ion-item>
-          </ion-card>
-        </ion-col>
-    </ion-row>
-    <ion-row>
-        <ion-col size="6">
-          <ion-card class="card1" (click)= "statesClicked('40')">
-            <ion-item lines="none">
-              <img style="width: 35px;margin:0 auto" slot="end" src="../../assets/images/overstay.png"/>
-              <!-- <ion-icon slot="end" name="walk" color="danger"></ion-icon> -->
-              <div>
-                <h3 text-wrap class="itemText">Today Overstay</h3>
-                <p class="para">{{OverstayVisitor}}</p>
-              </div>
-            </ion-item>
-          </ion-card>
-        </ion-col>
-        <ion-col size="6">
-            <ion-card class="card1" (click)= "statesClicked('30')">
-              <ion-item lines="none">
-                <img style="width: 35px;margin:0 auto" slot="end" src="../../assets/images/checkin.png"/>
-                <!-- <ion-icon slot="end" name="man" color="danger"></ion-icon> -->
-                <div>
-                  <h3 text-wrap class="itemText">Currently Check-In</h3>
-                  <p class="para">{{VisitorsInside}}</p>
-                </div>
-              </ion-item>
-            </ion-card>
-          </ion-col>
+    </ion-segment-button>
+</ion-segment>
+</ion-header>
 
-      </ion-row>
-  </ion-grid>
+<ion-content padding class="ion-no-border" style="--background: #f0f0f0;" line="none">
+  <div class="main">
 
-  <!-- <ion-tabs color="primary" mode="ios">
-    <ion-tab-bar slot="bottom" mode="ios" color="primary">
+    <!-- <ion-slides #slides pager style="padding-bottom: 150px" (ionSlideDidChange)="slideChanged()" scrollbar="true">
+      <ion-slide> -->
+        <ion-grid *ngIf="segment === 'Summary'">
+          <ion-row style="padding-top: 5px;" *ngIf="appSettings.customStyle">
+            <ion-col size="6">
+              <ion-card class="card1" (click)="statesClicked('50')" style="color: #236348;">
 
-    </ion-tab-bar>
-  </ion-tabs> -->
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="1">
 
+                    </ion-col>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="calendar-outline" class="cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card1.iconColor, 'font-size': appSettings.customStyle.Cards.Card1.iconSize+ 'px'}"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card1.countColor, 'font-size': appSettings.customStyle.Cards.Card1.countSize + 'px'}">{{statsCountData.TodayAppointmentCount ? statsCountData.TodayAppointmentCount: '0'}}</div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card1.labelColor, 'font-size': appSettings.customStyle.Cards.Card1.labelSize + 'px'}">{{appSettings.customStyle.Cards.Card1.title}}</ion-card-subtitle>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card class="card1" (click)="statesClicked('60')" style="color: #418FC0;">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="1">
 
-  </ion-content>
+                    </ion-col>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="book-outline" class="cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card2.iconColor, 'font-size': appSettings.customStyle.Cards.Card2.iconSize+ 'px'}"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card2.countColor, 'font-size': appSettings.customStyle.Cards.Card2.countSize + 'px'}">{{statsCountData.TotalCheckInCount ? statsCountData.TotalCheckInCount: '0'}}</div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card2.labelColor, 'font-size': appSettings.customStyle.Cards.Card2.labelSize + 'px'}">{{appSettings.customStyle.Cards.Card2.title}}</ion-card-subtitle>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6" >
+              <ion-card class="card1" style="color: #3836BD;" (click)="statesClicked('10')">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="1">
 
-  <ion-footer lines="lines" no-border transparent>
-   <ion-toolbar color="primary">
-    <ion-row transparent style="padding: 5px;    justify-content: center;">
-      <ion-tab-button color="primary" [ngStyle]="{'color': (tabSelected === 'QUICK_PASS')?'white': 'lightgray'}"
-    (click)="proceedNext('QUICK_PASS')" mode="ios" selected="{{tabSelected === 'QUICK_PASS'? 'true': 'false'}}">
-     <div>
-       <ion-icon class="tabIcon" name="qr-code-outline"></ion-icon>
-       <ion-icon class="tabIcon" name="man"></ion-icon>
-     </div>
-     <ion-label style="font-size: 12px; text-transform: none;">Quick Pass In</ion-label>
-   </ion-tab-button>
+                    </ion-col>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="trending-up-outline" [ngStyle]="{'color': appSettings.customStyle.Cards.Card3.iconColor, 'font-size': appSettings.customStyle.Cards.Card3.iconSize+ 'px'}" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card3.countColor, 'font-size': appSettings.customStyle.Cards.Card3.countSize + 'px'}">{{statsCountData.TotalVisitorsIn ? statsCountData.TotalVisitorsIn: '0'}}</div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card3.labelColor, 'font-size': appSettings.customStyle.Cards.Card3.labelSize + 'px'}">{{appSettings.customStyle.Cards.Card3.title}}</ion-card-subtitle>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card class="card1" style="color: #90CC64;" (click)="statesClicked('20')">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="1" >
+                    </ion-col>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="trending-down-outline" [ngStyle]="{'color': appSettings.customStyle.Cards.Card4.iconColor, 'font-size': appSettings.customStyle.Cards.Card4.iconSize+ 'px'}" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card4.countColor, 'font-size': appSettings.customStyle.Cards.Card4.countSize + 'px'}">{{statsCountData.TotalVisitorsOut? statsCountData.TotalVisitorsOut: '0'}}</div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card4.labelColor, 'font-size': appSettings.customStyle.Cards.Card4.labelSize + 'px'}">{{appSettings.customStyle.Cards.Card4.title}}</ion-card-subtitle>
+                </ion-grid>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card class="card1" style="color: #CA203D;"  (click)="statesClicked('40')">
+                <ion-fab vertical="top" color="danger" horizontal="end" *ngIf="statsCountData.OverstayVisitor">
+                  <ion-fab-button color="danger" class="heart-beat animated infinite pulse delay-1s">
+                  </ion-fab-button>
+                </ion-fab>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="1">
 
-   <ion-tab-button [ngStyle]="{'color': (tabSelected === 'QUICK_PASS_OUT')?'white': 'lightgray'}"
-   (click)="proceedNext('QUICK_PASS_OUT')" mode="ios" selected="{{tabSelected === 'QUICK_PASS_OUT'? 'true': 'false'}}">
-     <div>
-       <ion-icon class="tabIcon" name="qr-code-outline"></ion-icon>
-       <ion-icon class="tabIcon" name="walk"></ion-icon>
-     </div>
-     <ion-label style="font-size: 12px; text-transform: none;">Quick Pass Out</ion-label>
-   </ion-tab-button>
+                    </ion-col>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="alert-circle-outline" [ngStyle]="{'color': appSettings.customStyle.Cards.Card5.iconColor, 'font-size': appSettings.customStyle.Cards.Card5.iconSize+ 'px'}" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card5.countColor, 'font-size': appSettings.customStyle.Cards.Card5.countSize + 'px'}">{{statsCountData.OverstayVisitor? statsCountData.OverstayVisitor: '0'}}</div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card5.labelColor, 'font-size': appSettings.customStyle.Cards.Card5.labelSize + 'px'}">{{appSettings.customStyle.Cards.Card5.title}}</ion-card-subtitle>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card class="card1" (click)="statesClicked('30')" style="color: #006A5C;">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="1">
 
-   <ion-tab-button [ngStyle]="{'color': (tabSelected === 'IN')?'white': 'lightgray'}"
-   (click)="proceedNext('IN')" mode="ios" selected="{{tabSelected === 'IN'? 'true': 'false'}}">
-     <div>
-       <ion-icon class="tabIcon" name="man"></ion-icon>
-     </div>
-     <ion-label style="font-size: 12px; text-transform: none;">Check-In</ion-label>
-   </ion-tab-button>
-
-   <ion-tab-button [ngStyle]="{'color': (tabSelected === 'OUT')?'white': 'lightgray'}"
-   (click)="proceedNext('OUT')" mode="ios" selected="{{tabSelected === 'OUT'? 'true': 'false'}}">
-     <div>
-       <ion-icon class="tabIcon" name="walk"></ion-icon>
-     </div>
-     <ion-label style="font-size: 12px; text-transform: none;">Check-Out</ion-label>
-   </ion-tab-button>
-    </ion-row>
-   </ion-toolbar>
-  </ion-footer>
-
-     <!--<ion-grid class="ion-text-center" no-padding>
-      <ion-row *ngIf="(!showQuickPass && !showPreAppointment) || (!showQuickPass && showPreAppointment) || (showQuickPass && !showPreAppointment)">
-        <ion-col  text-wrap class="footerButton-1" size="4" class="ion-text-center" *ngIf="showQuickPass">
-          <img (click)="proceedNext('QUICK_PASS')" style="margin: 0 auto;display: block;width: 45px;" slot="end" src="../../assets/images/quick_pass.png"/>
-        </ion-col>
-        <ion-col  text-wrap class="footerButton-1" size="4" class="ion-text-center" *ngIf="showPreAppointment">
-          <ion-icon (click)="proceedNext('PRE_APPOINTMENT')" class="icon siva-icon-qrcode" style="color: green;display: block;margin: 0 auto;font-size: 30px;padding: 8PX;"></ion-icon>
-        </ion-col>
-        <ion-col  *ngIf="showQuickPass || showPreAppointment" class="footerButton-2" [style.font-size]="customStyle.WelcomePage.CheckInBtn.fontSize + 'px'" [ngStyle]="{'background': customStyle.WelcomePage.CheckInBtn.bckgrndColor}" col-5 class="ion-text-center">
-          <ion-button (click)="proceedNext('IN')" color="light" clear>Check-In<ion-icon style="padding-left: 10px;" slot="end" name="man" color="light"></ion-icon></ion-button>
-      </ion-col>
-
-      <ion-col  *ngIf="showQuickPass || showPreAppointment" class="footerButton-3" [style.font-size]="customStyle.WelcomePage.CheckOutBtn.fontSize + 'px'"  size="4" class="ion-text-center">
-          <ion-button (click)="proceedNext('OUT')" color="light" clear>Check-Out<ion-icon style="padding-left: 10px;" slot="end" name="walk" color="light"></ion-icon></ion-button>
-      </ion-col>
-        <ion-col  *ngIf="!showQuickPass && !showPreAppointment " class="footerButton-22" [style.font-size]="customStyle.WelcomePage.CheckInBtn.fontSize + 'px'" [ngStyle]="{'background': customStyle.WelcomePage.CheckInBtn.bckgrndColor}" col-6 class="ion-text-center">
-            <ion-button (click)="proceedNext('IN')" color="light" clear>Check-In<ion-icon style="padding-left: 10px;" slot="end" name="man" color="light"></ion-icon></ion-button>
-        </ion-col>
-
-        <ion-col  *ngIf="!showQuickPass && !showPreAppointment" class="footerButton-3" [style.font-size]="customStyle.WelcomePage.CheckOutBtn.fontSize + 'px'"  col-6 class="ion-text-center">
-            <ion-button (click)="proceedNext('OUT')" color="light" clear>Check-Out<ion-icon style="padding-left: 10px;" slot="end" name="walk" color="light"></ion-icon></ion-button>
-        </ion-col>
-      </ion-row>
-      <ion-row *ngIf="showQuickPass && showPreAppointment">
-        <ion-col  text-wrap class="footerButton-0" class="ion-text-center" >
-
-            <img (click)="proceedNext('QUICK_PASS')" style="margin: 0 auto;display: block;width: 45px;" slot="end" src="../../assets/images/quick_pass.png"/>
-        </ion-col>
-        <ion-col  text-wrap class="footerButton-1" style="padding-right: 20px;margin-left: 0px" class="ion-text-center" *ngIf="showPreAppointment">
-          <ion-icon (click)="proceedNext('PRE_APPOINTMENT')" class="icon siva-icon-qrcode" style="color: green;display: block;margin: 0 auto;font-size: 30px;padding: 8px;padding-left: 3px;"></ion-icon>
-        </ion-col>
-        <ion-col  class="footerButton-2" [style.font-size]="customStyle.WelcomePage.CheckInBtn.fontSize + 'px'" [ngStyle]="{'background': customStyle.WelcomePage.CheckInBtn.bckgrndColor}" size="4" class="ion-text-center">
-            <ion-button (click)="proceedNext('IN')" color="light" clear>Check-In<ion-icon style="padding-left: 10px;" slot="end" name="man" color="light"></ion-icon></ion-button>
-        </ion-col>
-
-        <ion-col  class="footerButton-33" [style.font-size]="customStyle.WelcomePage.CheckOutBtn.fontSize + 'px'"  size="4" class="ion-text-center">
-            <ion-button (click)="proceedNext('OUT')" style="padding: 0px" color="light" clear>Check-Out<ion-icon style="padding: 5px;" slot="end" name="walk" color="light"></ion-icon></ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>-->
-
-
-      <!-- <ion-toolbar transparent>
-        <ion-grid no-padding>
-          <ion-row align-items-center>
-              <ion-col size="3" class="ion-text-center">
-                  <ion-button expand="full" color="danger" (click)="proceedNext('QUICK_PASS')"
-                  [ngClass]= "{'selected': tabSelected == 'QUICK_PASS','unselected': tabSelected != 'QUICK_PASS'}">
-
-                  <ion-icon style="padding: 0px;padding-bottom: 7px;margin: 0px;" slot="top" name="qr-code-outline"></ion-icon>
-                  <ion-icon style="padding: 0px;margin: 0px;font-size: 16px;text-align: center;" slot="top" name="man" color="light"></ion-icon>
-                  <ion-label style="font-size: 12px; text-transform: none;">Quick Pass In</ion-label>
-                  </ion-button>
-              </ion-col>
-              <ion-col size="3" class="ion-text-center">
-                  <ion-button expand="full" color="danger" (click)="proceedNext('QUICK_PASS_OUT')"
-                  [ngClass]= "{'selected': tabSelected == 'QUICK_PASS_OUT','unselected': tabSelected != 'QUICK_PASS_OUT'}">
-                    <div>
-                        <ion-icon style="padding: 0px;padding-bottom: 7px;margin: 0px;" name="qr-code-outline" slot="top" color="light"></ion-icon>
-                        <ion-icon style="padding: 0px;margin: 0px;font-size: 16px;text-align: center;" slot="top" name="walk" color="light"></ion-icon>
-                        <br>
-                        <span style="font-size: 12px; text-transform: none;">Quick Pass Out</span>
-                    </div>
-                  </ion-button>
-              </ion-col>
-              <ion-col size="3" class="ion-text-center">
-                  <ion-button expand="full" color="danger" (click)="proceedNext('IN')"
-                  [ngClass]= "{'selected': tabSelected == 'IN','unselected': tabSelected != 'IN'}">
-                  <div>
-                      <ion-icon style="padding-bottom: 7px;" slot="top" name="man" color="light"></ion-icon>
-                      <br>
-                      <span style="font-size: 12px; text-transform: none;">Check-In</span>
-                  </div>
-
-                  </ion-button>
-              </ion-col>
-              <ion-col size="3" class="ion-text-center">
-                  <ion-button slot="icon-only" color="danger" (click)="proceedNext('OUT')"
-                  [ngClass]= "{'selected': tabSelected == 'OUT','unselected': tabSelected != 'OUT'}">
-                  <div>
-                      <ion-icon style="padding-bottom: 7px;" slot="end" name="walk" color="light"></ion-icon>
-                      <br>
-                      <span style="font-size: 12px; text-transform: none;">Check-Out</span>
-                  </div>
-                  </ion-button>
-              </ion-col>
+                    </ion-col>
+                    <ion-col size="3" class="cardCol">
+                      <ion-icon name="podium-outline" [ngStyle]="{'color': appSettings.customStyle.Cards.Card6.iconColor, 'font-size': appSettings.customStyle.Cards.Card6.iconSize+ 'px'}" class="cardtitle"></ion-icon>
+                    </ion-col>
+                    <ion-col size="8" class="cardCol">
+                      <div class="para cardtitle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card6.countColor, 'font-size': appSettings.customStyle.Cards.Card6.countSize + 'px'}">{{statsCountData.VisitorsInside? statsCountData.VisitorsInside: '0'}}</div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+                <ion-card-subtitle class="ion-tittle" [ngStyle]="{'color': appSettings.customStyle.Cards.Card6.labelColor, 'font-size': appSettings.customStyle.Cards.Card6.labelSize + 'px'}">{{appSettings.customStyle.Cards.Card6.title}}</ion-card-subtitle>
+              </ion-card>
+            </ion-col>
           </ion-row>
         </ion-grid>
-      </ion-toolbar> -->
+      <!-- </ion-slide>
+      <ion-slide> -->
+        <ion-grid *ngIf="segment === 'Graph'">
 
-  <!-- </ion-footer> -->
+          <ion-row style="padding-top: 5px;">
+            <ion-col size="12">
+              <ion-card class="card2">
+                <ion-card-header>
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Today appointments
+                  </ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content class="ion-no-padding"  style="margin-bottom: 25px;">
+                  <canvas id="barCanvas5"></canvas>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+
+          <ion-row style="padding-top: 5px;">
+            <ion-col size="12">
+              <ion-card class="card2">
+                <ion-card-header>
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Upcoming 10 days appointment
+                  </ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content class="ion-no-padding">
+                  <canvas id="barCanvas1"></canvas>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+
+          <ion-row style="padding-top: 5px;">
+            <ion-col size="12">
+              <ion-card class="card2">
+                <ion-card-header>
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Recent 10 days check-in
+                  </ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content class="ion-no-padding">
+                  <canvas id="barCanvas2"></canvas>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+
+          <ion-row style="padding-top: 5px;">
+            <ion-col size="12">
+              <ion-card class="card2">
+                <ion-card-header>
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Recent 10 days check-out
+                  </ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content class="ion-no-padding">
+                  <canvas id="barCanvas3"></canvas>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+
+          <ion-row style="padding-top: 5px;">
+            <ion-col size="12">
+              <ion-card class="card2">
+                <ion-card-header>
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Recent 10 days overstay
+                  </ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content class="ion-no-padding">
+                  <canvas id="barCanvas4"></canvas>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      <!-- </ion-slide>
+    </ion-slides> -->
+
+
+
+  </div>
+
+
+</ion-content>
+<ion-footer class="ion-no-border" *ngIf="appSettings.FooterTab">
+  <ion-toolbar class="ion-no-border dashboardToolbar" color="primary">
+    <ion-tabs>
+      <ion-tab-bar slot="bottom" color="primary" [ngStyle]="{'height': (appSettings.FooterTab.IconSize * 2) + 'px'}">
+        <ion-tab-button
+        (click)="proceedNext('IN')" mode="ios">
+        <ion-icon class="tabIcon" name="trending-up-outline" style="margin: 0px;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
+          <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
+          'font-weight': appSettings.FooterTab.FooterFontWeight}">Check-In</ion-label>
+          </ion-tab-button>
+
+          <ion-tab-button
+          (click)="statesClicked('30')" mode="ios">
+            <ion-icon class="tabIcon" name="trending-down-outline" style="margin: 0px;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
+            <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
+            'font-weight': appSettings.FooterTab.FooterFontWeight}">Check-Out</ion-label>
+          </ion-tab-button>
+
+          <ion-tab-button
+          (click)="proceedNext('APPOINTMENT')" mode="ios" *ngIf="appSettings.showPreAppointment">
+            <ion-icon class="tabIcon" name="qr-code-outline"[ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
+            <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
+            'font-weight': appSettings.FooterTab.FooterFontWeight}">Appointment</ion-label>
+          </ion-tab-button>
+
+          <ion-tab-button
+          (click)="proceedNext('QUICK_PASS')" mode="ios">
+            <ion-icon class="tabIcon" name="barcode-outline"[ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
+            <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
+            'font-weight': appSettings.FooterTab.FooterFontWeight}">Quick Pass</ion-label>
+          </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>

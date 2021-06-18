@@ -304,28 +304,17 @@ export class FacilityBookingPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter AddFacilityPage');
-    var appntmntData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA);
-    if(appntmntData && !this.edit){
-      this.VM.visitors = JSON.parse(appntmntData).visitors;
-    }
-    this.loadVimsAppFacilityMasterList();
-
-  }
-
-
-  ionViewWillEnter(){
-    // this.events.publishDataCompany({
-    //   action: "page",
-    //   title: "home-view1",
-    //   message: ''
-    // });
     this.newImage = this.newImage +"_"+ new Date().getTime();
     this.events.publishDataCompany({
       action: "page",
       title: "CreateFacilityPage",
       message: ''
     });
-    // this.content.scrollToTop();
+    var appntmntData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA);
+    if(appntmntData && !this.edit){
+      this.VM.visitors = JSON.parse(appntmntData).visitors;
+    }
+    this.loadVimsAppFacilityMasterList();
 
   }
 
@@ -384,7 +373,9 @@ export class FacilityBookingPage implements OnInit {
 
   }
 
-  onChangeFacility(FacilityCode){
+  onChangeFacility(event: any){
+
+    const FacilityCode = event.FacilityCode ? event.FacilityCode: event.detail.value;
     var str = JSON.stringify(this.VM);
     var data = JSON.parse(str);
     console.log(""+ FacilityCode);

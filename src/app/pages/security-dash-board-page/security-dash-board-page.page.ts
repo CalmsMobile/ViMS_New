@@ -1,76 +1,77 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { BarcodeScannerOptions, BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
-import { NavController, Platform, AlertController, ModalController, ToastController } from '@ionic/angular';
+import { NavController, Platform, AlertController, ModalController, ToastController,IonSlides,AnimationController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
-import { ToastService } from 'src/app/services/util/Toast.service';
+import { DatePipe } from '@angular/common';
+import * as Chart from 'chart.js';
+import { ThemeSwitcherService } from 'src/app/services/ThemeSwitcherService';
+import { CommonUtil } from 'src/app/services/util/CommonUtil';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 declare var cordova: any;
-
 @Component({
   selector: 'app-security-dash-board-page',
   templateUrl: './security-dash-board-page.page.html',
   styleUrls: ['./security-dash-board-page.page.scss'],
 })
-export class SecurityDashBoardPagePage implements OnInit {
-
-
+export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
+  // @ViewChild("myChart") totCheckinGraph: ElementRef;
+  // @ViewChild('slides', { static: true }) slider: IonSlides;
+  @ViewChild("barCanvas1") barCanvas1: ElementRef;
+  @ViewChild("barCanvas2") barCanvas2: ElementRef;
+  @ViewChild("barCanvas3") barCanvas3: ElementRef;
+  @ViewChild("barCanvas4") barCanvas4: ElementRef;
+  @ViewChild("barCanvas5") barCanvas5: ElementRef;
+  private barChart1: Chart;
+  private barChart2: Chart;
+  private barChart3: Chart;
+  private barChart4: Chart;
+  private barChart5: Chart;
+  colorArray = ["#a63cb8", "#e93574", "#ffc720", "#98c95c", "#f4564a", "#1db2f6", "#883b56", "#6a808a", "#25e0a1",
+"#147ed8"];
+  segment = 'Summary';
+  dataSets1 = {
+    labels: [],
+    datasets: []
+  };
+  dataSets2 = {
+    labels: [],
+    datasets: []
+  };
+  dataSets3 = {
+    labels: [],
+    datasets: []
+  };
+  dataSets4 = {
+    labels: [],
+    datasets: []
+  };
+  dataSets5 = {
+    labels: [],
+    datasets: []
+  };
   VM = {
     visitors : []
   }
-
-  TotalVisitorsIn = 0;
-  TotalVisitorsOut = 0;
-  VisitorsInside = 0;
-  OverstayVisitor = 0;
 
   options :BarcodeScannerOptions;
   T_SVC:any;
   GO_SETTINGS_COUNT:number = 0;
   GO_SETTINGS_TIMER:any = null;
-  isFetchingSettings = false;
+  loggedInInterval:any = null;
   timeoutInterval : any;
-  timeoutIntervalSettings : any;
-  AppointmentSync_Interval : any = 5000;
-  SettingsSync_Interval : any = 10000;
-  _currentClass : any = this;
-  MyKad_Enabled = true;
-  tabSelected = "";
-  companyData = {
-    HomeTitle : "Calms Tecnologies Sdn Bhd",
-    HomeContent : "Card Application Life Cycle Management System",
-    LogoImgUrl : "",
-    StorageURL :""
-  }
-
-  showQuickPass = true;
-  showPreAppointment = false;
+  Sync_Interval : any = 5000;
   loading : any;
   QRData : any = {};
-  customStyle : any = {
-    "WelcomePage":{
-      "Title":{
-        fontSize :  36,
-        fontFamily : "Germania"
-      },
-      "CheckInBtn":{
-        fontSize :  20,
-        bckgrndColor : "#DD2C00"
-      },
-      "CheckOutBtn":{
-        fontSize :  20,
-        bckgrndColor : "#FF5722"
-      },
-      "WelcomeDescription":{
-        fontSize :  16,
-        fontFamily : "Prompt"
-      }
-    }
-
-  }
+  appSettings: any = {};
+  userInfoObj: any;
+  statsCountData: any = {};
+  lastLoggedIn: any;
+  footerHeight = '0px';
   constructor(public navCtrl: NavController,
     private platform : Platform,
     private router: Router,
@@ -79,15 +80,17 @@ export class SecurityDashBoardPagePage implements OnInit {
     private barcodeScanner: BarcodeScanner,
     public apiProvider: RestProvider,
     private translate:TranslateService,
+    private datePipe: DatePipe,
     private toastCtrl : ToastController,
-    private toastCtrl1 : ToastService,
+    private themeSwitcher: ThemeSwitcherService,
     private dateformat : DateFormatPipe,
     private events : EventsService,
-    private _zone : NgZone) {
-
+    private commonUtil: CommonUtil,
+    private statusBar : StatusBar,
+    private animationCtrl: AnimationController,) {
       this.translate.get(['ACC_MAPPING.INVALID_QR', 'ACC_MAPPING.INVALID_ORG_TITLE',
-      'ACC_MAPPING.INVALID_FCM_TITLE',
-      'ACC_MAPPING.FCM_TITLE',
+      'ACC_MAPPING.INVALID_FCM_TITLE', 'ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS',
+      'ACC_MAPPING.FCM_TITLE', 'ALERT_TEXT.CONFIRMATION',
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'ALERT_TEXT.QR_INVALID_TODAY',
       'ALERT_TEXT.QR_USED',
@@ -97,6 +100,15 @@ export class SecurityDashBoardPagePage implements OnInit {
       'COMMON.OK','COMMON.CANCEL']).subscribe(t => {
         this.T_SVC = t;
       });
+      const userInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+      if (userInfo) {
+        this.userInfoObj = JSON.parse(userInfo);
+      }
+
+      const QRDataInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+      if (QRDataInfo) {
+        this.QRData = JSON.parse(QRDataInfo);
+      }
 
       events.observeDataCompany().subscribe((data1:any) => {
         if(data1.action === "addVisitor") {
@@ -104,226 +116,97 @@ export class SecurityDashBoardPagePage implements OnInit {
         }
 
       });
+
   }
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter SecurityDashBoardPage');
-    var ackSeettings =  window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
-    if(ackSeettings && JSON.parse(ackSeettings)){
-      var result1 = JSON.parse(ackSeettings);
-      if(result1){
-        var result = JSON.parse(result1.SettingDetail);
-        this.MyKad_Enabled = result.MyKad_Enabled;
-      }
+    this.refreshLastLoggedIn();
+    const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
+    if (ackSeettings) {
+      this.appSettings = JSON.parse(ackSeettings);
+      this.composeRunTimeCss();
+      this.getSecurityStats();
+      this.updateSyncInterval();
       this.enableMyKad();
+    } else {
+      this.getSecuritySettings();
     }
   }
 
-  ionViewWillEnter(){
+  composeRunTimeCss(){
+    if (!this.appSettings.customStyle) {
+      this.appSettings = AppSettings.DEFAULT_SETTINGS;
+    }
+    this.statusBar.backgroundColorByHexString(this.appSettings.customStyle.AppTheme);
+    this.themeSwitcher.setTheme('Theme1', this.appSettings.customStyle.AppTheme);
+    let _css = `
+    .dashboardToolbar {
+      --background: `+ this.appSettings.customStyle.AppTheme +` !important;
+      --min-height: ` + (this.appSettings.FooterTab.IconSize * 2) + `px !important;
+    }`;
+    document.getElementById("MY_RUNTIME_CSS").innerHTML = _css;
+  }
+
+  async updateSyncInterval() {
+    if (this.timeoutInterval) {
+      clearInterval(this.timeoutInterval);
+    }
+    this.timeoutInterval = setInterval(() => {
+      this.getSecurityStats();
+    }, this.appSettings.Sync_Interval * 1000);
+  }
+
+  getSecuritySettings(){
     var QRData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    var ackSeettings =  window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
-    if(ackSeettings && JSON.parse(ackSeettings)){
-      var result1 = JSON.parse(ackSeettings);
-      if(result1){
-        var result = JSON.parse(result1.SettingDetail);
-        if(result.HomeTitle){
-          this.companyData.HomeTitle = result.HomeTitle;
-        }
-        if(result.HomeContent){
-          this.companyData.HomeContent = result.HomeContent;
-        }
-
-        if(result.LogoImgUrl){
-          this.companyData.LogoImgUrl = result.LogoImgUrl;
-        }
-
-        if(QRData){
-          var ApiUrl = JSON.parse(QRData).ApiUrl;
-          if(ApiUrl.indexOf("/api") > -1) {
-            ApiUrl = ApiUrl.split("/api")[0];
-          }
-          this.companyData.StorageURL = ApiUrl + "/FS/";
-        }
-
-        if(result.SettingsSync_Interval){
-          this.SettingsSync_Interval = result.SettingsSync_Interval*1000;
-        }else{
-          this.SettingsSync_Interval = 10000;
-        }
-        this.showPreAppointment = result.showPreAppointment
-        this.showQuickPass = result.showQuickPass
-        if(result.customStyle){
-          this.customStyle = result.customStyle;
-         if(!this.customStyle.WelcomePage.Title.fontSize){
-            this.customStyle.WelcomePage.Title.fontSize = 36;
-          }
-          if(!this.customStyle.WelcomePage.WelcomeDescription.fontSize){
-            this.customStyle.WelcomePage.WelcomeDescription.fontSize = 16;
-          }
-          if(!this.customStyle.WelcomePage.CheckInBtn.fontSize){
-            this.customStyle.WelcomePage.CheckInBtn.fontSize = 20;
-          }
-          if(!this.customStyle.WelcomePage.CheckOutBtn.fontSize){
-            this.customStyle.WelcomePage.CheckOutBtn.fontSize = 20;
-          }
-        }else{
-
-        this.customStyle = {
-          "WelcomePage":{
-           "Title":{
-              fontSize :  36,
-              fontFamily : "Open Sans Condensed"
-            },
-            "CheckInBtn":{
-              fontSize :  20,
-              bckgrndColor : "#DD2C00"
-            },
-            "CheckOutBtn":{
-              fontSize :  20,
-              bckgrndColor : "#FF5722"
-            },
-            "WelcomeDescription":{
-              fontSize :  16,
-              fontFamily : "Fira Sans Condensed"
-            }
-          }
-
-        }
-      }
-      }
+    if(!QRData){
+      return;
     }
-    this.activateListenAckSettings(true, this);
-    this.getAckSettings(this, true);
+    var params  = {
+      "RefSchoolSeqId": "",
+      "RefBranchSeqId": "",
+      "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
+      "MAppDevSeqId": this.QRData.MAppDevSeqId
+    }
+    this.apiProvider.GetSecurityAppSettings(params).then(
+      (val) => {
+        var result1 = JSON.parse(val+"");
+        if(result1){
+          this.appSettings = JSON.parse(result1.SettingDetail);
+          console.log(val+"");
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, JSON.stringify(this.appSettings));
+          this.composeRunTimeCss();
+          this.getSecurityStats();
+          this.updateSyncInterval();
+          this.apiProvider.GetMasterDetails().then(
+            (result: any) => {
+              if(result){
+                window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+              }
+            },
+            (err) => {
 
-
+            }
+          );
+          this.enableMyKad();
+        }
+      },
+      (err) => {
+      }
+    );
   }
 
-  getAckSettings(_currentClass, refresh){
-    var QRData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-            if(!QRData){
-              if(_currentClass.timeoutIntervalSettings){
-                clearInterval(_currentClass.timeoutIntervalSettings);
-              }
-              return;
-            }
-            _currentClass.isFetchingSettings = true;
-            var params  = {
-              "RefSchoolSeqId": "",
-              "RefBranchSeqId": "",
-              "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
-              "MAppDevSeqId": JSON.parse(QRData).MAppDevSeqId
-            }
-            _currentClass.apiProvider.GetSecurityAppSettings(params).then(
-              (val) => {
-
-                _currentClass.isFetchingSettings = false;
-                var result1 = JSON.parse(val+"");
-                if(result1){
-                  var result = JSON.parse(result1.SettingDetail);
-                  console.log(val+"");
-                  _currentClass._zone.run(() => {
-
-                  _currentClass.showPreAppointment = result.showPreAppointment
-                  _currentClass.showQuickPass = result.showQuickPass
-                  if(result.HomeTitle){
-                    _currentClass.companyData.HomeTitle = result.HomeTitle;
-                  }
-                  if(result.HomeContent){
-                    _currentClass.companyData.HomeContent = result.HomeContent;
-                  }
-                  if(result.LogoImgUrl){
-                    _currentClass.companyData.LogoImgUrl = result.LogoImgUrl;
-                  }
-                  // _currentClass.companyData.LogoImg = "";
-                  if(QRData){
-                    var ApiUrl = JSON.parse(QRData).ApiUrl;
-                    if(ApiUrl.indexOf("/api") > -1) {
-                      ApiUrl = ApiUrl.split("/api")[0];
-                    }
-                    _currentClass.companyData.StorageURL = ApiUrl + "/FS/";
-                  }
-
-                  if(result.SettingsSync_Interval){
-                    _currentClass.SettingsSync_Interval = result.SettingsSync_Interval*1000;
-                  }else{
-                    _currentClass.SettingsSync_Interval = 10000;
-                  }
-
-                  if(result.customStyle ){
-                    _currentClass.customStyle = result.customStyle;
-                   if(!_currentClass.customStyle.WelcomePage.Title.fontSize){
-                      _currentClass.customStyle.WelcomePage.Title.fontSize = 36;
-                    }
-                    if(!_currentClass.customStyle.WelcomePage.WelcomeDescription.fontSize){
-                      _currentClass.customStyle.WelcomePage.WelcomeDescription.fontSize = 16;
-                    }
-                    if(!_currentClass.customStyle.WelcomePage.CheckInBtn.fontSize){
-                      _currentClass.customStyle.WelcomePage.CheckInBtn.fontSize = 20;
-                    }
-                    if(!_currentClass.customStyle.WelcomePage.CheckOutBtn.fontSize){
-                      _currentClass.customStyle.WelcomePage.CheckOutBtn.fontSize = 20;
-                    }
-                  }else{
-                    if(refresh){
-                      _currentClass.customStyle = {
-                        "WelcomePage":{
-                          backgroundcolor1 : "#DD2C00",
-                          backgroundcolor2 : "#FF5722",
-                          "Title":{
-                            fontSize :  36,
-                            fontFamily : "Open Sans Condensed"
-                          },
-                          "CheckInBtn":{
-                            fontSize :  20,
-                            bckgrndColor : "#DD2C00"
-                          },
-                          "CheckOutBtn":{
-                            fontSize :  20,
-                            bckgrndColor : "#FF5722"
-                          },
-                          "WelcomeDescription":{
-                            fontSize :  16,
-                            fontFamily : "Fira Sans Condensed"
-                          }
-                        }
-
-                      }
-                    }
-
-                  }
-                  window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS,val+"");
-                  if(result.SettingsSync_Interval && _currentClass.SettingsSync_Interval != result.SettingsSync_Interval){
-                    if(_currentClass.timeoutIntervalSettings){
-                      clearInterval(_currentClass.timeoutIntervalSettings);
-                    }
-
-                    _currentClass.activateListenAckSettings(false, _currentClass);
-                  }
-
-                });
-                _currentClass.getSecurityStats(_currentClass);
-                }
-              },
-              (err) => {
-                _currentClass.isFetchingSettings = false;
-                if(_currentClass.timeoutIntervalSettings){
-                  clearInterval(_currentClass.timeoutIntervalSettings);
-                }
-              }
-            );
+  gotoNotifiations() {
+    this.router.navigateByUrl('notifications');
   }
 
-  showLoading(currentClass){
-    if(!currentClass.loading){
-      currentClass.loading = currentClass.loadingCtrl.create({
-        content: 'Please wait...',
-        dismissOnPageChange: true,
-        showBackdrop: true,
-        enableBackdropDismiss: true
-      });
-      currentClass.loading.present();
+  segmentChanged(event) {
+    console.log(this.segment);
+    if (this.segment === 'Graph') {
+      setTimeout(() => {
+        this.displayChart();
+      }, 100);
     }
-
   }
 
   hideLoading(currentClass){
@@ -334,16 +217,35 @@ export class SecurityDashBoardPagePage implements OnInit {
   }
 
   proceedNext(type){
-    this.tabSelected = type;
 
+    setTimeout(() => { console.log("Click -->" + type); }, 10);
     if(type == 'IN'){
-      this.router.navigateByUrl("security-check-in-page");
+      const navigationExtras: NavigationExtras = {
+        state: {
+          passData: {
+          }
+        },
+        replaceUrl: true
+      };
+      this.router.navigate(['security-manual-check-in'], navigationExtras);
       // this.enableMyKad();
-    }else if(type == 'QUICK_PASS_OUT'){
-      // this.scanPreAppointmentQR();
+    } else if(type == 'OUT'){
+      const navigationExtras: NavigationExtras = {
+        state: {
+          passData: {
+            Type : '60'
+          }
+        }
+      };
+      this.router.navigate(['security-check-out-page'], navigationExtras);
+    } else if(type == 'APPOINTMENT'){
+      this.scanPreAppointmentQR();
+      // this.enableMyKad();
+    } else if(type == 'QUICK_PASS_OUT'){
       this.quickPassOut();
     }else if(type == 'QUICK_PASS'){
-      this.scanQuickPassQR();
+      // this.scanQuickPassQR()
+      this.quickPassOut();
     }else {
       const navigationExtras: NavigationExtras = {
         state: {
@@ -360,9 +262,76 @@ export class SecurityDashBoardPagePage implements OnInit {
     // alert("Released");
   }
 
-  pressed(){
-    this.logoutMe();
+  gotoSettings(){
+    this.router.navigateByUrl('settings-view-page');
+  }
 
+  logout() {
+    this.translate.get(['SETTINGS.ARE_U_SURE_LOGOUT_TITLE','SETTINGS.ARE_U_SURE_LOGOUT',
+     'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
+    ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
+      let loginConfirm = await this.alertCtrl.create({
+        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
+        message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
+        cssClass: 'alert-warning-logout',
+        mode: 'ios',
+        buttons: [
+          {
+            text: t['COMMON.EXIT1'],
+            handler: () => {
+              const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+                const data = {
+                  'LogoutTime': endDate,
+                  'Duration': this.getDurationToLogout(endDate)
+                }
+                console.log(JSON.stringify(data));
+                this.apiProvider.requestSecurityApi(data, '/api/SecurityApp/userLogout', true).then(
+                  (val: any) => {
+                    localStorage.setItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS, '');
+                    localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, '');
+                    this.apiProvider.showToast(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
+                    this.navCtrl.navigateRoot('login');
+                  },
+                  async (err) => {
+                    if(err && err.message == "No Internet"){
+                      return;
+                    }
+                    try {
+                      var result = JSON.parse(err.toString());
+                      if(result.message){
+                        this.apiProvider.showAlert(result.message);
+                        return;
+                      }
+                    } catch (error) {
+
+                    }
+
+                    if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                      var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+                      this.apiProvider.showAlert(message);
+                      return;
+                    }
+
+                    if(err && err.Table && err.Table[0].Code !== 10 && err.Table1 && err.Table1[0].Description){
+
+                      this.apiProvider.showAlert(err.Table1[0].Description);
+                      return;
+                      }
+                    this.apiProvider.showAlert("<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>');
+                  }
+                );
+            }
+          },
+          {
+            text: t['COMMON.CANCEL'],
+            role: 'cancel',
+            handler: () => {
+            }
+          }
+        ]
+      });
+      loginConfirm.present();
+    });
   }
 
   active(){
@@ -370,7 +339,7 @@ export class SecurityDashBoardPagePage implements OnInit {
   }
 
   enableMyKad(){
-    if(this.MyKad_Enabled && this.platform.is('cordova')) {
+    if(this.appSettings.MyKad_Enabled) {
       var currentClass = this;
       var success = async function(result) {
         console.log(result);
@@ -429,18 +398,18 @@ export class SecurityDashBoardPagePage implements OnInit {
             description = resultObj.Description;
             break;
           case "WAITING":
-            currentClass.showLoading(currentClass);
+            currentClass.apiProvider.presentLoading();
             description = resultObj.Description;
             break;
           case "INSERT":
             description = resultObj.Description;
             break;
           case "CARD READ PROGRESS":
-            currentClass.showLoading(currentClass);
+            currentClass.apiProvider.presentLoading();
             description = resultObj.Description;
             break;
           case "CANCEL":
-            currentClass.hideLoading(currentClass);
+            currentClass.apiProvider.dismissLoading();
             description = resultObj.Description;
             break;
         }
@@ -495,118 +464,9 @@ export class SecurityDashBoardPagePage implements OnInit {
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "AA328A36" //"C4B9F365";
+      var data = "0001105743" //"C4B9F365";
       var params = {"hexcode":""+ data};
-      this.apiProvider.VimsAppGetAppointmentByHexCode(params).then(
-        async (val) => {
-         console.log("val : "+JSON.stringify(val));
-         var visitorDetail = val+"";
-         var vOb1 = JSON.parse(visitorDetail);
-         var vOb;
-         var message = this.T_SVC['ALERT_TEXT.APPOINTMENT_NOT_FOUND'];
-          if(vOb1){
-            if(vOb1.Table1 && vOb1.Table1.length > 0){
-              vOb = vOb1.Table1[0];
-              // if(vOb1.Table2 && vOb1.Table2.length > 0 && vOb1.Table2[0].CheckinStatus == 10){
-              //   message = this.T_SVC['ALERT_TEXT.QR_USED'];
-              //   vOb = null;
-              // }
-            }
-            // if(!vOb){
-            //   let alert = this.alertCtrl.create({
-            //     header: 'Error !',
-            //     message: message,
-            //     cssClass:'alert-danger',
-            //     buttons: ['Okay']
-            //     });
-            //     alert.present();
-            //   return;
-            // }
-            var startDate = vOb.START_DATE.split("T")[0];
-            var fDate = this.dateformat.transform(startDate+"", "yyyy-MM-dd");
-            var fTime = new Date(fDate).getTime();
-            var endDate = vOb.END_DATE.split("T")[0];
-            var eDate = this.dateformat.transform(endDate+"", "yyyy-MM-dd");
-            var eTime = new Date(eDate).getTime();
-            var cDate = this.dateformat.transform(new Date()+"", "yyyy-MM-dd");
-            var cTime = new Date(cDate).getTime();
-            if((fDate == cDate) || (fTime <= cTime && cTime <= eTime)){
-              const navigationExtras: NavigationExtras = {
-                state: {
-                  passData: {
-                    PreAppointment : JSON.stringify(vOb)
-                  }
-                }
-              };
-              this.router.navigate(['security-check-in-page'], navigationExtras);
-            }else{
-              message = this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY'];
-              if(fTime < cTime && eTime < cTime){
-                message = this.T_SVC['ALERT_TEXT.QR_EXPIRED'];
-              }
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: message,
-                cssClass: 'alert-danger',
-                buttons: ['Okay']
-              });
-                alert.present();
-            }
-
-          }
-
-
-        },
-        async (err) => {
-          console.log("error : "+JSON.stringify(err));
-          if(err && err.message == "No Internet"){
-            return;
-          }
-
-          if(err.Table1 && err.Table1.length == 0){
-            var message  = this.T_SVC['ALERT_TEXT.INVALID_QR'];
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass: 'alert-danger',
-              buttons: ['Okay']
-            });
-              alert.present();
-              return;
-          }
-
-          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-            message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass: 'alert-danger',
-              buttons: ['Okay']
-            });
-              alert.present();
-              return;
-          }
-          message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
-
-          if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
-            message = JSON.parse(err).Table[0].description;
-          }
-          let invalidORGConfirm = await this.alertCtrl.create({
-            header: 'Error !',
-            message: "<span class='failed'>" + message + '</span>',
-            cssClass: 'alert-danger',
-            buttons: [
-              {
-                text: this.T_SVC['COMMON.OK'],
-                role: 'cancel',
-                handler: () => {
-                }
-              }
-            ]
-          });
-          invalidORGConfirm.present();
-        }
-      );
+      this.getAppointmentByQR(params);
     }else{
       this.options = {
         prompt : "Scan your QR Code ",
@@ -628,133 +488,8 @@ export class SecurityDashBoardPagePage implements OnInit {
         }
 
         if(!invalidQRCode){
-
             var params = {"hexcode":""+ data};
-            this.apiProvider.VimsAppGetAppointmentByHexCode(params).then(
-              async (val) => {
-                if(val){
-                  console.log("val : "+JSON.stringify(val));
-                  var visitorDetail = val+"";
-                  var vOb1 = JSON.parse(visitorDetail);
-                  var vOb;
-                  var message = this.T_SVC['ALERT_TEXT.APPOINTMENT_NOT_FOUND'];
-                   if(vOb1){
-                     if(vOb1.Table1 && vOb1.Table1.length > 0){
-                       vOb = vOb1.Table1[0];
-                      //  if(vOb1.Table2 && vOb1.Table2.length > 0 && vOb1.Table2[0].CheckinStatus == 10){
-                      //    message = this.T_SVC['ALERT_TEXT.QR_USED'];
-                      //    vOb = null;
-                      //  }
-                     }
-                    //  if(!vOb){
-                    //    let alert = this.alertCtrl.create({
-                    //      header: 'Error !',
-                    //      message: message,
-                    //      cssClass:'alert-danger',
-                    //      buttons: ['Okay']
-                    //      });
-                    //      alert.present();
-                    //    return;
-                    // }
-                   var startDate = vOb.START_DATE.split("T")[0];
-                   var fDate = this.dateformat.transform(startDate+"", "yyyy-MM-dd");
-                   var fTime = new Date(fDate).getTime();
-                   var endDate = vOb.END_DATE.split("T")[0];
-                   var eDate = this.dateformat.transform(endDate+"", "yyyy-MM-dd");
-                   var eTime = new Date(eDate).getTime();
-                   var cDate = this.dateformat.transform(new Date()+"", "yyyy-MM-dd");
-                   var cTime = new Date(cDate).getTime();
-                   if((fDate == cDate) || (fTime <= cTime && cTime <= eTime)){
-                    const navigationExtras: NavigationExtras = {
-                      state: {
-                        passData: {
-                          PreAppointment : JSON.stringify(vOb)
-                        }
-                      }
-                    };
-                    this.router.navigate(['security-check-in-page'], navigationExtras);
-                   }else{
-                    message = this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY'];
-                    if(fTime < cTime && eTime < cTime){
-                      message = this.T_SVC['ALERT_TEXT.QR_EXPIRED'];
-                    }
-                    let alert = await this.alertCtrl.create({
-                      header: 'Error !',
-                      message: message,
-                      cssClass: 'alert-danger',
-                      buttons: ['Okay']
-                    });
-                      alert.present();
-                  }
-
-                  }
-
-                }else{
-                  let alert = await this.alertCtrl.create({
-                    header: 'Error !',
-                    message: this.T_SVC['ALERT_TEXT.INVALID_QR'],
-                    cssClass: 'alert-danger',
-                    buttons: ['Okay']
-                  });
-                    alert.present();
-                }
-
-
-
-
-              },
-              async (err) => {
-                console.log("error : "+JSON.stringify(err));
-                if(err && err.message == "No Internet"){
-                  return;
-                }
-
-                if(err.Table1 && err.Table1.length == 0){
-                  var message  = this.T_SVC['ALERT_TEXT.INVALID_QR'];
-                  let alert = await this.alertCtrl.create({
-                    header: 'Error !',
-                    message: message,
-                    cssClass: 'alert-danger',
-                    buttons: ['Okay']
-                  });
-                    alert.present();
-                    return;
-                }
-
-                if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-                  message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-                  let alert = await this.alertCtrl.create({
-                    header: 'Error !',
-                    message: message,
-                    cssClass: 'alert-danger',
-                    buttons: ['Okay']
-                  });
-                    alert.present();
-                    return;
-                }
-                message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
-
-                if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
-                  message = JSON.parse(err).Table[0].description;
-                }
-
-                let invalidORGConfirm = await this.alertCtrl.create({
-                  header: 'Error !',
-                  message: "<span class='failed'>" + message + '</span>',
-                  cssClass: 'alert-danger',
-                  buttons: [
-                    {
-                      text: this.T_SVC['COMMON.OK'],
-                      role: 'cancel',
-                      handler: () => {
-                      }
-                    }
-                  ]
-                });
-                invalidORGConfirm.present();
-              }
-            );
-
+            this.getAppointmentByQR(params);
         } else{
           let invalidQRConfirm = await this.alertCtrl.create({
             header: 'Error !',
@@ -791,305 +526,76 @@ export class SecurityDashBoardPagePage implements OnInit {
     }
   }
 
-  scanQuickPassQR(){
-    let invalidQRCode = false;
-
-    var loadinWeb = true;
-    if(!this.platform.is('cordova')) {
-      loadinWeb = true;
-    } else {
-      loadinWeb = false;
-    }
-    if (loadinWeb) {
-      var data = "6578425602";
-      var params = {"HexCode":""+ data};
-      this.apiProvider.GetQuickPassVisitorDetail(params).then(
-        async (val) => {
-         console.log("val : "+JSON.stringify(val));
-         var visitorDetail = val+"";
-         var vOb = JSON.parse(visitorDetail);
-          if(vOb){
-
-            // var endDate = vOb.ExpiryTime.split("T")[0];
-            // var eDate = this.dateformat.transform(endDate+"", "yyyy-MM-dd");
-            // var eTime = new Date(eDate).getTime();
-            // var cDate = this.dateformat.transform(new Date()+"", "yyyy-MM-dd");
-            // var cTime = new Date(cDate).getTime();
-            var eDateTime = this.dateformat.transform(vOb.ExpiryTime+"", "yyyy-MM-ddTHH:mm:ss");
-            var eDTime = new Date(eDateTime).getTime();
-
-            var cDateTime = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");
-            var cDTime = new Date(cDateTime).getTime();
-            // if(vOb.IsCheckedIn || vOb.CheckInTime){
-            //   let alert = this.alertCtrl.create({
-            //     header: 'Error !',
-            //     message: this.T_SVC['ALERT_TEXT.QR_USED'],
-            //     cssClass:'alert-danger',
-            //     buttons: ['Okay']
-            //     });
-            //     alert.present();
-            // }else
-            if(eDTime > cDTime){
-
-              //   const modalOptions: ModalOptions = {
-              //     cssClass: "signInModal"
-              //   };
-              //   let contactModal = this.modalCtrl.create(QuickPassVisitorPopupComponent,
-              //     {
-              //       QPAppointment : visitorDetail,
-              //       CheckIn : true
-              //     }, modalOptions);
-              //  contactModal.present();
+  getAppointmentByQR(params) {
+    this.apiProvider.VimsAppGetAppointmentByHexCode(params, true).then(
+      async (val) => {
+        var visitorDetail = val+"";
+        var vOb1 = JSON.parse(visitorDetail);
+        var message = this.T_SVC['ALERT_TEXT.APPOINTMENT_NOT_FOUND'];
+        if(vOb1 && vOb1.Table1 && vOb1.Table1.length > 0) {
+          var vOb = vOb1.Table1[0];
+          vOb.Hexcode = params.hexcode;
+          const resultObj = this.commonUtil.checkQRCode(vOb.START_TIME, vOb.END_TIME, this.dateformat);
+          if(resultObj.isInValid){
+            message = this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY'];
+            if(resultObj.isExpired){
+              message = this.T_SVC['ALERT_TEXT.QR_EXPIRED'];
+            }
+            this.apiProvider.showAlert(message);
+          } else {
+            if ((vOb.att_check_in === null || vOb.att_check_in === 0) || (vOb.att_check_in === 1 && vOb.att_check_out === 1)) {
               const navigationExtras: NavigationExtras = {
                 state: {
                   passData: {
-                    QPAppointment : visitorDetail,
-                    CheckIn : true
+                    PreAppointment : vOb
                   }
                 }
               };
-              this.router.navigate(['quick-pass-details-page'], navigationExtras);
-            }else{
-                 let alert = await this.alertCtrl.create({
-                   header: 'Error !',
-                   message: this.T_SVC['ALERT_TEXT.QR_EXPIRED'],
-                   cssClass: 'alert-danger',
-                   buttons: ['Okay']
-                 });
-                    alert.present();
+              this.router.navigate(['security-manual-check-in'], navigationExtras);
+            } else if (vOb.att_check_in === 1 && (vOb.att_check_out === null || vOb.att_check_out === 0)){
+              const navigationExtras: NavigationExtras = {
+                state: {
+                  passData: vOb,
+                  fromAppointment: true,
+                  showCheckoutAlert: true
+                }
+              };
+              this.router.navigate(['visitor-information'], navigationExtras);
+            } else {
+              this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY']);
             }
 
           }
+        } else {
+          this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY']);
+        }
+      },
+      async (err) => {
+        console.log("error : "+JSON.stringify(err));
+        if(err && err.message == "No Internet"){
+          return;
+        }
 
-
-        },
-        async (err) => {
-          console.log("error : "+JSON.stringify(err));
-          if(err && err.message == "No Internet"){
+        if(err.Table1 && err.Table1.length == 0){
+          var message  = this.T_SVC['ALERT_TEXT.INVALID_QR'];
+          this.apiProvider.showAlert(message);
             return;
-          }
-
-          if(err.Table1 && err.Table1.length == 0){
-            var message  = this.T_SVC['ALERT_TEXT.INVALID_QR'];
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass: 'alert-danger',
-              buttons: ['Okay']
-            });
-              alert.present();
-              return;
-          }
-
-          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-            message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass: 'alert-danger',
-              buttons: ['Okay']
-            });
-              alert.present();
-              return;
-          }
-          message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
-
-          if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
-            message = JSON.parse(err).Table[0].description;
-          }
-          let invalidORGConfirm = await this.alertCtrl.create({
-            header: 'Error !',
-            message: "<span class='failed'>" + message + '</span>',
-            cssClass: 'alert-danger',
-            buttons: [
-              {
-                text: this.T_SVC['COMMON.OK'],
-                role: 'cancel',
-                handler: () => {
-                }
-              }
-            ]
-          });
-          invalidORGConfirm.present();
         }
-      );
-    }else{
-      this.options = {
-        prompt : "Scan your QR Code ",
-        preferFrontCamera : false, // iOS and Android
-        showFlipCameraButton : true, // iOS and Android
-        showTorchButton : true, // iOS and Android
-        torchOn: false, // Android, launch with the torch switched on (if available)
-        resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
-        formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-        disableAnimations : false, // iOS
-        disableSuccessBeep: false // iOS and Android
+
+        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+          this.apiProvider.showAlert(message);
+          return;
+        }
+        message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
+
+        if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
+          message = JSON.parse(err).Table[0].description;
+        }
+        message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        this.apiProvider.showAlert(message);
       }
-      this.barcodeScanner.scan(this.options).then(async (barcodeData) => {
-        var data = barcodeData.text;
-        console.log("barcodeScanner data: "+data);
-        // console.log(scanData); D20A6A48
-        if(data == ""){
-          invalidQRCode = true;
-        }
-
-        if(!invalidQRCode){
-
-            var params = {"HexCode":""+ data};
-            this.apiProvider.GetQuickPassVisitorDetail(params).then(
-              async (val) => {
-                if(val){
-                  console.log("val : "+JSON.stringify(val));
-                  var visitorDetail = val+"";
-                  var vOb = JSON.parse(visitorDetail);
-                  if(vOb){
-
-                    var eDateTime = this.dateformat.transform(vOb.ExpiryTime+"", "yyyy-MM-ddTHH:mm:ss");
-                    var eDTime = new Date(eDateTime).getTime();
-
-                    var cDateTime = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");
-                    var cDTime = new Date(cDateTime).getTime();
-                    // if(vOb.IsCheckedIn || vOb.CheckInTime){
-                    //   let alert = this.alertCtrl.create({
-                    //     header: 'Error !',
-                    //     message: this.T_SVC['ALERT_TEXT.QR_USED'],
-                    //     cssClass:'alert-danger',
-                    //     buttons: ['Okay']
-                    //     });
-                    //     alert.present();
-                    // }else
-                     if(eDTime > cDTime){
-                    //   const modalOptions: ModalOptions = {
-                    //     cssClass: "signInModal"
-                    //   };
-                    //   let contactModal = this.modalCtrl.create(QuickPassVisitorPopupComponent,
-                    //     {
-                    //       QPAppointment : visitorDetail,
-                    //       CheckIn : true
-                    //     }, modalOptions);
-                    //  contactModal.present();
-                    const navigationExtras: NavigationExtras = {
-                      state: {
-                        passData: {
-                          QPAppointment : visitorDetail,
-                          CheckIn : true
-                        }
-                      }
-                    };
-                    this.router.navigate(['quick-pass-details-page'], navigationExtras);
-                    }else{
-                        let alert = await this.alertCtrl.create({
-                          header: 'Error !',
-                          message: this.T_SVC['ALERT_TEXT.QR_EXPIRED'],
-                          cssClass: 'alert-danger',
-                          buttons: ['Okay']
-                        });
-                            alert.present();
-                    }
-
-                  }
-
-                }else{
-                  let alert = await this.alertCtrl.create({
-                    header: 'Error !',
-                    message: this.T_SVC['ALERT_TEXT.INVALID_QR'],
-                    cssClass: 'alert-danger',
-                    buttons: ['Okay']
-                  });
-                    alert.present();
-                }
-
-
-
-
-              },
-              async (err) => {
-                console.log("error : "+JSON.stringify(err));
-                if(err && err.message == "No Internet"){
-                  return;
-                }
-
-                if(err.Table1 && err.Table1.length == 0){
-                  var message  = this.T_SVC['ALERT_TEXT.INVALID_QR'];
-                  let alert = await this.alertCtrl.create({
-                    header: 'Error !',
-                    message: message,
-                    cssClass: 'alert-danger',
-                    buttons: ['Okay']
-                  });
-                    alert.present();
-                    return;
-                }
-
-                if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-                  message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-                  let alert = await this.alertCtrl.create({
-                    header: 'Error !',
-                    message: message,
-                    cssClass: 'alert-danger',
-                    buttons: ['Okay']
-                  });
-                    alert.present();
-                    return;
-                }
-
-                message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
-
-                if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
-                  message = JSON.parse(err).Table[0].description;
-                }
-
-                let invalidORGConfirm = await this.alertCtrl.create({
-                  header: 'Error !',
-                  message: "<span class='failed'>" + message + '</span>',
-                  cssClass: 'alert-danger',
-                  buttons: [
-                    {
-                      text: this.T_SVC['COMMON.OK'],
-                      role: 'cancel',
-                      handler: () => {
-                      }
-                    }
-                  ]
-                });
-                invalidORGConfirm.present();
-              }
-            );
-
-        } else{
-          let invalidQRConfirm = await this.alertCtrl.create({
-            header: 'Error !',
-            message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-            cssClass: 'alert-danger',
-            buttons: [
-              {
-                text: this.T_SVC['COMMON.OK'],
-                role: 'cancel',
-                handler: () => {
-                }
-              }
-            ]
-          });
-          invalidQRConfirm.present();
-        }
-    }, async (err) => {
-        console.log("Error occured : " + err);
-        let invalidQRConfirm = await this.alertCtrl.create({
-          header: 'Error !',
-          message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass: 'alert-danger',
-          buttons: [
-            {
-              text: this.T_SVC['COMMON.OK'],
-              role: 'cancel',
-              handler: () => {
-              }
-            }
-          ]
-        });
-        invalidQRConfirm.present();
-    });
-    }
+    );
   }
 
   ionViewWillLeave(){
@@ -1097,8 +603,11 @@ export class SecurityDashBoardPagePage implements OnInit {
       this.GO_SETTINGS_COUNT = 0;
       clearTimeout(this.GO_SETTINGS_TIMER);
     }
-    if(this.timeoutIntervalSettings){
-      clearInterval(this.timeoutIntervalSettings);
+    if(this.timeoutInterval){
+      clearInterval(this.timeoutInterval);
+    }
+    if(this.loggedInInterval){
+      clearInterval(this.loggedInInterval);
     }
 
   }
@@ -1117,129 +626,155 @@ export class SecurityDashBoardPagePage implements OnInit {
     if(this.GO_SETTINGS_COUNT === numOfClicks){
       this.GO_SETTINGS_COUNT = 0;
       clearTimeout(this.GO_SETTINGS_TIMER);
-      this.logoutMe();
     }
     if(this.GO_SETTINGS_COUNT > 5 && this.GO_SETTINGS_COUNT < numOfClicks){
-       this.showToast("Need " + (numOfClicks - this.GO_SETTINGS_COUNT) + " more clicks go to Settings");
+       this.apiProvider.showToast("Need " + (numOfClicks - this.GO_SETTINGS_COUNT) + " more clicks go to Settings");
     }
   }
 
-  async showToast(msg){
-   (await this.toastCtrl.create(
-      {
-        message: msg,
-        duration: 2000,
-        position: 'top'
-      })).present();
+  getDuration(endDate) {
+    const startDate = new Date(this.userInfoObj.LoginTime);
+    let difference = endDate.getTime() - startDate.getTime();
+
+    const dDays = this.apiProvider.twoDecimals(parseInt('' +difference/(24*60*60*1000)));
+    const dHours = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*60*1000)) % 24)) ;
+    const dMin = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*1000)) % 60));
+    this.lastLoggedIn = dDays +' day, '+dHours+' hour, '+dMin+' min';
   }
 
-  logoutMe(){
-    this.translate.get(['SETTINGS.ARE_U_SURE_LOGOUT_TITLE','SETTINGS.ARE_U_SURE_LOGOUT',
-     'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
-    ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
-      let loginConfirm = await this.alertCtrl.create({
-        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
-        message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
-        cssClass: 'alert-warning',
-        buttons: [
-          {
-            text: t['COMMON.EXIT1'],
-            handler: () => {
+  getDurationToLogout(endDate) {
+    const userInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+    if (userInfo) {
+      const userInfoObj = JSON.parse(userInfo);
+      const startDate = new Date(userInfoObj.LoginTime);
+      let difference = endDate.getTime() - startDate.getTime();
+      const dDays = this.apiProvider.twoDecimals(parseInt('' +difference/(24*60*60*1000)));
+      const dHours = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*60*1000)) % 24)) ;
+      const dMin = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*1000)) % 60));
+      const dSec = this.apiProvider.twoDecimals(parseInt('' +(difference/(1000)) % 60));
+      return dDays +' Day(s), '+dHours+' Hour(s), '+dMin+' Min(s), '+dSec+' Sec(s)';
+    }
 
-              this.toastCtrl1.create(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.ACK_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.LOGIN_TYPE, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFY_TIME, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.PREAPPOINTMENTAUTOAPPROVE, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.SIGN_PAD, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
-              this.navCtrl.navigateRoot('account-mapping')
-
-            }
-          },
-          {
-            text: t['COMMON.CANCEL'],
-            role: 'cancel',
-            handler: () => {
-            }
-          }
-        ]
-      });
-      loginConfirm.present();
-    });
   }
 
-
-
-  activateListenAckSettings(refresh, _currentClass : any){
-
-      if(_currentClass.timeoutIntervalSettings){
-       clearInterval(_currentClass.timeoutIntervalSettings);
-      }
-
-      var timeoutInterval = setInterval(function(){
-          if(_currentClass.isFetchingSettings){
-              console.log("Dont try..Setting is Fetching");
-          }else{
-            _currentClass.getAckSettings(_currentClass, false);
-          }
-      },_currentClass.SettingsSync_Interval);
-      _currentClass.timeoutIntervalSettings = timeoutInterval;
+  refreshLastLoggedIn() {
+   this.loggedInInterval = setInterval(() => {
+      const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+      this.getDuration(endDate);
+    }, 1000);
   }
 
-  getSecurityStats(_currentClass){
+  async getSecurityStats(){
     var params = {
-
     }
-    _currentClass.apiProvider.VimsAppGetSecurityStats(params).then(
-      (val) => {
-       console.log("val : "+JSON.stringify(val));
-       var data = JSON.parse(val);
-       _currentClass.TotalVisitorsIn = data.TotalVisitorsIn;
-       _currentClass.TotalVisitorsOut = data.TotalVisitorsOut;
-       _currentClass.VisitorsInside = data.VisitorsInside;
-       _currentClass.OverstayVisitor = data.OverstayVisitor;
+    this.apiProvider.VimsAppGetSecurityStats(params).then(
+      (data: any) => {
+       const result = JSON.parse(data);
+       this.statsCountData = result.Table1[0];
+       this.dataSets1.labels = [];
+       this.dataSets2.labels = [];
+       this.dataSets3.labels = [];
+       this.dataSets4.labels = [];
+       this.dataSets5.labels = [];
+       result.Table2 = result.Table2 ? result.Table2.reverse(): [];
+       if (result.Table2) {
+        const TenDaysAppointmentCount = [];
+        result.Table2.forEach(element => {
+          this.dataSets1.labels.push(this.datePipe.transform(element.Date, 'MMM dd'));
+          TenDaysAppointmentCount.push(element.TenDaysAppointmentCount);
+         });
+         this.dataSets1.datasets = [{
+          label: '',
+          data: TenDaysAppointmentCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1
+        }];
+        if (this.barChart1) {
+          this.barChart1.update();
+        }
+
+       }
+
+       if (result.Table3) {
+        const TenDaysCheckinCount = [];
+        result.Table3.forEach(element => {
+          this.dataSets2.labels.push(this.datePipe.transform(element.Date, 'MMM dd'));
+          TenDaysCheckinCount.push(element.TenDaysCheckinCount);
+         });
+         this.dataSets2.datasets = [{
+          label: 'Check-in count',
+          data: TenDaysCheckinCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1
+        }];
+        if (this.barChart2) {
+          this.barChart2.update();
+        }
+       }
+
+
+       if (result.Table4) {
+        const TenDaysCheckOutCount = [];
+        result.Table4.forEach(element => {
+          this.dataSets3.labels.push(this.datePipe.transform(element.Date, 'MMM dd'));
+          TenDaysCheckOutCount.push(element.TenDaysCheckOutCount);
+         });
+         this.dataSets3.datasets = [{
+          label: 'Check-out count',
+          data: TenDaysCheckOutCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1
+        }];
+        if (this.barChart3) {
+          this.barChart3.update();
+        }
+       }
+
+       if (result.Table5) {
+        const TenDaysOverStayTotalCount = [];
+        result.Table5.forEach(element => {
+          this.dataSets4.labels.push(this.datePipe.transform(element.Date, 'MMM dd'));
+          TenDaysOverStayTotalCount.push(element.TenDaysOverStayTotalCount);
+         });
+         this.dataSets4.datasets = [{
+          label: 'Overstay count',
+          data: TenDaysOverStayTotalCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1
+        }];
+        if (this.barChart4) {
+          this.barChart4.update();
+        }
+       }
+
+       if (result.Table6) {
+        const TenDaysUpcomingAppointmentTotalCount = [];
+        result.Table6.forEach(element => {
+          this.dataSets5.labels.push(element.VisitorCategory);
+          TenDaysUpcomingAppointmentTotalCount.push(element.AppointmentCount);
+         });
+         this.dataSets5.datasets = [{
+          label: 'Upcoming Appointment',
+          data: TenDaysUpcomingAppointmentTotalCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1,
+          keepTooltipOpen: true
+        }];
+        if (this.barChart5) {
+          this.barChart5.update();
+        }
+       }
+
       },
       (err) => {
-        console.log("error : "+JSON.stringify(err));
         if(err && err.message == "No Internet"){
           return;
         }
-
-
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-          var message  = _currentClass.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-          let alert = _currentClass.alertCtrl.create({
-            header: 'Error !',
-            message: message,
-            cssClass:'alert-danger',
-            buttons: ['Okay']
-            });
-            // alert.present();
-            return;
-        }
-        let invalidORGConfirm = _currentClass.alertCtrl.create({
-          header: 'Error !',
-          message: "<span class='failed'>" + _currentClass.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass:'alert-danger',
-          buttons: [
-            {
-              text: _currentClass.T_SVC['COMMON.OK'],
-              role: 'cancel',
-              handler: () => {
-              }
-            }
-          ]
-        });
-        // invalidORGConfirm.present();
       }
     );
   }
@@ -1252,10 +787,141 @@ export class SecurityDashBoardPagePage implements OnInit {
         }
       }
     };
-    this.router.navigate(['security-check-out-page'], navigationExtras);
+    switch (type) {
+      case '10':
+      case '20':
+      case '30':
+      case '40':
+      case '60':
+        this.router.navigate(['security-check-out-page'], navigationExtras);
+        break;
+      case '50':
+        this.router.navigate(['security-appointment-list'], navigationExtras);
+        break;
+      default:
+        break;
+    }
+
   }
 
   ngOnInit() {
+
+  }
+
+  displayChart(){
+    try {
+      const nativeElm = document.getElementById('barCanvas1');
+      this.barChart1 = new Chart(nativeElm, {
+        type: 'bar',
+        data: this.dataSets1,
+        options: {
+          legend: {
+            display: false
+         },
+          scales: {
+            // yAxes: [{
+            //   ticks: {
+            //     beginAtZero: true
+            //   }
+            // }]
+          }
+        }
+      });
+      const nativeElm2 = document.getElementById('barCanvas2');
+      this.barChart2 = new Chart(nativeElm2, {
+        type: 'bar',
+        data: this.dataSets2,
+        options: {
+          legend: {
+            display: false
+         },
+          scales: {
+            // yAxes: [{
+            //   ticks: {
+            //     beginAtZero: true
+            //   }
+            // }]
+          }
+        }
+      });
+      const nativeElm3 = document.getElementById('barCanvas3');
+      this.barChart3 = new Chart(nativeElm3, {
+        type: 'bar',
+        data: this.dataSets3,
+        options: {
+          legend: {
+            display: false
+         },
+          scales: {
+            // yAxes: [{
+            //   ticks: {
+            //     beginAtZero: true
+            //   }
+            // }]
+          }
+        }
+      });
+      const nativeElm4 = document.getElementById('barCanvas4');
+      this.barChart4 = new Chart(nativeElm4, {
+        type: 'bar',
+        data: this.dataSets4,
+        options: {
+          legend: {
+            display: false
+         },
+          scales: {
+            // yAxes: [{
+            //   ticks: {
+            //     beginAtZero: true
+            //   }
+            // }]
+          }
+        }
+      });
+
+      let options1 = {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels:{
+            usePointStyle: true,
+            fontSize: 8,
+            fontColor: '#333',
+        }
+       },
+       tooltips: {
+        enabled: true
+      },
+      plugins: {
+          datalabels: {
+              formatter: (value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                      sum += data;
+                  });
+                  let percentage = (value*100 / sum).toFixed(2)+"%";
+                  return percentage;
+              },
+              color: '#fff',
+          }
+      }
+
+      };
+
+
+      const nativeElm5 = document.getElementById('barCanvas5');
+      this.barChart5 = new Chart(nativeElm5, {
+        type: 'pie',
+        data: this.dataSets5,
+        options: options1
+      });
+    } catch (error) {
+
+    }
+  }
+
+  ngAfterViewInit(){
   }
 
 }

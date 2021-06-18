@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Camera } from '@ionic-native/camera/ngx';
-import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { NavController, AlertController, ActionSheetController, ToastController, Platform, LoadingController, IonContent, ModalController } from '@ionic/angular';
+import { NavController, AlertController, ActionSheetController, ToastController, Platform, IonContent, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { QuickPassVisitorPopupComponent } from 'src/app/components/quickpass-visitor-popup/quickpass-visitor-popup';
 import { VisitorInfoModal } from 'src/app/model/visitorInfoModal';
@@ -56,9 +55,7 @@ export class CreateQuickPassPage implements OnInit {
     public platform: Platform,
     public events: EventsService,
     private router: Router,
-    private route: ActivatedRoute,
-    private datePicker: DatePicker,
-    public loadingCtrl: LoadingController) {
+    private route: ActivatedRoute) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'ALERT_TEXT.QUICKPASS_CREATE_SUCCESS',
@@ -330,6 +327,11 @@ export class CreateQuickPassPage implements OnInit {
       cssClass: 'visitorPopupModal1'
     });
     presentModel.onWillDismiss().then((data) => {
+      this.events.publishDataCompany({
+        action: 'refreshQuickPass',
+        title: '',
+        message: ''
+      });
     });
     return await presentModel.present();
 
@@ -338,14 +340,6 @@ export class CreateQuickPassPage implements OnInit {
   isClassActive() {
     return this.active;
   }
-
-
-
-  ionViewWillEnter() {
-
-  }
-
-
 
   subscribeToIonScroll() {
     if (this.content && this.content['ionScroll']) {
