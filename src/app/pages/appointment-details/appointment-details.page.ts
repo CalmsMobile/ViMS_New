@@ -4,7 +4,7 @@ import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { WheelSelector } from '@ionic-native/wheel-selector/ngx';
-import { NavController, Platform, ToastController, ModalController, LoadingController, AlertController } from '@ionic/angular';
+import { NavController, Platform, ToastController, ModalController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CustomVisitorPopupComponent } from 'src/app/components/custom-visitor-popup/custom-visitor-popup';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
@@ -15,6 +15,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import * as CryptoJS from 'crypto-js';
 import { CommonUtil } from 'src/app/services/util/CommonUtil';
+import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
 @Component({
   selector: 'app-appointment-details',
   templateUrl: './appointment-details.page.html',
@@ -155,6 +156,9 @@ export class AppointmentDetailsPage implements OnInit {
     ShowExpiredSlot : true,
     AllowHostsToEndSession : true
   }
+  showQuestion = false;
+  showDocument = false;
+  showDelaration = false;
   FACILITYSLOTLIST = [];
   imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
   imageURLTypeHOST = '&RefType=HP&Refresh='+ new Date().getTime();
@@ -168,10 +172,9 @@ export class AppointmentDetailsPage implements OnInit {
     public modalCtrl: ModalController,
     private selector: WheelSelector,
     private androidPermissions: AndroidPermissions,
-    private loadingCtrl : LoadingController,
     private transfer: FileTransfer,
     private file: File,
-    private commonUtil: CommonUtil,
+    commonUtil: CommonUtil,
     private dateformat : DateFormatPipe,
     private socialSharing: SocialSharing,
     private translate : TranslateService,
@@ -217,6 +220,8 @@ export class AppointmentDetailsPage implements OnInit {
           if(fTime < cTime && eTime < cTime){
             this.isPastAppointment = true;
           }
+
+          this.getRefVisitorCateg(this.appointment[0].VisitorCategory);
         }
 
 
@@ -334,48 +339,25 @@ export class AppointmentDetailsPage implements OnInit {
         if(result.hasPermission){
           this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(
             async result =>{
-              let loading = this.loadingCtrl.create({
-                message: 'Please wait...'
-              });
-              (await loading).present();
+              this.apiProvider.presentLoading();
 
               console.log('Has permission?',result.hasPermission);
               fileTransfer.download(url, targetPath).then(async (entry) => {
-                (await loading).dismiss();
+                this.apiProvider.dismissLoading();
                 console.log('download complete: ' + entry.toURL());
                 var data = "Hi, I have shared the QR code for our appointment. Please use the QR code for your registration when you visit me."+
                 "\n"+" Thanks,"+"\n"+"["+hostName+"]";
                 this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(async () => {
-                  // Success!
-                  let toast = this.toastCtrl.create({
-                    message: this.T_SVC['ALERT_TEXT.QRSHARE_SUCCESS'],
-                    duration: 3000,
-                    color: 'primary',
-                    position: 'bottom'
-                  });
-                  (await toast).present();
                 }).catch(async (error) => {
                   // Error!
-                  (await loading).dismiss();
+                  this.apiProvider.dismissLoading();
                   console.log(""+error);
-                  let toast = this.toastCtrl.create({
-                    message: 'Error',
-                    duration: 3000,
-                    color: 'primary',
-                    position: 'bottom'
-                  });
-                  (await toast).present();
+                  this.apiProvider.showToast('Error');
                 });
               }, async (error) => {
                 // handle error
-                (await loading).dismiss();
-                console.log(""+error);
-                let toast = this.toastCtrl.create({
-                  message: 'Download Error',
-                  duration: 3000,
-                  position: 'bottom'
-                });
-                (await toast).present();
+                this.apiProvider.dismissLoading();
+                this.apiProvider.showToast('Download Error');
                 console.log("Download Error: "+ error);
               });
             } ,
@@ -776,6 +758,11 @@ export class AppointmentDetailsPage implements OnInit {
               }
               this.apiProvider.VimsAppDeleteFBFacilityBooking(params).then(
                 async (val) => {
+                  this.events.publishDataCompany({
+                    action: "delete",
+                    title: "AppointmentDetailsPage",
+                    message: ''
+                  });
                   var result = JSON.parse(JSON.stringify(val));
                   if(result){
                     var title  = '';
@@ -835,6 +822,11 @@ export class AppointmentDetailsPage implements OnInit {
                 async (val) => {
                   var result = JSON.parse(JSON.stringify(val));
                   if(result){
+                    this.events.publishDataCompany({
+                      action: "delete",
+                      title: "AppointmentDetailsPage",
+                      message: ''
+                    });
                     var title  = '';
                     if(this.facilityBooking && this.facilityBooking.length > 0){
                       title = this.facilityBooking[0].BookingID;
@@ -1386,6 +1378,111 @@ FBBookingEndSession(slot, PinNumber , StaffSeqId){
       }
     }
   );
+}
+
+getRefVisitorCateg(visitor_ctg_id) {
+  if (!visitor_ctg_id) {
+    return;
+  }
+  this.apiProvider.GetAddVisitorSettings({"RefVisitorCateg": visitor_ctg_id}).then(
+    (val) => {
+      var result = JSON.parse(JSON.stringify(val));
+      if(result){
+        if (result.Table.length > 0) {
+          if (result.Table[0].Code === 10 && result.Table1 && result.Table1[0]) {
+            const settingsDetails = JSON.parse(result.Table1[0].SettingDetail);
+            this.showQuestion = settingsDetails.QuestionnaireEnabled;
+            this.showDelaration = settingsDetails.MaterialDeclareEnabled;
+            this.showDocument = settingsDetails.AttachmentUploadEnabled;
+          }
+        }
+
+      }
+    },
+    (err) => {
+    }
+  );
+}
+
+async openCustomDialog(action, visitor) {
+  let api = '/api/Vims/GetVisitorQuestionariesByAppointmentId';
+  if (action === 'doc') {
+    api = '/api/Vims/GetVisitorDocsBySeqId';
+  } else if (action === 'declaration'){
+    api = '/api/vims/GetVisitorItemChecklistBySeqId';
+  }
+
+  var params = {
+    "SEQ_ID": visitor.VisitorBookingSeqId,
+    "STAFF_IC": visitor.STAFF_IC
+};
+// this.VM.host_search_id = "adam";
+this.apiProvider.requestApi(params, api, true, '', '').then(
+  async (val) => {
+    var result = JSON.parse(val.toString());
+    if (result.Table && result.Table.length > 0) {
+      const presentModel = await this.modalCtrl.create({
+        component: QuestionDocPopupComponent,
+        componentProps: {
+          data: {
+            seqId: visitor.VisitorBookingSeqId,
+            result: result.Table,
+            type: action
+          }
+        },
+        showBackdrop: true,
+        mode: 'ios',
+        cssClass: 'visitorPopupModal'
+      });
+      presentModel.onWillDismiss().then((data) => {
+      });
+      return await presentModel.present();
+
+    } else {
+      let msg = 'Visitor yet to submit the questionaries';
+      if (visitor.Approval_Status === 'Approved') {
+        msg = 'There is no questionaries for this Visitor';
+        if (action === 'doc') {
+          msg = 'There is no documents for this Visitor';
+        } else if (action === 'declaration'){
+          msg = 'There is no self declaration answers for this Visitor';
+        }
+      } else {
+        if (action === 'doc') {
+          msg = 'Visitor yet to submit the documents';
+        } else if (action === 'declaration'){
+          msg = 'Visitor yet to submit the  declaration';
+        }
+      }
+
+      this.apiProvider.showAlert(msg);
+    }
+    },
+  async (err) => {
+
+    if(err && err.message == "No Internet"){
+      return;
+    }
+    var message = "";
+    if (err.status) {
+      message = 'Api Not Found';
+    } else if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+      message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+    } else if(err && JSON.parse(err) && JSON.parse(err).message){
+      message =JSON.parse(err).message;
+    }
+    if(message){
+      // message = " Unknown"
+      let alert = this.alertCtrl.create({
+        header: 'Error !',
+        message: message,
+        cssClass:'alert-danger',
+        buttons: ['Okay']
+        });
+        (await alert).present();
+    }
+  }
+);
 }
 
   ngOnInit() {

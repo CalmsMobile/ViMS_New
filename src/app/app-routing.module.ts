@@ -80,10 +80,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/facility-upcoming/facility-upcoming.module').then( m => m.FacilityUpcomingPageModule)
   },
   {
-    path: 'intro-page',
-    loadChildren: () => import('./pages/intro-page/intro-page.module').then( m => m.IntroPagePageModule)
-  },
-  {
     path: 'manage-appointment',
     loadChildren: () => import('./pages/manage-appointment/manage-appointment.module').then( m => m.ManageAppointmentPageModule)
   },

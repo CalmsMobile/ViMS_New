@@ -8,7 +8,11 @@
   <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"
       style="font-size: x-large;color: #FFF;"></ion-icon>
-    <ion-title>{{'ALERT_TEXT.APPOINTMENT_DETAILS' | translate }}<br></ion-title>
+    <ion-title>{{fromAppointment ? ('ALERT_TEXT.APPOINTMENT_DETAILS' | translate): ('ALERT_TEXT.CHECK_IN_DETAILS' | translate) }}<br></ion-title>
+
+    <div slot="end" color="transparent" style="padding: 8px;" *ngIf="appSettings.customStyle && validQRCode" [ngStyle]="{'font-size': appSettings.customStyle.buttonStyle.btnTextSize + 'px', 'border-radius': appSettings.customStyle.buttonStyle.btnBorderRadius + 'px', 'color': appSettings.customStyle.buttonStyle.btnTextColor, 'background': 'linear-gradient(to right, ' + this.appSettings.customStyle.buttonStyle.btnColor1
+    +' 0%,'+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%)'}" expand="block" (click)="checkInOutProcess()">{{((this.appointmentInfo.att_check_in === null || this.appointmentInfo.att_check_in === 0) || (this.appointmentInfo.att_check_in === 1 && this.appointmentInfo.att_check_out === 1))? 'Check-In': 'Check-Out'}}
+  </div>
   </ion-toolbar>
 </ion-header>
 
@@ -26,7 +30,7 @@
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" class="bDets">
-                    <ion-icon name="id-card-outline" class="bDets"></ion-icon>{{appointmentInfo.visitor_id? appointmentInfo.visitor_id: (appointmentInfo.VISITOR_IC? appointmentInfo.VISITOR_IC: '&nbsp;&nbsp;--')}}
+                    <ion-icon name="id-card-outline" class="bDets"></ion-icon>{{appointmentInfo.visitor_id? '***': (appointmentInfo.VISITOR_IC? '***': '&nbsp;&nbsp;--')}}
                   </ion-col>
                 </ion-row>
                 <ion-row>
@@ -42,7 +46,9 @@
               </ion-grid>
           </ion-col>
           <ion-col size="3" style="display: flex;justify-content: center;align-items: center;">
-            <img src="{{appointmentInfo.SEQ_ID ? visitorImagePath + appointmentInfo.att_visitor_id + imageURLType: '../../../assets/images/user.png'}}" style="width: 50px;height: 50px; display: flex;justify-content: center; border-radius: 50%;">
+            <img src="{{appointmentInfo.visitor_photo? ('data:image/jpeg;base64,' + appointmentInfo.visitor_photo) : appointmentInfo.SEQ_ID ? visitorImagePath + appointmentInfo.SEQ_ID + imageURLType: '../../../assets/images/user.png'}}"
+            (click)="viewImage(appointmentInfo.visitor_photo? ('data:image/jpeg;base64,' + appointmentInfo.visitor_photo) : appointmentInfo.SEQ_ID ? visitorImagePath + appointmentInfo.SEQ_ID + imageURLType: '../../../assets/images/user.png')"
+            style="width: 60px;height: 60px; display: flex;justify-content: center; border-radius: 50%;object-fit: cover;">
           </ion-col>
         </ion-row>
       </ion-card>
@@ -50,7 +56,7 @@
     <div class="section">
       <div class="visitorInfo">
         <ion-item>
-          <ion-label>Visitor Additional Information</ion-label>
+          <ion-label>Visitor Information</ion-label>
         </ion-item>
         <ion-grid style="font-size: 15px;">
           <ion-row>
@@ -65,13 +71,15 @@
             <ion-col size="3">
               <ion-text>Category</ion-text>
             </ion-col>
-            <ion-col size="3">
+            <ion-col size="9">
               <ion-text  class="ansColor">: {{appointmentInfo.visitor_ctg_desc?appointmentInfo.visitor_ctg_desc: (appointmentInfo.VisitorCategory ? appointmentInfo.VisitorCategory: "&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
-            <ion-col size="3" class="ion-text-right">
+          </ion-row>
+          <ion-row>
+            <ion-col size="3">
               <ion-text >Gender</ion-text>
             </ion-col>
-            <ion-col size="3">
+            <ion-col size="9">
               <ion-text class="ansColor">: {{appointmentInfo.visitor_gender?appointmentInfo.visitor_gender: (appointmentInfo.VISITOR_GENDER_NAME? appointmentInfo.VISITOR_GENDER_NAME : "&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
@@ -85,7 +93,7 @@
           </ion-row>
           <ion-row>
             <ion-col size="3">
-              <ion-text>Vehicle No</ion-text>
+              <ion-text>Vehicle #</ion-text>
             </ion-col>
             <ion-col size="9">
               <ion-text class="ansColor">: {{appointmentInfo.PLATE_NUM?appointmentInfo.PLATE_NUM: "&nbsp;&nbsp;--"}}</ion-text>
@@ -105,99 +113,122 @@
     <div class="section">
       <div class="appointmentInfo">
         <ion-item>
-          <ion-label>Appointment Information</ion-label>
+          <ion-label>{{fromAppointment? 'Appointment Information' : 'Additional Information'}}</ion-label>
         </ion-item>
         <ion-grid style="font-size: 15px;">
-          <ion-row>
-            <ion-col size="3">
-              <ion-text>Start Date</ion-text>
+          <ion-row *ngIf="fromAppointment">
+            <ion-col size="5">
+              <ion-text>Start Time</ion-text>
             </ion-col>
-            <ion-col size="3">
-              <ion-text class="ansColor">: {{(appointmentInfo.att_check_in_time ?appointmentInfo.att_check_in_time: appointmentInfo.START_TIME) | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
+            <ion-col size="7">
+              <ion-text class="ansColor">: {{appointmentInfo.START_TIME ? (appointmentInfo.START_TIME | date : 'dd MMM yyyy hh:mm a'): '&nbsp;&nbsp;--'}}</ion-text>
             </ion-col>
-            <ion-col size="3" class="ion-text-right">
-              <ion-text>End Date</ion-text>
+          </ion-row>
+          <ion-row *ngIf="fromAppointment">
+            <ion-col size="5">
+              <ion-text>End Time</ion-text>
             </ion-col>
-            <ion-col size="3">
-              <ion-text class="ansColor">: {{(appointmentInfo.att_check_out_time ?appointmentInfo.att_check_out_time: appointmentInfo.END_TIME)  | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
+            <ion-col size="7">
+              <ion-text class="ansColor">: {{appointmentInfo.END_TIME ? (appointmentInfo.END_TIME | date : 'dd MMM yyyy hh:mm a'): '&nbsp;&nbsp;--'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="3">
-              <ion-text>Purpose</ion-text>
+            <ion-col size="5">
+              <ion-text >Check-In Time</ion-text>
             </ion-col>
-            <ion-col size="9">
-              <ion-text class="ansColor">: {{appointmentInfo.att_reason?appointmentInfo.att_reason: (appointmentInfo.REASON_NAME? appointmentInfo.REASON_NAME:"&nbsp;&nbsp;--")}}</ion-text>
+            <ion-col size="7">
+              <ion-text class="ansColor">: {{appointmentInfo.att_check_in_time ? (appointmentInfo.att_check_in_time  | date : 'dd MMM yyyy hh:mm a'): '&nbsp;&nbsp;--'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="3">
+            <ion-col size="5">
+              <ion-text>Check-Out Time</ion-text>
+            </ion-col>
+            <ion-col size="7">
+              <ion-text class="ansColor">: {{appointmentInfo.att_check_out_time ? (appointmentInfo.att_check_out_time  | date : 'dd MMM yyyy hh:mm a'): '&nbsp;&nbsp;--'}}</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="5">
               <ion-text>Host Name</ion-text>
             </ion-col>
-            <ion-col size="9">
+            <ion-col size="7">
               <ion-text class="ansColor">: {{appointmentInfo.HostName?appointmentInfo.HostName: (appointmentInfo.STAFF_NAME?appointmentInfo.STAFF_NAME:"&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="3">
+            <ion-col size="5">
+              <ion-text>Purpose</ion-text>
+            </ion-col>
+            <ion-col size="7">
+              <ion-text class="ansColor">: {{appointmentInfo.att_reason?appointmentInfo.att_reason: (appointmentInfo.REASON_NAME? appointmentInfo.REASON_NAME:"&nbsp;&nbsp;--")}}</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="5">
               <ion-text>Check-In Status</ion-text>
             </ion-col>
-            <ion-col size="9">
+            <ion-col size="7">
               <ion-text class="ansColor">: {{this.appointmentInfo.att_check_in === 1? 'Checked-In': 'Yet to Check-In'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="3">
+            <ion-col size="5">
               <ion-text>Check-Out Status</ion-text>
             </ion-col>
-            <ion-col size="9">
+            <ion-col size="7">
               <ion-text class="ansColor">: {{this.appointmentInfo.att_check_out === 1? 'Checked-Out': 'Yet to Check-Out'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="3">
+            <ion-col size="5">
               <ion-text>Expiry Time</ion-text>
             </ion-col>
-            <ion-col size="9">
-              <ion-text class="ansColor">: {{(appointmentInfo.WorkPermitExpiry? appointmentInfo.WorkPermitExpiry : appointmentInfo.END_TIME) | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
+            <ion-col size="7">
+              <ion-text class="ansColor" [ngStyle]="{'color': appointmentInfo.isExpired? '#f44336': '#000000'}">: {{(appointmentInfo.WorkPermitExpiry? appointmentInfo.WorkPermitExpiry : appointmentInfo.END_TIME) | date : 'dd MMM yyyy hh:mm a'}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="3">
+            <ion-col size="5">
+              <ion-text>Overstay Time</ion-text>
+            </ion-col>
+            <ion-col size="7">
+              <ion-text class="ansColor" [ngStyle]="{'color': appointmentInfo.isExpired? '#f44336': '#000000'}">: {{appointmentInfo.overStayTime?appointmentInfo.overStayTime: '&nbsp;&nbsp;--'}}</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="5">
               <ion-text>Floor</ion-text>
             </ion-col>
-            <ion-col size="9">
+            <ion-col size="7">
               <ion-text class="ansColor">: {{appointmentInfo.att_floor_no?appointmentInfo.att_floor_no: (appointmentInfo.Floor?appointmentInfo.FloorName:"&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="3">
+            <ion-col size="5">
               <ion-text>Meeting Location</ion-text>
             </ion-col>
-            <ion-col size="9">
+            <ion-col size="7">
               <ion-text class="ansColor">: {{appointmentInfo.RoomName?appointmentInfo.RoomName: "&nbsp;&nbsp;--"}}</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="3">
+            <ion-col size="5">
               <ion-text>Remarks</ion-text>
             </ion-col>
-            <ion-col size="9">
+            <ion-col size="7">
               <ion-text class="ansColor">: {{appointmentInfo.Remarks?appointmentInfo.Remarks: (appointmentInfo.att_remark? appointmentInfo.att_remark:"&nbsp;&nbsp;--")}}</ion-text>
             </ion-col>
           </ion-row>
         </ion-grid>
       </div>
     </div>
-    <div class="section" >
+    <div class="section" *ngIf="fromAppointment && appSettings.addVisitor.ApptDeclarationEnabled && (QuestionnaireEnabled || AttachmentUploadEnabled || MaterialDeclareEnabled)" >
       <div class="additional">
         <ion-item>
-          <ion-label>Additional Information</ion-label>
+          <ion-label>{{appSettings.addVisitor.ApptDeclarationLabel}}</ion-label>
         </ion-item>
         <ion-grid>
-          <ion-row *ngIf="!AttachmentUploadEnabled && !MaterialDeclareEnabled && !QuestionnaireEnabled">
-            <ion-label style="    width: -webkit-fill-available;text-align: center;margin: 20px;">No documents enabled</ion-label>
-          </ion-row>
           <ion-row *ngIf="AttachmentUploadEnabled">
             <ion-col size="12">
               <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
@@ -234,6 +265,53 @@
               </ion-card>
             </ion-col>
           </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+    <div class="section" *ngIf="appointmentInfo.visitorIDImage || (appointmentInfo.additionalDocList &&  appointmentInfo.additionalDocList.length > 0)" >
+      <div class="additional">
+        <ion-item>
+          <ion-label>Other Documents</ion-label>
+        </ion-item>
+        <ion-grid>
+          <ion-row *ngIf="appointmentInfo.visitorIDImage">
+            <ion-col size="12">
+              <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+              padding-left: 0px;">
+                <ion-item lines="none">
+                  <ion-icon color="primary" slot="start" style="font-size: 22px;" name="camera-outline"></ion-icon>
+                  <ion-label>ID Image</ion-label>
+                  <ion-buttons slot="end">
+                    <img src="{{'data:image/jpeg;base64,' + appointmentInfo.visitorIDImage}}" style="width: 65px;height: 65px; padding: 6px;display: flex;justify-content: center; border-radius: 50%;
+                    object-fit: cover;" (click)="viewImage('data:image/jpeg;base64,' + appointmentInfo.visitorIDImage)">
+                  </ion-buttons>
+                </ion-item>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="appointmentInfo.additionalDocList &&  appointmentInfo.additionalDocList.length > 0">
+            <ion-col size="12">
+              <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+              padding-left: 0px;" (click)="documentModal()">
+                <ion-item lines="none">
+                  <div slot="start">
+                    <ion-icon color="primary" style="    font-size: 22px;" name="document-attach-outline"></ion-icon>
+                  <div class="insideBadge">
+                    <ion-badge style="background: var(--ion-color-primary);
+                    color: white;
+                    width: 22px;
+                    height: 22px;
+                    padding: 5px !important;">{{appointmentInfo.additionalDocList? appointmentInfo.additionalDocList.length: '0'}}</ion-badge>
+                  </div>
+                  </div>
+                  <ion-label>Additional Document</ion-label>
+                  <ion-icon name="chevron-forward-outline"></ion-icon>
+                </ion-item>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+
         </ion-grid>
       </div>
     </div>

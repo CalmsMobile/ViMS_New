@@ -235,6 +235,7 @@ $active-body-width: 70;
   overflow: hidden;
   ion-content {
     background: transparent;
+    --background: transparent;
   }
   [active-room-body] {
     padding-bottom: ($custom-footer-font-xla + 2 + 4) + vh;
@@ -264,11 +265,13 @@ $active-body-width: 70;
     // margin-top: 3vh;
   }
   &[status-type="avail"] {
+    background: red;
     [stopbutton] {
       display: none;
     }
   }
   &[status-type="engaged"] {
+    background: red;
     [stopbutton] {
       display: block;
     }
@@ -280,6 +283,7 @@ $active-body-width: 70;
   background: transparent;
   ion-content {
     background: transparent;
+    --background: transparent;
   }
   ion-list {
     padding-bottom: 18vh;

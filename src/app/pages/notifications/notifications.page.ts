@@ -186,8 +186,12 @@ export class NotificationsPage implements OnInit {
 	}
 
   ionViewDidEnter() {
+    this.events.publishDataCompany({
+      action: "page",
+      title: "notifications",
+      message: ''
+    });
 		window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "0");
-
 	}
 
 	filterTechnologies(event) : void
@@ -522,14 +526,6 @@ export class NotificationsPage implements OnInit {
       }
     };
     this.router.navigate(['notiification-view'], navigationExtras);
-	}
-
-	ionViewWillEnter(){
-		this.events.publishDataCompany({
-      action: "page",
-      title: "notifications",
-      message: ''
-    });
 	}
 
 	ionViewWillLeave(){

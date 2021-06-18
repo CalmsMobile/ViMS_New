@@ -2,6 +2,7 @@
 
 import {Injectable} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
+import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { AppSettings } from '../app-settings';
 
 @Injectable()
@@ -26,14 +27,14 @@ export class CommonUtil{
 
   getRoomName(code, isReturnID) {
     let result = code;
-    if (code === null || code === '') {
+    if (code === undefined || code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
     if(masterDetails){
       const ROOMS = JSON.parse(masterDetails).Table8;
       for (var i = 0; i <= ROOMS.length - 1; i++) {
-        if(ROOMS[i].MeetingRoomSeqId === code || ROOMS[i].MeetingRoomDesc === code){
+        if((ROOMS[i].MeetingRoomSeqId + '') === (code+'') || (ROOMS[i].MeetingRoomDesc + '') === (code+'')){
           if (isReturnID) {
             result = ROOMS[i].MeetingRoomSeqId;
           } else {
@@ -48,14 +49,14 @@ export class CommonUtil{
 
   getPurposeName(code, isReturnID) {
     let result = code;
-    if (code === null || code === '') {
+    if (code === undefined || code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
     if(masterDetails){
       const REASONS = JSON.parse(masterDetails).Table3;
       for (var i = 0; i <= REASONS.length - 1; i++) {
-        if(REASONS[i].visitpurpose_id === code || REASONS[i].visitpurpose_desc === code){
+        if((REASONS[i].visitpurpose_id + '') === (code+'') || (REASONS[i].visitpurpose_desc + '') === (code+'')){
           if (isReturnID) {
             result = REASONS[i].visitpurpose_id;
           } else {
@@ -71,7 +72,7 @@ export class CommonUtil{
 
   getCategory(code, isReturnID) {
     let result = code;
-    if (code === null || code === '') {
+    if (code === undefined || code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
@@ -94,7 +95,7 @@ export class CommonUtil{
 
   getFloor(code, isReturnID) {
     let result = code;
-    if (code === null || code === '') {
+    if (code === undefined || code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
@@ -117,7 +118,7 @@ export class CommonUtil{
 
   getGender(code, isReturnID) {
     let result = code;
-    if (code === null || code === '') {
+    if (code === undefined || code === null || code === '') {
       return '';
     }
     if (code === "Male" || code === "MALE" || code === "0" || code === 0) {
@@ -132,7 +133,7 @@ export class CommonUtil{
 
   getPurposeCode(code, isReturnID) {
     let result = code;
-    if (code === null || code === '') {
+    if (code === undefined || code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
@@ -169,7 +170,7 @@ export class CommonUtil{
 
   getCompany(code, isReturnID) {
     let result = code;
-    if (code === null || code === '') {
+    if (code === undefined || code === null || code === '') {
       return '';
     }
     var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
@@ -183,5 +184,29 @@ export class CommonUtil{
       }
     }
     return result;
+  }
+
+  checkQRCode(START_DATE, END_DATE, dateformat: DateFormatPipe) {
+    var startDate = START_DATE.split("T")[0];
+    var fDate = dateformat.transform(startDate+"", "yyyy-MM-dd");
+    var fTime = new Date(fDate).getTime();
+    var endDate = END_DATE.split("T")[0];
+    var eDate = dateformat.transform(endDate+"", "yyyy-MM-dd");
+    var eTime = new Date(eDate).getTime();
+    var cDate = dateformat.transform(new Date()+"", "yyyy-MM-dd");
+    var cTime = new Date(cDate).getTime();
+    const resultObj = {
+      isExpired: false,
+      isInValid: false
+    }
+    if(fTime < cTime && eTime < cTime){
+      resultObj.isExpired = true;
+    }
+    if((fDate == cDate) || (fTime <= cTime && cTime <= eTime)){
+      resultObj.isInValid = false;
+    } else {
+      resultObj.isInValid = true;
+    }
+    return resultObj;
   }
 }

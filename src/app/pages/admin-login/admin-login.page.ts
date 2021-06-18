@@ -45,20 +45,12 @@ export class AdminLoginPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter AdminLoginPage');
-    var encrypted = CryptoJS.AES.encrypt("admin", "A6G7YEQRE");
-
-    console.log(encrypted.toString());
-  }
-
-  ionViewWillEnter() {
     this.events.publishDataCompany({
       action: "page",
       title: "Admin",
       message: ''
     });
-		console.log('ionViewWillEnter AdminLoginPage');
     this.showNotificationCount();
-
   }
 
   showNotificationCount(){

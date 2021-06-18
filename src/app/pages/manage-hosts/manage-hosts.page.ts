@@ -90,12 +90,6 @@ export class ManageHostsPage implements OnInit {
 
   }
 
-  ionViewDidEnter() {
-
-  }
-  ionViewWillEnter() {
-  }
-
   addVisitors(){
     var visitorTemp = [];
     for(let contacts in this.VM.visitors){

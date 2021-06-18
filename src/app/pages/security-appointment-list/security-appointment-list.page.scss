@@ -148,6 +148,7 @@ ion-icon {
   display: grid;
   justify-content: end;
   padding-bottom: 0px;
+  align-items: center;
 }
 .card_appointment {
   margin: 5px;
@@ -285,8 +286,8 @@ ion-icon {
 
 .statuswithBadge {
   position: relative;
-  margin-top: 15px;
-  margin-left: 20px;
+  margin-top: -20px;
+  margin-left: 24px;
 }
 
 .insideBadge {

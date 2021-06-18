@@ -4,8 +4,9 @@
 }
 
 .headerIcon {
-  font-size: 26px;
+  font-size: 36px !important;
   vertical-align: bottom;
+  margin: 0px !important;
 }
 
 .main {
@@ -13,13 +14,24 @@
   background-color: #f4f6fc;
 }
 
+.classCamIcon {
+  background: var(--ion-color-primary);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  color: white;
+  margin-top: -15px;
+}
+
 .bDets {
   align-items: center;
   vertical-align: middle;
+  padding: 2px;
 }
 
 .section {
-  padding: 1.5vh;
+  padding: 0.5vh;
 }
 
 .visitorInfo {
@@ -35,8 +47,16 @@
   background-color: white;
 }
 
-.section ion-row {
-  padding-top: 1vh;
+.insideBadge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-left: 38px;
+  border-radius: 50%;
+}
+
+.classCol {
+  padding: 2px;
 }
 
 input {
@@ -83,4 +103,7 @@ ion-datetime {
 
 .btn-grad {
   margin: 15px;
+}
+.errorLabel {
+  margin-left: 20px;
 }

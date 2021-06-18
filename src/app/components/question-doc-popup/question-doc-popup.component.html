@@ -7,12 +7,14 @@
 <ion-content class="ion-padding">
 
   <div *ngIf="type === 'question'">
-    <ion-label class="boldClass" color="primary" >Following questions are self declared by this Visitor</ion-label>
+    <ion-label class="boldClass" style="    text-align: center;    display: block;" color="primary" >Following questions are self declared by this Visitor</ion-label>
     <div *ngFor="let ques of result">
-      <ion-card mode="ios" style="padding: 5px; margin-top: 5px !important" no-margin >
+      <ion-card mode="ios" style="padding: 12px;
+      margin-top: 5px !important;
+      text-align: center;" no-margin >
         <div>
           <ion-label style="font-size: 14px;">{{ques.Description}}</ion-label>
-          <ion-radio-group value="{{ques.Answer}}" style="    display: flex;">
+          <ion-radio-group value="{{ques.Answer}}" style="display: inline-flex;">
             <ion-item lines="none">
               <ion-label>Yes</ion-label>
               <ion-radio [disabled]="ques.Answer === 0 || ques.Answer === '0'" mode="ios" slot="end" value="1"></ion-radio>
@@ -40,7 +42,9 @@
   </div>
   <div *ngIf="type === 'declaration'">
     <div>
-      <ion-label class="boldClass" color="primary">Visitor Declared Items</ion-label>
+      <ion-label class="boldClass" style="display: block;
+      text-align: center;
+      margin-bottom: 10px;" color="primary">Visitor Declared Items</ion-label>
       <ion-card mode="ios" style="padding: 7px; margin: 3px;">
         <ion-item lines="none" *ngFor="let declaration of result">
           <ion-icon slot="start" name="checkmark-done-outline" style="font-size: 24px;"></ion-icon>

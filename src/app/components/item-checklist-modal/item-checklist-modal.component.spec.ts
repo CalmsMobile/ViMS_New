@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { IntroPagePage } from './intro-page.page';
+import { ItemChecklistModalComponent } from './item-checklist-modal.component';
 
-describe('IntroPagePage', () => {
-  let component: IntroPagePage;
-  let fixture: ComponentFixture<IntroPagePage>;
+describe('ItemChecklistModalComponent', () => {
+  let component: ItemChecklistModalComponent;
+  let fixture: ComponentFixture<ItemChecklistModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ IntroPagePage ],
+      declarations: [ ItemChecklistModalComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(IntroPagePage);
+    fixture = TestBed.createComponent(ItemChecklistModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

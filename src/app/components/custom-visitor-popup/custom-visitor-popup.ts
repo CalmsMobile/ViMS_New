@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastController, Platform, LoadingController, ModalController, NavParams, AlertController } from '@ionic/angular';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { DatePipe } from '@angular/common';
+import { CommonUtil } from 'src/app/services/util/CommonUtil';
 
 /**
  * Generated class for the CustomVisitorPopupComponent component.
@@ -45,6 +46,7 @@ export class CustomVisitorPopupComponent{
     public toastCtrl: ToastController,
     private apiProvider: RestProvider,
     private datePipe: DatePipe,
+    private commonUtil: CommonUtil,
     private androidPermissions : AndroidPermissions,
     private alertCtrl: AlertController,
     private loadingCtrl : LoadingController,
@@ -57,9 +59,9 @@ export class CustomVisitorPopupComponent{
       this.aptgid = navParams.data.data.aptgid;
       this.cid = navParams.data.data.cid;
       var HexCode = navParams.data.data.HexCode;
-
       this.userImgPath = this.data.logo + this.visitor.VisitorBookingSeqId + this.visitorType + new Date().getTime();
 
+      this.visitor.VisitorCategory = commonUtil.getCategory(this.visitor.VisitorCategory, false);
 
       // var qrJsonString1 = "{\"aptid\":\""+this.aptid+ "\",\"aptgid\":\"" + this.aptgid + "\",\"cid\":\"" + this.cid + "\"}";
       this.qrJsonString1 = HexCode;
@@ -161,13 +163,6 @@ export class CustomVisitorPopupComponent{
               fileTransfer.download(url, targetPath).then((entry) => {
                 loading.dismiss();
                 this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(() => {
-                  // Success!
-                  // let toast = this.toastCtrl.create({
-                  //   message: this.T_SVC['ALERT_TEXT.QRSHARE_SUCCESS'],
-                  //   duration: 3000,
-                  //   position: 'bottom'
-                  // });
-                  // toast.present();
                 }).catch(async (error) => {
                   // Error!
                   loading.dismiss();

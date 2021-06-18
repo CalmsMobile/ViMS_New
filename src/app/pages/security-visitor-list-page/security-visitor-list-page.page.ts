@@ -3,9 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-import { BarcodeScannerOptions, BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
-import { NavController, Platform, AlertController, LoadingController, ToastController, IonItemSliding } from '@ionic/angular';
+import { NavController, AlertController, ToastController, IonItemSliding } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -38,20 +37,16 @@ export class SecurityVisitorListPagePage implements OnInit {
   addDocs : any = [];
   loading : any;
   T_SVC:any;
-  options :BarcodeScannerOptions;
 
   constructor(public navCtrl: NavController,
-    private platform : Platform,
     private apiProvider : RestProvider,
-    private barcodeScanner: BarcodeScanner,
     private alertCtrl : AlertController,
-    private loadingCtrl : LoadingController,
     private toastCtrl : ToastController,
     private androidPermissions: AndroidPermissions,
     private camera: Camera,
     private route: ActivatedRoute,
     private router: Router,
-    private events : EventsService,
+    events : EventsService,
     private translate : TranslateService,
     public sanitizer: DomSanitizer) {
     this.translate.get([
@@ -141,10 +136,7 @@ export class SecurityVisitorListPagePage implements OnInit {
       if(result.hasPermission){
         this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(
           result =>{
-            currClass.loading = currClass.loadingCtrl.create({
-              message: 'Please wait...'
-            });
-            currClass.loading.present();
+            currClass.apiProvider.presentLoading();
             currClass.takePicture(currClass.camera.PictureSourceType.CAMERA);
           } ,
           err => {

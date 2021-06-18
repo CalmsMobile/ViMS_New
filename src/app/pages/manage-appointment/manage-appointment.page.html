@@ -65,15 +65,16 @@
                   </div>
                   <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
                 </div>
-                <div (click)="openTooltip($event, event.value.value[0].Approval_Status)">
-                  <div [ngClass]="{'outer-circle':event.value.value[0].Approval_Status=='Pending','outer-circle2':event.value.value[0].Approval_Status=='Canceled','outer-circle1':event.value.value[0].Approval_Status=='Approved'}">
-                    <div [ngClass]="{'inner-circle':event.value.value[0].Approval_Status=='Pending','inner-circle2':event.value.value[0].Approval_Status=='Canceled','inner-circle1':event.value.value[0].Approval_Status=='Approved'}">
+                <div class="" (click)="openTooltip($event, getAppointmentStatus(event.value.value))">
+                  <div [ngClass]="{'outer-circle': getAppointmentStatus(event.value.value) === 'Pending','outer-circle2':getAppointmentStatus(event.value.value) === 'Canceled','outer-circle1': getAppointmentStatus(event.value.value) === 'Approved'}">
+                    <div [ngClass]="{'inner-circle':getAppointmentStatus(event.value.value) === 'Pending','inner-circle2':getAppointmentStatus(event.value.value)=== 'Canceled','inner-circle1': getAppointmentStatus(event.value.value) === 'Approved'}">
                       <span id="inside-content">
-                        {{event.value.value[0].Approval_Status.charAt(0)}}
+                        {{getAppointmentStatus(event.value.value).charAt(0)}}
                       </span>
                     </div>
                   </div>
                 </div>
+
               </ion-col>
             </ion-row>
           </ion-item>

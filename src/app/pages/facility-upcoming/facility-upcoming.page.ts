@@ -35,17 +35,13 @@ export class FacilityUpcomingPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter FacilityBookingHistoryPage');
-
-  }
-
-  ionViewWillEnter() {
-    console.log('ionViewWillEnter FacilityBookingHistoryPage');
     this.OffSet = 0;
     this.getAppointmentHistory(null);
     var count = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT);
     if(count){
       this.notificationCount = parseInt(count);
     }
+
   }
 
   getDayofDate(dateString){

@@ -51,17 +51,13 @@ export class QuickPassDashBoardPagePage implements OnInit {
     this.events.observeDataCompany().subscribe((data1: any) => {
       // "refreshQuickPass", data=>{
         if (data1.action === 'refreshQuickPass') {
-          this.ionViewWillEnter();
+          this.ionViewDidEnter();
         }
     });
   }
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter quick-pass-dash-board-page');
-
-  }
-
-  ionViewWillEnter(){
     this.events.publishDataCompany({
       action: "page",
       title: "quick-pass-dash-board-page",

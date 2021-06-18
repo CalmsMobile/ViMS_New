@@ -60,6 +60,11 @@
         </ion-item-sliding>
       </ion-item-group>
     </ion-list>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles"
+        loadingText="{{ 'COMMON.LOADER_MSG.LOADING_MORE_DATA' | translate }}">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </ion-content>
 
 <ion-footer >

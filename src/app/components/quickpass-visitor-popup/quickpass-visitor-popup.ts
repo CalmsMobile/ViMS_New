@@ -323,13 +323,6 @@ export class QuickPassVisitorPopupComponent {
                   fileTransfer.download(url, targetPath).then((entry) => {
                     loading.dismiss();
                     this.socialSharing.share(data, 'Your appointment QR code', targetPath, "").then(() => {
-                      // Success!
-                      // let toast = this.toastCtrl.create({
-                      //   message: this.T_SVC['ALERT_TEXT.QRSHARE_SUCCESS'],
-                      //   duration: 3000,
-                      //   position: 'bottom'
-                      // });
-                      // toast.present();
                     }).catch(async (error) => {
                       // Error!
                       loading.dismiss();

@@ -25,6 +25,7 @@ export class LoginPage implements OnInit {
   }
   T_SVC:any;
   scannedJson: any;
+  isFromLogin = false;
   constructor(private translate:TranslateService,
     private alertCtrl: AlertController,
     private apiProvider : RestProvider,
@@ -53,14 +54,23 @@ export class LoginPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         const passData = this.router.getCurrentNavigation().extras.state.passData;
-        console.log('passData : ' + JSON.stringify(passData.QR_DETAIL));
-        this.scannedJson = passData.QR_DETAIL;
+        console.log('passData : ' + passData.isFromLogin);
+        this.isFromLogin = passData.isFromLogin;
       }
     });
+   const qrInfo =  localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+   if (qrInfo) {
+    this.scannedJson = JSON.parse(qrInfo)
+   }
   }
 
   goBack() {
-    this.navCtrl.navigateBack("account-mapping");
+    if (this.isFromLogin) {
+      this.navCtrl.navigateBack("account-mapping");
+    } else {
+      localStorage.clear();
+      this.navCtrl.navigateRoot("account-mapping");
+    }
   }
 
   securityUserLogin(){
@@ -75,9 +85,7 @@ export class LoginPage implements OnInit {
     }
 
     var token = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.FCM_ID);
-    if(this.platform.is('cordova')) {
-      token = "";
-    }else if(!token){
+    if(!token){
       token = "crINLpP4e9s:APA91bFQ7slN5VncMGZTdJJ49N3h1rZC0zYwpcv78xzO-sXG-NFTouko6v-yvnut9tkMm-YX5I0kAUlwCRaE7j5cJGYVeSgQy5UOj9TICLahItYkX70O0LwZpMTF5kD17iX2vLAiwl3g";
     }
     var MAppSeqId = this.scannedJson.MAppDevSeqId;

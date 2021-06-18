@@ -47,17 +47,14 @@ export class NotiificationViewPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter NotiificationViewPage');
-    this.UpdateReadNotificationStatus();
-
-  }
-
-  ionViewWillEnter(){
-		this.events.publishDataCompany({
+    this.events.publishDataCompany({
       action:"page",
       title:  "notifications",
       message: ''
     });
-	}
+    this.UpdateReadNotificationStatus();
+
+  }
 
   UpdateReadNotificationStatus(){
 

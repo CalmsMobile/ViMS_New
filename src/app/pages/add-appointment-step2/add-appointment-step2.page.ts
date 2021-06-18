@@ -806,10 +806,6 @@ export class AddAppointmentStep2Page implements OnInit {
     );
   }
 
-  ionViewWillEnter(){
-    // this.content.scrollToTop();
-  }
-
   ngOnInit() {
   }
 

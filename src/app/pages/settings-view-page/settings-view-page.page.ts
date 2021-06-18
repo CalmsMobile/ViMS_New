@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { NavController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -39,6 +40,7 @@ export class SettingsViewPagePage implements OnInit {
      private events : EventsService,
      private datePipe: DatePipe,
      private router: Router,
+     private statusBar: StatusBar,
      private themeSwitcher: ThemeSwitcherService,
      private translate:TranslateService) {
 
@@ -61,6 +63,12 @@ export class SettingsViewPagePage implements OnInit {
       if(hostData){
         this.hostInfo = JSON.parse(hostData);
         this.name = this.hostInfo.HOSTNAME;
+      }
+
+      const userInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+      if (userInfo) {
+        const userInfoObj = JSON.parse(userInfo);
+        this.name = userInfoObj.Name;
       }
 
       this.languageSelect = {
@@ -95,16 +103,12 @@ export class SettingsViewPagePage implements OnInit {
   }
 
   ionViewDidEnter() {
-
-  }
-
-  ionViewWillEnter() {
     this.events.publishDataCompany({
       action: "page",
       title: "home-view",
       message: ''
     });
-		console.log('ionViewWillEnter SettingsViewPage');
+		console.log('ionViewDidEnter SettingsViewPage');
     this.showNotificationCount();
   }
 
@@ -148,7 +152,6 @@ export class SettingsViewPagePage implements OnInit {
       const userInfoObj = JSON.parse(userInfo);
       const startDate = new Date(userInfoObj.LoginTime);
       let difference = endDate.getTime() - startDate.getTime();
-
       const dDays = this.apiProvider.twoDecimals(parseInt('' +difference/(24*60*60*1000)));
       const dHours = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*60*1000)) % 24)) ;
       const dMin = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*1000)) % 60));
@@ -159,18 +162,23 @@ export class SettingsViewPagePage implements OnInit {
   }
 
 
-  logoutMe(){
-    this.translate.get(['SETTINGS.ARE_U_SURE_LOGOUT_TITLE','SETTINGS.ARE_U_SURE_LOGOUT',
-     'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
+  logoutMe(action){
+    this.translate.get(['SETTINGS.ARE_U_SURE_LOGOUT_TITLE','SETTINGS.ARE_U_SURE_LOGOUT', 'SETTINGS.UNREGISTER_ACCOUNT_SCUSS',
+     'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED', 'SETTINGS.UNREGISTER','SETTINGS.ARE_U_SURE_UNREGISTER'
     ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
+      let title = t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'];
+      let desc = t['SETTINGS.ARE_U_SURE_LOGOUT'];
+      if (action === 'unregister') {
+        desc = t['SETTINGS.ARE_U_SURE_UNREGISTER'];
+      }
       let loginConfirm = await this.alertCtrl.create({
-        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
-        message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
+        header: title,
+        message: desc,
         cssClass: 'alert-warning-logout',
         mode: 'ios',
         buttons: [
           {
-            text: t['COMMON.EXIT1'],
+            text: (action === 'exit') ? t['COMMON.EXIT1']: t['COMMON.OK'],
             handler: () => {
               if(this.isSecurityApp) {
                 const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'));
@@ -181,9 +189,17 @@ export class SettingsViewPagePage implements OnInit {
                 console.log(JSON.stringify(data));
                 this.apiProvider.requestSecurityApi(data, '/api/SecurityApp/userLogout', true).then(
                   (val: any) => {
-                    this.apiProvider.showToast(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
-                    localStorage.clear();
-                    this.navCtrl.navigateRoot('account-mapping');
+
+                    if (action === 'exit') {
+                      this.apiProvider.showToast(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
+                      localStorage.setItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS, '');
+                      localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, '');
+                      this.navCtrl.navigateRoot('login');
+                    } else {
+                      this.apiProvider.showToast(t['SETTINGS.UNREGISTER_ACCOUNT_SCUSS']);
+                      localStorage.clear();
+                      this.navCtrl.navigateRoot('account-mapping');
+                    }
                   },
                   async (err) => {
                     if(err && err.message == "No Internet"){
@@ -325,6 +341,8 @@ export class SettingsViewPagePage implements OnInit {
    }
 
   composeRunTimeCss(result){
+
+    this.statusBar.backgroundColorByHexString(result.customStyle.AppTheme);
     this.themeSwitcher.setTheme('Theme1', result.customStyle.AppTheme);
     let _css = `
     `;

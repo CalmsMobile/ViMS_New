@@ -7,8 +7,10 @@
 <ion-header>
 
   <ion-toolbar color="primary">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
-    <ion-title style="font-size: 16px;">{{title}}</ion-title>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" style="padding-bottom: 0px !important;
+    padding-top: 0px !important;" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-title style="font-size: 16px;padding-bottom: 0px !important;
+    padding-top: 0px !important;">{{title}}</ion-title>
      <ion-buttons slot="end" *ngIf="Type == '50'">
           <ion-button slot="icon-only" (click)="scanQuickPassQR()" style="padding: 5px;">
               <ion-icon name="qr-code-outline"></ion-icon>
@@ -17,7 +19,7 @@
      </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar (ionChange)="getVisitorsBySearch($event)"
+    <ion-searchbar  color="light" (ionChange)="getVisitorsBySearch($event)" style="    padding: 2px; height: 45px;"
     placeholder="{{'SECURITY_APP.SEARCH_VISITOR' | translate}}" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
         <!-- (ionChange)="updateSchedule()" -->
     </ion-searchbar>
@@ -31,7 +33,7 @@
     </ion-refresher>
     <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">
           <ion-col size="12" size-sm size-md>
-                  <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.jpeg">
+                  <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.png">
                   <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'SECURITY_APP.NO_LIST' | translate}}</h5> -->
           </ion-col>
     </ion-row>
@@ -87,96 +89,77 @@
     <div *ngIf="Type != '50'">
       <ion-card class="card_appointment" *ngFor="let item of appointmentsClone" no-padding no-border (click)="moveToDetailsPage(item)">
         <ion-item-sliding #slideDOM (ionDrag)="ondrag($event, slideDOM, item)">
-          <ion-item lines="none" class="ion-no-padding">
+          <ion-item lines="none" class="ion-no-padding" style="--inner-padding-end: 0px;">
         <ion-row lines="none" no-padding full-width>
           <ion-col size="4" class="col apt-left" no-padding>
             <ion-row style="height: 100%;">
-             <ion-item lines="none" style="    --padding-start: 6px;
+             <ion-item lines="none" style="    --padding-start: 6px;align-self: center;
              width: 100%;">
               <div>
                 <div style="    width: -webkit-fill-available;
                 display: inline-flex;">
-                <ion-icon style="font-size: 20px;
-                align-self: center;" color="light" name="stopwatch-outline"></ion-icon>
-                  <ion-label color="light" style="font-size: 10px;
-                  align-self: center;">START</ion-label>
+                <ion-icon style="font-size: 16px;
+                align-self: center;" color="light" name="arrow-forward-outline"></ion-icon>
+                  <ion-label color="light" style="font-size: 12px;
+                  align-self: center;">Check-In</ion-label>
 
                 </div>
                 <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
-                text-align: center;
-                display: inline-block;">{{item.START_TIME | date : 'hh:mm a'}}</ion-label>
+                text-align: center;font-size: 13px;">{{item.att_check_in_time | date : 'dd MMM hh:mm a'}}</ion-label>
               </div>
              </ion-item>
-             <ion-item lines="none" style="    --padding-start: 6px;
+             <ion-item lines="none" [ngStyle]="{'border': '1px solid ' + appSettings.customStyle.AppTheme}" style="--padding-start: 6px; background: white;
+             border-radius: 6px;align-self: center;
              width: 100%;">
-              <div>
-                <div style="    width: -webkit-fill-available;
+              <div style="padding-bottom: 8px;
+              padding-top: 8px;">
+                <div style="width: -webkit-fill-available;
                 display: inline-flex;">
-                <ion-icon style="font-size: 20px;
-                align-self: center;" color="light" name="stopwatch-outline"></ion-icon>
-                  <ion-label color="light" style="font-size: 10px;
-                  align-self: center;">END</ion-label>
-
+                <ion-icon style="font-size: 16px;
+                align-self: center;" color="dark" name="arrow-back-outline"></ion-icon>
+                  <ion-label color="dark" style="font-size: 12px;
+                  align-self: center;">Check-Out</ion-label>
                 </div>
-                <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
-                text-align: center;
-                display: inline-block;">{{item.END_TIME | date : 'hh:mm a'}}</ion-label>
+
+                <ion-label [ngStyle]="{'color': item.att_check_out_time ? 'black': 'red'}" color="dark" style="font-weight: 600;    width: -webkit-fill-available;
+                font-size: 13px;">{{item.att_check_out_time ? (item.att_check_out_time | date : 'dd MMM hh:mm a') : (item.isExpired ? 'Overstay' : 'Visitor inside')}}</ion-label>
               </div>
              </ion-item>
             </ion-row>
           </ion-col>
           <ion-col size="6" style="padding-bottom: 0px;">
             <div class="div-apt-center">
-              <ion-icon slot="start" name="person-outline" color="primary" class="apt-text-icons"></ion-icon>
+              <ion-icon slot="start" name="person-outline" color="dark" class="apt-text-icons"></ion-icon>
               <ion-label class="apt-center-title">{{item.VISITOR_NAME}}</ion-label>
             </div>
 
             <div class="div-apt-center">
-              <ion-icon slot="start" name="call-outline" color="primary" class="apt-text-icons"></ion-icon>
+              <ion-icon slot="start" name="call-outline" color="dark" class="apt-text-icons"></ion-icon>
               <ion-label class="apt-center-subtitle">{{item.TELEPHONE_NO? item.TELEPHONE_NO: '&nbsp;&nbsp;--'}}</ion-label>
             </div>
 
             <div class="div-apt-center">
-              <ion-icon slot="start" name="people-outline" color="primary" class="apt-text-icons"></ion-icon>
+              <ion-icon slot="start" name="people-outline" color="dark" class="apt-text-icons"></ion-icon>
               <ion-label class="apt-center-subtitle">{{item.STAFF_NAME ? item.STAFF_NAME: '&nbsp;&nbsp;--'}}</ion-label>
             </div>
 
             <div class="div-apt-center">
-              <ion-icon slot="start" name="car-sport-outline" color="primary" class="apt-text-icons"></ion-icon>
+              <ion-icon slot="start" name="car-sport-outline" color="dark" class="apt-text-icons"></ion-icon>
               <ion-label class="apt-center-subtitle">{{item.PLATE_NUM ? item.PLATE_NUM: '&nbsp;&nbsp;--'}}</ion-label>
             </div>
 
-            <div class="div-apt-center">
-              <ion-icon slot="start" name="timer-outline" class="apt-text-icons" color="danger"></ion-icon>
-              <ion-label class="apt-center-subtitle" style=" color: #f44336; font-weight: bold;">{{item.WorkPermitExpiry? (item.WorkPermitExpiry | date : 'dd MMM yyyy hh:mm a'): '&nbsp;&nbsp;--' }}</ion-label>
+            <div class="div-apt-center" style="display: inline-flex;align-items: center;margin-left: -1px;">
+              <ion-icon slot="start" name="timer-outline" [ngClass]="{'apt-text-icons animated infinite pulse delay-1s': item.isExpired, 'apt-text-icons': !item.isExpired}" [color]="item.isExpired? 'danger': 'dark'"></ion-icon>
+              <ion-label class="apt-center-subtitle" style="font-weight: bold;font-size: 10px;    margin-left: -3px;" [ngStyle]="{'color': item.isExpired? '#f44336': '#000000'}">{{item.WorkPermitExpiry? (item.WorkPermitExpiry | date : 'dd MMM yyyy hh:mm a') : '&nbsp;&nbsp;--' }}</ion-label>
+              <ion-label *ngIf="item.overStayTime" class="apt-center-subtitle" style="font-weight: bold;font-size: 10px;" [ngStyle]="{'color': item.isExpired? '#f44336': '#000000'}">{{item.overStayTime? ( '&nbsp;(' + item.overStayTime +')') : '' }}</ion-label>
             </div>
           </ion-col>
 
           <ion-col size="2" class="colIcons">
-            <img src="{{item.SEQ_ID ? visitorImagePath + item.att_visitor_id + imageURLType: '../../../assets/images/user.png'}}" class="visitorImage" style="width: 60px;
+            <img src="{{item.visitorBookingSeqId ? ( visitorImagePath + item.visitorBookingSeqId + imageURLType) : (item.att_visitor_id ? visitorImagePath + item.att_visitor_id + imageURLType : '../../../assets/images/user.png')}}" class="visitorImage" style="width: 60px;
                 height: 60px;
                 max-width: 60px;
-                border-radius: 50%;">
-                    <div class="statuswithBadge">
-                      <div class="outer circle shapeborder">
-                        <div class="inner circle shapeborder">
-                          <ion-icon *ngIf="(!item.att_check_in || item.att_check_in == 0) && (!item.att_check_out || item.att_check_out == 0)" color="light" name="timer-outline"></ion-icon>
-                          <ion-icon *ngIf="item.att_check_in == 1 && (!item.att_check_out || item.att_check_out == 0)" color="light" name="trending-down-outline"></ion-icon>
-                          <ion-icon *ngIf="item.att_check_in == 1 && item.att_check_out == 1" color="light" name="trending-up-outline"></ion-icon>
-                        </div>
-                      </div>
-
-                      <div class="insideBadge">
-                        <ion-badge style="border-radius: 50%;
-                      padding-top: 4px;
-                      border: 1px solid var(--ion-color-primary);
-                      background-color: white;
-                      color: var(--ion-color-primary);
-                      width: 25px;
-                      height: 25px;
-                      padding: 6px !important;">{{item.no_of_time_utilized ? item.no_of_time_utilized: 0}}</ion-badge>
-                      </div>
-                    </div>
+                border-radius: 50%;"/>
                 </ion-col>
               </ion-row>
             </ion-item>

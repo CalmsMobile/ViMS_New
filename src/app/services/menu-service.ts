@@ -35,7 +35,7 @@ export class MenuService implements IService {
                     if (settings && JSON.parse(settings)) {
                         try {
                             var hostSettings = JSON.parse(settings).Table1[0];
-                            showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
+                            showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
                         } catch (e) {
 
                         }
@@ -82,8 +82,8 @@ export class MenuService implements IService {
                     settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
                     if (settings && JSON.parse(settings)) {
                         try {
-                            hostSettings = JSON.parse(settings).Table1[0];
-                            showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled && hostSettings.QuickPassEnabled;
+                          hostSettings = JSON.parse(settings).Table1[0];
+                          showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
                         } catch (e) {
 
                         }

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NavController, ToastController, AlertController, LoadingController, IonContent } from '@ionic/angular';
+import { NavController, ToastController, AlertController, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { ToastService } from 'src/app/services/util/Toast.service';
@@ -44,8 +44,7 @@ export class AddVisitorCompanyPage implements OnInit {
     private toastCtrl: ToastController,
     private translate:TranslateService,
     public apiProvider: RestProvider,
-    private alertCtrl: AlertController,
-    public loadingCtrl: LoadingController) {
+    private alertCtrl: AlertController) {
       this.translate.get([
         'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
           this.T_SVC = t;

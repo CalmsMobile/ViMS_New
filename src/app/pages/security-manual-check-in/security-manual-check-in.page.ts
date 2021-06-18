@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {ModalController,AlertController,ToastController, PopoverController, NavController} from '@ionic/angular';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
@@ -11,6 +11,7 @@ import { DocumentModalComponent } from 'src/app/components/document-modal/docume
 import { TranslateService } from '@ngx-translate/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
+import { ItemChecklistModalComponent } from 'src/app/components/item-checklist-modal/item-checklist-modal.component';
 
 @Component({
   selector: 'app-security-manual-check-in',
@@ -22,7 +23,6 @@ export class SecurityManualCheckInPage implements OnInit {
   autoApproval: any = false;
   showOption = false;
   isPastAppointment = false;
-  base64Image = "";
   data: any = {
     "logo": JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/ImageHandler.ashx?RefSlno=',
     "coverImage": "assets/images/profile_bg.jpg",
@@ -64,10 +64,13 @@ export class SecurityManualCheckInPage implements OnInit {
     private commonUtil: CommonUtil,
     private navCtrl: NavController,
     private camera: Camera,
+    private cdr: ChangeDetectorRef,
     private dateformat : DateFormatPipe,
     public toastCtrl: ToastController,
     private translate : TranslateService,
     public sanitizer: DomSanitizer) {
+      setTimeout(() => this.setChanged(), 0);
+
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'ALERT_TEXT.VISITOR_CHECKED_IN',
@@ -92,6 +95,16 @@ export class SecurityManualCheckInPage implements OnInit {
       if (ackSeettings) {
         this.appSettings = JSON.parse(ackSeettings);
       }
+      this.checkAllInputs();
+  }
+
+  setChanged() {
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+  }
+
+  viewImage(base64) {
+    this.apiProvider.viewImage(base64);
   }
 
   ngOnInit() {
@@ -115,16 +128,22 @@ export class SecurityManualCheckInPage implements OnInit {
           }
           this.appointmentInfo.REASON = this.commonUtil.getPurposeCode(this.appointmentInfo.REASON, true);
           this.appointmentInfo.VISITOR_GENDER = this.commonUtil.getGender(this.appointmentInfo.VISITOR_GENDER, true);
+          this.checkAllInputs();
+        } else {
+          this.appointmentInfo.START_TIME = this.dateformat.transform(new Date() + '', "yyyy-MM-ddTHH:mm:ss")
         }
-
       }
     });
   }
 
-  onChangePurpose(event){
-    const PurposeCode = event?event.detail.value: '';
-    console.log(""+ PurposeCode);
-    this.appointmentInfo.REASON = PurposeCode;
+  onSelectChange(event, action) {
+    this.checkAllInputs();
+    if (action === 'Purpose') {
+      const PurposeCode = event?event.detail.value: '';
+      console.log(""+ PurposeCode);
+      this.appointmentInfo.REASON = PurposeCode;
+    }
+
   }
 
   goBack() {
@@ -171,7 +190,7 @@ export class SecurityManualCheckInPage implements OnInit {
       "STAFF_IC": this.preAppointmentInfo.STAFF_IC
   };
   // this.VM.host_search_id = "adam";
-  this.apiProvider.requestApi(params, api, true, 'WEB').then(
+  this.apiProvider.requestApi(params, api, true, 'WEB', '').then(
     async (val) => {
       var result = JSON.parse(val.toString());
       if (result.Table && result.Table.length > 0) {
@@ -193,11 +212,11 @@ export class SecurityManualCheckInPage implements OnInit {
         return await presentModel.present();
 
       } else {
-        let msg = 'Questionaries not added.';
+        let msg = 'Visitor yet to submit the questionaries';
         if (action === 'doc') {
-          msg = 'Verification document not added.';
+          msg = 'Visitor yet to submit the documents';
         } else if (action === 'declaration'){
-          msg = 'Declaration not added.';
+          msg = 'Visitor yet to submit the  declaration';
         }
         this.apiProvider.showAlert(msg);
       }
@@ -229,17 +248,6 @@ export class SecurityManualCheckInPage implements OnInit {
   );
   }
 
-
-  private async presentToast(text) {
-    let toast = await this.toastCtrl.create({
-      message: text,
-      duration: 3000,
-      color: 'primary',
-      position: 'bottom'
-    });
-    toast.present();
-  }
-
   public capture(action){
     this.imageType = action;
     this.takePicture(this.camera.PictureSourceType.CAMERA);
@@ -255,7 +263,7 @@ export class SecurityManualCheckInPage implements OnInit {
       // destinationType: this.camera.DestinationType.FILE_URI,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
-      allowEdit: true,
+      allowEdit: false,
       targetWidth: 400,
       targetHeight: 400
     };
@@ -264,8 +272,6 @@ export class SecurityManualCheckInPage implements OnInit {
     this.camera.getPicture(options).then((imageData) => {
 
       if (this.imageType === 'PROFILE_IMAGE') {
-        this.base64Image = 'data:image/jpeg;base64,' + imageData;
-        this.data.profile = imageData;
         this.visitor_RemoveImg = false;
         this.appointmentInfo.visitorImage = imageData;
       } else {
@@ -286,7 +292,7 @@ export class SecurityManualCheckInPage implements OnInit {
 
     await modal.present();
     modal.onDidDismiss().then((response)=> {
-      if (response) {
+      if (response && response.data) {
         console.log("data:" + JSON.stringify(response.data));
         this.appointmentInfo.additionalDocList = response.data ? response.data: [];
       }
@@ -296,6 +302,7 @@ export class SecurityManualCheckInPage implements OnInit {
   onChangeID($event) {
     const value = $event.target.value;
     if (value.length > 2) {
+      this.checkAllInputs();
       let api = '/api/Vims/SearchExistVisitor';
       var params = {
         "SearchString": value,
@@ -303,7 +310,7 @@ export class SecurityManualCheckInPage implements OnInit {
         "Rows": "1"
       };
       // this.VM.host_search_id = "adam";
-      this.apiProvider.requestApi(params, api, false, 'WEB').then(
+      this.apiProvider.requestApi(params, api, false, 'WEB', '').then(
         async (val) => {
           var result = JSON.parse(val.toString());
           if (result.Table && result.Table.length > 0 && result.Table2 && result.Table2.length > 0) {
@@ -330,7 +337,63 @@ export class SecurityManualCheckInPage implements OnInit {
     }
   }
 
+  onInputChange($event, field) {
+    this.checkAllInputs();
+  }
+
+  checkAllInputs() {
+    this.appSettings.addVisitor.showVisitorNameError = this.appSettings.addVisitor.NameEnabled && this.appSettings.addVisitor.NameRequired && !this.appointmentInfo.VISITOR_NAME;
+    this.appSettings.addVisitor.showVisitorICError = this.appSettings.addVisitor.IdProofEnabled && this.appSettings.addVisitor.IdProofRequired && !this.appointmentInfo.VISITOR_IC;
+    this.appSettings.addVisitor.showEmailError = this.appSettings.addVisitor.EmailEnabled && this.appSettings.addVisitor.EmailRequired && !this.appointmentInfo.EMAIL;
+    this.appSettings.addVisitor.showPhoneNumberError = this.appSettings.addVisitor.ContactNumberEnabled && this.appSettings.addVisitor.ContactNumberRequired && !this.appointmentInfo.TELEPHONE_NO;
+    this.appSettings.addVisitor.showAddressError = this.appSettings.addVisitor.AddressEnabled && this.appSettings.addVisitor.AddressRequired && !this.appointmentInfo.VISITOR_ADDRESS;
+    this.appSettings.addVisitor.showVehicleNumberError = this.appSettings.addVisitor.VehicleNumberEnabled && this.appSettings.addVisitor.VehicleNumberRequired && !this.appointmentInfo.PLATE_NUM;
+
+    this.appSettings.addVisitor.showCategoryError = this.appSettings.addVisitor.CategoryEnabled && this.appSettings.addVisitor.CategoryRequired && !this.appointmentInfo.VisitorCategory;
+    this.appSettings.addVisitor.showGenderError = this.appSettings.addVisitor.GenderEnabled && this.appSettings.addVisitor.GenderRequired && (this.appointmentInfo.VISITOR_GENDER === undefined || this.appointmentInfo.VISITOR_GENDER === null || this.appointmentInfo.VISITOR_GENDER === '');
+    this.appSettings.addVisitor.showCountryError = this.appSettings.addVisitor.CountryEnabled && this.appSettings.addVisitor.CountryRequired && !this.appointmentInfo.VISITOR_COUNTRY;
+    this.appSettings.addVisitor.showCompanyError = this.appSettings.addVisitor.CompanyEnabled && this.appSettings.addVisitor.CompanyRequired && !this.appointmentInfo.visitor_comp_code;
+
+    this.appSettings.addVisitor.showTemperatureError = this.appSettings.addVisitor.TemperatureEnabled && this.appSettings.addVisitor.TemperatureRequired && !this.appointmentInfo.att_bodytemperature;
+
+    this.appSettings.addVisitor.showHostError = this.appSettings.General.ShowHost && this.appSettings.General.MandatoryHost && !this.appointmentInfo.Host_IC;
+    this.appSettings.addVisitor.showPurposeError = this.appSettings.General.ShowPurpose && this.appSettings.General.MandatoryPurpose && !this.appointmentInfo.REASON;
+    this.appSettings.addVisitor.showFloorError = this.appSettings.General.ShowFloor && this.appSettings.General.MandatoryFloor && !this.appointmentInfo.Floor;
+    this.appSettings.addVisitor.showRoomError = this.appSettings.General.ShowRoom && this.appSettings.General.MandatoryRoom && !this.appointmentInfo.MEETING_LOCATION;
+    this.appSettings.addVisitor.showRemarksError = this.appSettings.General.ShowRemarks && this.appSettings.General.MandatoryRemarks && !this.appointmentInfo.Remarks;
+
+  }
+
   processCheckIn() {
+
+    this.checkAllInputs();
+    if (this.appSettings.addVisitor.showVisitorNameError || this.appSettings.addVisitor.showVisitorICError ||
+      this.appSettings.addVisitor.showEmailError || this.appSettings.addVisitor.showPhoneNumberError ||
+      this.appSettings.addVisitor.showAddressError || this.appSettings.addVisitor.showVehicleNumberError ||
+      this.appSettings.addVisitor.showCategoryError || this.appSettings.addVisitor.showGenderError ||
+      this.appSettings.addVisitor.showCountryError || this.appSettings.addVisitor.showCompanyError ||
+      this.appSettings.addVisitor.showHostError || this.appSettings.addVisitor.showPurposeError ||
+      this.appSettings.addVisitor.showFloorError || this.appSettings.addVisitor.showTemperatureError ||
+      this.appSettings.addVisitor.showRoomError || this.appSettings.addVisitor.showRemarksError) {
+        this.apiProvider.showToast(" Please fill mandatory fields ");
+      return;
+    }
+
+    if(this.appSettings.addVisitor.IdImgUploadEnabled && this.appSettings.addVisitor.IdImgUploadRequired && !this.appointmentInfo.visitorIDImage) {
+      this.apiProvider.showAlert(" * required ID image ");
+      return;
+    }
+
+    if(this.appSettings.addVisitor.ImageUploadEnabled && this.appSettings.addVisitor.ImageUploadRequired && !this.appointmentInfo.visitorImage) {
+      this.apiProvider.showAlert(" * required profile image ");
+      return;
+    }
+
+    if(this.appSettings.addVisitor.VerificationDocEnabled && this.appSettings.addVisitor.VerificationDocRequired && !this.appointmentInfo.additionalDocList) {
+      this.apiProvider.showAlert(" * required additional document ");
+      return;
+    }
+
     var ackData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
     var MAppDevSeqId = "";
     if(ackData && JSON.parse(ackData)){
@@ -365,18 +428,27 @@ export class SecurityManualCheckInPage implements OnInit {
       Hexcode :  this.preAppointmentInfo.Hexcode ? this.preAppointmentInfo.Hexcode:  (this.appointmentInfo.Hexcode? this.appointmentInfo.Hexcode: '')
     }];
 
+    const additionDocs = [];
+    if (this.appointmentInfo.additionalDocList) {
+      this.appointmentInfo.additionalDocList.forEach(element => {
+        additionDocs.push({
+          'doc': element
+        });
+      });
+    }
+
     var params  = {
       DEV_SEQID: MAppDevSeqId,
       VISITOR_ARRAY: visitor,
-      START_DATE: this.appointmentInfo.START_TIME? this.dateformat.transform(this.appointmentInfo.START_TIME, "yyyy-MM-ddTHH:mm:ss"): '',
-      END_DATE: this.appointmentInfo.END_TIME? this.dateformat.transform(this.appointmentInfo.END_TIME, "yyyy-MM-ddTHH:mm:ss"): '',
+      START_DATE: this.appointmentInfo.START_TIME? this.dateformat.transform(new Date() + '', "yyyy-MM-ddTHH:mm:ss"): '',
+      END_DATE: this.appointmentInfo.END_TIME? this.dateformat.transform(new Date() + '', "yyyy-MM-ddTHH:mm:ss"): '',
       Purpose: this.appointmentInfo.REASON? this.appointmentInfo.REASON: '',
       HOST_NAME: this.appointmentInfo.Host_IC? this.appointmentInfo.Host_IC: '',
       HOST_IC: this.appointmentInfo.Host_IC? this.appointmentInfo.Host_IC: '',
       FLOOR: this.appointmentInfo.Floor? this.appointmentInfo.Floor: '',
       MEETING_LOCATION: this.appointmentInfo.MEETING_LOCATION? this.appointmentInfo.MEETING_LOCATION: '',
       Remarks: this.appointmentInfo.Remarks? this.appointmentInfo.Remarks: '',
-      AdditionalDocs: this.appointmentInfo.additionalDocList ? this.appointmentInfo.additionalDocList: '',
+      AdditionalDocs: additionDocs,
       Declaration: this.appointmentInfo.declarationList ? JSON.stringify(this.appointmentInfo.declarationList): ''
     }
 
@@ -385,24 +457,11 @@ export class SecurityManualCheckInPage implements OnInit {
         var result = JSON.parse(val.toString());
         if(result  && result[0].Code == 10){
 
-          let toast = await this.toastCtrl.create({
-            message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKED_IN'],
-            duration: 3000,
-            color: 'primary',
-            position: 'bottom'
-          });
-          toast.present();
+          this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKED_IN']);
           this.navCtrl.navigateRoot('security-dash-board-page');
           return;
         }
-        let toast = await this.toastCtrl.create({
-          message: 'Server Error',
-          duration: 3000,
-          color: 'primary',
-          position: 'bottom'
-        });
-        toast.present();
-
+        this.apiProvider.showAlert('Server Error');
       },
       async (err) => {
 
@@ -427,5 +486,13 @@ export class SecurityManualCheckInPage implements OnInit {
 
       }
     );
+  }
+
+  async checklistmodal(){
+    const modal = await this.modalCtrl.create({
+      component: ItemChecklistModalComponent
+    });
+
+    await modal.present();
   }
 }

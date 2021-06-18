@@ -150,9 +150,7 @@ export class SignPadTermsAndConditionPagePage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter SignPadTermsAndConditionPage');
-  }
 
-  ionViewWillEnter(){
     this.getVideoOptionAvailable();
     this.checkAppointmentFinished();
   }

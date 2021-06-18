@@ -21,24 +21,26 @@
 
     <ion-buttons slot="end">
       <ion-icon style="font-size: 26px;padding-right: 10px;" color="light" name="notifications-outline" (click)="gotoNotifiations()"></ion-icon>
-      <ion-icon style="font-size: 26px;" name="settings-sharp" color="light" (click)="pressed()"></ion-icon>
+      <ion-icon style="font-size: 26px;padding-right: 10px;" name="settings-sharp" color="light" (click)="gotoSettings()"></ion-icon>
+      <ion-icon style="font-size: 26px;padding-right: 10px;" name="exit-outline" color="light" (click)="logout()"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
+  <ion-segment mode="ios" [(ngModel)]="segment" class="mainsegments" (ionChange)="segmentChanged($event)">
+    <ion-segment-button color="light" value="Summary" layout="icon-start">
+      <ion-icon style=" font-size: 16px;" name="copy-outline"></ion-icon>
+      <ion-label style="margin: 0 auto;font-weight: 600;">Summary</ion-label>
+    </ion-segment-button>
+    <ion-segment-button color="light" value="Graph" layout="icon-start">
+      <ion-icon style="font-size: 16px;" name="bar-chart-sharp"></ion-icon>
+      <ion-label style="margin: 0 auto;font-weight: 600;">Graph</ion-label>
+
+    </ion-segment-button>
+</ion-segment>
 </ion-header>
 
-<ion-content padding class="ion-no-border" line="none">
+<ion-content padding class="ion-no-border" style="--background: #f0f0f0;" line="none">
   <div class="main">
-    <ion-segment mode="ios" [(ngModel)]="segment" class="mainsegments" (ionChange)="segmentChanged($event)">
-      <ion-segment-button value="Summary" layout="icon-start">
-        <ion-icon style=" font-size: 16px;" name="copy-outline"></ion-icon>
-        <ion-label style="margin: 0 auto;font-weight: 600;">Summary</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="Graph" layout="icon-start">
-        <ion-icon style="font-size: 16px;" name="bar-chart-sharp"></ion-icon>
-        <ion-label style="margin: 0 auto;font-weight: 600;">Graph</ion-label>
 
-      </ion-segment-button>
-  </ion-segment>
     <!-- <ion-slides #slides pager style="padding-bottom: 150px" (ionSlideDidChange)="slideChanged()" scrollbar="true">
       <ion-slide> -->
         <ion-grid *ngIf="segment === 'Summary'">
@@ -120,7 +122,6 @@
                 <ion-fab vertical="top" color="danger" horizontal="end" *ngIf="statsCountData.OverstayVisitor">
                   <ion-fab-button color="danger" class="heart-beat animated infinite pulse delay-1s">
                   </ion-fab-button>
-                  <!-- <div id="buttonOverstay" class="heart-beat animated pulse delay-1s"></div> -->
                 </ion-fab>
                 <ion-grid>
                   <ion-row>
@@ -161,13 +162,30 @@
       <!-- </ion-slide>
       <ion-slide> -->
         <ion-grid *ngIf="segment === 'Graph'">
+
           <ion-row style="padding-top: 5px;">
             <ion-col size="12">
               <ion-card class="card2">
                 <ion-card-header>
                   <ion-card-subtitle style="text-transform: capitalize;
                   text-align: center;">
-                    Recent 10 days appointment
+                    Today appointments
+                  </ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content class="ion-no-padding"  style="margin-bottom: 25px;">
+                  <canvas id="barCanvas5"></canvas>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+
+          <ion-row style="padding-top: 5px;">
+            <ion-col size="12">
+              <ion-card class="card2">
+                <ion-card-header>
+                  <ion-card-subtitle style="text-transform: capitalize;
+                  text-align: center;">
+                    Upcoming 10 days appointment
                   </ion-card-subtitle>
                 </ion-card-header>
                 <ion-card-content class="ion-no-padding">
@@ -234,10 +252,10 @@
 
 
 </ion-content>
-<ion-footer class="ion-no-border">
-  <ion-toolbar class="ion-no-border" color="primary">
-    <ion-tabs *ngIf="appSettings.FooterTab">
-      <ion-tab-bar slot="bottom" color="primary">
+<ion-footer class="ion-no-border" *ngIf="appSettings.FooterTab">
+  <ion-toolbar class="ion-no-border dashboardToolbar" color="primary">
+    <ion-tabs>
+      <ion-tab-bar slot="bottom" color="primary" [ngStyle]="{'height': (appSettings.FooterTab.IconSize * 2) + 'px'}">
         <ion-tab-button
         (click)="proceedNext('IN')" mode="ios">
         <ion-icon class="tabIcon" name="trending-up-outline" style="margin: 0px;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
@@ -253,7 +271,7 @@
           </ion-tab-button>
 
           <ion-tab-button
-          (click)="proceedNext('APPOINTMENT')" mode="ios">
+          (click)="proceedNext('APPOINTMENT')" mode="ios" *ngIf="appSettings.showPreAppointment">
             <ion-icon class="tabIcon" name="qr-code-outline"[ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
             <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
             'font-weight': appSettings.FooterTab.FooterFontWeight}">Appointment</ion-label>

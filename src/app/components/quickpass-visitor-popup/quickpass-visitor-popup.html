@@ -32,27 +32,33 @@
             </ion-label>
           </ion-col>
           <ion-col size="12">
-            <ion-label text-wrap *ngIf="QPAppointment.VehicleNo != '' || QPAppointment.VehicleNo != undefined ">
+            <ion-label text-wrap style="align-items: center;display: flex;">
               <ion-icon slot="start" color="danger" name="car-outline"></ion-icon>
-              {{QPAppointment.VehicleNo}}
+              {{QPAppointment.VehicleNo? QPAppointment.VehicleNo: '&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
           <ion-col size="12">
-            <ion-label text-wrap >
-              <ion-icon name="calendar-outline" slot="start" color="danger"></ion-icon>
+            <ion-label text-wrap style="align-items: center;display: flex;">
+              <ion-icon slot="start" color="danger" name="reader-outline"></ion-icon>
+              {{QPAppointment.Purpose? QPAppointment.Purpose: '&nbsp;&nbsp;--'}}
+            </ion-label>
+          </ion-col>
+          <ion-col size="12">
+            <ion-label text-wrap style="align-items: center;display: flex;">
+              <ion-icon name="trending-up-outline" slot="start" color="danger"></ion-icon>
               {{ QPAppointment.CheckInTime ? (QPAppointment.CheckInTime| date: "MMM dd, yyyy HH:mm a") : '&nbsp;&nbsp;--' }}
             </ion-label>
           </ion-col>
 
           <ion-col size="12">
-            <ion-label text-wrap >
-              <ion-icon name="calendar-outline" slot="start" color="danger"></ion-icon>
+            <ion-label text-wrap style="align-items: center;display: flex;">
+              <ion-icon name="trending-down-outline" slot="start" color="danger"></ion-icon>
               {{ QPAppointment.CheckOutTime ? (QPAppointment.CheckOutTime| date: "MMM dd, yyyy HH:mm a") : '&nbsp;&nbsp;--' }}
             </ion-label>
           </ion-col>
 
-          <ion-col size="12">
-            <ion-label text-wrap >
+          <ion-col size="12"  >
+            <ion-label color="danger" text-wrap style="align-items: center;display: flex;">
               <ion-icon name="timer-outline" slot="start" color="danger"></ion-icon>
               {{ QPAppointment.ExpiryTime ? (QPAppointment.ExpiryTime| date: "MMM dd, yyyy HH:mm a") : '&nbsp;&nbsp;--' }}
             </ion-label>
@@ -67,7 +73,7 @@
           (click)="presentActionSheet()" />
           </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row *ngIf="!CheckIn">
           <ion-col>
             <img class="animated fadeInDown delay-1s qrCodeImage" onError="this.src='../../assets/images/user.png';"
           [src]="qrCodeString" />

@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Camera } from '@ionic-native/camera/ngx';
 import { Contacts } from '@ionic-native/contacts/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { NavController, AlertController, ActionSheetController, ToastController, Platform, LoadingController, IonContent, PopoverController, ModalController } from '@ionic/angular';
+import { NavController, AlertController, ActionSheetController, ToastController, Platform, IonContent, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CountryComponentComponent } from 'src/app/components/country-component/country-component.component';
 import { VisitorInfoModal } from 'src/app/model/visitorInfoModal';
@@ -66,14 +66,14 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
     private popoverController: ModalController,
     private camera: Camera,
     private _zone : NgZone,
+    private commonUtil: CommonUtil,
     private file: File,
     public actionSheetCtrl: ActionSheetController,
     public toastCtrl: ToastController,
     public platform: Platform,
     public events: EventsService,
     private contacts: Contacts,
-    private router: Router,
-    public loadingCtrl: LoadingController) {
+    private router: Router) {
       this.translate.get([
         'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
         'ALERT_TEXT.IMAGE_SELECT_ERROR', 'ALERT_TEXT.SELECT_VISITOR_COUNTRY',
@@ -157,9 +157,7 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
             contact: new FormControl('', (this.hostSettings && this.hostSettings.ContactNumberEnabled && this.hostSettings.ContactNumberRequired) ? ([Validators.required]) : []),
             vechile: new FormControl('', (this.hostSettings && this.hostSettings.VehicleNumberEnabled && this.hostSettings.VehicleNumberRequired) ? ([Validators.required]) : []),
             address: new FormControl('', (this.hostSettings && this.hostSettings.AddressEnabled && this.hostSettings.AddressRequired) ? ([Validators.required]) : []),
-            country: new FormControl('', (this.hostSettings && this.hostSettings.CountryEnabled && this.hostSettings.CountryRequired) ? ([Validators.required]) : []),
-            gender: new FormControl('', (this.hostSettings && this.hostSettings.GenderEnabled && this.hostSettings.GenderRequired) ? ([Validators.required]) : []),
-            vistorCompany:new FormControl('', [])
+            gender: new FormControl('', (this.hostSettings && this.hostSettings.GenderEnabled && this.hostSettings.GenderRequired) ? ([Validators.required]) : [])
             //country: new FormControl('', [Validators.pattern('[a-zA-Z0-9 ]*')]),
             //city: new FormControl('', [Validators.pattern('[a-zA-Z0-9 ]*')]),
           });
@@ -252,10 +250,19 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
         if(resultOB._objectInstance.emails && resultOB._objectInstance.emails[0]){
           this.visitorInfoModal.visitor_email = resultOB._objectInstance.emails[0].value;
         }
-        this.visitorInfoModal.visitor_mobile_no = resultOB._objectInstance.phoneNumbers[0].value;
+        const phone = resultOB._objectInstance.phoneNumbers[0].value;
+        if (phone) {
+          this.visitorInfoModal.visitor_mobile_no = phone.replace(/[^\d.-]/g, '');
+        }
+
         if(resultOB._objectInstance.organizations && resultOB._objectInstance.organizations[0]){
           this.visitorInfoModal.visitor_comp_name = resultOB._objectInstance.organizations[0].name;
-          this.getCompanyList(this.visitorInfoModal.visitor_comp_name);
+          this.visitorInfoModal.visitor_comp_id = this.commonUtil.getCompany(this.visitorInfoModal.visitor_comp_name, true);;
+          this.visitorInfoModal.visitor_comp = this.visitorInfoModal.visitor_comp_id;
+          if (!this.visitorInfoModal.visitor_comp_id) {
+            this.addVisitorsNewCompany(this.visitorInfoModal.visitor_comp_name);
+          }
+
         }
 
         if(resultOB._objectInstance.addresses && resultOB._objectInstance.addresses[0]){
@@ -632,7 +639,7 @@ ionViewDidEnter() {
       "AuMAppDevSeqId":'',
       "AuDeviceUID":'WEB'
     }
-    this.apiProvider.requestApi(params1, '/api/vims/CheckBlackList', true, 'WEB').then(
+    this.apiProvider.requestApi(params1, '/api/vims/CheckBlackList', true, 'WEB', '').then(
       async (val) => {
         var result = JSON.parse(val.toString());
         if(result["Table"] != undefined && result["Table"].length > 0){
@@ -885,55 +892,6 @@ ionViewDidEnter() {
       }
     };
     this.router.navigate(['visitor-company-page'], navigationExtras);
-  }
-
-  getCompanyList(company){
-
-      var params = {"SearchString":company,
-      "OffSet":"0",
-      "Rows":"20000"};
-      // this.VM.host_search_id = "adam";
-      this.apiProvider.GetVisitorCompany(params).then(
-        (val) => {
-          var allowAdd = true;
-            var companyList = JSON.parse(val.toString());
-            for(var i = 0 ; i < companyList.length ; i++){
-              if(company == companyList[i].visitor_comp_name){
-                this.visitorInfoModal.visitor_comp_name = company;
-                this.visitorInfoModal.visitor_comp_id = companyList[i].visitor_comp_code;
-                this.visitorInfoModal.visitor_comp = companyList[i].visitor_comp_code;
-                allowAdd = false;
-                break;
-              }
-            }
-
-            if(allowAdd){
-              this.addVisitorsNewCompany(company);
-            }
-        },
-        async (err) => {
-
-            this.addVisitorsNewCompany(company);
-            var companyList = [];
-
-            var message = "";
-            if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-              message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-            } else if(err && JSON.parse(err) && JSON.parse(err).message){
-              message =JSON.parse(err).message;
-            }
-            if(message){
-              // message = " Unknown"
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: message,
-                cssClass: 'alert-danger',
-                buttons: ['Okay']
-              });
-                alert.present();
-            }
-          }
-      );
   }
 
   addVisitorsNewCompany(company){

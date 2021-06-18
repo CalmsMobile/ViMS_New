@@ -37,7 +37,7 @@
                 margin-top: 10px;
                 margin-bottom: 10px;
                 width: 200px;
-            " src="assets/images/box.jpeg">
+            " src="assets/images/box.png">
                 <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
         </ion-col>
   </ion-row>
@@ -104,11 +104,12 @@
                 </div>
                 <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
               </div>
-              <div (click)="openTooltip($event, list.value[0].Approval_Status)">
-                <div [ngClass]="{'outer-circle':list.value[0].Approval_Status=='Pending','outer-circle2':list.value[0].Approval_Status=='Canceled','outer-circle1':list.value[0].Approval_Status=='Approved'}">
-                  <div [ngClass]="{'inner-circle':list.value[0].Approval_Status=='Pending','inner-circle2':list.value[0].Approval_Status=='Canceled','inner-circle1':list.value[0].Approval_Status=='Approved'}">
+
+              <div class="" (click)="openTooltip($event, getAppointmentStatus(list.value))">
+                <div [ngClass]="{'outer-circle': getAppointmentStatus(list.value) === 'Pending','outer-circle2':getAppointmentStatus(list.value) === 'Canceled','outer-circle1': getAppointmentStatus(list.value) === 'Approved'}">
+                  <div [ngClass]="{'inner-circle':getAppointmentStatus(list.value) === 'Pending','inner-circle2':getAppointmentStatus(list.value)=== 'Canceled','inner-circle1': getAppointmentStatus(list.value) === 'Approved'}">
                     <span id="inside-content">
-                      {{list.value[0].Approval_Status.charAt(0)}}
+                      {{getAppointmentStatus(list.value).charAt(0)}}
                     </span>
                   </div>
                 </div>

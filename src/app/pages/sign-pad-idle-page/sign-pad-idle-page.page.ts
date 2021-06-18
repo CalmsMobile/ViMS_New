@@ -138,6 +138,84 @@ export class SignPadIdlePagePage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter SignPadIdlePage');
+    this.isMovedToDetailPage = false;
+    this._currentClass.isMovedToDetailPage = false;
+    this._currentClass.isListeningAppointment = false;
+    var ackSeettings =  window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS);
+    if(ackSeettings && JSON.parse(ackSeettings)){
+      var result = JSON.parse(ackSeettings);
+      this.ackSeettings = result;
+      if(result.HomeTitle){
+        this.companyData.HomeTitle = result.HomeTitle;
+       }
+       if(result.HomeContent){
+        this.companyData.HomeContent = result.HomeContent;
+       }
+       if(result.LogoImg){
+        this.companyData.LogoImg = result.LogoImg;
+       }
+       if(this.QRData){
+        var ApiUrl = this.QRData.ApiUrl;
+        if(ApiUrl.indexOf("/api") > -1) {
+          ApiUrl = ApiUrl.split("/api")[0];
+        }
+        this.companyData.StorageURL = ApiUrl + "/FS/";
+       }
+
+       if(result.AppointmentSync_Interval){
+        this.AppointmentSync_Interval = result.AppointmentSync_Interval;
+       }else{
+        this.AppointmentSync_Interval = 5;
+       }
+
+       if(result.SettingsSync_Interval){
+        this.SettingsSync_Interval = result.SettingsSync_Interval;
+      }else{
+        this.SettingsSync_Interval = 10;
+      }
+
+       if(result.customStyle && JSON.parse(result.customStyle)){
+        this.customStyle = JSON.parse(result.customStyle);
+        if(!this._currentClass.customStyle.WelcomePage.backgroundcolor1){
+          this._currentClass.customStyle.WelcomePage.backgroundcolor1 = "#5acba0";
+          this._currentClass.customStyle.WelcomePage.backgroundcolor2 = "#5d866a";
+        }
+        if(!this._currentClass.customStyle.WelcomePage.Title.fontSize){
+          this._currentClass.customStyle.WelcomePage.Title = 36;
+        }
+        if(!this._currentClass.customStyle.WelcomePage.welcomeText.fontSize){
+          this._currentClass.customStyle.WelcomePage.welcomeText.fontSize = 36;
+        }
+        if(!this._currentClass.customStyle.WelcomePage.WelcomeDescription.fontSize){
+          this._currentClass.customStyle.WelcomePage.WelcomeDescription.fontSize = 16;
+        }
+       }else{
+        this.customStyle  = {
+          "WelcomePage":{
+            backgroundcolor1 : "#5acba0",
+            backgroundcolor2 : "#5d866a",
+            "Title":{
+              fontSize :  30,
+              fontFamily : "Lobster"
+            },
+            "welcomeText":{
+              fontSize :  20,
+              fontFamily : "Teko"
+            },
+            "WelcomeDescription":{
+              fontSize :  17,
+              fontFamily : "Open Sans Condensed"
+            }
+          }
+
+        }
+      }
+    }
+    this.getAckSettings(false,this._currentClass);
+
+    if(this.QRData.Location){
+     this.listenVisitorDetails(this.QRData.Location);
+    }
   }
 
   getAckSettings(refresh, _currentClass : any){
@@ -275,87 +353,6 @@ export class SignPadIdlePagePage implements OnInit {
       },_currentClass.SettingsSync_Interval * 1000);
       _currentClass.timeoutIntervalSettings = timeoutInterval;
   }
-  }
-
-  ionViewWillEnter(){
-    this.isMovedToDetailPage = false;
-    this._currentClass.isMovedToDetailPage = false;
-    this._currentClass.isListeningAppointment = false;
-    var ackSeettings =  window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_ACK_SETTINGS);
-    if(ackSeettings && JSON.parse(ackSeettings)){
-      var result = JSON.parse(ackSeettings);
-      this.ackSeettings = result;
-      if(result.HomeTitle){
-        this.companyData.HomeTitle = result.HomeTitle;
-       }
-       if(result.HomeContent){
-        this.companyData.HomeContent = result.HomeContent;
-       }
-       if(result.LogoImg){
-        this.companyData.LogoImg = result.LogoImg;
-       }
-       if(this.QRData){
-        var ApiUrl = this.QRData.ApiUrl;
-        if(ApiUrl.indexOf("/api") > -1) {
-          ApiUrl = ApiUrl.split("/api")[0];
-        }
-        this.companyData.StorageURL = ApiUrl + "/FS/";
-       }
-
-       if(result.AppointmentSync_Interval){
-        this.AppointmentSync_Interval = result.AppointmentSync_Interval;
-       }else{
-        this.AppointmentSync_Interval = 5;
-       }
-
-       if(result.SettingsSync_Interval){
-        this.SettingsSync_Interval = result.SettingsSync_Interval;
-      }else{
-        this.SettingsSync_Interval = 10;
-      }
-
-       if(result.customStyle && JSON.parse(result.customStyle)){
-        this.customStyle = JSON.parse(result.customStyle);
-        if(!this._currentClass.customStyle.WelcomePage.backgroundcolor1){
-          this._currentClass.customStyle.WelcomePage.backgroundcolor1 = "#5acba0";
-          this._currentClass.customStyle.WelcomePage.backgroundcolor2 = "#5d866a";
-        }
-        if(!this._currentClass.customStyle.WelcomePage.Title.fontSize){
-          this._currentClass.customStyle.WelcomePage.Title = 36;
-        }
-        if(!this._currentClass.customStyle.WelcomePage.welcomeText.fontSize){
-          this._currentClass.customStyle.WelcomePage.welcomeText.fontSize = 36;
-        }
-        if(!this._currentClass.customStyle.WelcomePage.WelcomeDescription.fontSize){
-          this._currentClass.customStyle.WelcomePage.WelcomeDescription.fontSize = 16;
-        }
-       }else{
-        this.customStyle  = {
-          "WelcomePage":{
-            backgroundcolor1 : "#5acba0",
-            backgroundcolor2 : "#5d866a",
-            "Title":{
-              fontSize :  30,
-              fontFamily : "Lobster"
-            },
-            "welcomeText":{
-              fontSize :  20,
-              fontFamily : "Teko"
-            },
-            "WelcomeDescription":{
-              fontSize :  17,
-              fontFamily : "Open Sans Condensed"
-            }
-          }
-
-        }
-      }
-    }
-    this.getAckSettings(false,this._currentClass);
-
-    if(this.QRData.Location){
-     this.listenVisitorDetails(this.QRData.Location);
-    }
   }
 
   logoutMe(){

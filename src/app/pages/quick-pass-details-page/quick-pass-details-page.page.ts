@@ -44,7 +44,8 @@ export class QuickPassDetailsPagePage implements OnInit {
     public socialSharing: SocialSharing,
     private alertCtrl: AlertController,
     private camera: Camera,
-    private transfer: FileTransfer, private file: File,
+    private transfer: FileTransfer,
+    private file: File,
     private androidPermissions: AndroidPermissions,
     private loadingCtrl: LoadingController,
     private route: ActivatedRoute,
@@ -372,13 +373,6 @@ export class QuickPassDetailsPagePage implements OnInit {
                   fileTransfer.download(url, targetPath).then((entry) => {
                     loading.dismiss();
                     this.socialSharing.share(data, 'Your appointment QR code', targetPath, "").then(() => {
-                      // Success!
-                      // let toast = this.toastCtrl.create({
-                      //   message: this.T_SVC['ALERT_TEXT.QRSHARE_SUCCESS'],
-                      //   duration: 3000,
-                      //   position: 'bottom'
-                      // });
-                      // toast.present();
                     }).catch(async (error) => {
                       // Error!
                       loading.dismiss();

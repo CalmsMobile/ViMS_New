@@ -726,10 +726,6 @@ export class FacilityBookingPage2Page implements OnInit {
     alert.present();
   }
 
-  ionViewWillEnter(){
-    // this.content.scrollToTop();
-  }
-
   ngOnInit() {
   }
 

@@ -199,7 +199,7 @@ export const AppSettings = Object.freeze({
         //Samsung
         // SAMPLE_DEVICE_ID : "9f2b72d35e1b64a6",
         // Redmi
-        SAMPLE_DEVICE_ID : "c3e4f63b8f6b7043"
+        SAMPLE_DEVICE_ID : "c3e4f63b816b70131"
 
     },
     APPOINTMENT_BufferTime : 120,
@@ -234,6 +234,7 @@ export const AppSettings = Object.freeze({
         "SEL_FASILITY_DISPLAY_KIOSK_FACILITY":"SEL_FASILITY_DISPLAY_KIOSK_FACILITY",
         "DISPLAY_DETAILS": "DisplayDetails",
         "SECURITY_DETAILS": "SecurityDetails",
+        "SECURITY_LOGIN_STATUS": "SecurityLoginStatus",
         "SECURITY_USER_DETAILS": "SecurityUserDetails",
         "QRCODE_INFO":"QRCodeInfo",
         "FCM_ID":"FCMID",

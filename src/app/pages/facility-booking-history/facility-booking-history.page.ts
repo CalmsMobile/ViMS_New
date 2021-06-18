@@ -36,6 +36,20 @@ export class FacilityBookingHistoryPage implements OnInit {
 
   ionViewDidEnter() {
 		console.log('ionViewDidEnter FacilityBookingHistoryPage');
+    var MAppId = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
+		if(MAppId == AppSettings.LOGINTYPES.FACILITY){
+			this.events.publishDataCompany({
+        action: "page",
+        title: "home-view",
+        message: ''
+      });
+		}
+		this.OffSet = 0;
+		this.getAppointmentHistory(null);
+		var count = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT);
+    if(count){
+      this.notificationCount = parseInt(count);
+    }
 		var MAppId = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
 		if(MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
 			this.events.publishDataCompany({
@@ -66,24 +80,6 @@ export class FacilityBookingHistoryPage implements OnInit {
       });
 		}
   }
-
-	ionViewWillEnter() {
-		var MAppId = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
-		if(MAppId == AppSettings.LOGINTYPES.FACILITY){
-			this.events.publishDataCompany({
-        action: "page",
-        title: "home-view",
-        message: ''
-      });
-		}
-		console.log('ionViewWillEnter FacilityBookingHistoryPage');
-		this.OffSet = 0;
-		this.getAppointmentHistory(null);
-		var count = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT);
-    if(count){
-      this.notificationCount = parseInt(count);
-    }
-	}
 
   editVisitors(slideDOM, action, item){
 

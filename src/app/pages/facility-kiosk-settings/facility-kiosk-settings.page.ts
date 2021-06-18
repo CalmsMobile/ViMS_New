@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Device } from '@ionic-native/device/ngx';
 import { NavController, MenuController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,7 +23,7 @@ export class FacilityKioskSettingsPage implements OnInit {
   constructor(
     public navCtrl: NavController,
     private menuCtrl: MenuController,
-
+    private router: Router,
     private device: Device,
     private toastCtrl : ToastService,
     private alertCtrl : AlertController,
@@ -60,6 +61,11 @@ export class FacilityKioskSettingsPage implements OnInit {
 
   goToUserAbout(){
 
+  }
+
+  goBack() {
+    this.router.navigateByUrl('facility-kiosk-display');
+    console.log('goBack ');
   }
 
   logoutMe(){

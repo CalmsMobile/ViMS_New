@@ -85,16 +85,12 @@ export class QuickPassHistoryPagePage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter QuickPassHistoryPage');
+    this.OffSet = 0;
     this.events.publishDataCompany({
       action: "page",
       title: "quick-pass-dash-board-page",
       message: ''
     });
-  }
-
-  ionViewWillEnter() {
-    console.log('ionViewWillEnter QuickPassHistoryPage');
-    this.OffSet = 0;
   }
 
   getDayofDate(dateString){

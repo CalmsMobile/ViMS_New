@@ -75,19 +75,12 @@ export class FacilityKioskDisplayPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter FacilityKioskDisplayPage');
-  }
-  async ionViewWillEnter(){
     var sFacilityList = localStorage.getItem(AppSettings.LOCAL_STORAGE.SEL_FASILITY_DISPLAY_KIOSK_FACILITY);
     if( sFacilityList != undefined && sFacilityList  != ""){
       this.SELECTED_FACILITIE = JSON.parse(sFacilityList);
       this.resetGetBookingSlotTimer();
     } else{
-      (await this.alertCtrl.create({
-        header: this.T_SVC['NOTIFICATION.TITLE'],
-        message: 'Please select your facility',
-        cssClass: 'alert-warning',
-        buttons: ['OK']
-      })).present();
+      this.apiProvider.showAlert('Please select your facility');
       this.router.navigateByUrl("facility-kiosk-settings");
     }
   }
@@ -198,12 +191,15 @@ export class FacilityKioskDisplayPage implements OnInit {
     [upcoming-room] [header]{
       background: linear-gradient(to top left, ` +this.K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['bg_grad_clr1'] +`, ` + this.K_PROPERTIES['screen_ui']['upcoming_block']['upcoming_header']['bg_grad_clr2']+`) !important;
     }
-    [upcoming-room] ion-list .item[status-type='avail']{
+
+    [upcoming-room] [ion-item][status-type='avail']{
       background: linear-gradient(to top left, ` +this.K_PROPERTIES['screen_ui']['upcoming_block']['avail_tile_grad_clr1'] +`, ` + this.K_PROPERTIES['screen_ui']['upcoming_block']['avail_tile_grad_clr2']+`) !important;
     }
-    [upcoming-room] ion-list .item[status-type='engaged']{
+
+    [upcoming-room] [ion-item][status-type='engaged']{
       background: linear-gradient(to top left, ` +this.K_PROPERTIES['screen_ui']['upcoming_block']['engaged_tile_grad_clr1'] +`, ` + this.K_PROPERTIES['screen_ui']['upcoming_block']['engaged_tile_grad_clr2']+`) !important;
     }
+
     `;
     document.getElementById("MY_RUNTIME_CSS").innerHTML = _css;
   }
@@ -249,7 +245,7 @@ export class FacilityKioskDisplayPage implements OnInit {
       if (flag) {
         this.apiProvider.DisplayApp_GetBookingSlots(param).then((data : any) => {
           if(event){
-            event.complete();
+            event.target.complete();
           }
           var result = JSON.parse(data);
           if(result && result.length > 0){
@@ -281,6 +277,7 @@ export class FacilityKioskDisplayPage implements OnInit {
         cssClass: 'alert-warning',
         buttons: ['OK']
       })).present();
+
       this.router.navigateByUrl("facility-kiosk-settings");
     }
   }
@@ -295,7 +292,7 @@ export class FacilityKioskDisplayPage implements OnInit {
         var chkEndTime = (_fulBookingData[i].EndTime).replace(/T/g, " ");
         var init_pre = function () {
             let _evntType = _fulBookingData[i].BookPurps;
-            if ((_evntType).trim() == "" || _fulBookingData[i].SessionEnd) {
+            if ((_evntType).trim() === "" || _fulBookingData[i].SessionEnd) {
                 _evntType = loc_k_properties['screen_ui']['upcoming_block']['no_booking_txt'];
             }
             _pre = {
@@ -309,14 +306,17 @@ export class FacilityKioskDisplayPage implements OnInit {
                 XYZ_STIME_1: _fulBookingData[i].StartTime,
                 XYZ_ETIME_1: _fulBookingData[i].EndTime,
                 XYZ_NO_PERSON:"",
-                XYZ_STATUS: (_fulBookingData[i].BookingID != "" || !_fulBookingData[i].SessionEnd)?"engaged":"avail",
+                XYZ_STATUS: (_fulBookingData[i].BookingID != "" && !_fulBookingData[i].SessionEnd)?"engaged":"avail",
                 SessionEnd : _fulBookingData[i].SessionEnd
             }
         }
-        if (i == 0) {
+        if (i > 22) {
+          console.log(i + ' ' + _fulBookingData[i].BookingID);
+        }
+        if (i === 0) {
             init_pre();
-        } else if (i != (_fulBookingData.length - 1)) {
-            if (_fulBookingData[i].BookingID == _pre.XYZ_Bookid) {
+        } else if (i !== (_fulBookingData.length - 1)) {
+            if (_fulBookingData[i].BookingID === _pre.XYZ_Bookid) {
                 _pre.XYZ_ETIME = chkEndTime;
             } else {
                 if (new Date() < new Date(_pre.XYZ_ETIME)) { // Check End Time with Current Time
@@ -349,9 +349,24 @@ export class FacilityKioskDisplayPage implements OnInit {
     //APP_GEN._updateScreen();
   }
 
+  // let alert = this.alertCtrl.create({
+  //   header: 'Alert',
+  //   message: 'Please select your facility',
+  //   cssClass: 'alert-danger',
+  //   buttons: [{
+  //     text: 'Okay',
+  //     handler: () => {
+  //       console.log('Cancel clicked');
+  //       this.alertShowing = false;
+  //     }
+  //   }]
+  // });
+  // (await alert).present();
+
   async takeActForStopEvent(){
     let alert = await this.alertCtrl.create({
       header: this.T_SVC['ALERT_TEXT.WISH_TO_END_BOOK'],
+      cssClass: 'alert-danger-ios',
       inputs: [
         {
           name: 'stopcode',
@@ -374,7 +389,7 @@ export class FacilityKioskDisplayPage implements OnInit {
           handler: data => {
             var displayData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.DISPLAY_DETAILS);
             var MAppDevSeqId = JSON.parse(displayData).MAppDevSeqId;
-            if (!!data.stopcode) {
+            if (data.stopcode) {
               this.FBDisplayEndSession(data.stopcode, this.ACTIVE_BLOCK_CURRENT_DATA.XYZ_STIME_1, this.ACTIVE_BLOCK_CURRENT_DATA.XYZ_ETIME_1, this.ACTIVE_BLOCK_CURRENT_DATA.XYZ_Bookid, MAppDevSeqId);
               // logged in!
             } else {
@@ -401,7 +416,7 @@ export class FacilityKioskDisplayPage implements OnInit {
       async (val) => {
         if(val){
           var message = "Success"; // 0- used 1.success 2.Expired
-          if(JSON.parse(val+"")[0].code == 10){
+          if(JSON.parse(val+"")[0].code === 10){
             let alert = await this.alertCtrl.create({
               header: 'Success',
               message: this.T_SVC['ALERT_TEXT.SESSION_ENDED'],
@@ -413,9 +428,9 @@ export class FacilityKioskDisplayPage implements OnInit {
             this.resetGetBookingSlotTimer();
           }else{
             message = "Invalid Code";
-            if(JSON.parse(val+"")[0].Status == "0"){
+            if(JSON.parse(val+"")[0].Status === "0"){
               message = this.T_SVC['ALERT_TEXT.SLOT_OCCUPIED'];
-            }else if(JSON.parse(val+"")[0].Status == "2"){
+            }else if(JSON.parse(val+"")[0].Status === "2"){
               message = this.T_SVC['ALERT_TEXT.SESSION_EXPIRED'];
             }
             let alert = await this.alertCtrl.create({
@@ -430,11 +445,11 @@ export class FacilityKioskDisplayPage implements OnInit {
         }
       },
       async (err) => {
-        if(err && err.message == "No Internet"){
+        if(err && err.message === "No Internet"){
           return;
         }
         var message = "";
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+        if(err && err.message === "Http failure response for (unknown url): 0 Unknown Error"){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else if(err && JSON.parse(err) && JSON.parse(err).message){
           message =JSON.parse(err).message;

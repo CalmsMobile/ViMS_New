@@ -7,15 +7,12 @@ import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
-import { ToastService } from 'src/app/services/util/Toast.service';
 import { DatePipe } from '@angular/common';
-import { Chart } from 'chart.js';
+import * as Chart from 'chart.js';
 import { ThemeSwitcherService } from 'src/app/services/ThemeSwitcherService';
-import * as ChartJs from 'chart.js'
-
-
+import { CommonUtil } from 'src/app/services/util/CommonUtil';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 declare var cordova: any;
-
 @Component({
   selector: 'app-security-dash-board-page',
   templateUrl: './security-dash-board-page.page.html',
@@ -28,10 +25,12 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   @ViewChild("barCanvas2") barCanvas2: ElementRef;
   @ViewChild("barCanvas3") barCanvas3: ElementRef;
   @ViewChild("barCanvas4") barCanvas4: ElementRef;
+  @ViewChild("barCanvas5") barCanvas5: ElementRef;
   private barChart1: Chart;
   private barChart2: Chart;
   private barChart3: Chart;
   private barChart4: Chart;
+  private barChart5: Chart;
   colorArray = ["#a63cb8", "#e93574", "#ffc720", "#98c95c", "#f4564a", "#1db2f6", "#883b56", "#6a808a", "#25e0a1",
 "#147ed8"];
   segment = 'Summary';
@@ -48,6 +47,10 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     datasets: []
   };
   dataSets4 = {
+    labels: [],
+    datasets: []
+  };
+  dataSets5 = {
     labels: [],
     datasets: []
   };
@@ -68,6 +71,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   userInfoObj: any;
   statsCountData: any = {};
   lastLoggedIn: any;
+  footerHeight = '0px';
   constructor(public navCtrl: NavController,
     private platform : Platform,
     private router: Router,
@@ -81,11 +85,12 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     private themeSwitcher: ThemeSwitcherService,
     private dateformat : DateFormatPipe,
     private events : EventsService,
-    private _zone : NgZone,
+    private commonUtil: CommonUtil,
+    private statusBar : StatusBar,
     private animationCtrl: AnimationController,) {
       this.translate.get(['ACC_MAPPING.INVALID_QR', 'ACC_MAPPING.INVALID_ORG_TITLE',
-      'ACC_MAPPING.INVALID_FCM_TITLE',
-      'ACC_MAPPING.FCM_TITLE',
+      'ACC_MAPPING.INVALID_FCM_TITLE', 'ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS',
+      'ACC_MAPPING.FCM_TITLE', 'ALERT_TEXT.CONFIRMATION',
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
       'ALERT_TEXT.QR_INVALID_TODAY',
       'ALERT_TEXT.QR_USED',
@@ -111,17 +116,21 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
         }
 
       });
+
   }
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter SecurityDashBoardPage');
-    this.enableMyKad();
+    this.refreshLastLoggedIn();
     const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
     if (ackSeettings) {
       this.appSettings = JSON.parse(ackSeettings);
       this.composeRunTimeCss();
       this.getSecurityStats();
       this.updateSyncInterval();
+      this.enableMyKad();
+    } else {
+      this.getSecuritySettings();
     }
   }
 
@@ -129,21 +138,17 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     if (!this.appSettings.customStyle) {
       this.appSettings = AppSettings.DEFAULT_SETTINGS;
     }
+    this.statusBar.backgroundColorByHexString(this.appSettings.customStyle.AppTheme);
     this.themeSwitcher.setTheme('Theme1', this.appSettings.customStyle.AppTheme);
     let _css = `
-    // ion-toolbar {
-    //   --background: `+ this.appSettings.customStyle.AppTheme +` !important;
-    // }
-    `;
+    .dashboardToolbar {
+      --background: `+ this.appSettings.customStyle.AppTheme +` !important;
+      --min-height: ` + (this.appSettings.FooterTab.IconSize * 2) + `px !important;
+    }`;
     document.getElementById("MY_RUNTIME_CSS").innerHTML = _css;
   }
 
-  ionViewWillEnter(){
-    this.getSecuritySettings();
-    this.refreshLastLoggedIn();
-  }
-
-  updateSyncInterval() {
+  async updateSyncInterval() {
     if (this.timeoutInterval) {
       clearInterval(this.timeoutInterval);
     }
@@ -171,6 +176,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
           console.log(val+"");
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, JSON.stringify(this.appSettings));
           this.composeRunTimeCss();
+          this.getSecurityStats();
           this.updateSyncInterval();
           this.apiProvider.GetMasterDetails().then(
             (result: any) => {
@@ -182,6 +188,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
 
             }
           );
+          this.enableMyKad();
         }
       },
       (err) => {
@@ -202,19 +209,6 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     }
   }
 
-  showLoading(currentClass){
-    if(!currentClass.loading){
-      currentClass.loading = currentClass.loadingCtrl.create({
-        content: 'Please wait...',
-        dismissOnPageChange: true,
-        showBackdrop: true,
-        enableBackdropDismiss: true
-      });
-      currentClass.loading.present();
-    }
-
-  }
-
   hideLoading(currentClass){
     if(currentClass.loading){
       currentClass.loading.dismiss();
@@ -223,12 +217,15 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   }
 
   proceedNext(type){
+
+    setTimeout(() => { console.log("Click -->" + type); }, 10);
     if(type == 'IN'){
       const navigationExtras: NavigationExtras = {
         state: {
           passData: {
           }
-        }
+        },
+        replaceUrl: true
       };
       this.router.navigate(['security-manual-check-in'], navigationExtras);
       // this.enableMyKad();
@@ -265,8 +262,76 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     // alert("Released");
   }
 
-  pressed(){
+  gotoSettings(){
     this.router.navigateByUrl('settings-view-page');
+  }
+
+  logout() {
+    this.translate.get(['SETTINGS.ARE_U_SURE_LOGOUT_TITLE','SETTINGS.ARE_U_SURE_LOGOUT',
+     'SETTINGS.EXIT_ACCOUNT_SCUSS','SETTINGS.EXIT_ACCOUNT_FAILED'
+    ,'COMMON.OK','COMMON.CANCEL','COMMON.EXIT1']).subscribe(async t => {
+      let loginConfirm = await this.alertCtrl.create({
+        header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
+        message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
+        cssClass: 'alert-warning-logout',
+        mode: 'ios',
+        buttons: [
+          {
+            text: t['COMMON.EXIT1'],
+            handler: () => {
+              const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+                const data = {
+                  'LogoutTime': endDate,
+                  'Duration': this.getDurationToLogout(endDate)
+                }
+                console.log(JSON.stringify(data));
+                this.apiProvider.requestSecurityApi(data, '/api/SecurityApp/userLogout', true).then(
+                  (val: any) => {
+                    localStorage.setItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS, '');
+                    localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, '');
+                    this.apiProvider.showToast(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
+                    this.navCtrl.navigateRoot('login');
+                  },
+                  async (err) => {
+                    if(err && err.message == "No Internet"){
+                      return;
+                    }
+                    try {
+                      var result = JSON.parse(err.toString());
+                      if(result.message){
+                        this.apiProvider.showAlert(result.message);
+                        return;
+                      }
+                    } catch (error) {
+
+                    }
+
+                    if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                      var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+                      this.apiProvider.showAlert(message);
+                      return;
+                    }
+
+                    if(err && err.Table && err.Table[0].Code !== 10 && err.Table1 && err.Table1[0].Description){
+
+                      this.apiProvider.showAlert(err.Table1[0].Description);
+                      return;
+                      }
+                    this.apiProvider.showAlert("<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>');
+                  }
+                );
+            }
+          },
+          {
+            text: t['COMMON.CANCEL'],
+            role: 'cancel',
+            handler: () => {
+            }
+          }
+        ]
+      });
+      loginConfirm.present();
+    });
   }
 
   active(){
@@ -274,7 +339,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   }
 
   enableMyKad(){
-    if(this.appSettings.MyKad_Enabled && this.platform.is('cordova')) {
+    if(this.appSettings.MyKad_Enabled) {
       var currentClass = this;
       var success = async function(result) {
         console.log(result);
@@ -333,18 +398,18 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
             description = resultObj.Description;
             break;
           case "WAITING":
-            currentClass.showLoading(currentClass);
+            currentClass.apiProvider.presentLoading();
             description = resultObj.Description;
             break;
           case "INSERT":
             description = resultObj.Description;
             break;
           case "CARD READ PROGRESS":
-            currentClass.showLoading(currentClass);
+            currentClass.apiProvider.presentLoading();
             description = resultObj.Description;
             break;
           case "CANCEL":
-            currentClass.hideLoading(currentClass);
+            currentClass.apiProvider.dismissLoading();
             description = resultObj.Description;
             break;
         }
@@ -399,7 +464,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "0037042496" //"C4B9F365";
+      var data = "0001105743" //"C4B9F365";
       var params = {"hexcode":""+ data};
       this.getAppointmentByQR(params);
     }else{
@@ -462,7 +527,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   }
 
   getAppointmentByQR(params) {
-    this.apiProvider.VimsAppGetAppointmentByHexCode(params).then(
+    this.apiProvider.VimsAppGetAppointmentByHexCode(params, true).then(
       async (val) => {
         var visitorDetail = val+"";
         var vOb1 = JSON.parse(visitorDetail);
@@ -470,29 +535,36 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
         if(vOb1 && vOb1.Table1 && vOb1.Table1.length > 0) {
           var vOb = vOb1.Table1[0];
           vOb.Hexcode = params.hexcode;
-          var startDate = vOb.START_TIME.split("T")[0];
-          var fDate = this.dateformat.transform(startDate+"", "yyyy-MM-dd");
-          var fTime = new Date(fDate).getTime();
-          var endDate = vOb.END_TIME.split("T")[0];
-          var eDate = this.dateformat.transform(endDate+"", "yyyy-MM-dd");
-          var eTime = new Date(eDate).getTime();
-          var cDate = this.dateformat.transform(new Date()+"", "yyyy-MM-dd");
-          var cTime = new Date(cDate).getTime();
-          if((fDate == cDate) || (fTime <= cTime && cTime <= eTime)){
-            const navigationExtras: NavigationExtras = {
-              state: {
-                passData: {
-                  PreAppointment : vOb
-                }
-              }
-            };
-            this.router.navigate(['security-manual-check-in'], navigationExtras);
-          }else{
+          const resultObj = this.commonUtil.checkQRCode(vOb.START_TIME, vOb.END_TIME, this.dateformat);
+          if(resultObj.isInValid){
             message = this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY'];
-            if(fTime < cTime && eTime < cTime){
+            if(resultObj.isExpired){
               message = this.T_SVC['ALERT_TEXT.QR_EXPIRED'];
             }
             this.apiProvider.showAlert(message);
+          } else {
+            if ((vOb.att_check_in === null || vOb.att_check_in === 0) || (vOb.att_check_in === 1 && vOb.att_check_out === 1)) {
+              const navigationExtras: NavigationExtras = {
+                state: {
+                  passData: {
+                    PreAppointment : vOb
+                  }
+                }
+              };
+              this.router.navigate(['security-manual-check-in'], navigationExtras);
+            } else if (vOb.att_check_in === 1 && (vOb.att_check_out === null || vOb.att_check_out === 0)){
+              const navigationExtras: NavigationExtras = {
+                state: {
+                  passData: vOb,
+                  fromAppointment: true,
+                  showCheckoutAlert: true
+                }
+              };
+              this.router.navigate(['visitor-information'], navigationExtras);
+            } else {
+              this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY']);
+            }
+
           }
         } else {
           this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY']);
@@ -570,6 +642,21 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     this.lastLoggedIn = dDays +' day, '+dHours+' hour, '+dMin+' min';
   }
 
+  getDurationToLogout(endDate) {
+    const userInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+    if (userInfo) {
+      const userInfoObj = JSON.parse(userInfo);
+      const startDate = new Date(userInfoObj.LoginTime);
+      let difference = endDate.getTime() - startDate.getTime();
+      const dDays = this.apiProvider.twoDecimals(parseInt('' +difference/(24*60*60*1000)));
+      const dHours = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*60*1000)) % 24)) ;
+      const dMin = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*1000)) % 60));
+      const dSec = this.apiProvider.twoDecimals(parseInt('' +(difference/(1000)) % 60));
+      return dDays +' Day(s), '+dHours+' Hour(s), '+dMin+' Min(s), '+dSec+' Sec(s)';
+    }
+
+  }
+
   refreshLastLoggedIn() {
    this.loggedInInterval = setInterval(() => {
       const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'));
@@ -577,7 +664,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     }, 1000);
   }
 
-  getSecurityStats(){
+  async getSecurityStats(){
     var params = {
     }
     this.apiProvider.VimsAppGetSecurityStats(params).then(
@@ -588,6 +675,8 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
        this.dataSets2.labels = [];
        this.dataSets3.labels = [];
        this.dataSets4.labels = [];
+       this.dataSets5.labels = [];
+       result.Table2 = result.Table2 ? result.Table2.reverse(): [];
        if (result.Table2) {
         const TenDaysAppointmentCount = [];
         result.Table2.forEach(element => {
@@ -662,9 +751,27 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
         }
        }
 
+       if (result.Table6) {
+        const TenDaysUpcomingAppointmentTotalCount = [];
+        result.Table6.forEach(element => {
+          this.dataSets5.labels.push(element.VisitorCategory);
+          TenDaysUpcomingAppointmentTotalCount.push(element.AppointmentCount);
+         });
+         this.dataSets5.datasets = [{
+          label: 'Upcoming Appointment',
+          data: TenDaysUpcomingAppointmentTotalCount,
+          backgroundColor: this.colorArray, // array should have same number of elements as number of dataset
+          borderColor: this.colorArray,// array should have same number of elements as number of dataset
+          borderWidth: 1,
+          keepTooltipOpen: true
+        }];
+        if (this.barChart5) {
+          this.barChart5.update();
+        }
+       }
+
       },
       (err) => {
-        console.log("error : "+JSON.stringify(err));
         if(err && err.message == "No Internet"){
           return;
         }
@@ -770,6 +877,44 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
             // }]
           }
         }
+      });
+
+      let options1 = {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels:{
+            usePointStyle: true,
+            fontSize: 8,
+            fontColor: '#333',
+        }
+       },
+       tooltips: {
+        enabled: true
+      },
+      plugins: {
+          datalabels: {
+              formatter: (value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                      sum += data;
+                  });
+                  let percentage = (value*100 / sum).toFixed(2)+"%";
+                  return percentage;
+              },
+              color: '#fff',
+          }
+      }
+
+      };
+
+
+      const nativeElm5 = document.getElementById('barCanvas5');
+      this.barChart5 = new Chart(nativeElm5, {
+        type: 'pie',
+        data: this.dataSets5,
+        options: options1
       });
     } catch (error) {
 

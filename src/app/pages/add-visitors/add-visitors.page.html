@@ -6,7 +6,7 @@
       <ion-buttons slot="end">
         <ion-button (click)="getPhoneBookContact()">
           <!-- <ion-icon name="contact"></ion-icon> -->
-          <img slot="end" style="width: 35px;height: 35px;" src="../../assets/images/phone-book.png">
+          <img slot="end" style="width: 35px;height: 35px; padding: 3px;" src="../../assets/images/phone-book.png">
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
@@ -43,7 +43,7 @@
       <ion-spinner slot="start" [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
     </div>
   </div>
-  <ion-grid class="ion-padding" style="padding-top: 0px;">
+  <ion-grid class="ion-padding" style="padding: 0px;margin: 10px;">
     <ion-row align-items-start>
 
       <form novalidate size="12" size-sm size-md (ngSubmit)="addVisitors()" [formGroup]="visitorProfile"
@@ -125,7 +125,7 @@
             <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_USER_CONTACT' | translate}} <span
                 style="color: #cf3c4f;">*</span></ion-label>
             <ion-input required editable='false' placeholder="{{'ADD_VISITORS.LAB_PH_USER_CONTACT' | translate}}"
-              style="font-size: 16px;" type="text" formControlName="contact"
+              style="font-size: 16px;" type="number" formControlName="contact"
               [(ngModel)]="visitorInfoModal.visitor_mobile_no"></ion-input>
           </ion-item>
 
@@ -133,7 +133,7 @@
             *ngIf="hostSettings && hostSettings.ContactNumberEnabled && !hostSettings.ContactNumberRequired">
             <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_USER_CONTACT' | translate}}</ion-label>
             <ion-input editable='false' placeholder="{{'ADD_VISITORS.LAB_PH_USER_CONTACT' | translate}}"
-              style="font-size: 16px;" type="text" formControlName="contact"
+              style="font-size: 16px;" type="number" formControlName="contact"
               [(ngModel)]="visitorInfoModal.visitor_mobile_no"></ion-input>
           </ion-item>
 
@@ -217,7 +217,7 @@
 
             <ion-item lines="none" class="ion-no-padding commonItem box_round_corner"
             [ngStyle]="{'border': hostSettings.CountryRequired ? '3px solid #eee': '3px solid #eee'}" no-padding transparent (click)="onChangeCountry()"
-              *ngIf="hostSettings.CountryEnabled && !hostSettings.CountryRequired">
+              *ngIf="hostSettings.CountryEnabled">
               <div>
                 <ion-label *ngIf="!visitorInfoModal.visitor_country_name"
                   style="margin:0px; color: #8e8e93 !important;margin-left: 3px !important;    padding: 5px;margin-bottom: 0px !important;">

@@ -1,13 +1,14 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"
-      style="font-size: x-large;color: #FFF;"></ion-icon>
+      style="font-size: x-large;color: #FFF;padding-bottom: 0px !important;
+      padding-top: 0px !important;"></ion-icon>
     <ion-title>My Appointments</ion-title>
     <ion-buttons slot="end">
       <ion-label *ngIf="expiryTime" style="font-size: 14px;
       background: white;
       color: var(--ion-color-primary);
-      padding: 7px;
+      padding: 5px;
       border-radius: 12px;">{{expiryTime | date : 'dd MMM yyyy'}}</ion-label>
       <ion-button slot="icon-only" (click)="showCalender(picker)" style="font-size: larger;">
         <ion-datetime #picker style=" margin-left: 5px;
@@ -18,7 +19,7 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar mode="ios" (ionChange)="filterTechnologies($event)" placeholder="  Search" animated>
+    <ion-searchbar  style="    padding: 2px;height: 45px;" color="light" mode="ios" (ionChange)="filterTechnologies($event)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s" placeholder="Search">
     </ion-searchbar>
   </ion-toolbar>
 </ion-header>
@@ -26,43 +27,47 @@
   <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
+  <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointmentsCone.length == 0">
+    <ion-col size="12" size-sm size-md>
+            <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.png">
+            <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'SECURITY_APP.NO_LIST' | translate}}</h5> -->
+    </ion-col>
+</ion-row>
   <ion-card class="card_appointment" *ngFor="let item of appointmentsCone" no-padding no-border (click)="moveToDetailsPage(item)">
     <ion-item-sliding #slideDOM (ionDrag)="ondrag($event, slideDOM, item)">
       <ion-item lines="none" class="ion-no-padding">
         <ion-row lines="none" no-padding full-width>
           <ion-col size="4" class="col apt-left" no-padding>
             <ion-row style="height: 100%;">
-            <ion-item lines="none" style="    --padding-start: 6px;
+            <ion-item lines="none" style="    --padding-start: 4px;
             width: 100%;">
               <div>
                 <div style="    width: -webkit-fill-available;
                 display: inline-flex;">
-                <ion-icon style="font-size: 20px;
-                align-self: center;" color="light" name="stopwatch-outline"></ion-icon>
-                  <ion-label color="light" style="font-size: 10px;
-                  align-self: center;">START</ion-label>
+                <ion-icon style="font-size: 16px;
+                align-self: center;" color="light" name="calendar-outline"></ion-icon>
+                  <ion-label color="light" style="font-size: 12px;
+                  align-self: center;">Start Time</ion-label>
 
                 </div>
                 <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
-                text-align: center;
-                display: inline-block;">{{item.START_TIME | date : 'hh:mm a'}}</ion-label>
+                text-align: center;font-size: 13px;">{{item.START_TIME | date : 'dd MMM hh:mm a'}}</ion-label>
               </div>
             </ion-item>
-            <ion-item lines="none" style="    --padding-start: 6px;
+            <ion-item lines="none" [ngStyle]="{'border': '1px solid ' + appSettings.customStyle.AppTheme}" style="--padding-start: 4px; background: white;
+            border-radius: 6px;align-self: center;
             width: 100%;">
               <div>
-                <div style="    width: -webkit-fill-available;
+                <div style="width: -webkit-fill-available;
                 display: inline-flex;">
-                <ion-icon style="font-size: 20px;
-                align-self: center;" color="light" name="stopwatch-outline"></ion-icon>
-                  <ion-label color="light" style="font-size: 10px;
-                  align-self: center;">END</ion-label>
+                <ion-icon style="font-size: 16px;
+                align-self: center;" color="dark" name="calendar-outline"></ion-icon>
+                  <ion-label color="dark" style="font-size: 12px;
+                  align-self: center;">End Time</ion-label>
 
                 </div>
-                <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
-                text-align: center;
-                display: inline-block;">{{item.END_TIME | date : 'hh:mm a'}}</ion-label>
+                <ion-label color="dark" style="font-weight: 600;    width: -webkit-fill-available;
+                text-align: center;font-size: 13px;">{{item.END_TIME | date : 'dd MMM hh:mm a'}}</ion-label>
               </div>
             </ion-item>
             </ion-row>
@@ -87,11 +92,6 @@
               <ion-icon slot="start" name="car-sport-outline" color="dark" class="apt-text-icons"></ion-icon>
               <p class="apt-center-subtitle">{{item.PLATE_NUM ? item.PLATE_NUM: '&nbsp;&nbsp;--'}}</p>
             </div>
-
-            <div class="div-apt-center">
-              <ion-icon slot="start" name="timer-outline" class="apt-text-icons" color="danger"></ion-icon>
-              <p class="apt-center-subtitle" style=" color: #f44336; font-weight: bold;">{{item.END_TIME? (item.END_TIME | date : 'dd MMM yyyy hh:mm a'): '&nbsp;&nbsp;--' }}</p>
-            </div>
           </ion-col>
 
           <ion-col size="2" class="colIcons">
@@ -103,8 +103,8 @@
                       <div class="outer circle shapeborder">
                         <div class="inner circle shapeborder">
                           <ion-icon *ngIf="item.att_check_in === 0 && item.att_check_in === 0" color="light" name="timer-outline"></ion-icon>
-                          <ion-icon *ngIf="item.att_check_in === 1 && item.att_check_out === 1" color="light" name="trending-up-outline"></ion-icon>
-                          <ion-icon *ngIf="item.att_check_in === 1 && item.att_check_out === 0" color="light" name="trending-down-outline"></ion-icon>
+                          <ion-icon *ngIf="item.att_check_in === 1 && item.att_check_out === 1" color="light" name="trending-down-outline"></ion-icon>
+                          <ion-icon *ngIf="item.att_check_in === 1 && item.att_check_out === 0" color="light" name="trending-up-outline"></ion-icon>
                         </div>
                       </div>
 

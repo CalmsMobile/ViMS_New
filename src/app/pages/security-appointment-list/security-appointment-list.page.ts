@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
+import { CommonUtil } from 'src/app/services/util/CommonUtil';
 
 @Component({
   selector: 'app-security-appointment-list',
@@ -19,11 +20,12 @@ export class SecurityAppointmentListPage implements OnInit {
   appointmentsCone = [];
   isFetching = false;
   showAlert = false;
+  appSettings: any = {};
   visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
   constructor(private router: Router,
     public apiProvider: RestProvider,
-    private datePipe: DatePipe,
+    private commonUtil: CommonUtil,
     private alertCtrl: AlertController,
     private dateformat: DateFormatPipe,
     private translate:TranslateService,) {
@@ -31,11 +33,20 @@ export class SecurityAppointmentListPage implements OnInit {
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'SETTINGS.SELECT_LANGUAGE']).subscribe(t => {
         this.T_SVC = t;
     });
+    const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
+    if (ackSeettings) {
+      this.appSettings = JSON.parse(ackSeettings);
+    }
     this.expiryTime = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
   }
 
   ngOnInit() {
-    this.getBranchAppointments(null, false);
+    // this.getBranchAppointments(null, false);
+  }
+
+  ionViewDidEnter() {
+    this.appointments = [];
+    this.getBranchAppointments(null, false, false);
   }
 
   loadData(event) {
@@ -49,7 +60,7 @@ export class SecurityAppointmentListPage implements OnInit {
       if(!currentClass.isFetching){
         currentClass.isFetching = true;
         // setTimeout(()=>{
-          currentClass.getBranchAppointments(null, true);
+          currentClass.getBranchAppointments(null, true, true);
       //  },1000)
       }
       // }
@@ -74,7 +85,11 @@ export class SecurityAppointmentListPage implements OnInit {
         return;
         }
         this.showAlert = true;
-        this.checkInOutVisitor(item);
+        const resultObj = this.commonUtil.checkQRCode(item.START_TIME, item.END_TIME, this.dateformat);
+        if (!resultObj.isInValid && !resultObj.isExpired) {
+          this.checkInOutVisitor(item);
+        }
+
     }
     if (Math.abs(percent) > 1) {
       // console.log('overscroll');
@@ -89,79 +104,90 @@ export class SecurityAppointmentListPage implements OnInit {
 
   async checkInOutVisitor(item) {
     let message1 = "";
-      if ((item.att_check_in === 0 && item.att_check_out === 0) || (item.att_check_in === 1 && item.att_check_out === 1)) {
-        message1 = "Do you wish to check-in ";
-      } else if (item.att_check_in === 1 && (!item.att_check_out || item.att_check_out === 0)) {
-        message1 = "Do you wish to check-out ";
-      } else {
-        this.showAlert = false;
-        return;
+    let inputsShow = [];
+    if ((item.att_check_in === 0 && item.att_check_out === 0) || (item.att_check_in === 1 && item.att_check_out === 1)) {
+      message1 = "Do you wish to check-in ";
+    } else if (item.att_check_in === 1 && (!item.att_check_out || item.att_check_out === 0)) {
+      message1 = "Do you wish to check-out ";
+      if (item.overStayTime) {
+        inputsShow = [
+          {
+            name: 'remarks',
+            type: 'text',
+            placeholder: 'Enter Check-out Remarks'
+          }]
       }
-      let alert = this.alertCtrl.create({
-        header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
-        cssClass:"alert-danger",
-        message: message1+(item.visitor_name? item.visitor_name : " this visitor")+" now?",
-        buttons: [
-          {
-            text: 'Cancel',
-            role: 'cancel',
-            handler: () => {
-              console.log('Cancel clicked');
-            }
-          },
-          {
-            text: 'Ok',
-            handler: () => {
-              console.log('Ok clicked');
-              if ((item.att_check_in === 0 && item.att_check_out === 0) || (item.att_check_in === 1 && item.att_check_out === 1)) {
-                const navigationExtras: NavigationExtras = {
-                  state: {
-                    passData: {
-                      PreAppointment : item
-                    }
-                  }
-                };
-                this.router.navigate(['security-manual-check-in'], navigationExtras);
-                return;
-              }
-              var params = {
-                "att_id":item.att_id,
-                "CheckOutCounter":"admin"
-              };
-              // this.VM.host_search_id = "adam";
-              this.apiProvider.VimsAppUpdateVisitorCheckOut(params).then(
-                async (val) => {
-                  this.appointments = [];
-                  this.appointmentsCone = [];
-                  this.getBranchAppointments(null, false);
-
-                  this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
-
-                },
-                async (err) => {
-                  if(err && err.message == "No Internet"){
-                    return;
-                  }
-                  var message = "";
-                  if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-                    message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-                  } else if(err && JSON.parse(err) && JSON.parse(err).message){
-                    message =JSON.parse(err).message;
-                  }
-                  if(message){
-                    // message = " Unknown"
-                    this.apiProvider.showAlert(message);
+    } else {
+      this.showAlert = false;
+      return;
+    }
+    let alert = this.alertCtrl.create({
+      header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
+      cssClass:"alert-danger",
+      inputs: inputsShow,
+      message: message1+(item.visitor_name? item.visitor_name : " this visitor")+" now?",
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Ok',
+          handler: (result) => {
+            console.log('Ok clicked');
+            if ((item.att_check_in === 0 && item.att_check_out === 0) || (item.att_check_in === 1 && item.att_check_out === 1)) {
+              const navigationExtras: NavigationExtras = {
+                state: {
+                  passData: {
+                    PreAppointment : item
                   }
                 }
-              );
+              };
+              this.router.navigate(['security-manual-check-in'], navigationExtras);
+              return;
             }
+            var params = {
+              "att_id":item.att_id,
+              "remarks": (result && result.remarks)? result.remarks: '',
+              "CheckOutCounter":"admin"
+            };
+            // this.VM.host_search_id = "adam";
+            this.apiProvider.VimsAppUpdateVisitorCheckOut(params).then(
+              async (val) => {
+                this.appointments = [];
+                this.appointmentsCone = [];
+                this.getBranchAppointments(null, false, true);
+
+                this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
+
+              },
+              async (err) => {
+                if(err && err.message == "No Internet"){
+                  return;
+                }
+                var message = "";
+                if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                  message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+                } else if(err && JSON.parse(err) && JSON.parse(err).message){
+                  message =JSON.parse(err).message;
+                }
+                if(message){
+                  // message = " Unknown"
+                  this.apiProvider.showAlert(message);
+                }
+              }
+            );
           }
-        ]
-      });
-      (await alert).present();
-      (await alert).onDidDismiss().then(() => {
-        this.showAlert = false;
-      })
+        }
+      ]
+    });
+    (await alert).present();
+    (await alert).onDidDismiss().then(() => {
+      this.showAlert = false;
+    })
 
   }
 
@@ -174,16 +200,16 @@ export class SecurityAppointmentListPage implements OnInit {
     this.expiryTime = this.dateformat.transform($event.detail.value + "", "yyyy-MM-dd");
     console.log("OpenCalender:Start:"+ this.expiryTime);
     this.appointments = [];
-    this.getBranchAppointments(null, false);
+    this.getBranchAppointments(null, false, false);
 }
 
-  getBranchAppointments(refresher, loadmore) {
+  getBranchAppointments(refresher, loadmore, hideLoading) {
     const data = {
     "START_DATE": this.expiryTime,
-    "LIMIT": 200,
+    "LIMIT": 20,
     "START": this.appointments.length,
  };
-    this.apiProvider.requestSecurityApi(data, '/api/SecurityApp/getBranchAppointments', true).then(
+    this.apiProvider.requestSecurityApi(data, '/api/SecurityApp/getBranchAppointments', hideLoading ? false: true).then(
       (val: any) => {
         const response = JSON.parse(val);
         if (response.Table && response.Table.length > 0 && response.Table[0].Code === 10) {
@@ -256,7 +282,7 @@ export class SecurityAppointmentListPage implements OnInit {
   doRefresh(refresher) {
     this.appointments = [];
     this.appointmentsCone = [];
-    this.getBranchAppointments(refresher, false);
+    this.getBranchAppointments(refresher, false, true);
   }
 
   filterTechnologies(event) {
@@ -270,6 +296,10 @@ export class SecurityAppointmentListPage implements OnInit {
      } else {
       this.appointmentsCone = this.appointments;
      }
+  }
+
+  onCancel(){
+    this.appointmentsCone = this.appointments;
   }
 
   goBack() {

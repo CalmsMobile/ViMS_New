@@ -66,6 +66,9 @@ ion-content {
   text-align: center;
   padding-top: 20px;
   padding-bottom: 20px;
+  min-width: 130px;
+  max-width: 300px;
+  margin-bottom: 20px;
 }
 
 .cardtitle {
@@ -87,6 +90,8 @@ ion-content {
   justify-content: center;
   text-transform: capitalize;
   color: inherit;
+  padding: 10px;
+  text-align: center;
 }
 .para {
   font-size: 32px;
@@ -141,11 +146,22 @@ ion-content {
 }
 
 .mainsegments {
-  float: inline-end;
+  background: var(--ion-color-primary);
+  border-radius: 0px;
+  color: whitesmoke;
 }
 
 .mainsegments ion-segment-button {
   --color-checked: var(--ion-color-primary);
   padding: 5px;
-  // --background-checked: blue;
+  border-bottom: 3px solid var(--ion-color-primary);
+  border-radius: 0px;
+  margin: 0px;
+  --background-checked: white;
+}
+ion-footer {
+  position: sticky;
+}
+
+.dashboardToolbar {
 }

@@ -29,11 +29,13 @@
                 <ion-label style="font-size: 14px;
                 padding-top: 2px;" (click)="openVisitorDetails(visitors)">{{visitors.EMAIL}}</ion-label>
             </div>
-            <div slot="end" style="margin: 0px;">
+            <div slot="end" style="margin: 0px;" *ngIf="visitors.Approval_Status === 'Pending'">
               <!-- <ion-icon color="secondary" class="iconiconClass" name="share-outline" (click) = "shareQR(visitors)" ></ion-icon> -->
               <ion-icon color="success" class="iconiconClass" name="thumbs-up-outline"
               (click)="showChangeAppointmentStatusAlert('Approved', '', visitors.VisitorBookingSeqId)"></ion-icon>
-              <ion-icon color="danger" class="iconiconClass" name="thumbs-down-outline" (click)="showChangeAppointmentStatusAlert('Canceled', '', visitors.VisitorBookingSeqId)"></ion-icon>
+              <ion-icon color="danger" class="iconiconClass" name="thumbs-down-outline"
+              *ngIf="getShowRejectButton(visitors)"
+              (click)="showChangeAppointmentStatusAlert('Cancelled', '', visitors.VisitorBookingSeqId)"></ion-icon>
             </div>
 
         </ion-item>
@@ -51,8 +53,8 @@
                     </span>
                 </ion-col>
                 <ion-col>
-                    <p no-margin>{{appointment[0].START_DATE | date:'MMM d, yyyy h:mm a'}}</p>
-                    <!-- <p class='stable'>{{appointment[0].START_DATE | date:'h:mm a'}}</p> -->
+                    <p no-margin>{{(appointment[0].START_TIME? appointment[0].START_TIME: appointment[0].START_DATE) | date:'MMM d, yyyy h:mm a'}}</p>
+                    <!-- <p class='stable'>{{appointment[0].START_TIME | date:'h:mm a'}}</p> -->
                 </ion-col>
             </ion-row>
         </ion-grid>
@@ -70,7 +72,7 @@
                     </span>
                 </ion-col>
                 <ion-col>
-                    <p no-margin>{{appointment[0].END_DATE | date:'MMM d, yyyy h:mm a'}}</p>
+                    <p no-margin>{{(appointment[0].END_TIME? appointment[0].END_TIME: appointment[0].END_DATE) | date:'MMM d, yyyy h:mm a'}}</p>
                     <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
                 </ion-col>
             </ion-row>
@@ -211,7 +213,7 @@ class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.lengt
             <ion-col size="1"></ion-col>
             <ion-col>
                 <p no-margin>{{facilityBooking[0].StartDateTime | date:'MMM d, yyyy h:mm a'}}</p>
-                <!-- <p class='stable'>{{appointment[0].START_DATE | date:'h:mm a'}}</p> -->
+                <!-- <p class='stable'>{{appointment[0].START_TIME | date:'h:mm a'}}</p> -->
             </ion-col>
 
         </ion-row>
@@ -335,7 +337,7 @@ class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.lengt
 
     <ion-card no-margin mode="ios" style="margin-top: 15px !important;
     padding: 10px;
-    padding-left: 0px;" (click)="openCustomDialog('question')">
+    padding-left: 0px;" (click)="openCustomDialog('question')" *ngIf="appointment.showQuestion">
       <ion-item lines="none">
         <ion-icon color="primary" slot="start" name="document-text-outline"></ion-icon>
         <ion-label>Questionaries</ion-label>
@@ -345,7 +347,7 @@ class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.lengt
 
 
     <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
-    padding-left: 0px;" (click)="openCustomDialog('doc')">
+    padding-left: 0px;" (click)="openCustomDialog('doc')" *ngIf="appointment.showDocument">
       <ion-item lines="none">
         <ion-icon color="primary" slot="start" name="document-attach-outline"></ion-icon>
         <ion-label>Verification Documents</ion-label>
@@ -354,7 +356,7 @@ class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.lengt
     </ion-card>
 
     <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
-    padding-left: 0px;" (click)="openCustomDialog('declaration')">
+    padding-left: 0px;" (click)="openCustomDialog('declaration')" *ngIf="appointment.showDelaration">
       <ion-item lines="none">
         <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
         <ion-label>Item Checklist</ion-label>
@@ -396,7 +398,7 @@ margin-top: 15px !important;" class="ion-padding pending-info"
 
 <ion-card no-margin mode="ios"
 style="width:100%;    padding: 0px;margin-top:14px !important;"
-(click)="selectNotifyAppointment()">
+(click)="selectNotifyAppointment()" *ngIf="!isPastAppointment">
 <ion-item lines="none" style="padding: 10px; --padding-start: 0px">
     <i slot="start" theme-text-color class="siva-icon-clock" style="font-size: 35px;margin: 0px;"></i>
     <div>

@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { NavController, ActionSheetController, ToastController, AlertController } from '@ionic/angular';
+import { NavController, ActionSheetController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CustomPipe } from 'src/app/pipes/custom/custom';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -45,7 +45,6 @@ export class ManageAppointmentPage implements OnInit {
     private datePipe: DatePipe,
     private router: Router,
     private events : EventsService,
-    private toastCtrl : ToastController,
     private translate : TranslateService,
     private alertCtrl : AlertController) {
 
@@ -66,6 +65,20 @@ export class ManageAppointmentPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter ManageAppointmentPage');
+    this.events.publishDataCompany({
+      action: "page",
+      title: "home-view",
+      message: ''
+    });
+    this.showNotificationCount();
+    if(this.QRObj){
+      if(this.QRObj.MAppId == AppSettings.LOGINTYPES.FACILITY){
+        this.getAppointmentFacilityHistory();
+      }else{
+        this.getAppointmentHistory();
+      }
+
+    }
   }
 
   ionViewWillLeave(){
@@ -90,22 +103,24 @@ export class ManageAppointmentPage implements OnInit {
   openTooltip(event, message) {
     this.apiProvider.presentPopover(event, message);
   }
-  ionViewWillEnter(){
-    this.events.publishDataCompany({
-      action: "page",
-      title: "home-view",
-      message: ''
-    });
-    this.showNotificationCount();
-    if(this.QRObj){
-      if(this.QRObj.MAppId == AppSettings.LOGINTYPES.FACILITY){
-        this.getAppointmentFacilityHistory();
-      }else{
-        this.getAppointmentHistory();
+
+  getAppointmentStatus(appointments1) {
+    let result = '';
+    let appointment = appointments1.find(item => item.Approval_Status === 'Approved');
+    if (appointment) {
+      result = 'Approved';
+    } else {
+      appointment = appointments1.find(item => item.Approval_Status === 'Pending');
+      if (appointment) {
+        result = 'Pending';
+      } else {
+        appointment = appointments1.find(item => (item.Approval_Status === 'Canceled' || item.Approval_Status === 'Cancelled'));
+        if (appointment) {
+          result = 'Canceled';
+        }
       }
-
     }
-
+    return result;
   }
 
   getDayofDate(dateString){
@@ -473,19 +488,6 @@ export class ManageAppointmentPage implements OnInit {
   onOptionSelected($event: any) {
     console.log($event)
     //this.calendar.mode = $event
-  }
-
-  showLoading(currentClass){
-    if(!currentClass.loading){
-      currentClass.loading = currentClass.loadingCtrl.create({
-        content: 'Please wait...',
-        dismissOnPageChange: true,
-        showBackdrop: true,
-        enableBackdropDismiss: true
-      });
-      currentClass.loading.present();
-    }
-
   }
 
   syncFromGoogleCalender(){

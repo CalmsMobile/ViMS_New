@@ -157,17 +157,17 @@ Copyright (c) 2015 Daniel Eden
   from {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);
-    box-shadow: 0, 0, 0, 0 rgba(44, 103, 255, 0.4);
+    box-shadow: 0, 0, 0, 0 red;
   }
   50% {
-    -webkit-transform: scale3d(1.05, 1.05, 1.05);
-    transform: scale3d(1.05, 1.05, 1.05);
-    box-shadow: 0, 0, 0, 0 rgba(44, 103, 255, 0);
+    -webkit-transform: scale3d(0.55, 0.55, 0.55);
+    transform: scale3d(0.55, 0.55, 0.55);
+    box-shadow: 0, 0, 0, 0 red;
   }
   to {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);
-    box-shadow: 0, 0, 0, 0 rgba(44, 103, 255, 0);
+    box-shadow: 0, 0, 0, 0 red;
   }
 }
 
@@ -175,17 +175,17 @@ Copyright (c) 2015 Daniel Eden
   from {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);
-    box-shadow: 0, 0, 0, 0 rgba(44, 103, 255, 0.4);
+    box-shadow: 0, 0, 0, 0 red;
   }
   50% {
-    -webkit-transform: scale3d(1.05, 1.05, 1.05);
-    transform: scale3d(1.05, 1.05, 1.05);
-    box-shadow: 0, 0, 0, 0 rgba(44, 103, 255, 0);
+    -webkit-transform: scale3d(0.55, 0.55, 0.55);
+    transform: scale3d(0.55, 0.55, 0.55);
+    box-shadow: 0, 0, 0, 0 red;
   }
   to {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);
-    box-shadow: 0, 0, 0, 0 rgba(44, 103, 255, 0);
+    box-shadow: 0, 0, 0, 0 red;
   }
 }
 

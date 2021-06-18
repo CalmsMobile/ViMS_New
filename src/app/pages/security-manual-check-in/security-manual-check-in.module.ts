@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { SecurityManualCheckInPageRoutingModule } from './security-manual-check-in-routing.module';
 import { SecurityManualCheckInPage } from './security-manual-check-in.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { ItemChecklistModalComponent } from 'src/app/components/item-checklist-modal/item-checklist-modal.component';
 import { DocumentModalComponent } from 'src/app/components/document-modal/document-modal.component';
 
 @NgModule({
@@ -18,7 +19,7 @@ import { DocumentModalComponent } from 'src/app/components/document-modal/docume
     SecurityManualCheckInPageRoutingModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  declarations: [SecurityManualCheckInPage, DocumentModalComponent],
-  entryComponents:[DocumentModalComponent]
+  declarations: [SecurityManualCheckInPage, DocumentModalComponent,ItemChecklistModalComponent],
+  entryComponents:[DocumentModalComponent,ItemChecklistModalComponent]
 })
 export class SecurityManualCheckInPageModule {}

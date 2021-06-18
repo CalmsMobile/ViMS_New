@@ -39,7 +39,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     toTime:"02:02",
     fromTimeSession:"AM",
     toTimeSession:"AM",
-    appointment: {},
+    appointment: [],
     addVisitorSettings: '',
     visitor_ctg: {
       visitor_ctg_id: '',
@@ -51,6 +51,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
   VISITOR_CATEGORY:any = [];
   hostSettings : any = {};
   minDate: any = "";
+  minDateTo: any = "";
   edit = false;
   hostData : any = {};
   QRObj : any = {};
@@ -93,8 +94,20 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
       this.showFacility = false;
     }
 
+    let min = today.getMinutes();
+    if (min >= 45) {
+      today.setHours(today.getHours()+1);
+      today.setMinutes(0);
+    } else if (min >= 30) {
+      today.setMinutes(45);
+    } else if (min >= 15) {
+      today.setMinutes(30);
+    } else if (min >= 0) {
+      today.setMinutes(15);
+    }
+    min = today.getMinutes();
     var hours = today.getHours();
-    var min = today.getMinutes();
+
     var minutes = ""+min;
     var ampm = hours >= 12 ? 'PM' : 'AM';
     minutes = min < 10 ? '0'+minutes : minutes;
@@ -103,27 +116,20 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     this.VM.fromTime = strTime;
     this.VM.fromTimeSession = ampm;
 
-    this.minDate = this.dateformat.transform(new Date()+"", "yyyy-MM-ddTHH:mm:ss");
+    this.minDate = this.dateformat.transform(today+"", "yyyy-MM-ddTHH:mm:ss");
 
-    this.VM.fromDate = new Date();
-    this.VM.toDate = new Date();
-    this.VM.toDate.setTime(this.VM.toDate.getTime() + (AppSettings.APPOINTMENT_BufferTime * 60 * 1000));
-
-    hours = this.VM.toDate.getHours();
-    min = this.VM.toDate.getMinutes();
-    minutes = ""+min;
-    ampm = hours >= 12 ? 'PM' : 'AM';
-    minutes = min < 10 ? '0'+minutes : minutes;
-    var ToTime = hours + ':' + minutes;
-    this.VM.toTime = ToTime;
-    this.VM.toTimeSession = ampm;
+    this.VM.fromDate = today;
+    this.datepickerFrmDate = this.dateformat.transform(new Date(this.VM.fromDate) + '', 'yyyy-MM-ddTHH:mm');
 
 
-      this.route.queryParams.subscribe(params => {
-        if (this.router.getCurrentNavigation().extras.state) {
-          this.passData = this.router.getCurrentNavigation().extras.state.passData;
-          console.log('passData : ' + this.passData);
-          this.edit = this.passData.edit;
+    this.resetToDate();
+
+
+  this.route.queryParams.subscribe(params => {
+    if (this.router.getCurrentNavigation().extras.state) {
+      this.passData = this.router.getCurrentNavigation().extras.state.passData;
+      console.log('passData : ' + this.passData);
+      this.edit = this.passData.edit;
       if(this.edit){
         this.VM.appointment = this.passData.appointment;
         this.VM.facility = this.passData.facility;
@@ -175,6 +181,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
         setTimeout(() => {
           this.onChangeCategory(this.addAppointmentModel.visitor_ctg_id, false);
         }, 1000);
+        this.GetAppointmentDetailByGroup();
       }else{
         this.contactsarray = this.passData.data;
         if(this.passData.aData){
@@ -211,7 +218,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
             toTime:"02:02",
             fromTimeSession:"AM",
             toTimeSession:"AM",
-            appointment: {},
+            appointment: [],
             addVisitorSettings: '',
             visitor_ctg: {
               visitor_ctg_id: '',
@@ -308,6 +315,53 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
 
   }
 
+  GetAppointmentDetailByGroup() {
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if(hostData){
+      var HOSTIC = JSON.parse(hostData).HOSTIC;
+			var params = {
+			"STAFF_IC":HOSTIC,
+			"appointment_group_id": this.VM.appointment[0].appointment_group_id,
+		  };
+      this.apiProvider.requestApi(params, '/api/vims/GetAppointmentDetailByGroupId', true, 'WEB', '').then(
+        async (val) => {
+          var result = JSON.parse(val.toString());
+          if(result["Table1"] != undefined && result["Table1"].length > 0){
+            result.Table1.forEach(element => {
+              let appointment = this.VM.visitors.find(item => item.VisitorBookingSeqId === element.SEQ_ID);
+              if (appointment) {
+                appointment.IsAckVerified = element.IsAckVerified;
+              }
+
+            });
+          }
+
+        },
+        async (err) => {
+          if(err && err.message == "No Internet"){
+            return;
+          }
+
+            if(err && err.message){
+              var error = err.message;
+              this.apiProvider.showAlert('Error! ' + error);
+              return;
+            }
+
+          var result = JSON.parse(err.toString());
+          if(result && result["Table1"] != undefined){
+            this.apiProvider.showAlert('Error! ' + result["Table1"][0].Status);
+          }else if(result.message){
+            this.apiProvider.showAlert(result.message);
+          }else{
+            this.apiProvider.showAlert('Error!');
+          }
+
+        }
+      );
+    }
+  }
+
 
   async presentActionSheet() {
     const actionSheet = await this.actionsheetCtrl.create({
@@ -354,13 +408,20 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
   }
 
 
-  openCalender(picker) {
-    picker.open();
+  openCalender(picker, action) {
+    if (!this.edit) {
+      if (action === 'START') {
+
+      } else {
+
+      }
+      picker.open();
+    }
   }
 
 
   changeCalendar(from){
-    if(!this.edit || (!this.VM.facility || this.VM.facility.length == 0) || !this.showFacility){
+    if(!this.edit && (!this.VM.facility || this.VM.facility.length == 0 || !this.showFacility)){
       let showDate = new Date();
       if(from){
         showDate = new Date(this.datepickerFrmDate);
@@ -376,29 +437,36 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
       var ampm = hours >= 12 ? 'PM' : 'AM';
       minutes = min < 10 ? '0'+minutes : minutes;
       var strTime = hours + ':' + minutes;
-      var ftDate = this.dateformat.transform(showDate+"", "yyyy-MM-ddTHH:mm:ss");
       if(from){
         this.VM.fromDate = new Date(showDate.getTime());
         this.VM.fromTime = strTime;
         this.VM.fromTimeSession = ampm;
-        var sTime = new Date(ftDate).getTime() + (AppSettings.APPOINTMENT_BufferTime * 60 * 1000);
-        if(sTime >= new Date(this.VM.toDate).getTime()){
-          this.VM.toDate = new Date(new Date(ftDate).getTime()+ (AppSettings.APPOINTMENT_BufferTime * 60 * 1000));
-          hours = this.VM.toDate.getHours();
-          min = this.VM.toDate.getMinutes();
-          minutes = ""+min;
-          ampm = hours >= 12 ? 'PM' : 'AM';
-          minutes = min < 10 ? '0'+minutes : minutes;
-          strTime = hours + ':' + minutes;
-          this.VM.toTime = strTime;
-          this.VM.toTimeSession = ampm;
-        }
+        this.resetToDate();
       }else{
         this.VM.toDate = new Date(showDate.getTime());
         this.VM.toTime = strTime;
         this.VM.toTimeSession = ampm;
       }
     }
+  }
+
+  resetToDate() {
+    const fromDate = new Date(this.VM.fromDate.getTime());
+    fromDate.setHours(fromDate.getHours() + 1);
+    this.minDateTo = this.dateformat.transform(fromDate+"", "yyyy-MM-ddTHH:mm:ss");
+    const newToDate = new Date(this.VM.fromDate.getTime());
+    newToDate.setHours(23);
+    newToDate.setMinutes(59);
+    this.datepickerToDate = this.dateformat.transform(newToDate +"", "yyyy-MM-ddTHH:mm");
+    this.VM.toDate = new Date(newToDate.getTime());
+    let hours = this.VM.toDate.getHours();
+    let min = this.VM.toDate.getMinutes();
+    let minutes = ""+min;
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    minutes = min < 10 ? '0'+minutes : minutes;
+    let strTime = hours + ':' + minutes;
+    this.VM.toTime = strTime;
+    this.VM.toTimeSession = ampm;
   }
 
 
@@ -478,13 +546,6 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
       };
       this.router.navigate(['add-visitors'], navigationExtras);
     }
-  }
-
-  ionViewWillEnter(){
-    if(this.content){
-      // this.content.scrollToTop();
-    }
-
   }
 
   changeEvent(pickerName){
@@ -965,8 +1026,8 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     this._getVisitorCategory();
   }
 
-  onChangeCategory(event, allowCheck){
-    const visitor_ctg_id = event.detail.value
+  onChangeCategory(event : any, allowCheck){
+    const visitor_ctg_id = allowCheck ? event.detail.value: event;
     if (this.VM.visitors) {
       this.VM.visitors.forEach(element => {
         element.VisitorCategory = visitor_ctg_id;
