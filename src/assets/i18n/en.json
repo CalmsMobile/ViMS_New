@@ -445,6 +445,7 @@
 		"ON_BACK": "Do you want to exit now?",
 		"QRSHARE_SUCCESS": "QR code has been shared successfully",
 		"IMAGE_SELECT_ERROR": "Oops.. something went wrong on gallery selection",
+    "CAMEARA_IMAGE_SELECT_ERROR": "Oops.. something went wrong on camera",
 		"VISITOR_CHECKIN_FAIL": "Visitor failed to check-In",
 		"SETTINGS_NOT_FOUND": "Appointment App defaut configuration not found! Please configure in backend portal",
 		"UPDATE_APPOINTMENT_SUCCESS": "Your appointment has been updated successfully!",
@@ -520,6 +521,11 @@
 		"VISITOR_NOT_FOUND": "Visitor not found.",
     "HOST_ACCESS_TITLE": "Your Access",
     "BRANCH": "Branch :",
-    "SELECT_BRANCH": "Select Branch"
+    "SELECT_BRANCH": "Select Branch",
+    "MY_ATTENDANCE": "My Attendance",
+    "MY_SCHEDULE": "My Schedule",
+    "REGISTER_ATTENDANCE": "Register Attendance",
+    "MY_ATTENDANCE_LOCATION": "My Attendance Location",
+    "MY_ATTENDANCE_LOGS": "My Attendance Logs"
 	}
 }

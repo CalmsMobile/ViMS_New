@@ -194,7 +194,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
                 alert.present();
@@ -403,7 +403,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
         let invalidQRConfirm = await _thisData.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + _thisData.T_SVC['COMMON.VIDEO_ERROR'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: _thisData.T_SVC['COMMON.OK'],
@@ -520,7 +520,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
           alert.present();
@@ -535,7 +535,7 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
 
     let actionSheet = this.actionSheetCtrl.create({
       header: 'Select Image Source',
-      cssClass :'alert-warning',
+      cssClass :'',
       buttons: [
         {
           text: 'Gallery',

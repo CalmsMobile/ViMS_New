@@ -85,18 +85,25 @@
         </ion-item-sliding>
       </ion-card>
 
-		<ion-item *ngIf="selectedDate?.events.length==0">
-			<div class="no-events-label" style="    text-align: center;"><b>No Appointments Available</b></div>
-		</ion-item>
+			<ion-item *ngIf="selectedDate?.events.length==0" lines="none">
+        <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;">
+          <ion-col size="12" size-sm size-md>
+                  <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.png">
+                  <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'SECURITY_APP.NO_LIST' | translate}}</h5> -->
+          </ion-col>
+      </ion-row>
+      </ion-item>
 	</ion-list>
 
 </ng-template>
 
 <ion-header>
 	<ion-toolbar color="danger">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="(QRObj.MAppId !== HOSTWTTAMS && QRObj.MAppId !== TAMS)">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-icon slot="start" *ngIf="(QRObj.MAppId === HOSTWTTAMS || QRObj.MAppId === TAMS)" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+
     <ion-title>Manage Appointments</ion-title>
 
     <ion-buttons slot="end" >

@@ -2,8 +2,8 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start" >
-      <ion-menu-button *ngIf="!isSecurityApp"></ion-menu-button>
-      <ion-icon *ngIf="isSecurityApp" slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+      <ion-menu-button *ngIf="!isSecurityApp && (QRObj.MAppId !== HOSTWTTAMS && QRObj.MAppId !== TAMS)"></ion-menu-button>
+      <ion-icon *ngIf="isSecurityApp || QRObj.MAppId === HOSTWTTAMS || QRObj.MAppId === TAMS" slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     </ion-buttons>
       <ion-title>{{"SETTINGS.TITLE" | translate}}
       </ion-title>

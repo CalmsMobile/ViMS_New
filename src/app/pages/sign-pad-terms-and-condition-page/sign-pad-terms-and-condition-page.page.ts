@@ -139,7 +139,7 @@ export class SignPadTermsAndConditionPagePage implements OnInit {
           let alert = await this.alertCntrl.create({
             header: 'Error !',
             message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -288,7 +288,7 @@ export class SignPadTermsAndConditionPagePage implements OnInit {
             let invalidQRConfirm = await currentClass.alertCtrl.create({
               header: 'Error !',
               message: "<span class='failed'>" + currentClass.T_SVC['COMMON.VIDEO_ERROR'] + '</span>',
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: [
                 {
                   text: currentClass.T_SVC['COMMON.OK'],
@@ -411,7 +411,7 @@ export class SignPadTermsAndConditionPagePage implements OnInit {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
           alert.present();

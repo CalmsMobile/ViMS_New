@@ -55,7 +55,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
   edit = false;
   hostData : any = {};
   QRObj : any = {};
-  showFacility = true;
+  showFacility = false;
   passData: any ={};
   constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
@@ -90,8 +90,8 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     }
 
 
-    if(this.QRObj && this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
-      this.showFacility = false;
+    if(this.QRObj && (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY || this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP)){
+      this.showFacility = true;
     }
 
     let min = today.getMinutes();
@@ -475,7 +475,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     let alert = await this.alertCtrl.create({
       header: 'Confirmation',
       message: this.T_SVC['ALERT_TEXT.REMOVE_VISITOR'],
-      cssClass: 'alert-warning',
+      cssClass: '',
       buttons: [
         {
           text: 'Cancel',
@@ -788,7 +788,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: '',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
         alert.present();
@@ -817,7 +817,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
           alert.present();
@@ -864,7 +864,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
         message: 'Server Error',
         duration: 3000,
         color: 'primary',
-        cssClass: 'alert-danger',
+        cssClass: '',
         position: 'bottom'
       });
       toast.present();
@@ -889,7 +889,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
                 let alert = await this.alertCtrl.create({
                   header: 'Failed !',
                   message: this.T_SVC['ALERT_TEXT.SLOT_OCCUPIED'],
-                  cssClass: 'alert-danger',
+                  cssClass: '',
                   buttons: ['Okay']
                 });
                 alert.present();
@@ -898,7 +898,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
                 let alert = await this.alertCtrl.create({
                   header: 'Failed !',
                   message: this.T_SVC['ALERT_TEXT.DUPLICATE_BOOKING'],
-                  cssClass: 'alert-danger',
+                  cssClass: '',
                   buttons: ['Okay']
                 });
                 alert.present();
@@ -906,7 +906,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
               }else if(output && output.Status == 3){
                 let alert = await this.alertCtrl.create({
                   header: 'Failed !',
-                  cssClass: 'alert-danger',
+                  cssClass: '',
                   message: this.T_SVC['ALERT_TEXT.SLOT_EXPIRED'],
                   buttons: ['Okay']
                 });
@@ -916,7 +916,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
                 let alert = await this.alertCtrl.create({
                   header: 'Error !',
                   message: this.T_SVC['ALERT_TEXT.MEMBER_NOT_FOUND'],
-                  cssClass: 'alert-danger',
+                  cssClass: '',
                   buttons: ['Okay']
                 });
                 alert.present();
@@ -934,7 +934,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
         alert.present();
@@ -947,7 +947,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     let alert = await this.alertCtrl.create({
       header: 'Notification',
       message: msg,
-      cssClass: 'alert-danger',
+      cssClass: '',
       buttons: ['Okay']
     });
     alert.present();
@@ -989,7 +989,17 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.router.navigateByUrl('home-view');
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.router.navigateByUrl('home-tams');
+      } else {
+        this.router.navigateByUrl('home-view');
+      }
+    } else {
+      this.navCtrl.pop();
+    }
     console.log('goBack ');
   }
 
@@ -1107,17 +1117,17 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     if(settings && JSON.parse(settings)){
       try{
 
-        if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
+        if(this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
           var sett = JSON.parse(settings).Table1;
           if(sett && sett.length > 0){
             this.hostSettings = sett[0];
             this.hostSettings.available = true;
             this.hostSettings.isFacility = true;
-          }else{
+          } else{
             this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
           }
 
-        }else{
+        } else {
           sett = JSON.parse(settings).Table1;
           if(sett && sett.length > 0){
             this.hostSettings = sett[0];

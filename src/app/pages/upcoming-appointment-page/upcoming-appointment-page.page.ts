@@ -24,6 +24,9 @@ export class UpcomingAppointmentPagePage implements OnInit {
   loadingFinished = true;
   alertShowing = false;
   isAdmin = true;
+  QRObj: any = {};
+  HOSTWTTAMS = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
+  TAMS = AppSettings.LOGINTYPES.TAMS;
   constructor(public navCtrl: NavController,
     private events : EventsService,
     private router: Router,
@@ -114,7 +117,17 @@ export class UpcomingAppointmentPagePage implements OnInit {
     this.router.navigateByUrl('notifications');
   }
 
+  goBack() {
 
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.router.navigateByUrl('home-tams');
+      }
+    }
+    console.log('goBack ');
+   }
 
   checkIsToday(fromDate, toDate, dateCondition){
     if(fromDate && toDate){
@@ -219,7 +232,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
     let alert = await this.alertCtrl.create({
       header: 'Confirmation',
       message: msg,
-      cssClass: 'alert-warning',
+      cssClass: '',
       buttons: [
         {
           text: 'Cancel',
@@ -303,7 +316,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -363,7 +376,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -385,6 +398,10 @@ export class UpcomingAppointmentPagePage implements OnInit {
   }
 
   ngOnInit() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      this.QRObj = JSON.parse(qrData);
+    }
   }
 
 }

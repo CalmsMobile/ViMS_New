@@ -215,7 +215,7 @@ export class CustomVisitorPopupComponent{
     //   let toast = this.toastCtrl.create({
     //     message: 'Error',
     //     duration: 3000,
-    //     cssClass:'alert-danger',
+    //     cssClass:'',
     //     position: 'bottom'
     //   });
     //   toast.present();

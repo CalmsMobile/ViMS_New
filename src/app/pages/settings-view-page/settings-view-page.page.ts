@@ -33,6 +33,9 @@ export class SettingsViewPagePage implements OnInit {
   };
   T_SVC: any;
   isSecurityApp = false;
+  QRObj: any = {};
+  HOSTWTTAMS = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
+  TAMS = AppSettings.LOGINTYPES.TAMS;
   constructor(public navCtrl: NavController,
      private alertCtrl: AlertController,
      private toastCtrl:ToastService,
@@ -50,8 +53,8 @@ export class SettingsViewPagePage implements OnInit {
 
       const qrinfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
       if (qrinfo) {
-        const qrCodeInfo = JSON.parse(qrinfo);
-        this.isSecurityApp = qrCodeInfo.MAppId === AppSettings.LOGINTYPES.SECURITYAPP;
+        this.QRObj = JSON.parse(qrinfo);
+        this.isSecurityApp = this.QRObj.MAppId === AppSettings.LOGINTYPES.SECURITYAPP;
       }
 
       this.translate.get([
@@ -174,7 +177,6 @@ export class SettingsViewPagePage implements OnInit {
       let loginConfirm = await this.alertCtrl.create({
         header: title,
         message: desc,
-        cssClass: 'alert-warning-logout',
         mode: 'ios',
         buttons: [
           {
@@ -264,6 +266,60 @@ export class SettingsViewPagePage implements OnInit {
     );
   }
 
+  getSettingsForTams() {
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
+      return;
+    }
+    var hostId = JSON.parse(hostData).HOSTIC;
+    var data = {
+      "MAppId": "TAMS",
+      "HostIc": hostId
+    };
+    this.apiProvider.requestApi(data, '/api/TAMS/getTAMSsettings', false, false, '').then(
+      (val: any) => {
+        const response = JSON.parse(val);
+        if (response.Table && response.Table.length > 0 ) {
+          if(response.Table[0].Code === 10 || response.Table[0].code === 10) {
+            localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS, JSON.stringify(response.Table1[0]));
+          }
+        }
+      },
+      async (err) => {
+        if(err && err.message == "No Internet"){
+          return;
+        }
+      }
+    );
+  }
+
+  getMyAttendanceWhitelistedLocations(){
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
+      return;
+    }
+    var hostId = JSON.parse(hostData).HOSTIC;
+    var data = {
+      "MAppId": "TAMS",
+      "HostIc": hostId
+    };
+    this.apiProvider.requestApi(data, '/api/TAMS/getMyWhitelistedLocation', false, false, '').then(
+      (val: any) => {
+        const response = JSON.parse(val);
+        if (response.Table && response.Table.length > 0 && (response.Table[0].Code === 10 || response.Table[0].code === 10)) {
+          const locationUpdatedDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+          response.Table1[0].locationUpdatedDate = locationUpdatedDate;
+          localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_WHITELISTED_LOCATION, JSON.stringify(response.Table1));
+        }
+      },
+      async (err) => {
+        if(err && err.message == "No Internet"){
+          return;
+        }
+      }
+    );
+  }
+
   syncSettings() {
     var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (!qrInfo) {
@@ -300,7 +356,7 @@ export class SettingsViewPagePage implements OnInit {
           return;
         }
         var params1  = {
-          "MAppId": QRObj.MAppId,
+          "MAppId": QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS ? AppSettings.LOGINTYPES.HOSTAPPT: QRObj.MAppId,
           "HostIc":""
         }
         params1.HostIc = JSON.parse(hostData).HOSTIC;
@@ -317,6 +373,10 @@ export class SettingsViewPagePage implements OnInit {
                   message: "ReloadMenu"
                 });
                 this.getMasterdetails();
+                if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS) {
+                  this.getSettingsForTams();
+                  this.getMyAttendanceWhitelistedLocations();
+                }
                 this.apiProvider.showAlert('Device sync successfully.');
               }
             }catch(e){
@@ -331,12 +391,26 @@ export class SettingsViewPagePage implements OnInit {
   }
 
   goBack() {
+
     if (this.isSecurityApp) {
       this.router.navigateByUrl('security-dash-board-page');
     } else {
-      this.router.navigateByUrl('home-view');
+      var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+      if (qrData) {
+        const QRObj = JSON.parse(qrData);
+        if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+          this.router.navigateByUrl('home-tams');
+        } else {
+          if (this.isSecurityApp) {
+            this.router.navigateByUrl('security-dash-board-page');
+          } else {
+            this.router.navigateByUrl('home-view');
+          }
+        }
+      } else {
+        this.navCtrl.pop();
+      }
     }
-
     console.log('goBack ');
    }
 

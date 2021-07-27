@@ -340,7 +340,7 @@ export class SecurityCheckInPagePage implements OnInit {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: message,
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
                 alert.present();
@@ -361,7 +361,7 @@ export class SecurityCheckInPagePage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -373,7 +373,7 @@ export class SecurityCheckInPagePage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -384,7 +384,7 @@ export class SecurityCheckInPagePage implements OnInit {
             message =JSON.parse(err).message;
             let alert = await this.alertCtrl.create({
               header: 'Error !',
-              cssClass: 'alert-danger',
+              cssClass: '',
               message: message,
               buttons: ['Okay']
             });
@@ -394,7 +394,7 @@ export class SecurityCheckInPagePage implements OnInit {
           let invalidORGConfirm = await this.alertCtrl.create({
             header: 'Error !',
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: [
               {
                 text: this.T_SVC['COMMON.OK'],
@@ -450,7 +450,7 @@ export class SecurityCheckInPagePage implements OnInit {
                   //    let alert = this.alertCtrl.create({
                   //      header: 'Error !',
                   //      message: message,
-                  //      cssClass:'alert-danger',
+                  //      cssClass:'',
                   //      buttons: ['Okay']
                   //      });
                   //      alert.present();
@@ -502,7 +502,7 @@ export class SecurityCheckInPagePage implements OnInit {
                     let alert = await this.alertCtrl.create({
                       header: 'Error !',
                       message: message,
-                      cssClass: 'alert-danger',
+                      cssClass: '',
                       buttons: ['Okay']
                     });
                       alert.present();
@@ -514,7 +514,7 @@ export class SecurityCheckInPagePage implements OnInit {
                   let alert = await this.alertCtrl.create({
                     header: 'Error !',
                     message: this.T_SVC['ALERT_TEXT.INVALID_QR'],
-                    cssClass: 'alert-danger',
+                    cssClass: '',
                     buttons: ['Okay']
                   });
                     alert.present();
@@ -535,7 +535,7 @@ export class SecurityCheckInPagePage implements OnInit {
                   let alert = await this.alertCtrl.create({
                     header: 'Error !',
                     message: message,
-                    cssClass: 'alert-danger',
+                    cssClass: '',
                     buttons: ['Okay']
                   });
                     alert.present();
@@ -547,7 +547,7 @@ export class SecurityCheckInPagePage implements OnInit {
                   let alert = await this.alertCtrl.create({
                     header: 'Error !',
                     message: message,
-                    cssClass: 'alert-danger',
+                    cssClass: '',
                     buttons: ['Okay']
                   });
                     alert.present();
@@ -556,7 +556,7 @@ export class SecurityCheckInPagePage implements OnInit {
                 let invalidORGConfirm = await this.alertCtrl.create({
                   header: 'Error !',
                   message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-                  cssClass: 'alert-danger',
+                  cssClass: '',
                   buttons: [
                     {
                       text: this.T_SVC['COMMON.OK'],
@@ -574,7 +574,7 @@ export class SecurityCheckInPagePage implements OnInit {
           let invalidQRConfirm = await this.alertCtrl.create({
             header: 'Error !',
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: [
               {
                 text: this.T_SVC['COMMON.OK'],
@@ -591,7 +591,7 @@ export class SecurityCheckInPagePage implements OnInit {
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -658,7 +658,7 @@ export class SecurityCheckInPagePage implements OnInit {
     }
       let actionSheet = await this.actionSheetCtrl.create({
         header: 'Select Image Source',
-        cssClass: 'alert-warning',
+        cssClass: '',
         buttons: option
       });
       actionSheet.present();
@@ -945,7 +945,7 @@ ionViewDidEnter() {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: message,
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
                 alert.present();
@@ -1011,7 +1011,7 @@ ionViewDidEnter() {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
           alert.present();

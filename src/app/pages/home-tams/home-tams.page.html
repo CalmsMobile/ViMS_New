@@ -1,0 +1,108 @@
+<ion-header class="ion-no-border" style="margin: -1px;">
+  <ion-toolbar color="danger" lines="none" class="ion-no-border">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{'APP_NAME' | translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button slot="icon-only" (click)="gotoAdminPage()">
+        <ion-icon name="customicon"></ion-icon>
+      </ion-button>
+      <ion-button slot="icon-only" (click)="gotoNotification()">
+        <ion-icon name="notifications-outline" style="position:relative" style="color: #FFF;">
+          <span *ngIf="notificationCount > 0" style="position: absolute;
+                      font-size: 16px;
+                      margin-top: -10px;"><b>{{notificationCount}}</b></span>
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+<div class="container"  style="background: url('../../../assets/images/background/app_bg.png') no-repeat center center fixed;">
+  <div class="curveBackground">
+  </div>
+  <div class="overlay">
+    <ion-item >
+      <img [src]="hostObj.hostImage" slot="start" onError="this.src='../assets/images/user.png';" class="imgClass">
+    <div>
+      <ion-label class="name">{{hostObj.HOSTNAME}}</ion-label>
+      <div style="display: flex;">
+          <span>
+              <ion-icon name="podium-outline" color="light" style="font-size: 13px;"></ion-icon>
+          </span>
+          <ion-label class="desc">{{hostObj.comp_name}}</ion-label>
+      </div>
+      <div style="display: flex;">
+          <span>
+              <ion-icon name="mail-outline" color="light" style="font-size: 13px;"></ion-icon>
+          </span>
+          <ion-label class="desc">{{hostObj.HOST_EMAIL}}</ion-label>
+      </div>
+    </div>
+    </ion-item>
+    <ion-grid>
+      <ion-row style="padding-top: 5px;">
+        <ion-col size="4">
+          <ion-card class="card1" (click)="statesClicked('add-appointment')" style="color: #eb445a;">
+            <ion-icon class="cardIcon" name="create-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Create Appointment'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card class="card1" style="color: #eb445a;" (click)="statesClicked('upcoming-appointment-page')">
+            <ion-icon class="cardIcon" name="options-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle" >{{'Upcoming Appointment'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card class="card1" (click)="statesClicked('appointment-history')" style="color: #eb445a;">
+            <ion-icon class="cardIcon" name="list-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Appointment List View'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4" >
+          <ion-card class="card1" style="color: #eb445a;" (click)="statesClicked('manage-appointment')">
+            <ion-icon class="cardIcon" name="calendar-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Appointment Calendar View'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card class="card1" style="color: #eb445a;"  (click)="statesClicked('tamsmyschedule')">
+            <ion-icon class="cardIcon" name="newspaper-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'My Schedule'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card class="card1" (click)="statesClicked('tamsmyattendance')" style="color: #eb445a;">
+            <ion-icon class="cardIcon" name="calendar-number-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle" >{{'My Attendance'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card class="card1" style="color: #eb445a;" (click)="statesClicked('tamsregisterattendance')">
+            <ion-icon class="cardIcon" name="checkbox-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle" >{{'Register Attendance'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card class="card1" style="color: #eb445a;"  (click)="statesClicked('tamsmyattendancelocation')">
+            <ion-icon class="cardIcon" name="location-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Whitelisted Location'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card class="card1" (click)="statesClicked('tamsmyattendancelogs')" style="color: #eb445a;">
+            <ion-icon class="cardIcon" name="locate-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle" >{{'Attendance Logs'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+</div>
+
+</ion-content>

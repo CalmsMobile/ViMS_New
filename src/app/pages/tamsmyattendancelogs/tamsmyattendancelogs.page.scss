@@ -1,0 +1,105 @@
+.text-white {
+  color: white;
+}
+.div-left-middle-text {
+  font-size: 10px;
+  text-align: center;
+  padding: 3px;
+  margin: 0px;
+  background: #00000012;
+}
+.div-left-bottom-text {
+  font-size: 14px;
+  text-align: center;
+  padding: 3px;
+  margin: 0px;
+  color: var(--ion-color-primary);
+  font-weight: 600;
+}
+
+.div-apt-center {
+  --padding-start: 0px;
+  --inner-padding-start: 0px;
+}
+
+.apt-center-title {
+  font-size: 10px;
+  font-weight: bold;
+  color: #586f7b;
+}
+
+.apt-text-icons {
+  padding: 2px;
+  margin: 0px;
+  margin-right: 5px;
+  font-size: 15px;
+}
+
+.bottom-center {
+  background: var(--ion-color-primary);
+  color: white;
+  padding: 7px;
+  font-size: 12px;
+}
+
+.card-style {
+  --inner-padding-end: 0px;
+  margin: 3px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.apt-right {
+  text-align: center;
+  color: var(--ion-color-primary);
+  align-self: center;
+}
+
+.list-style {
+  margin: 0px;
+  padding: 5px;
+  // height: -webkit-fill-available;
+}
+
+.clockin-icon {
+  padding: 2px;
+  margin-top: 3px;
+  background: #07d50f;
+  border-radius: 50%;
+  color: white;
+  font-size: 12px;
+}
+
+.clockout-icon {
+  padding: 2px;
+  margin-top: 3px;
+  background: var(--ion-color-primary);
+  border-radius: 50%;
+  color: white;
+  font-size: 12px;
+}
+.dot {
+  height: 10px;
+  width: 10px;
+  background-color: #7ec2b7;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.clockin-icon1 {
+  padding: 2px;
+  margin-right: 10px;
+  background: #07d50f;
+  border-radius: 50%;
+  color: white;
+  font-size: 12px;
+}
+
+.clockout-icon1 {
+  padding: 2px;
+  margin-right: 10px;
+  background: var(--ion-color-primary);
+  border-radius: 50%;
+  color: white;
+  font-size: 12px;
+}

@@ -362,7 +362,7 @@ export class SignPadIdlePagePage implements OnInit {
       let loginConfirm = await this.alertCtrl.create({
         header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
         message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
-        cssClass: 'alert-warning',
+        cssClass: '',
         buttons: [
           {
             text: t['COMMON.EXIT1'],
@@ -565,7 +565,7 @@ export class SignPadIdlePagePage implements OnInit {
               // let alert = _currentClass.alertCtrl.create({
               //   header: 'Error !',
               //   message: "Visitor information not available",
-              //   cssClass:'alert-danger',
+              //   cssClass:'',
               //   buttons: ['Okay']
               //   });
               //   alert.present();
@@ -590,7 +590,7 @@ export class SignPadIdlePagePage implements OnInit {
               let alert = this.alertCtrl.create({
                 header: 'Error !',
                 message: message,
-                cssClass:'alert-danger',
+                cssClass:'',
                 buttons: ['Okay']
                 });
                 (await alert).present();
@@ -696,7 +696,7 @@ export class SignPadIdlePagePage implements OnInit {
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -757,7 +757,7 @@ export class SignPadIdlePagePage implements OnInit {
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + message + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -844,7 +844,7 @@ export class SignPadIdlePagePage implements OnInit {
             let invalidQRConfirm = await this.alertCtrl.create({
               header: 'Error !',
               message: "<span class='failed'>" + message + '</span>',
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: [
                 {
                   text: this.T_SVC['COMMON.OK'],

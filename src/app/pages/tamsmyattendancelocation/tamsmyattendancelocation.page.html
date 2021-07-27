@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar color="primary" style="height:48px">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-title>{{'ALERT_TEXT.MY_ATTENDANCE_LOCATION' | translate}}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar  style="    padding: 2px;height: 45px;" color="light" mode="ios" (ionChange)="filterTechnologies($event)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s" placeholder="Search">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card *ngFor="let item of myAttendanceLocationListCone">
+    <ion-item lines="none" (click)="openMap(item)">
+      <ion-icon class="locate-icon" name="locate-outline" slot="start"></ion-icon>
+      <ion-label class="apt-center-title">{{item.LocationName}}</ion-label>
+      <ion-icon color="primary" name="location-outline" slot="end"></ion-icon>
+    </ion-item>
+  </ion-card>
+</ion-content>

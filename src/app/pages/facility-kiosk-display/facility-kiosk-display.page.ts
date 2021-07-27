@@ -274,7 +274,7 @@ export class FacilityKioskDisplayPage implements OnInit {
       (await this.alertCtrl.create({
         header: this.T_SVC['NOTIFICATION.TITLE'],
         message: 'Please select your facility',
-        cssClass: 'alert-warning',
+        cssClass: '',
         buttons: ['OK']
       })).present();
 
@@ -352,7 +352,7 @@ export class FacilityKioskDisplayPage implements OnInit {
   // let alert = this.alertCtrl.create({
   //   header: 'Alert',
   //   message: 'Please select your facility',
-  //   cssClass: 'alert-danger',
+  //   cssClass: '',
   //   buttons: [{
   //     text: 'Okay',
   //     handler: () => {
@@ -366,7 +366,7 @@ export class FacilityKioskDisplayPage implements OnInit {
   async takeActForStopEvent(){
     let alert = await this.alertCtrl.create({
       header: this.T_SVC['ALERT_TEXT.WISH_TO_END_BOOK'],
-      cssClass: 'alert-danger-ios',
+      cssClass: '',
       inputs: [
         {
           name: 'stopcode',
@@ -420,7 +420,7 @@ export class FacilityKioskDisplayPage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Success',
               message: this.T_SVC['ALERT_TEXT.SESSION_ENDED'],
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
             alert.present();
@@ -436,7 +436,7 @@ export class FacilityKioskDisplayPage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Failed',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
             alert.present();
@@ -459,7 +459,7 @@ export class FacilityKioskDisplayPage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
             alert.present();

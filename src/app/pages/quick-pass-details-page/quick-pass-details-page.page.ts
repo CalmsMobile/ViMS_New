@@ -177,7 +177,7 @@ export class QuickPassDetailsPagePage implements OnInit {
       }
       let actionSheet = await this.actionSheetCtrl.create({
         header: 'Select Image Source',
-        cssClass: 'alert-warning',
+        cssClass: '',
         buttons: option
       });
       actionSheet.present();
@@ -254,7 +254,7 @@ export class QuickPassDetailsPagePage implements OnInit {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: this.T_SVC['ALERT_TEXT.QUICKPASS_USER_PROFILE_REQUIRED'],
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
           alert.present();
@@ -275,7 +275,7 @@ export class QuickPassDetailsPagePage implements OnInit {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_FAIL'],
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
               alert.present();
@@ -296,7 +296,7 @@ export class QuickPassDetailsPagePage implements OnInit {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: message,
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
               alert.present();
@@ -308,7 +308,7 @@ export class QuickPassDetailsPagePage implements OnInit {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: message,
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
               alert.present();
@@ -319,7 +319,7 @@ export class QuickPassDetailsPagePage implements OnInit {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: JSON.parse(err).message,
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
               alert.present();
@@ -328,7 +328,7 @@ export class QuickPassDetailsPagePage implements OnInit {
             let invalidORGConfirm = await this.alertCtrl.create({
               header: 'Error !',
               message: "<span class='failed'>" + this.T_SVC['ALERT_TEXT.VISITOR_CHECKIN_FAIL'] + '</span>',
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: [
                 {
                   text: this.T_SVC['COMMON.OK'],

@@ -102,8 +102,11 @@
         <splash height="2436" src="resources/ios/splash/Default-2436h.png" width="1125" />
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
         <config-file parent="NSCameraUsageDescription" platform="ios" target="*-Info.plist">
-            <string>You can take photos</string>
+            <string>We use your camera for update profile picture</string>
         </config-file>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>We use your location for full functionality of certain app features.</string>
+        </edit-config>
     </platform>
     <plugin name="phonegap-plugin-barcodescanner" spec="^8.1.0">
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
@@ -136,10 +139,13 @@
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-androidx" spec="^3.0.0" />
     <plugin name="cordova-plugin-fcm-with-dependecy-updated" spec="^7.8.0">
-        <variable name="ANDROID_DEFAULT_NOTIFICATION_ICON" value="@drawable/icon" />
+        <variable name="ANDROID_DEFAULT_NOTIFICATION_ICON" value="@mipmap/ic_launcher" />
         <variable name="ANDROID_FCM_VERSION" value="21.0.0" />
         <variable name="ANDROID_FIREBASE_BOM_VERSION" value="26.0.0" />
         <variable name="ANDROID_GOOGLE_SERVICES_VERSION" value="4.3.4" />
         <variable name="ANDROID_GRADLE_TOOLS_VERSION" value="4.1.0" />
     </plugin>
+    <plugin name="cordova-plugin-geolocation" spec="^4.1.0" />
+    <plugin name="cordova-plugin-request-location-accuracy" spec="^2.3.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^4.1.0" />
 </widget>

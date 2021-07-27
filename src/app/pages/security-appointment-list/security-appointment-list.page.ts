@@ -123,7 +123,7 @@ export class SecurityAppointmentListPage implements OnInit {
     }
     let alert = this.alertCtrl.create({
       header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
-      cssClass:"alert-danger",
+      cssClass:"",
       inputs: inputsShow,
       message: message1+(item.visitor_name? item.visitor_name : " this visitor")+" now?",
       buttons: [

@@ -212,7 +212,7 @@ export class QuickPassDashBoardPagePage implements OnInit {
             // message = " Unknown"
             let alert = this.alertCtrl.create({
               header: 'Error !',
-              cssClass:'alert-danger',
+              cssClass:'',
               message: message,
               buttons: ['Okay']
               });

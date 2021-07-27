@@ -174,7 +174,7 @@ export class QuickPassVisitorPopupComponent {
       }
       let actionSheet = await this.actionSheetCtrl.create({
         header: 'Select Image Source',
-        cssClass: 'alert-warning',
+        cssClass: '',
         buttons: option
       });
       actionSheet.present();

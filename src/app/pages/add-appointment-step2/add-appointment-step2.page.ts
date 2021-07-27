@@ -189,7 +189,7 @@ export class AddAppointmentStep2Page implements OnInit {
 
   ionViewDidEnter() {
 
-    if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT){
+    if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT || this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS){
       this.loadMasterData();
     }else{
       this.loadVimsAppFacilityMasterList();
@@ -520,13 +520,18 @@ export class AddAppointmentStep2Page implements OnInit {
           }
           this.showAlert(this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS']);
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-          this.navCtrl.navigateRoot('home-view');
+          if (this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS) {
+            this.navCtrl.navigateRoot('home-tams');
+          } else {
+            this.navCtrl.navigateRoot('home-view');
+          }
+
           return;
       }
       let alert = await this.alertCtrl.create({
         header: 'Error !',
         message: '',
-        cssClass: 'alert-danger',
+        cssClass: '',
         buttons: ['Okay']
       });
       alert.present();
@@ -554,7 +559,7 @@ export class AddAppointmentStep2Page implements OnInit {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
         alert.present();
@@ -566,7 +571,7 @@ export class AddAppointmentStep2Page implements OnInit {
     let alert = await this.alertCtrl.create({
       header: 'Notification',
       message: msg,
-      cssClass: 'alert-danger',
+      cssClass: '',
       buttons: ['Okay']
     });
     alert.present();
@@ -581,7 +586,7 @@ export class AddAppointmentStep2Page implements OnInit {
           message: this.T_SVC['ALERT_TEXT.ALERT_TEXT.SELECT_PURPOSE'],
           duration: 3000,
           color: 'primary',
-          cssClass: 'alert-danger',
+          cssClass: '',
           position: 'bottom'
         });
         toast.present();
@@ -711,16 +716,32 @@ export class AddAppointmentStep2Page implements OnInit {
             message: messageArray
           });
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-          this.navCtrl.navigateRoot('home-view').then((data)=>{
-            setTimeout(() => {
-              this.events.publishDataCompany({
-                action:'RefreshUpcoming',
-                title: 'RefreshUpcoming',
-                message: 0
-              });
-            }, 1000);
-            this.apiProvider.dismissLoading();
-          });
+
+          if (this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS) {
+            this.navCtrl.navigateRoot('home-tams').then((data)=>{
+              setTimeout(() => {
+                this.events.publishDataCompany({
+                  action:'RefreshUpcoming',
+                  title: 'RefreshUpcoming',
+                  message: 0
+                });
+              }, 1000);
+              this.apiProvider.dismissLoading();
+            });
+          } else {
+            this.navCtrl.navigateRoot('home-view').then((data)=>{
+              setTimeout(() => {
+                this.events.publishDataCompany({
+                  action:'RefreshUpcoming',
+                  title: 'RefreshUpcoming',
+                  message: 0
+                });
+              }, 1000);
+              this.apiProvider.dismissLoading();
+            });
+          }
+
+
 
           return;
       }
@@ -728,7 +749,7 @@ export class AddAppointmentStep2Page implements OnInit {
         message: 'Server Error',
         duration: 3000,
         color: 'primary',
-        cssClass: 'alert-danger',
+        cssClass: '',
         position: 'bottom'
       });
       toast.present();
@@ -753,7 +774,7 @@ export class AddAppointmentStep2Page implements OnInit {
                 let alert = await this.alertCtrl.create({
                   header: 'Failed !',
                   message: this.T_SVC['ALERT_TEXT.SLOT_OCCUPIED'],
-                  cssClass: 'alert-danger',
+                  cssClass: '',
                   buttons: ['Okay']
                 });
                 alert.present();
@@ -762,7 +783,7 @@ export class AddAppointmentStep2Page implements OnInit {
                 let alert = await this.alertCtrl.create({
                   header: 'Failed !',
                   message: this.T_SVC['ALERT_TEXT.DUPLICATE_BOOKING'],
-                  cssClass: 'alert-danger',
+                  cssClass: '',
                   buttons: ['Okay']
                 });
                 alert.present();
@@ -770,7 +791,7 @@ export class AddAppointmentStep2Page implements OnInit {
               }else if(output && output.Status == 3){
                 let alert = await this.alertCtrl.create({
                   header: 'Failed !',
-                  cssClass: 'alert-danger',
+                  cssClass: '',
                   message: this.T_SVC['ALERT_TEXT.SLOT_EXPIRED'],
                   buttons: ['Okay']
                 });
@@ -780,7 +801,7 @@ export class AddAppointmentStep2Page implements OnInit {
                 let alert = await this.alertCtrl.create({
                   header: 'Error !',
                   message: this.T_SVC['ALERT_TEXT.MEMBER_NOT_FOUND'],
-                  cssClass: 'alert-danger',
+                  cssClass: '',
                   buttons: ['Okay']
                 });
                 alert.present();
@@ -798,7 +819,7 @@ export class AddAppointmentStep2Page implements OnInit {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
         alert.present();

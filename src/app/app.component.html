@@ -3,7 +3,7 @@
       <!-- Menu Main Top -->
       <ion-menu side="start" menuId="myLeftMenu" id="myLeftMenu" contentId="myLeftMenu" [content]="content"
           *ngIf="params != null">
-          <ion-header>
+          <ion-header *ngIf="showHeader">
               <!-- <div header-background-image [ngStyle]="{'background-image': 'url(' + params.background + ')'}"> -->
               <div header-background-image [ngStyle]="{'background-image': ''}"
                   style="text-align: center;background: linear-gradient(to bottom, #ff0066 0%, #3366ff 100%);">
@@ -45,13 +45,13 @@
           <ion-content>
               <ion-menu-toggle auto-hide="true" no-margin *ngFor="let p of pages" class="custom-menu-item">
                   <ion-item item-title main-menu lines="none" (click)="openPage(p)" class="no-padding"
-                      style="pointer-events: auto !important;">
+                      style="pointer-events: auto !important;background: #f9f6f6;">
                       <ion-icon slot="start" [name]="p.icon" color="danger" class="sideIcon"></ion-icon>
                       <span class="sideMenuTitle">
                           {{p.title}}
                       </span>
                   </ion-item>
-                  <ion-item style="margin-left: 35px;pointer-events: auto !important;display: block;" item-title
+                  <ion-item style="margin-left: 15px;pointer-events: auto !important;display: block;" item-title
                       main-menu lines="none" *ngFor="let subMenu of p.subMenu" (click)="openPage(subMenu)">
                       <!-- <ion-icon icon-small item-left>
                 <i class="icon {{subMenu.icon}}"></i>

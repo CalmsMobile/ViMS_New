@@ -160,7 +160,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 						let alert = this.alertCtrl.create({
 							header: 'Error !',
 							message: message,
-							cssClass:'alert-danger',
+							cssClass:'',
 						    buttons: ['Okay']
 							});
 							(await alert).present();
@@ -205,7 +205,7 @@ export class FacilityBookingHistoryPage implements OnInit {
       let alert = await this.alertCtrl.create({
         header: 'Confirmation',
         message: msg,
-        cssClass: 'alert-warning',
+        cssClass: '',
         buttons: [
           {
             text: 'Cancel',
@@ -298,7 +298,7 @@ export class FacilityBookingHistoryPage implements OnInit {
           let alert = this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
             });
             (await alert).present();

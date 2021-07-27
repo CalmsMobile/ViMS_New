@@ -277,7 +277,7 @@ export class FacilityBookingPage implements OnInit {
 
     let alert = await this.alertCtrl.create({
       header: 'Confirmation',
-      cssClass: 'alert-warning',
+      cssClass: '',
       message: this.translation['ALERT_TEXT.REMOVE_STAFF'],
       buttons: [
         {

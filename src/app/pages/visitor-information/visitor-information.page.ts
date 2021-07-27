@@ -350,7 +350,7 @@ export class VisitorInformationPage implements OnInit {
     }
     let alert = this.alertCtrl.create({
       header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
-      cssClass:"alert-danger",
+      cssClass:"",
       inputs: inputsShow,
       message: message1,
       buttons: [
@@ -497,7 +497,7 @@ export class VisitorInformationPage implements OnInit {
         let alert = this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass:'alert-danger',
+          cssClass:'',
           buttons: ['Okay']
           });
           (await alert).present();

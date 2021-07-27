@@ -376,7 +376,7 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
     }
       let actionSheet = await this.actionSheetCtrl.create({
         header: 'Select Image Source',
-        cssClass: 'alert-warning',
+        cssClass: '',
         buttons: option
       });
       actionSheet.present();
@@ -575,7 +575,7 @@ UpdateVisitor(){
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: result.message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
         alert.present();
@@ -861,7 +861,7 @@ ionViewDidEnter() {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
           alert.present();
@@ -952,7 +952,7 @@ ionViewDidEnter() {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
           alert.present();

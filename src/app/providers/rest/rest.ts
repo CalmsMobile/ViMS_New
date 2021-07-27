@@ -11,6 +11,7 @@ import { Device } from '@ionic-native/device/ngx';
 import { ToolTipComponent } from 'src/app/components/tool-tip/tool-tip.component';
 import { DecimalPipe } from '@angular/common';
 import { ViewImageComponent } from 'src/app/components/view-image/view-image.component';
+import { Router } from '@angular/router';
 
 /*
   Generated class for the RestProvider provider.
@@ -31,6 +32,7 @@ export class RestProvider {
     private toastCtrl: ToastController,
     private eventsService:EventsService,
     public network: Network,
+    private router: Router,
     // private http1: Http,
     private decimalPipe: DecimalPipe,
     private popoverController: PopoverController,
@@ -82,13 +84,50 @@ export class RestProvider {
     toast.present();
   }
 
+  isRunningOnMobile() {
+    return this.platform.is('cordova');
+  }
+
+
+/**
+ *
+ * @param deg
+ * @returns
+ */
+deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+/**
+ *
+ * @param lat1
+ * @param lon1
+ * @param lat2
+ * @param lon2
+ * @returns
+ */
+
+  getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = this.deg2rad(lat2-lat1);  // deg2rad below
+    var dLon = this.deg2rad(lon2-lon1);
+    var a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c; // Distance in km
+        return d * 1000;
+  }
+
+
   async showAlert(msg) {
     if(!this.alertShowing){
       this.alertShowing = true;
       let alert = this.alertCtrl.create({
         header: 'Notification',
         message: msg,
-        cssClass:'alert-danger',
+        mode:'ios',
         buttons: [{
             text: 'Okay',
             handler: () => {
@@ -104,11 +143,48 @@ export class RestProvider {
     }
   }
 
+  async showAlertForLocation(errorMsg) {
+    let alert = this.alertCtrl.create({
+      header: 'Notification',
+      message: errorMsg,
+      mode:'ios',
+      buttons: [{
+          text: 'Okay',
+          handler: () => {
+            console.log('Cancel clicked');
+            this.alertShowing = false;
+          }
+        }]
+      });
+      (await alert).present();
+      (await alert).onDidDismiss().then(() => {
+        this.alertShowing = false;
+        this.router.navigateByUrl('home-tams');
+      });
+
+  }
+
   async presentLoading() {
     this.isLoading = true;
     return await this.loadingCtrl.create({
       message: 'Please wait...',
       backdropDismiss: true,
+      showBackdrop: true
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.isLoading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+        }
+      });
+    });
+  }
+
+  async presentLoadingWithText(message1) {
+    this.isLoading = true;
+    return await this.loadingCtrl.create({
+      message: message1,
+      backdropDismiss: false,
       showBackdrop: true
     }).then(a => {
       a.present().then(() => {
@@ -188,6 +264,7 @@ export class RestProvider {
       return;
     }
     data  = this.setAuthorizedInfo(data, '', '');
+    console.log('Param' + JSON.stringify(data));
     if (loading) {
       this.presentLoading();
     }
@@ -208,6 +285,7 @@ export class RestProvider {
         if(this.validateUser(output)){
           return;
         }
+        console.log('Result:' + JSON.stringify(output));
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
           resolve(output);
         }else{
@@ -3189,10 +3267,19 @@ export class RestProvider {
         if(this.validateUser(output)){
           return;
         }
-        if(output != undefined && output.Table){
-          resolve(JSON.stringify(output));
+
+        if(output){
+          if(output.Table){
+            resolve(JSON.stringify(output));
+          }else{
+            reject(JSON.stringify(output));
+          }
         }else{
-          reject(JSON.stringify(output));
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
         }
 
       }, (err) => {

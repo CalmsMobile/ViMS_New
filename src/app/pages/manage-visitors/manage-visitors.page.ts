@@ -300,7 +300,7 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -323,7 +323,7 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
       let alert = await this.alertCtrl.create({
         header: 'Error !',
         message: this.T_SVC['ALERT_TEXT.UPDATE_VISITOR_EMAIL'],
-        cssClass: 'alert-danger',
+        cssClass: '',
         buttons: [{
           text: 'Okay',
           handler: () => {

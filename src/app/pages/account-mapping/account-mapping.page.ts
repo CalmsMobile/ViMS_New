@@ -185,12 +185,12 @@ export class AccountMappingPage {
           if(invalidORG){
             this.STOPS = 'STOP2';
           } else {
-            var  ApiUrl = "http://124.217.235.107:2001/";
+            var  ApiUrl = "http://124.217.235.107:1001/api/";
             var CompanyId = "2";
             var HostId = "VijayCalms";
             var AppId = "1";
            var qrJsonString1 = "{\"ApiUrl\":\""+ApiUrl+ "\",\"CompanyId\":\"" + CompanyId + "\",\"HostId\":\""
-           + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT+ "\"}";
+           + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS+ "\"}";
           // var qrJsonString1 = "{\"CompanyId\":\"1\",\"HostId\":\""+AppSettings.TEST_DATA.SAMPLE_HOST_IC+"\",\"AppId\":\"1\",\"ApiUrl\":\"http://124.217.235.107:2026\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP+ "\"}";
           // ACK
           // var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3066\", \"MAppId\":\""+ AppSettings.LOGINTYPES.ACKAPPT+ "\", \"Location\":\"ACKDemo\"}";
@@ -209,7 +209,7 @@ export class AccountMappingPage {
               mode: CryptoJS.mode.CBC,
               padding: CryptoJS.pad.Pkcs7
           });
-            // var qrCodeString = "" + encrypted;
+            var qrCodeString = "" + encrypted;
             // 1001 HOST APP
             // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohZjEU6Evg3rcMxk+/Ugdcex2hFM6P4LE2zMmCF/XoF6kbtLZRrN6d2wZtKDKw7wzf5ZU6E1Ud9RSlXHW9nXhMnyNXs3gJR/8IT4DDzEQdmP+K6TVrX4YXzUbuP+qEN6/U=';
             //HOSTWF 1001
@@ -217,7 +217,7 @@ export class AccountMappingPage {
             //FAcility Display
             // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmsOWXsylRj+rCMMx0EgAXhUReWw865+hTAeDCEKjxB1Ow==';
             //HOST 2001
-            var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5oiFeX7BsAqxUzljIRJdDWo7fjFdjd5CYtyMqUPAqE82J7INYJg3yt8iYa+5P2zoCB+8qNoUbmH80zVyCrzpZJobcHl1pkIWqja9wnesvEJzOw==';
+            // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5oiFeX7BsAqxUzljIRJdDWo7fjFdjd5CYtyMqUPAqE82J7INYJg3yt8iYa+5P2zoCB+8qNoUbmH80zVyCrzpZJobcHl1pkIWqja9wnesvEJzOw==';
             //ACK
             // var qrCodeString = 'qYNb75lXZms19Ri+u9GuOKEOnI+Bw2rOjRNRz3F3gK5yStsC7HV5d0FoZmKl97l5D/TzMTQCqKnahYPuTqZ6TrHijxnIJnXGCrbD93loR9n/96rUnC+77Vl8D/VZ3XTIwc3axSyZQ7DQC4g4NiQGJlH8pY7wGwxGkeDBwIRR7GA=';
 
@@ -237,7 +237,7 @@ export class AccountMappingPage {
           let invalidQRConfirm = await this.alertCtrl.create({
             header: 'Error !',
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-            cssClass: 'alert-danger',
+            cssClass: '',
 
             buttons: [
               {
@@ -272,9 +272,6 @@ export class AccountMappingPage {
         if(scanData == ""){
           invalidQRCode = true;
           this.scannedJson = null;
-          // var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
-          // this.processJson(qrCodeString);
-          // return;
         } else{
           try{
             this.scannedJson = JSON.parse(scanData);
@@ -286,7 +283,7 @@ export class AccountMappingPage {
             let alert = this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass:'alert-danger',
+              cssClass:'',
               buttons: ['Okay']
               });
               (await alert).present();
@@ -345,6 +342,9 @@ export class AccountMappingPage {
                     case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
                       this.STOPS = 'STOP2';
                       break;
+                    case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
+                      this.STOPS = 'STOP2';
+                      break;
                     case AppSettings.LOGINTYPES.FACILITY:
                       this.STOPS = 'STOP2';
                       break;
@@ -381,7 +381,7 @@ export class AccountMappingPage {
                     let alert = this.alertCtrl.create({
                       header: 'Error !',
                       message: result.message,
-                      cssClass:'alert-danger',
+                      cssClass:'',
                       buttons: ['Okay']
                       });
                       (await alert).present();
@@ -396,7 +396,7 @@ export class AccountMappingPage {
                   let alert = this.alertCtrl.create({
                     header: 'Error !',
                     message: message,
-                    cssClass:'alert-danger',
+                    cssClass:'',
                     buttons: ['Okay']
                     });
                     (await alert).present();
@@ -408,7 +408,7 @@ export class AccountMappingPage {
                   let alert = this.alertCtrl.create({
                     header: 'Error !',
                     message: message,
-                    cssClass:'alert-danger',
+                    cssClass:'',
                     buttons: ['Okay']
                     });
                     (await alert).present();
@@ -420,7 +420,7 @@ export class AccountMappingPage {
                   let alert = this.alertCtrl.create({
                     header: 'Error !',
                     message: message,
-                    cssClass:'alert-danger',
+                    cssClass:'',
                     buttons: ['Okay']
                     });
                     (await alert).present();
@@ -429,7 +429,7 @@ export class AccountMappingPage {
                 let invalidORGConfirm = this.alertCtrl.create({
                   header:"<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_ORG_TITLE'] + '</span>',
                   message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_ORG_DETAIL'] + '</span>',
-                  cssClass:'alert-danger',
+                  cssClass:'',
                   buttons: [
                     {
                       text: this.T_SVC['COMMON.OK'],
@@ -449,7 +449,7 @@ export class AccountMappingPage {
             header: 'Error !',
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
 
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: [
               {
                 text: this.T_SVC['COMMON.OK'],
@@ -467,7 +467,7 @@ export class AccountMappingPage {
           header: 'Error !',
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
 
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -490,7 +490,7 @@ export class AccountMappingPage {
     // var testQr = "12345KQCvWA6nnLWEx3R75yj0nKt102YtHO6R2u4GXVSc/DAlAJltSHUucrncKYz/IxdN+EilpEnfBOmSRjtTWDFgAeZHR5OmSo0cn26te710F5qbE19xBcqRW5Vka075iOWw";
     var scanData = this.decrypt(testQr);
     // var scanData1 = this.decrypt("tj7giUScblByz+O3ODrG6g==", "qweqweqweqweqweq", "qweqweqweqweqweq");
-
+    // this.scannedJson.MAppId = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
     console.log(scanData);
     try{
       this.scannedJson = JSON.parse(scanData);
@@ -502,7 +502,7 @@ export class AccountMappingPage {
       let alert = await this.alertCtrl.create({
         header: 'Error !',
         message: message,
-        cssClass: 'alert-danger',
+        cssClass: '',
         buttons: ['Okay']
       });
         alert.present();
@@ -544,6 +544,9 @@ export class AccountMappingPage {
             case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
               this.STOPS = 'STOP2';
               break;
+            case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
+              this.STOPS = 'STOP2';
+              break;
             case AppSettings.LOGINTYPES.FACILITY:
               this.STOPS = 'STOP2';
               break;
@@ -573,7 +576,7 @@ export class AccountMappingPage {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: result.message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -587,7 +590,7 @@ export class AccountMappingPage {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -599,7 +602,7 @@ export class AccountMappingPage {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -612,7 +615,7 @@ export class AccountMappingPage {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -623,7 +626,7 @@ export class AccountMappingPage {
         let invalidORGConfirm = await this.alertCtrl.create({
           header: this.T_SVC['ACC_MAPPING.INVALID_ORG_TITLE'],
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVAYLID_ORG_DETAIL'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -714,7 +717,7 @@ export class AccountMappingPage {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: result.message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -741,7 +744,7 @@ export class AccountMappingPage {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -752,7 +755,7 @@ export class AccountMappingPage {
         let invalidORGConfirm = await this.alertCtrl.create({
           header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -849,7 +852,7 @@ export class AccountMappingPage {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: result.message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -864,7 +867,7 @@ export class AccountMappingPage {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -875,7 +878,7 @@ export class AccountMappingPage {
         let invalidORGConfirm = await this.alertCtrl.create({
           header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -971,7 +974,7 @@ export class AccountMappingPage {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: result.message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -986,7 +989,7 @@ export class AccountMappingPage {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -997,7 +1000,7 @@ export class AccountMappingPage {
         let invalidORGConfirm = await this.alertCtrl.create({
           header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -1099,7 +1102,7 @@ export class AccountMappingPage {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: result.message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -1114,7 +1117,7 @@ export class AccountMappingPage {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -1125,7 +1128,7 @@ export class AccountMappingPage {
         let invalidORGConfirm = await this.alertCtrl.create({
           header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -1208,7 +1211,7 @@ export class AccountMappingPage {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: result.message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -1223,7 +1226,7 @@ export class AccountMappingPage {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -1234,7 +1237,7 @@ export class AccountMappingPage {
         let invalidORGConfirm = await this.alertCtrl.create({
           header: "Error",
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -1368,6 +1371,9 @@ export class AccountMappingPage {
               case AppSettings.LOGINTYPES.SECURITYAPP:
                 this.navCtrl.navigateRoot('security-dash-board-page');
                 break;
+              case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
+                this.navCtrl.navigateRoot('home-tams');
+                break;
               default:
                 this.navCtrl.navigateRoot('home-view');
                 break;
@@ -1388,7 +1394,7 @@ export class AccountMappingPage {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: result.message,
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
                 alert.present();
@@ -1402,7 +1408,7 @@ export class AccountMappingPage {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -1411,7 +1417,7 @@ export class AccountMappingPage {
           let invalidORGConfirm = await this.alertCtrl.create({
             header: this.T_SVC['ACC_MAPPING.FCM_TITLE'],
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_FCM_TITLE'] + '</span>',
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: [
               {
                 text: this.T_SVC['COMMON.OK'],
@@ -1497,7 +1503,7 @@ export class AccountMappingPage {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: result.message,
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
                 alert.present();
@@ -1511,7 +1517,7 @@ export class AccountMappingPage {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -1521,7 +1527,7 @@ export class AccountMappingPage {
           let invalidORGConfirm = await this.alertCtrl.create({
             header: "Error",
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_HOST'] + '</span>',
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: [
               {
                 text: this.T_SVC['COMMON.OK'],
@@ -1541,7 +1547,7 @@ export class AccountMappingPage {
     // this.navCtrl.push('AccountMapping2Page');
     let alert = await this.alertCtrl.create({
       header: 'Manual  Registration',
-      cssClass: 'alert-warning',
+      cssClass: '',
       inputs: [
         {
           name: 'RegKey',

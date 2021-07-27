@@ -126,7 +126,7 @@ export class UserProfilePagePage implements OnInit {
   public async presentActionSheet() {
     let actionSheet = await this.actionSheetCtrl.create({
       header: 'Select Image Source',
-      cssClass: 'alert-warning',
+      cssClass: '',
       buttons: [
         {
           text: 'Gallery',
@@ -306,7 +306,7 @@ export class UserProfilePagePage implements OnInit {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
         alert.present();

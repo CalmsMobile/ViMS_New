@@ -119,7 +119,7 @@ export class AdminHomePage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -283,7 +283,7 @@ export class AdminHomePage implements OnInit {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -334,7 +334,7 @@ export class AdminHomePage implements OnInit {
     }
     let alert = this.alertCtrl.create({
       header: this.T_SVC['NOTIFICATION.TITLE'],
-      cssClass:'alert-warning',
+      cssClass:'',
       message: status,
       inputs: inputsShow,
       buttons: [
@@ -405,7 +405,7 @@ export class AdminHomePage implements OnInit {
           let alert = this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
             });
             (await alert).present();
@@ -450,7 +450,7 @@ export class AdminHomePage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -462,8 +462,19 @@ export class AdminHomePage implements OnInit {
 
 
   goBack() {
-    this.navCtrl.pop();
-    this.router.navigateByUrl('home-view');
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.router.navigateByUrl('home-tams');
+      } else {
+        this.router.navigateByUrl('home-view');
+      }
+
+    } else {
+      this.navCtrl.pop();
+    }
+
   }
 
   getPreAppointmentenableApprovalSettings(){
@@ -488,7 +499,7 @@ export class AdminHomePage implements OnInit {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -586,7 +597,7 @@ export class AdminHomePage implements OnInit {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: message,
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
                 alert.present();
@@ -610,7 +621,7 @@ export class AdminHomePage implements OnInit {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -671,7 +682,7 @@ export class AdminHomePage implements OnInit {
               // message = " Unknown"
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
-                cssClass: 'alert-danger',
+                cssClass: '',
                 message: message,
                 buttons: ['Okay']
               });
@@ -683,7 +694,7 @@ export class AdminHomePage implements OnInit {
       }
     }];
     // fab.close();
-    let alert = await this.alertCtrl.create({ cssClass: 'alert-danger',
+    let alert = await this.alertCtrl.create({ cssClass: '',
     header: 'Preappointment Approval',
     message: "(Note: If checked, preAppointment will be approved automatically)",
     inputs: [{
@@ -708,7 +719,7 @@ export class AdminHomePage implements OnInit {
       let loginConfirm = await this.alertCtrl.create({
         header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
         message: t['SETTINGS.ARE_U_SURE_ADMIN_LOGOUT'],
-        cssClass: 'alert-warning',
+        cssClass: '',
         buttons: [
           {
             text: t['COMMON.EXIT1'],

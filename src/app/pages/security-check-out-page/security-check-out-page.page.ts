@@ -255,7 +255,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 						// message = " Unknown"
 						let alert = this.alertCtrl.create({
 							header: 'Error !',
-							cssClass:'alert-danger',
+							cssClass:'',
 							message: message,
 							buttons: ['Okay']
 							});
@@ -310,7 +310,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 						// message = " Unknown"
 						let alert = this.alertCtrl.create({
 							header: 'Error !',
-							cssClass:'alert-danger',
+							cssClass:'',
 							message: message,
 							buttons: ['Okay']
 							});
@@ -402,7 +402,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 						// message = " Unknown"
 						let alert = this.alertCtrl.create({
 							header: 'Error !',
-							cssClass:'alert-danger',
+							cssClass:'',
 							message: message,
 							buttons: ['Okay']
 							});
@@ -443,7 +443,7 @@ export class SecurityCheckOutPagePage implements OnInit {
           let invalidQRConfirm = this.alertCtrl.create({
             header: 'Error !',
             message:"<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: [
               {
                 text: this.T_SVC['COMMON.OK'],
@@ -465,7 +465,7 @@ export class SecurityCheckOutPagePage implements OnInit {
         let invalidQRConfirm = this.alertCtrl.create({
           header: 'Error !',
           message:"<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass:'alert-danger',
+          cssClass:'',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -482,7 +482,7 @@ export class SecurityCheckOutPagePage implements OnInit {
   async checkoutVisitorByQR(HexCode: string) {
     let alert = this.alertCtrl.create({
       header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
-      cssClass:"alert-danger",
+      cssClass:"",
       message: "Visitor already checked-in. do you like to check-out?",
       buttons: [
         {
@@ -590,7 +590,7 @@ export class SecurityCheckOutPagePage implements OnInit {
     }
     let alert = this.alertCtrl.create({
       header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
-      cssClass:"alert-danger",
+      cssClass:"",
       message: message1,
       inputs: inputsShow,
       buttons: [

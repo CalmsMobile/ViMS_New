@@ -1,0 +1,608 @@
+#calendar {
+  width: 90%;
+  margin: auto 5% 5% 5%;
+}
+.booking-main {
+  .fixed-content,
+  .scroll-content1 {
+    display: flex;
+    align-items: center;
+
+    ion-list {
+      max-width: 300px;
+      width: 100%;
+      margin: auto;
+      text-align: center;
+    }
+  }
+  .item-inner,
+  .input-wrapper {
+    padding: 0px;
+    border-bottom: 0px !important;
+  }
+  // ion-label {
+  //   margin: 0px;
+  // }
+
+  button {
+    ion-badge {
+      position: absolute;
+      top: -0.2rem;
+      right: -0.2rem;
+      opacity: 0.9;
+
+      & ~ ion-icon {
+        margin-right: 1.2rem;
+      }
+    }
+  }
+
+  .apt-left {
+    background-color: var(--ion-color-primary);
+    max-width: 100px;
+    padding: 0px;
+    text-align: center;
+    // border-radius: 10px;
+  }
+  .text-white {
+    color: white;
+    text-align: center;
+  }
+  .booking-status {
+    padding: 5px;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 8px;
+  }
+  .booking-status.pending {
+    background: rgb(252, 170, 170);
+  }
+  .booking-status.canceled {
+    background: #f2f2f2;
+    color: #aaa;
+  }
+  .booking-status.approved {
+    background: #90d3a3;
+    color: #ffffff;
+  }
+}
+
+ion-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: contain;
+  background-size: 18px;
+}
+
+.item-native {
+  padding: 0px !important;
+}
+
+.outer-circle {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid #ffeb3b;
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+  margin-left: 30%;
+}
+.inner-circle {
+  position: absolute;
+  background: #ffeb3b;
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #000000;
+  font-weight: bold;
+}
+
+.outer-circle1 {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid #17be17;
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+}
+
+.inner-circle1 {
+  position: absolute;
+  background: #17be17;
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.outer-circle2 {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid var(--ion-color-primary);
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+}
+
+.inner-circle2 {
+  position: absolute;
+  background: var(--ion-color-primary);
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.colIcons {
+  display: grid;
+  justify-content: end;
+  padding-bottom: 0px;
+  align-items: center;
+}
+.card_appointment {
+  margin: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border: 1px solid #dedede;
+  padding: 0px;
+}
+.col_apt_left {
+  max-width: 100px;
+  padding: 0px;
+  text-align: center;
+}
+.div-date {
+  width: -webkit-fill-available;
+  padding-top: 5px;
+}
+.div-left-middle {
+  display: flex;
+  padding: 5px;
+  justify-content: center;
+}
+
+.div-left-middle-text {
+  font-size: 15px;
+  padding: 0px;
+  margin-bottom: 0px;
+  margin-top: 3px;
+}
+
+.div-left-bottom-text {
+  font-size: 15px;
+  padding: 6px;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+.div-apt-center {
+  display: flex;
+  padding-bottom: 3px;
+}
+
+.apt-center-title {
+  margin: 0px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.apt-center-subtitle {
+  margin: 0px;
+  font-size: 12px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  color: #989aa2;
+}
+.apt-text-icons {
+  font-size: 16px;
+  padding: 0px;
+  padding-right: 3px;
+}
+
+.apt-right-icon {
+  font-size: 13px;
+  padding: 1px;
+  color: #ffffff;
+  padding-top: 0px;
+}
+
+.apt-item {
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+}
+
+.slideIcons {
+  border: 2px solid white;
+  border-radius: 50%;
+  padding: 7px;
+  display: flex;
+}
+
+.visitorImage {
+  width: 70px;
+  height: 63px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 1px;
+  object-fit: cover;
+  img {
+    max-width: 46px;
+    border: 2px solid green;
+    border-radius: 50px;
+    width: 46px;
+    height: 46px;
+  }
+}
+
+.shapeborder {
+  border: 2px solid var(--ion-color-primary);
+}
+.circle {
+  border-radius: 50%;
+}
+
+.outer {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 2px ​solid var(--ion-color-primary);
+  height: 25px;
+  width: 25px;
+  margin-top: -15px;
+}
+.inner {
+  position: absolute;
+  // background: var(--ion-color-primary);
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #000000;
+  font-weight: bold;
+  background: var(--ion-color-primary);
+}
+.status {
+  padding-top: 3px;
+  margin-left: 20%;
+}
+
+.statuswithBadge {
+  position: relative;
+  margin-top: -20px;
+  margin-left: 24px;
+}
+
+.insideBadge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-left: 15px;
+  border-radius: 50%;
+  margin-top: -30px;
+}
+
+ion-content {
+  --background: #f4f6fc;
+}
+.item-inner,
+.input-wrapper {
+  padding: 0px;
+  border-bottom: 0px !important;
+}
+ion-label {
+  margin: 0px;
+}
+
+.apt-left {
+  background-color: #eb445a;
+}
+.text-white {
+  color: white;
+  text-align: center;
+}
+.booking-status {
+  padding: 5px;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 8px;
+}
+.booking-status.pending {
+  background: rgb(252, 170, 170);
+}
+.booking-status.canceled {
+  background: #f2f2f2;
+  color: #aaa;
+}
+.booking-status.approved {
+  background: #90d3a3;
+  color: #ffffff;
+}
+.card-md p {
+  margin: 0 0 2px;
+  font-size: 1.4rem;
+  font-weight: normal;
+  line-height: 1.5;
+}
+.table-bordered[_ngcontent-c1]
+  > thead[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > th[_ngcontent-c1],
+.table-bordered[_ngcontent-c1]
+  > tbody[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > th[_ngcontent-c1],
+.table-bordered[_ngcontent-c1]
+  > tfoot[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > th[_ngcontent-c1],
+.table-bordered[_ngcontent-c1]
+  > thead[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > td[_ngcontent-c1],
+.table-bordered[_ngcontent-c1]
+  > tbody[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > td[_ngcontent-c1],
+.table-bordered[_ngcontent-c1]
+  > tfoot[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > td[_ngcontent-c1] {
+  border: 1px solid whitesmoke;
+}
+.table[_ngcontent-c1]
+  > thead[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > th[_ngcontent-c1],
+.table[_ngcontent-c1]
+  > tbody[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > th[_ngcontent-c1],
+.table[_ngcontent-c1]
+  > tfoot[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > th[_ngcontent-c1],
+.table[_ngcontent-c1]
+  > thead[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > td[_ngcontent-c1],
+.table[_ngcontent-c1]
+  > tbody[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > td[_ngcontent-c1],
+.table[_ngcontent-c1]
+  > tfoot[_ngcontent-c1]
+  > tr[_ngcontent-c1]
+  > td[_ngcontent-c1] {
+  padding: 12px 8px 10px 8px;
+}
+
+.monthview-primary-with-event[_ngcontent-c1] {
+  background-color: transparent;
+  color: #9c27b0;
+  box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.2);
+  // border-bottom:2px solid #9C27B0 !important;
+}
+.monthview-primary-with-event[_ngcontent-c1]::after {
+  background-color: #9c27b0;
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  content: "";
+  margin-top: -5px;
+}
+.monthview-current[_ngcontent-c1] {
+  background-color: #f0f0f0;
+  box-shadow: inset 1px 1px 12px rgba(0, 0, 0, 0.2);
+}
+.monthview-selected[_ngcontent-c1] {
+  background-color: #eb445a;
+  //border: 1px solid theme-colors('mainColors', 'primary') !important;
+  color: white;
+  box-shadow: inset 1px 1px 12px rgba(0, 0, 0, 0.3);
+}
+thead tr {
+  background: whitesmoke;
+}
+
+ion-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: contain;
+  background-size: 18px;
+  &[ng-reflect-name="customicon"] {
+    background-image: url("../../../assets/images/x-icon/admin.png");
+    &[ng-reflect-is-active="true"] {
+      background-image: url("../../../assets/images/x-icon/admin.png");
+    }
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}
+ion-toolbar {
+  ion-title {
+    text-align: left;
+  }
+}
+
+.item-native {
+  padding: 0px !important;
+}
+
+.outer-circle {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid #ffeb3b;
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+}
+.inner-circle {
+  position: absolute;
+  background: #ffeb3b;
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #000000;
+  font-weight: bold;
+}
+
+.outer-circle1 {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid #17be17;
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+}
+
+.inner-circle1 {
+  position: absolute;
+  background: #17be17;
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.outer-circle2 {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid #eb445a;
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+}
+
+.inner-circle2 {
+  position: absolute;
+  background: #eb445a;
+  border-radius: 50%;
+  right: 2px;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  padding: 0px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.colIcons {
+  display: grid;
+  justify-content: end;
+  padding-bottom: 0px;
+}
+.card_appointment {
+  margin: 3px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border: 1px solid #dedede;
+  padding: 0px;
+}
+.col_apt_left {
+  max-width: 100px;
+  padding: 0px;
+  text-align: center;
+}
+.div-date {
+  width: -webkit-fill-available;
+  padding-top: 5px;
+}
+.div-left-middle {
+  display: flex;
+  padding: 5px;
+  justify-content: center;
+}
+
+.div-left-middle-text {
+  font-size: 15px;
+  padding: 0px;
+  margin-bottom: 0px;
+  margin-top: 3px;
+}
+
+.div-left-bottom-text {
+  font-size: 15px;
+  padding: 6px;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+.div-apt-center {
+  display: flex;
+  padding-bottom: 3px;
+}
+
+.apt-center-title {
+  margin: 0px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.apt-center-subtitle {
+  margin: 0px;
+  font-size: 12px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.apt-text-icons {
+  font-size: 16px;
+  padding: 0px;
+  padding-right: 3px;
+}
+
+.apt-right-icon {
+  font-size: 13px;
+  padding: 1px;
+  color: #ffffff;
+  padding-top: 0px;
+}
+
+.apt-item {
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+}
+
+.slideIcons {
+  border: 2px solid white;
+  border-radius: 50%;
+  padding: 7px;
+  display: flex;
+}

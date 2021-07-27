@@ -273,7 +273,7 @@ export class SecurityVisitorListPagePage implements OnInit {
     let alert = await this.alertCtrl.create({
       header: 'Confirmation',
       message: this.T_SVC['ALERT_TEXT.WISH_TO_REMOVE_VISITOR'],
-      cssClass: 'alert-warning',
+      cssClass: '',
       buttons: [
         {
           text: 'Cancel',
@@ -352,7 +352,7 @@ export class SecurityVisitorListPagePage implements OnInit {
         message: this.T_SVC['ADD_APPOIN.NO_VISITROS'],
         duration: 3000,
         color: 'primary',
-        cssClass: 'alert-danger',
+        cssClass: '',
         position: 'bottom'
       });
       toast.present();
@@ -364,7 +364,7 @@ export class SecurityVisitorListPagePage implements OnInit {
         message: this.T_SVC['ALERT_TEXT.SELECT_STAFF'],
         duration: 3000,
         color: 'primary',
-        cssClass: 'alert-danger',
+        cssClass: '',
         position: 'bottom'
       });
       toast.present();
@@ -376,7 +376,7 @@ export class SecurityVisitorListPagePage implements OnInit {
         message: this.T_SVC['ALERT_TEXT.ALERT_TEXT.SELECT_PURPOSE'],
         duration: 3000,
         color: 'primary',
-        cssClass: 'alert-danger',
+        cssClass: '',
         position: 'bottom'
       });
       toast.present();
@@ -445,7 +445,7 @@ export class SecurityVisitorListPagePage implements OnInit {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
           alert.present();

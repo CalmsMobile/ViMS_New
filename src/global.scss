@@ -172,7 +172,7 @@ $global-opacity: (
 
 .alert-message.sc-ion-alert-ios,
 .alert-input-group.sc-ion-alert-ios {
-  padding-bottom: 0px;
+  padding-bottom: 15px;
 }
 
 ion-title {
@@ -492,8 +492,9 @@ ion-icon {
 }
 
 .alert-title.sc-ion-alert-ios {
-  color: white;
+  color: var(--ion-color-primary) !important;
   text-align: center;
+  margin-bottom: 10px;
 }
 // Function to print color
 @function theme-colors($name: "blendModes", $variant: "primary", $opacity: 1) {

@@ -494,7 +494,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
           let invalidQRConfirm = await this.alertCtrl.create({
             header: 'Error !',
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: [
               {
                 text: this.T_SVC['COMMON.OK'],
@@ -511,7 +511,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],

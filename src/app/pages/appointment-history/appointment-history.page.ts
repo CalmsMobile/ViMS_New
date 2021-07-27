@@ -23,6 +23,9 @@ export class AppointmentHistoryPage implements OnInit {
 	loadingFinished = true;
 	isAdmin = true;
   alertShowing = false;
+  QRObj: any = {};
+  HOSTWTTAMS = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
+  TAMS = AppSettings.LOGINTYPES.TAMS;
 	constructor(public navCtrl: NavController,
 		 private events : EventsService,
      private router: Router,
@@ -162,7 +165,7 @@ export class AppointmentHistoryPage implements OnInit {
 						// message = " Unknown"
 						let alert = await this.alertCtrl.create({
               header: 'Error !',
-              cssClass: 'alert-danger',
+              cssClass: '',
               message: message,
               buttons: ['Okay']
             });
@@ -208,7 +211,7 @@ export class AppointmentHistoryPage implements OnInit {
     let alert = await this.alertCtrl.create({
       header: 'Confirmation',
       message: msg,
-      cssClass: 'alert-warning',
+      cssClass: '',
       buttons: [
         {
           text: 'Cancel',
@@ -285,7 +288,7 @@ export class AppointmentHistoryPage implements OnInit {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();
@@ -306,6 +309,21 @@ export class AppointmentHistoryPage implements OnInit {
   }
 
   ngOnInit() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      this.QRObj = JSON.parse(qrData);
+    }
   }
+
+  goBack() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.router.navigateByUrl('home-tams');
+      }
+    }
+    console.log('goBack ');
+   }
 
 }

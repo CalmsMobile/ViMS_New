@@ -1,8 +1,9 @@
 <ion-header>
   <ion-toolbar color="danger">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="(QRObj.MAppId !== HOSTWTTAMS && QRObj.MAppId !== TAMS)">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-icon slot="start" *ngIf="(QRObj.MAppId === HOSTWTTAMS || QRObj.MAppId === TAMS)" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>My Appointments</ion-title>
     <ion-buttons slot="end">
       <ion-button *ngIf="isAdmin" slot="icon-only" (click)="gotoAdminPage()">

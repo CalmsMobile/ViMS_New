@@ -328,7 +328,7 @@ export class NotificationsPage implements OnInit {
             let alert = this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass:'alert-danger',
+              cssClass:'',
               buttons: ['Okay']
               });
               (await alert).present();
@@ -339,12 +339,22 @@ export class NotificationsPage implements OnInit {
 	}
 
   goBack() {
-    if (this.isSecurityApp) {
-      this.router.navigateByUrl('security-dash-board-page');
-    } else {
-      this.router.navigateByUrl('home-view');
-    }
 
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.router.navigateByUrl('home-tams');
+      } else {
+        if (this.isSecurityApp) {
+          this.router.navigateByUrl('security-dash-board-page');
+        } else {
+          this.router.navigateByUrl('home-view');
+        }
+      }
+    } else {
+      this.navCtrl.pop();
+    }
     console.log('goBack ');
    }
 
@@ -438,7 +448,7 @@ export class NotificationsPage implements OnInit {
 	async deleteNotification(notification: any){
 	  let alert = this.alertCtrl.create({
       header: 'Delete Notification',
-      cssClass:'alert-warning',
+      cssClass:'',
       message: this.T_SVC['ALERT_TEXT.DELETE_NOTIFIACTION'],
       buttons: [
         {
@@ -499,7 +509,7 @@ export class NotificationsPage implements OnInit {
 								// message = " Unknown"
 								let alert = this.alertCtrl.create({
 									header: 'Error !',
-									cssClass:'alert-danger',
+									cssClass:'',
 									message: message,
 									buttons: ['Okay']
 									});

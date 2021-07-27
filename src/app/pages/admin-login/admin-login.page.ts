@@ -94,7 +94,7 @@ export class AdminLoginPage implements OnInit {
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
           let alert = await this.alertCtrl.create({
             header: 'Error !',
-            cssClass: 'alert-danger',
+            cssClass: '',
             message: message,
             buttons: ['Okay']
           });
@@ -105,7 +105,7 @@ export class AdminLoginPage implements OnInit {
 
         let invalidORGConfirm = await this.alertCtrl.create({
           header: this.T_SVC['ADMIN_LOGIN.TITLE'],
-          cssClass: 'alert-danger',
+          cssClass: '',
           message: "<span class='failed'>" + this.T_SVC['ADMIN_LOGIN.INVALID_ADMIN_LOGIN'] + '</span>',
           buttons: [
             {

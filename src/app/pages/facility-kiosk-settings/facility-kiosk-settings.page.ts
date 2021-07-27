@@ -75,7 +75,7 @@ export class FacilityKioskSettingsPage implements OnInit {
       let loginConfirm = await this.alertCtrl.create({
         header: t['SETTINGS.ARE_U_SURE_LOGOUT_TITLE'],
         message: t['SETTINGS.ARE_U_SURE_LOGOUT'],
-        cssClass: 'alert-warning',
+        cssClass: '',
         buttons: [
           {
             text: t['COMMON.EXIT1'],

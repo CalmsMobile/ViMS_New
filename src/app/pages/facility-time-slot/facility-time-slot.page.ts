@@ -202,7 +202,7 @@ export class FacilityTimeSlotPage implements OnInit {
       let loginConfirm = this.alertController.create({
         header:"<span class='failed'>" + "Cancel Slot" + '</span>',
         message: this.T_SVC['ALERT_TEXT.WISH_TO_CANCEL_SLOT'],
-        cssClass:'alert-warning',
+        cssClass:'',
         buttons: [
           {
             text: "Cancel",
@@ -224,7 +224,7 @@ export class FacilityTimeSlotPage implements OnInit {
         header: 'Slot Booked',
         subHeader: '',
         message: '<b>Booked by : </b>You' + (slot.PurposeName ? (' <br> <b>Purpose : </b>' + slot.PurposeName) : ''),
-        cssClass: 'alert-danger',
+        cssClass: '',
         buttons: ['OK']
       });
       alert.present();
@@ -234,7 +234,7 @@ export class FacilityTimeSlotPage implements OnInit {
         header: 'Slot Booked',
         subHeader: '',
         message: (slot.StaffID ? ('<b>Booked By : </b>' + slot.StaffID) : '') + (slot.PurposeName ? (' <br> <b>Purpose : </b>' + slot.PurposeName) : ''),
-        cssClass: 'alert-danger',
+        cssClass: '',
         buttons: ['OK']
       });
       alert.present();
@@ -261,7 +261,7 @@ export class FacilityTimeSlotPage implements OnInit {
             let alert = await this.alertController.create({
               header: 'Success',
               message: this.T_SVC['ALERT_TEXT.SLOT_REMOVED'],
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
             alert.present();
@@ -275,7 +275,7 @@ export class FacilityTimeSlotPage implements OnInit {
             let alert = await this.alertController.create({
               header: 'Failed',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
             alert.present();
@@ -298,7 +298,7 @@ export class FacilityTimeSlotPage implements OnInit {
             let alert = await this.alertController.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
             alert.present();

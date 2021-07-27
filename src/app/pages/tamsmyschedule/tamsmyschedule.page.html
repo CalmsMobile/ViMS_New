@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar style="    height: 48px;" color="primary">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-title>{{'ALERT_TEXT.MY_SCHEDULE' | translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-label *ngIf="startDate" style="font-size: 14px;
+      background: white;
+      color: var(--ion-color-primary);
+      padding: 5px;
+      border-radius: 12px;">{{startDate | date : 'dd MMM yyyy'}}</ion-label>
+      <ion-button slot="icon-only" (click)="showCalender(picker)" style="font-size: larger;">
+        <ion-datetime #picker style=" margin-left: 5px;
+            font-size: 14px;display: none;" displayFormat="YYYY-MM-DD"  max="2121-12-12" placeholder="Select Date" (ionChange)="changeCalendar($event)"></ion-datetime>
+        <ion-icon name="calendar-outline" style="position:relative;" style="color: #FFF;">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar  style="padding: 2px;height: 45px;" color="light" mode="ios" [(ngModel)]="searchText" (ionChange)="filterTechnologies($event)"
+     (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s" placeholder="{{selectedTab === 'tab1'? 'Search shift': (selectedTab === 'tab2'? 'Search date': 'Search time')}}">
+    </ion-searchbar>
+  </ion-toolbar>
+  <ion-toolbar color="primary" style="height:40px">
+    <ion-row style="text-align: center;">
+      <ion-col (click)="changeTab('tab1')" style="padding: 5px;margin-right: 12px;"
+      [ngStyle]="{'border-bottom': selectedTab === 'tab1'? '5px solid #ffffff': ''}">
+        <ion-label class="other">SHIFT
+        </ion-label>
+      </ion-col>
+      <ion-col (click)="changeTab('tab2')" size="3" style="padding: 5px;
+      margin-right: 8px;" [ngStyle]="{'border-bottom': selectedTab === 'tab2'? '5px solid #ffffff': ''}">
+        <ion-label style="margin-bottom: 5px;font-weight: 600;
+        font-size: 12px;">DATE</ion-label>
+      </ion-col>
+      <ion-col (click)="changeTab('tab3')" size="4" style="padding: 5px;
+      margin-right: 0px;" [ngStyle]="{'border-bottom': selectedTab === 'tab3'? '5px solid #ffffff': ''}">
+        <ion-label style="min-width: 100px; font-size: 12px;font-weight: 600;">TIME</ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="booking-main" #pageTop>
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="myScheduleListCone.length === 0 && !isFetching">
+    <ion-col size="12" size-sm size-md>
+            <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.png">
+            <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'SECURITY_APP.NO_LIST' | translate}}</h5> -->
+    </ion-col>
+</ion-row>
+
+
+<ion-list>
+  <!-- <ion-card class="card" *ngFor="let item of myScheduleListCone" >
+    <div>
+      <div style="    display: flex;
+      width: -webkit-fill-available;
+      justify-content: space-between;
+      align-items: center;">
+        <ion-label style="margin-bottom: 5px;font-weight: 600;
+    font-size: 15px;">{{item.scheduleDate | date: 'dd MMM yyyy'}}</ion-label>
+      <ion-label style="    font-size: 13px;font-weight: 600;">{{(item.fromTime? item.fromTime: '--') + '&nbsp;&nbsp;-&nbsp;&nbsp;' + (item.fromTime?item.toTime: '--')}}</ion-label>
+      </div>
+    <ion-label [ngClass]="{ 'holiday': item.shiftName === 'Public Day', 'offDay': item.shiftName === 'Off Day' , 'flexiDay': item.shiftName === 'Flexi Hours Test'}">
+      {{item.shiftName}}
+    </ion-label>
+    </div>
+
+  </ion-card> -->
+
+  <ion-card class="card" *ngFor="let item of myScheduleListCone" >
+    <ion-row>
+      <ion-col class="right_line">
+        <ion-label class="other" [ngClass]="{ 'holiday': item.shiftName === 'Public Day', 'offDay': item.shiftName === 'Off Day' , 'flexiDay': item.shiftName === 'Rest Day'}">
+          {{item.shiftName}}
+        </ion-label>
+      </ion-col>
+      <ion-col class="right_line" size="3" style="text-align: center;">
+        <ion-label style="margin-bottom: 5px;font-weight: 600;
+        font-size: 10px;">{{item.scheduleDate | date: 'dd-MM-yyyy'}}</ion-label>
+      </ion-col>
+      <ion-col size="4">
+        <ion-label style="min-width: 100px; font-size: 12px;font-weight: 600;">{{(item.fromTime? item.fromTime: '--') + ' - ' + (item.fromTime?item.toTime: '--')}}</ion-label>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+
+</ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{ 'COMMON.LOADER_MSG.LOADING_MORE_DATA' | translate }}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+<ion-footer style="background: #f4f6fc">
+  <ion-toolbar transparent>
+    <ion-row>
+      <ion-col style="text-align: center;">
+        <div>
+          <div class="dot" style="background: #009688;"></div>
+          <ion-label class="point">Holiday</ion-label>
+        </div>
+      </ion-col>
+      <ion-col style="text-align: center;">
+        <div>
+          <div class="dot" style="background: rgb(233, 76, 76);"></div>
+          <ion-label class="point">Off Day</ion-label>
+        </div>
+      </ion-col>
+      <ion-col style="text-align: center;">
+        <div>
+          <div class="dot" style="background: #fb920a;"></div>
+          <ion-label class="point">Rest Day</ion-label>
+        </div>
+      </ion-col>
+      <ion-col style="text-align: center;">
+        <div>
+          <div class="dot" style="background: #000000;"></div>
+          <ion-label class="point">Other</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

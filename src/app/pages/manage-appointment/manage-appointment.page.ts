@@ -16,7 +16,7 @@ import { EventsService } from 'src/app/services/EventsService';
 export class ManageAppointmentPage implements OnInit {
 
   selectedDay = new Date()
-  selectedObject
+  selectedObject;
   eventSource =[];
 
   viewTitle;
@@ -34,6 +34,8 @@ export class ManageAppointmentPage implements OnInit {
     currentDate: new Date()
   }; // these are the variable used by the calendar.
   QRObj : any;
+  HOSTWTTAMS = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
+  TAMS = AppSettings.LOGINTYPES.TAMS;
   T_SVC:any;
   notificationCount = 0;
   isAdmin = true;
@@ -184,7 +186,7 @@ export class ManageAppointmentPage implements OnInit {
 						// message = " Unknown"
 						let alert = await this.alertCtrl.create({
               header: 'Error !',
-              cssClass: 'alert-danger',
+              cssClass: '',
               message: message,
               buttons: ['Okay']
             });
@@ -231,7 +233,7 @@ export class ManageAppointmentPage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -294,7 +296,7 @@ export class ManageAppointmentPage implements OnInit {
     let alert = await this.alertCtrl.create({
       header: 'Confirmation',
       message: msg,
-      cssClass: 'alert-warning',
+      cssClass: '',
       buttons: [
         {
           text: 'Cancel',
@@ -371,7 +373,7 @@ export class ManageAppointmentPage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -421,7 +423,7 @@ export class ManageAppointmentPage implements OnInit {
     console.log('opening');
     let actionsheet = await this.actionSheetCtrl.create({
       header: "Choose Option",
-      cssClass: 'alert-warning',
+      cssClass: '',
       buttons: [
         {
           text: 'Block Date',
@@ -636,7 +638,23 @@ export class ManageAppointmentPage implements OnInit {
   //     }
   //     return true;
   //   }
+
   ngOnInit() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      this.QRObj = JSON.parse(qrData);
+    }
   }
+
+  goBack() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.router.navigateByUrl('home-tams');
+      }
+    }
+    console.log('goBack ');
+   }
 
 }

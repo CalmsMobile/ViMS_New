@@ -60,7 +60,9 @@ import { ToolTipComponent } from './components/tool-tip/tool-tip.component';
 import { ThemeSwitcherService } from './services/ThemeSwitcherService';
 import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 import { ViewImageComponent } from './components/view-image/view-image.component';
-
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent, ToolTipComponent,
     CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent, CountryComponentComponent,
@@ -110,17 +112,19 @@ import { ViewImageComponent } from './components/view-image/view-image.component
     EventsService,
     DecimalPipe,
     Device,
+    InAppBrowser,
     RestProvider,
     ThemeSwitcherService,
     LocalNotifications,
     FileOpener,
     FileTransfer,
     Camera,
+    LocationAccuracy,
     ScreenOrientation,
     FilePath,
     SocialSharing,
     NetworkProvider,
-    Network,
+    Geolocation,
     WheelSelector,
     PreviewAnyFile,
     DatePicker,

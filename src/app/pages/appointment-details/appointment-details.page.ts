@@ -265,7 +265,18 @@ export class AppointmentDetailsPage implements OnInit {
   }
 
   goBack() {
-    this.router.navigateByUrl(this.fromPage);
+
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+      if (qrData) {
+        const QRObj = JSON.parse(qrData);
+        if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+          this.router.navigateByUrl('home-tams');
+        } else {
+          this.router.navigateByUrl(this.fromPage);
+        }
+      } else {
+        this.navCtrl.pop();
+      }
     console.log('goBack ');
   }
 
@@ -422,7 +433,7 @@ export class AppointmentDetailsPage implements OnInit {
     if(this.isPastAppointment){
       let alert1 = this.alertCtrl.create({
         header: 'Appointment Reminder',
-        cssClass:'alert-danger',
+        cssClass:'',
         message: this.T_SVC['ALERT_TEXT.APPOINTMENT_EXPIRED'],
         buttons: ['OK']
       });
@@ -545,7 +556,7 @@ export class AppointmentDetailsPage implements OnInit {
         this.localNotifications.schedule(schedule);
         let alert1 = this.alertCtrl.create({
           header: 'Appointment Reminder',
-          cssClass:'alert-danger',
+          cssClass:'',
           message: this.T_SVC['ALERT_TEXT.NOTIFICATION_SET_SUCCESS1']+ this.dateformat.transform(noti+"", "dd MMMM yyyy hh:mm a"),
           buttons: ['OK']
         });
@@ -562,7 +573,7 @@ export class AppointmentDetailsPage implements OnInit {
     fab.close();
     let alert = this.alertCtrl.create({
       header: 'Appointment Reminder',
-      cssClass:'alert-warning',
+      cssClass:'',
       message: this.T_SVC['ALERT_TEXT.SEND_REMINDER'],
       buttons: [
         {
@@ -614,7 +625,7 @@ export class AppointmentDetailsPage implements OnInit {
                   let alert = this.alertCtrl.create({
                     header: 'Error !',
                     message: message,
-                    cssClass:'alert-danger',
+                    cssClass:'',
                     buttons: ['Okay']
                     });
                     (await alert).present();
@@ -677,7 +688,7 @@ export class AppointmentDetailsPage implements OnInit {
       let alert = this.alertCtrl.create({
         header: 'Error !',
         message:this.T_SVC['ALERT_TEXT.BOOKING_EXPIRED_TO_EDIT'],
-        cssClass:'alert-danger',
+        cssClass:'',
         buttons: ['Okay']
         });
         (await alert).present();
@@ -689,7 +700,7 @@ export class AppointmentDetailsPage implements OnInit {
   async deleteAppintment(fab: any, message){
     var css = "alert-warning-largemsg";
     if(fab){
-      css = "alert-danger";
+      css = "";
       message = this.T_SVC['ALERT_TEXT.DELETE_APPOINTMENT'];
       fab.close();
     }
@@ -715,7 +726,7 @@ export class AppointmentDetailsPage implements OnInit {
       let alert = this.alertCtrl.create({
         header: 'Error !',
         message: this.T_SVC['ALERT_TEXT.BOOKING_EXPIRED_TO_DELETE'],
-        cssClass: 'alert-danger',
+        cssClass: '',
         buttons: ['Okay']
         });
         (await alert).present();
@@ -798,7 +809,7 @@ export class AppointmentDetailsPage implements OnInit {
                     let alert = this.alertCtrl.create({
                       header: 'Error !',
                       message: message,
-                      cssClass:'alert-danger',
+                      cssClass:'',
                       buttons: ['Okay']
                       });
                       (await alert).present();
@@ -860,7 +871,7 @@ export class AppointmentDetailsPage implements OnInit {
                     let alert = this.alertCtrl.create({
                       header: 'Error !',
                       message: message,
-                      cssClass:'alert-danger',
+                      cssClass:'',
                       buttons: ['Okay']
                       });
                       (await alert).present();
@@ -974,7 +985,7 @@ export class AppointmentDetailsPage implements OnInit {
           let alert = this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
             });
             (await alert).present();
@@ -1088,7 +1099,7 @@ export class AppointmentDetailsPage implements OnInit {
       let loginConfirm = this.alertCtrl.create({
         header:"<span class='failed'>" + "Cancel Slot" + '</span>',
         message: this.T_SVC['ALERT_TEXT.WISH_TO_CANCEL_SLOT'],
-        cssClass:'alert-warning',
+        cssClass:'',
         buttons: [
           {
             text: "Cancel",
@@ -1111,7 +1122,7 @@ export class AppointmentDetailsPage implements OnInit {
         let loginConfirm = this.alertCtrl.create({
           header:"<span class='failed'>" + "End Booking" + '</span>',
           message: this.T_SVC['ALERT_TEXT.WISH_TO_END_BOOK'],
-          cssClass:'alert-warning',
+          cssClass:'',
           buttons: [
             {
               text: "Cancel",
@@ -1133,7 +1144,7 @@ export class AppointmentDetailsPage implements OnInit {
       }else{
         const prompt = this.alertCtrl.create({
           header: this.T_SVC['ALERT_TEXT.WISH_TO_END_BOOK'],
-          cssClass:'alert-warning',
+          cssClass:'',
           // message: this.T_SVC['ALERT_TEXT.WISH_TO_END_BOOK'],
           inputs: [
             {
@@ -1178,7 +1189,7 @@ export class AppointmentDetailsPage implements OnInit {
       let loginConfirm = this.alertCtrl.create({
         header:"<span class='failed'>" + "Cancel Booking" + '</span>',
         message: "You cannot cancel expired Booking",
-        cssClass:'alert-warning',
+        cssClass:'',
         buttons: [
           {
             text: "Okay",
@@ -1192,7 +1203,7 @@ export class AppointmentDetailsPage implements OnInit {
 
       const prompt = this.alertCtrl.create({
         header: 'End Booking',
-        cssClass:'alert-warning',
+        cssClass:'',
         message: this.T_SVC['ALERT_TEXT.WISH_TO_END_BOOK'],
         inputs: [
           {
@@ -1254,7 +1265,7 @@ cancelSlot(slot, startDate, endDate, StaffSeqId){
           let alert = this.alertCtrl.create({
             header: 'Success',
             message: this.T_SVC['ALERT_TEXT.SLOT_REMOVED'],
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
           });
           (await alert).present();
@@ -1277,7 +1288,7 @@ cancelSlot(slot, startDate, endDate, StaffSeqId){
           let alert = this.alertCtrl.create({
             header: 'Failed',
             message: message,
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
           });
           (await alert).present();
@@ -1300,7 +1311,7 @@ cancelSlot(slot, startDate, endDate, StaffSeqId){
           let alert = this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass:'alert-danger',
+          cssClass:'',
           buttons: ['Okay']
           });
           (await alert).present();
@@ -1325,7 +1336,7 @@ FBBookingEndSession(slot, PinNumber , StaffSeqId){
           let alert = this.alertCtrl.create({
             header: 'Success',
             message: this.T_SVC['ALERT_TEXT.SESSION_ENDED'],
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
           });
           (await alert).present();
@@ -1348,7 +1359,7 @@ FBBookingEndSession(slot, PinNumber , StaffSeqId){
           let alert = this.alertCtrl.create({
             header: 'Failed',
             message: message,
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
           });
           (await alert).present();
@@ -1371,7 +1382,7 @@ FBBookingEndSession(slot, PinNumber , StaffSeqId){
           let alert = this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass:'alert-danger',
+          cssClass:'',
           buttons: ['Okay']
           });
           (await alert).present();
@@ -1476,7 +1487,7 @@ this.apiProvider.requestApi(params, api, true, '', '').then(
       let alert = this.alertCtrl.create({
         header: 'Error !',
         message: message,
-        cssClass:'alert-danger',
+        cssClass:'',
         buttons: ['Okay']
         });
         (await alert).present();

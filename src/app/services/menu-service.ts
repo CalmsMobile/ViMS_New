@@ -77,6 +77,68 @@ export class MenuService implements IService {
                     }
 
                     break;
+                    case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
+                      var showQP = false;
+                      var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+                      if (settings && JSON.parse(settings)) {
+                          try {
+                              var hostSettings = JSON.parse(settings).Table1[0];
+                              showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
+                          } catch (e) {
+
+                          }
+                      }
+                      if (showQP) {
+                          menus = [
+                              { "title": "Home", "icon": "home-outline", "component": "home-view" },
+                              {
+                                  "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
+                                      { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
+                                      { "title": "Appointment List View", "icon": "list-circle-outline", "component": "appointment-history" },
+                                      { "title": "Appointment Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" },
+                                      { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
+                                  ]
+                              },
+                              {
+                                "title": "Attendance", "icon": "calendar-outline", "component": "", "subMenu": [
+                                    { "title": "My Schedule", "icon": "create-outline", "component": "add-appointment" },
+                                    { "title": "My Attendance", "icon": "list-circle-outline", "component": "appointment-history" },
+                                    { "title": "Register Attendance", "icon": "calendar-number-outline", "component": "manage-appointment" },
+                                ]
+                              },
+                              {
+                                  "title": "Quick Pass", "icon": "qr-code-outline", "component": "", "subMenu": [
+                                      { "title": "Create Quick Pass", "icon": "create-outline", "component": "create-quick-pass" },
+                                      { "title": "Quick Pass Dashboard", "icon": "analytics-outline", "component": "quick-pass-dash-board-page" }
+                                  ]
+                              },
+                              { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
+                              { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
+                          ];
+                      } else {
+                          menus = [
+                              { "title": "Home", "icon": "home-outline", "component": "home-view" },
+                              {
+                                  "title": "Appointment", "icon": "calendar-clear-outline", "component": "", "subMenu": [
+                                      { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
+                                      { "title": "Appointment List View", "icon": "list-circle-outline", "component": "appointment-history" },
+                                      { "title": "Appointment Calendar View", "icon": "calendar-outline", "component": "manage-appointment" },
+                                      { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
+                                  ]
+                              },
+                              {
+                                "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": [
+                                    { "title": "My Schedule", "icon": "create-outline", "component": "add-appointment" },
+                                    { "title": "My Attendance", "icon": "list-circle-outline", "component": "appointment-history" },
+                                    { "title": "Register Attendance", "icon": "calendar-number-outline", "component": "manage-appointment" },
+                                ]
+                              },
+                              { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
+                              { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
+                          ];
+                      }
+
+                      break;
                 case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
                     showQP = false;
                     settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);

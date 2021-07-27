@@ -11,6 +11,9 @@ import { EventsService } from './services/EventsService';
 import { IService } from './services/IService';
 import { MenuService } from './services/menu-service';
 
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -20,7 +23,7 @@ import { MenuService } from './services/menu-service';
 export class AppComponent {
   // @ViewChild(Nav) nav: Nav;
 
-
+  showHeader = true;
   pages: any;
   params: any;
   leftMenuTitle: string;
@@ -36,7 +39,9 @@ export class AppComponent {
     public statusBar: StatusBar,
     public events: EventsService,
     private fcm: FCM,
-    // private ionicApp: IonicApp,
+    private androidPermissions: AndroidPermissions,
+    private locationAccuracy: LocationAccuracy,
+    private geolocation: Geolocation,
     private navCtrl: NavController,
     private apiProvider: RestProvider,
     public alertCtrl: AlertController,
@@ -66,12 +71,14 @@ export class AppComponent {
         this.navCtrl.navigateRoot('sign-pad-idle-page');
       } else if (data.title === "CheckIn Acknowledgment") {
         this.navCtrl.navigateRoot('sign-pad-idle-page');
+      }else if (data.title === "GetLocationForTAMS") {
+        this.checkGPSPermission();
       } else if (data.title === "UserInActive") {
         this.navCtrl.navigateRoot('account-mapping');
         let alert = this.alertCtrl.create({
           header: 'Alert',
           message: this.T_SVC['ALERT_TEXT.USER_INACTIVE'],
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [{
             text: 'Okay',
             handler: () => {
@@ -147,7 +154,7 @@ export class AppComponent {
               this.router.navigateByUrl('security-dash-board-page');
               return;
             }
-            if (this.router.url === '/account-mapping' || this.router.url === '/home' || this.router.url === 'security-dash-board-page') {
+            if (this.router.url === '/account-mapping' || this.router.url ==='home-tams' || this.router.url === '/home' || this.router.url === 'security-dash-board-page') {
               if (!this.alertShown) {
                 this.presentConfirm();
               }
@@ -202,6 +209,18 @@ export class AppComponent {
             this.menu.enable(true, "myLeftMenu");
             this.navCtrl.navigateRoot("home-view");;
             break;
+          case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
+            this.showHeader = false;
+            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+            if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+              console.log("calling login Page: " + hostData);
+              return;
+            }
+            this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
+            this.getSettingsForTams();
+            this.menu.enable(true, "myLeftMenu");
+            this.navCtrl.navigateRoot("home-tams");;
+            break;
           case AppSettings.LOGINTYPES.FACILITY:
             hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
             if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
@@ -232,11 +251,200 @@ export class AppComponent {
 
             break;
         }
-        // }
       }
-
     });
   }
+
+//getLocationForTAMS Start
+
+/**
+   *
+   * @param lat1
+   * @param lat2
+   * @param long1
+   * @param long2
+   * @returns
+   */
+ calculateDistance(lat1:number,lat2:number,long1:number,long2:number){
+  let p = 0.017453292519943295;    // Math.PI / 180
+  let c = Math.cos;
+  let a = 0.5 - c((lat1-lat2) * p) / 2 + c(lat2 * p) *c((lat1) * p) * (1 - c(((long1- long2) * p))) / 2;
+  let dis = (12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
+  return dis/1000;
+}
+  /**
+   *
+   * @returns
+   */
+  //Check if application having GPS access permission
+  checkGPSPermission() {
+
+    if (!this.apiProvider.isRunningOnMobile()) {
+      this.getLocationCoordinates(true);
+      return;
+    }
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
+      result => {
+        if (result.hasPermission) {
+          //If having permission show 'Turn On GPS' dialogue
+          this.askToTurnOnGPS();
+        } else {
+          //If not having permission ask for permission
+          this.requestGPSPermission();
+        }
+      },
+      err => {
+
+        if (err === 'cordova_not_available') {
+          this.requestGPSPermission();
+        } else {
+          this.showAlertForLocation('Please allow location permission inorder to use attendance and try again.');
+        }
+
+      }
+    );
+  }
+
+  /**
+   *
+   */
+  requestGPSPermission() {
+    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+      if (canRequest) {
+        console.log("4");
+        this.askToTurnOnGPS();
+      } else {
+        //Show 'GPS Permission Request' dialogue
+        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+          .then(
+            () => {
+              // call method to turn on GPS
+              this.askToTurnOnGPS();
+            },
+            error => {
+              //Show alert if user click on 'No Thanks'
+              if (error === 'cordova_not_available') {
+                this.requestGPSPermission();
+              } else {
+                this.showAlertForLocation("Please allow location permission inorder to use attendance and try again.");
+              }
+
+            }
+          );
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  askToTurnOnGPS() {
+    this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+      () => {
+        // When GPS Turned ON call method to get Accurate location coordinates
+        this.getLocationCoordinates(true);
+      },
+      error => {
+        if (JSON.stringify(error) === 'cordova_not_available') {
+          this.getLocationCoordinates(true);
+        } else {
+          // alert('Error requesting location permissions ' + JSON.stringify(error))
+          this.showAlertForLocation("Your GPS seems to be disabled, please enable it to proceed.");
+        }
+      }
+    );
+  }
+
+  async showAlertForLocation(errorMsg) {
+    if (!this.alertShowing) {
+      this.alertShowing = true;
+      let alert = this.alertCtrl.create({
+        header: 'Notification',
+        message: errorMsg,
+        mode:'ios',
+        buttons: [{
+            text: 'Okay',
+            handler: () => {
+              console.log('Cancel clicked');
+              this.alertShowing = false;
+            }
+          }]
+        });
+        (await alert).present();
+        (await alert).onDidDismiss().then(() => {
+          this.alertShowing = false;
+          this.router.navigateByUrl('home-tams');
+        });
+    }
+
+  }
+
+  isEnabledAlready = false;
+
+  /**
+   *
+   */
+  getLocationCoordinates(showOnce) {
+    if (!this.isEnabledAlready) {
+      this.getCurrentLocation(true);
+      const watchId = this.geolocation.watchPosition({ enableHighAccuracy: true,timeout:30000 });
+      watchId.subscribe((data: any) => {
+
+        if (data && data.coords) {
+          console.log('watchPosition latitude location --> ', data.coords.latitude + "," + data.coords.longitude);
+          // data can be a set of coordinates, or an error (if an error occurred).
+          localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_LATITUDE, data.coords.latitude+"");
+          localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_LONGITUDE, data.coords.longitude+"");
+
+          if (showOnce) {
+          //  this.apiProvider.showAlert('watchPosition latitude location --> '+ data.coords.latitude + "," + data.coords.longitude);
+          }
+        } else {
+          if (showOnce) {
+            this.events.publishDataCompany({
+              action: 'hideLoading',
+              title: 'hideLoading',
+              message: 'hideLoading'
+            });
+            this.showAlertForLocation('Someting went wrong while fetch location and try again.');
+          }
+
+        }
+
+        showOnce = false;
+        this.isEnabledAlready = true;
+      });
+    }
+
+
+  }
+
+  /**
+   *
+   */
+  getCurrentLocation(showOnce) {
+    this.geolocation.getCurrentPosition({ enableHighAccuracy: true,timeout:30000}).then((resp) => {
+      console.log('getCurrentPosition latitude location --> ', resp.coords.latitude + "," + resp.coords.longitude);
+      localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_LATITUDE, resp.coords.latitude+"");
+      localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_LONGITUDE, resp.coords.longitude+"");
+      this.isEnabledAlready = true;
+      if (showOnce) {
+        // this.apiProvider.showAlert('getCurrentPosition latitude location --> '+ resp.coords.latitude + "," + resp.coords.longitude);
+      }
+      showOnce = false;
+     }).catch((error) => {
+       console.log('Error getting location', error);
+       this.events.publishDataCompany({
+          action: 'hideLoading',
+          title: 'hideLoading',
+          message: 'hideLoading'
+        });
+        this.apiProvider.showAlert('Someting went wrong while fetch location and try again');
+     });
+  }
+
+  ////getLocationForTAMS Ends
+
 
   GetHostAppSettings(MAppId) {
     var params = {
@@ -262,6 +470,33 @@ export class AppComponent {
 
       },
       (err) => {
+      }
+    );
+  }
+
+  getSettingsForTams() {
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
+      return;
+    }
+    var hostId = JSON.parse(hostData).HOSTIC;
+    var data = {
+      "MAppId": "TAMS",
+      "HostIc": hostId
+    };
+    this.apiProvider.requestApi(data, '/api/TAMS/getTAMSsettings', false, false, '').then(
+      (val: any) => {
+        const response = JSON.parse(val);
+        if (response.Table && response.Table.length > 0 ) {
+          if(response.Table[0].Code === 10 || response.Table[0].code === 10) {
+            localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS, JSON.stringify(response.Table1[0]));
+          }
+        }
+      },
+      async (err) => {
+        if(err && err.message == "No Internet"){
+          return;
+        }
       }
     );
   }
@@ -323,7 +558,7 @@ export class AppComponent {
     let alert = this.alertCtrl.create({
       header: 'Confirm Exit',
       message: this.T_SVC['ALERT_TEXT.ON_BACK'],
-      cssClass: 'alert-warning',
+      cssClass: '',
       buttons: [
         {
           text: 'Cancel',
@@ -373,6 +608,7 @@ export class AppComponent {
     if (!page.component) {
       return;
     }
+
     var scannedJson1 = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (scannedJson1 && JSON.parse(scannedJson1).MAppId) {
       if (JSON.parse(scannedJson1).MAppId == AppSettings.LOGINTYPES.FACILITY) {
@@ -393,7 +629,14 @@ export class AppComponent {
             message: 1
           });
         }
-      } else {
+      } else if (JSON.parse(scannedJson1).MAppId == AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || JSON.parse(scannedJson1).MAppId == AppSettings.LOGINTYPES.TAMS) {
+        if (page.component === 'home-view') {
+          this.router.navigateByUrl('home-tams');
+        } else {
+          this.router.navigateByUrl(page.component);
+        }
+
+       } else {
         switch (page.component) {
           case "create-quick-pass":
           case "add-appointment":
@@ -406,13 +649,20 @@ export class AppComponent {
           case "home-view":
             var currentClass = this;
             this._zone.run(function () {
-              // currentClass.navCtrl.navigateRoot(page.component);
-              currentClass.navCtrl.navigateRoot("home-view");
-              currentClass.events.publishDataCompany({
-                action: 'ChangeTab',
-                title: page,
-                message: 0
-              });
+              var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+              if (qrData) {
+                const QRObj = JSON.parse(qrData);
+                if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+                  currentClass.router.navigateByUrl('home-tams');
+                } else {
+                  currentClass.navCtrl.navigateRoot("home-view");
+                  currentClass.events.publishDataCompany({
+                    action: 'ChangeTab',
+                    title: page,
+                    message: 0
+                  });
+                }
+              }
             });
             break;
           default:

@@ -1,8 +1,9 @@
 <ion-header>
   <ion-toolbar color="danger">
-      <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="(QRObj.MAppId !== HOSTWTTAMS && QRObj.MAppId !== TAMS)">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-icon slot="start" *ngIf="(QRObj.MAppId === HOSTWTTAMS || QRObj.MAppId === TAMS)" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{'APPOIN_HISTORY.TITLE' | translate}}</ion-title>
     <ion-buttons slot="end" *ngIf= "false">
         <ion-button slot="icon-only" (click)="createBooking()">

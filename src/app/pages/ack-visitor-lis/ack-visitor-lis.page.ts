@@ -79,7 +79,7 @@ export class AckVisitorLisPage implements OnInit {
       header:"<span class='failed'>" + this.T_SVC['ALERT_TEXT.CONFIRMATION'] + '</span>',
       message: this.T_SVC['ALERT_TEXT.ADD_MORE_VISITOR'],
 
-      cssClass:'alert-danger',
+      cssClass:'',
       buttons: [
 
         {
@@ -209,7 +209,7 @@ export class AckVisitorLisPage implements OnInit {
           let invalidQRConfirm = await this.alertCtrl.create({
             header: 'Error !',
             message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: [
               {
                 text: this.T_SVC['COMMON.OK'],
@@ -228,7 +228,7 @@ export class AckVisitorLisPage implements OnInit {
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -260,7 +260,7 @@ export class AckVisitorLisPage implements OnInit {
             let invalidQRConfirm = await this.alertCtrl.create({
               header: 'Error !',
               message: "<span class='failed'>" + this.T_SVC['ALERT_TEXT.VISITOR_ALREADY_SCANNED'] + '</span>',
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: [
                 {
                   text: this.T_SVC['COMMON.OK'],
@@ -283,7 +283,7 @@ export class AckVisitorLisPage implements OnInit {
               let invalidQRConfirm = await this.alertCtrl.create({
                 header: 'Error !',
                 message: "<span class='failed'>" + result.visitor_ctg_id + " category not allowed to watch safety brief on this group</span>",
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: [
                   {
                     text: this.T_SVC['COMMON.OK'],
@@ -316,7 +316,7 @@ export class AckVisitorLisPage implements OnInit {
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + message + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -343,7 +343,7 @@ export class AckVisitorLisPage implements OnInit {
         let invalidQRConfirm = await _thisData.alertCtrl.create({
           header: 'Notice !',
           message: "<span class='failed'>" + _thisData.T_SVC['ALERT_TEXT.UPDATE_BRIEF_STATUS'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: _thisData.T_SVC['COMMON.OK'],
@@ -377,7 +377,7 @@ export class AckVisitorLisPage implements OnInit {
         let invalidQRConfirm = await _thisData.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + _thisData.T_SVC['COMMON.VIDEO_ERROR'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: _thisData.T_SVC['COMMON.OK'],
@@ -519,7 +519,7 @@ export class AckVisitorLisPage implements OnInit {
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -558,7 +558,7 @@ export class AckVisitorLisPage implements OnInit {
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + this.T_SVC['ALERT_TEXT.VISITOR_ALREADY_SCANNED'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -573,7 +573,7 @@ export class AckVisitorLisPage implements OnInit {
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + this.T_SVC['ALERT_TEXT.VISITOR_NOT_FOUND'] + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],
@@ -594,7 +594,7 @@ export class AckVisitorLisPage implements OnInit {
     let alert = await this.alertCtrl.create({
       header: 'Confirmation',
       message: this.T_SVC['ALERT_TEXT.REMOVE_VISITOR'],
-      cssClass: 'alert-warning',
+      cssClass: '',
       buttons: [
         {
           text: 'Cancel',
@@ -631,7 +631,7 @@ export class AckVisitorLisPage implements OnInit {
           let invalidQRConfirm = await this.alertCtrl.create({
             header: 'Success',
             message: "<span class='success'> " + this.T_SVC['ALERT_TEXT.THANK_YOU_WATCH_VIDEO'] + " </span>",
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: [
               {
                 text: this.T_SVC['COMMON.OK'],
@@ -662,7 +662,7 @@ export class AckVisitorLisPage implements OnInit {
         let invalidQRConfirm = await this.alertCtrl.create({
           header: 'Error !',
           message: "<span class='failed'>" + message + '</span>',
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: [
             {
               text: this.T_SVC['COMMON.OK'],

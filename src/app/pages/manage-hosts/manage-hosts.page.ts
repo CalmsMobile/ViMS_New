@@ -208,7 +208,7 @@ export class ManageHostsPage implements OnInit {
           let alert = this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
             });
             (await alert).present();

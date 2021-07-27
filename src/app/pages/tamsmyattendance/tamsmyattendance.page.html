@@ -1,0 +1,140 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-title>{{'ALERT_TEXT.MY_ATTENDANCE' | translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-label *ngIf="startDate" style="font-size: 14px;
+      background: white;
+      color: var(--ion-color-primary);
+      padding: 5px;
+      border-radius: 12px;">{{startDate | date : 'dd MMM yyyy'}}</ion-label>
+      <ion-button slot="icon-only" (click)="showCalender(picker)" style="font-size: larger;">
+        <ion-datetime #picker style=" margin-left: 5px;
+            font-size: 14px;display: none;" displayFormat="YYYY-MM-DD"  max="2121-12-12" placeholder="Select Date" (ionChange)="changeCalendar($event)"></ion-datetime>
+        <ion-icon name="calendar-outline" style="position:relative;" style="color: #FFF;">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="myAttendanceListClone.length == 0">
+    <ion-col size="12" size-sm size-md>
+            <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.png">
+            <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'SECURITY_APP.NO_LIST' | translate}}</h5> -->
+  </ion-col>
+  </ion-row>
+  <ion-card class="card_appointment" style="width: 98%;"
+    no-padding no-border  *ngIf="myAttendanceListClone.length > 0" >
+
+    <ion-item lines="none" style="--inner-padding-end: 0px;" class="ion-no-padding" *ngFor="let item of myAttendanceListClone">
+      <ion-row lines="none" no-padding full-width>
+        <ion-col size="3" class="col apt-left" no-padding>
+          <ion-row style="height: 100%;">
+          <ion-item lines="none" style="    --padding-start: 2px;
+          width: 100%;">
+            <div>
+              <div style="    width: -webkit-fill-available;
+              display: inline-flex;">
+              <ion-icon style="font-size: 16px;
+              align-self: center;" color="light" name="calendar-outline"></ion-icon>
+                <ion-label color="light" style="font-size: 10px;
+                align-self: center;">Start Time</ion-label>
+
+              </div>
+              <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
+              text-align: center;font-size: 10px;">{{item.fromTime? (item.fromTime | date : 'dd MMM hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
+            </div>
+          </ion-item>
+          <ion-item lines="none" [ngStyle]="{'border': '1px solid ' + AppTheme}" style="--padding-start: 2px; background: white;
+          border-top-left-radius: 6px;
+          border-top-right-radius: 6px;align-self: center;
+          width: 100%;">
+            <div>
+              <div style="width: -webkit-fill-available;
+              display: inline-flex;">
+              <ion-icon style="font-size: 16px;
+              align-self: center;" color="dark" name="arrow-forward-outline"></ion-icon>
+                <ion-label color="dark" style="font-size: 12px;
+                align-self: center;">Clock In</ion-label>
+
+              </div>
+              <ion-label color="dark" style="font-weight: 600;    width: -webkit-fill-available;
+              text-align: center;font-size: 13px;" [ngStyle]="{'color': item.InTimeExpired? 'red':'green'}">{{item.actualClockinTime? item.actualClockinTime: '&nbsp;&nbsp;--'}}</ion-label>
+            </div>
+          </ion-item>
+          </ion-row>
+        </ion-col>
+        <ion-col size="6" style="padding-bottom: 0px;">
+          <div class="div-apt-center">
+            <ion-icon slot="start" name="layers-outline" color="dark" class="apt-text-icons"></ion-icon>
+            <p class="apt-center-title">{{item.ShiftName?item.ShiftName: '&nbsp;&nbsp;--'}}</p>
+          </div>
+
+          <div class="div-apt-center">
+            <ion-icon slot="start" name="hourglass-outline" color="dark" class="apt-text-icons"></ion-icon>
+            <p class="apt-center-subtitle">Schedule Hours ({{item.TotalRequiredHours? (item.TotalRequiredHours | number:'1.2-2'): '&nbsp;&nbsp;--'}})</p>
+          </div>
+
+          <div class="div-apt-center">
+            <ion-icon slot="start" name="stopwatch-outline" color="dark" class="apt-text-icons"></ion-icon>
+            <p class="apt-center-subtitle">Actual Hours ({{item.TotalWorkHours ? (item.TotalWorkHours | number:'1.2-2'): '&nbsp;&nbsp;--'}})</p>
+          </div>
+
+          <div class="div-apt-center">
+            <ion-icon slot="start" name="calendar-number-outline" color="dark" class="apt-text-icons"></ion-icon>
+            <p class="apt-center-subtitle">{{item.ScheduleDate ? (item.ScheduleDate | date: 'dd MMM yyyy'): '&nbsp;&nbsp;--'}}</p>
+          </div>
+        </ion-col>
+
+        <ion-col size="3" class="col apt-left" no-padding>
+          <ion-row style="height: 100%;">
+            <ion-item lines="none" style="    --padding-start: 2px;
+            width: 100%;">
+              <div>
+                <div style="    width: -webkit-fill-available;
+                display: inline-flex;">
+                <ion-icon style="font-size: 16px;
+                align-self: center;" color="light" name="calendar-outline"></ion-icon>
+                  <ion-label color="light" style="font-size: 10px;
+                  align-self: center;">End Time</ion-label>
+
+                </div>
+                <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
+                text-align: center;font-size: 10px;">{{item.toTime? (item.toTime | date : 'dd MMM hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
+              </div>
+            </ion-item>
+            <ion-item lines="none" [ngStyle]="{'border': '1px solid ' + AppTheme}" style="--padding-start: 2px; background: white;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;align-self: center;
+            width: 100%;">
+              <div>
+                <div style="width: -webkit-fill-available;
+                display: inline-flex;">
+                <ion-icon style="font-size: 16px;
+                align-self: center;" color="dark" name="arrow-back-outline"></ion-icon>
+                  <ion-label color="dark" style="font-size: 12px;
+                  align-self: center;">Clock Out</ion-label>
+
+                </div>
+                <ion-label color="dark" [ngStyle]="{'color': item.outTimeExpired? 'red':'green'}" style="font-weight: 600;    width: -webkit-fill-available;
+                text-align: center;font-size: 13px;">{{item.actualClockoutTime? item.actualClockoutTime: '&nbsp;&nbsp;--'}}</ion-label>
+              </div>
+            </ion-item>
+            </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-card>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{ 'COMMON.LOADER_MSG.LOADING_MORE_DATA' | translate }}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

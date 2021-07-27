@@ -457,7 +457,7 @@ export class FacilityBookingPage2Page implements OnInit {
               let alert = this.alertCtrl.create({
                 header: 'Error !',
                 message: this.T_SVC['ALERT_TEXT.USER_NOT_FOUND'],
-                cssClass:'alert-danger',
+                cssClass:'',
                 buttons: ['Okay']
               });
               (await alert).present();
@@ -466,7 +466,7 @@ export class FacilityBookingPage2Page implements OnInit {
               alert = this.alertCtrl.create({
                 header: 'Error !',
                 message:  this.T_SVC['ALERT_TEXT.FACILITY_SESSION_EXPIRED'],
-                cssClass:'alert-danger',
+                cssClass:'',
                 buttons: ['Okay']
               });
               (await alert).present();
@@ -475,7 +475,7 @@ export class FacilityBookingPage2Page implements OnInit {
               alert = this.alertCtrl.create({
                 header: 'Error !',
                 message: this.T_SVC['ALERT_TEXT.MEMBER_NOT_FOUND'],
-                cssClass:'alert-danger',
+                cssClass:'',
                 buttons: ['Okay']
               });
               (await alert).present();
@@ -490,7 +490,7 @@ export class FacilityBookingPage2Page implements OnInit {
       let alert = await this.alertCtrl.create({
         header: 'Error !',
         message: '',
-        cssClass: 'alert-danger',
+        cssClass: '',
         buttons: ['Okay']
       });
       alert.present();
@@ -524,7 +524,7 @@ export class FacilityBookingPage2Page implements OnInit {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
         alert.present();
@@ -618,7 +618,7 @@ export class FacilityBookingPage2Page implements OnInit {
         if(result && result.Status == 0){
           let alert = await this.alertCtrl.create({
             header: 'Failed !',
-            cssClass: 'alert-danger',
+            cssClass: '',
             message: this.T_SVC['ALERT_TEXT.SLOT_OCCUPIED'],
             buttons: ['Okay']
           });
@@ -652,7 +652,7 @@ export class FacilityBookingPage2Page implements OnInit {
       }else if(result && result.Status == 2){
         let alert = await this.alertCtrl.create({
           header: 'Failed !',
-          cssClass: 'alert-danger',
+          cssClass: '',
           message: this.T_SVC['ALERT_TEXT.DUPLICATE_BOOKING'],
           buttons: ['Okay']
         });
@@ -661,7 +661,7 @@ export class FacilityBookingPage2Page implements OnInit {
       }else if(result && result.Status == 3){
         let alert = await this.alertCtrl.create({
           header: 'Failed !',
-          cssClass: 'alert-danger',
+          cssClass: '',
           message: this.T_SVC['ALERT_TEXT.SLOT_EXPIRED'],
           buttons: ['Okay']
         });
@@ -671,7 +671,7 @@ export class FacilityBookingPage2Page implements OnInit {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: this.T_SVC['ALERT_TEXT.MEMBER_NOT_FOUND'],
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
         alert.present();
@@ -707,7 +707,7 @@ export class FacilityBookingPage2Page implements OnInit {
         }
         let alert = await this.alertCtrl.create({
           header: 'Error !',
-          cssClass: 'alert-danger',
+          cssClass: '',
           message: message,
           buttons: ['Okay']
         });
@@ -720,7 +720,7 @@ export class FacilityBookingPage2Page implements OnInit {
     let alert = await this.alertCtrl.create({
       header: 'Notification',
       message: msg,
-      cssClass: 'alert-danger',
+      cssClass: '',
       buttons: ['Okay']
     });
     alert.present();

@@ -105,7 +105,7 @@ export class SignaturePagePage implements OnInit,AfterViewInit {
               let alert = await this.alertCtrl.create({
                 header: 'Error !',
                 message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
-                cssClass: 'alert-danger',
+                cssClass: '',
                 buttons: ['Okay']
               });
                 alert.present();
@@ -135,7 +135,7 @@ export class SignaturePagePage implements OnInit,AfterViewInit {
       let alert = await this.alertCtrl.create({
         header: 'Error',
         message: this.T_SVC['ALERT_TEXT.PLEASE_SIGN'],
-        cssClass: 'alert-danger',
+        cssClass: '',
         buttons: ['Ok']
       });
         alert.present();
@@ -223,7 +223,7 @@ export class SignaturePagePage implements OnInit,AfterViewInit {
         let alert = await this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass: 'alert-danger',
+          cssClass: '',
           buttons: ['Okay']
         });
           alert.present();

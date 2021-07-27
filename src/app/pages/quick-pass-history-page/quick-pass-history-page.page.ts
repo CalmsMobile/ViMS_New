@@ -229,7 +229,7 @@ export class QuickPassHistoryPagePage implements OnInit {
             // message = " Unknown"
             let alert = this.alertCtrl.create({
               header: 'Error !',
-              cssClass:'alert-danger',
+              cssClass:'',
               message: message,
               buttons: ['Okay']
               });
@@ -269,7 +269,7 @@ export class QuickPassHistoryPagePage implements OnInit {
     if(ableToDelete){
       let alert = this.alertCtrl.create({
         header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
-        cssClass:"alert-danger",
+        cssClass:"",
         message: this.T_SVC['ALERT_TEXT.DELETE_QUICK_PASS']+(item.VisitorName? item.VisitorName : " this visitor")+ this.T_SVC['ALERT_TEXT.DELETE_QUICK_PASS1'],
         buttons: [
           {
@@ -294,7 +294,7 @@ export class QuickPassHistoryPagePage implements OnInit {
 
                   let alert = this.alertCtrl.create({
                     header: 'Success',
-                    cssClass:'alert-danger',
+                    cssClass:'',
                     message: this.T_SVC['ALERT_TEXT.QUIK_PASS_DELETE_SUCCESS'],
                     buttons: ['Okay']
                     });
@@ -315,7 +315,7 @@ export class QuickPassHistoryPagePage implements OnInit {
                     // message = " Unknown"
                     let alert = this.alertCtrl.create({
                       header: 'Error !',
-                      cssClass:'alert-danger',
+                      cssClass:'',
                       message: message,
                       buttons: ['Okay']
                       });
@@ -331,7 +331,7 @@ export class QuickPassHistoryPagePage implements OnInit {
     }else{
       let alert = this.alertCtrl.create({
         header: this.T_SVC['ALERT_TEXT.CONFIRMATION'],
-        cssClass:"alert-danger",
+        cssClass:"",
         message: (item.VisitorName? item.VisitorName : " This visitor") + this.T_SVC['ALERT_TEXT.CHECKOUT_MESSAGE'],
         buttons: [
           {
@@ -357,7 +357,7 @@ export class QuickPassHistoryPagePage implements OnInit {
 
                   let alert = this.alertCtrl.create({
                     header: 'Success',
-                    cssClass:'alert-danger',
+                    cssClass:'',
                     message: this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS'],
                     buttons: ['Okay']
                     });
@@ -378,7 +378,7 @@ export class QuickPassHistoryPagePage implements OnInit {
                     // message = " Unknown"
                     let alert = this.alertCtrl.create({
                       header: 'Error !',
-                      cssClass:'alert-danger',
+                      cssClass:'',
                       message: message,
                       buttons: ['Okay']
                       });

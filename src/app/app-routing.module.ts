@@ -76,6 +76,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/facility-time-slot/facility-time-slot.module').then( m => m.FacilityTimeSlotPageModule)
   },
   {
+    path: 'upcoming-appointment-page',
+    loadChildren: () => import('./pages/upcoming-appointment-page/upcoming-appointment-page.module').then(m => m.UpcomingAppointmentPagePageModule)
+  },
+  {
     path: 'facility-upcoming',
     loadChildren: () => import('./pages/facility-upcoming/facility-upcoming.module').then( m => m.FacilityUpcomingPageModule)
   },
@@ -126,6 +130,10 @@ const routes: Routes = [
   {
     path: 'quick-pass-history-page',
     loadChildren: () => import('./pages/quick-pass-history-page/quick-pass-history-page.module').then( m => m.QuickPassHistoryPagePageModule)
+  },
+  {
+    path: 'appointment-history',
+    loadChildren: () => import('./pages/appointment-history/appointment-history.module').then( m => m.AppointmentHistoryPageModule)
   },
   {
     path: 'security-check-in-page',
@@ -190,7 +198,32 @@ const routes: Routes = [
   {
     path: 'security-manual-check-in',
     loadChildren: () => import('./pages/security-manual-check-in/security-manual-check-in.module').then( m => m.SecurityManualCheckInPageModule)
+  },
+  {
+    path: 'home-tams',
+    loadChildren: () => import('./pages/home-tams/home-tams.module').then( m => m.HomeTAMSPageModule)
+  },  {
+    path: 'tamsmyschedule',
+    loadChildren: () => import('./pages/tamsmyschedule/tamsmyschedule.module').then( m => m.TamsmyschedulePageModule)
+  },
+  {
+    path: 'tamsmyattendance',
+    loadChildren: () => import('./pages/tamsmyattendance/tamsmyattendance.module').then( m => m.TamsmyattendancePageModule)
+  },
+  {
+    path: 'tamsmyattendancelocation',
+    loadChildren: () => import('./pages/tamsmyattendancelocation/tamsmyattendancelocation.module').then( m => m.TamsmyattendancelocationPageModule)
+  },
+  {
+    path: 'tamsmyattendancelogs',
+    loadChildren: () => import('./pages/tamsmyattendancelogs/tamsmyattendancelogs.module').then( m => m.TamsmyattendancelogsPageModule)
+  },
+  {
+    path: 'tamsregisterattendance',
+    loadChildren: () => import('./pages/tamsregisterattendance/tamsregisterattendance.module').then( m => m.TamsregisterattendancePageModule)
   }
+
+
 
 ];
 

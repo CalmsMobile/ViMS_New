@@ -133,7 +133,7 @@ export class FacilityUpcomingPage implements OnInit {
             let alert = await this.alertCtrl.create({
               header: 'Error !',
               message: message,
-              cssClass: 'alert-danger',
+              cssClass: '',
               buttons: ['Okay']
             });
               alert.present();
@@ -271,7 +271,7 @@ export class FacilityUpcomingPage implements OnInit {
           let alert = await this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass: 'alert-danger',
+            cssClass: '',
             buttons: ['Okay']
           });
             alert.present();

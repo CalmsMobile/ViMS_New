@@ -409,7 +409,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     if(this.isPastAppointment){
       let alert1 = this.alertCtrl.create({
         header: 'Appointment Reminder',
-        cssClass:'alert-danger',
+        cssClass:'',
         message: this.T_SVC['ALERT_TEXT.APPOINTMENT_EXPIRED'],
         buttons: ['OK']
       });
@@ -525,7 +525,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
           this.localNotifications.schedule(schedule);
           let alert1 = this.alertCtrl.create({
             header: 'Appointment Reminder',
-            cssClass:'alert-danger',
+            cssClass:'',
             message: this.T_SVC['ALERT_TEXT.NOTIFICATION_SET_SUCCESS1']+ this.dateformat.transform(noti+"", "dd-MM-yyyy hh:mm tt") + this.T_SVC['ALERT_TEXT.NOTIFICATION_SET_SUCCESS2'],
             buttons: ['OK']
           });
@@ -542,7 +542,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     fab.close();
     let alert = this.alertCtrl.create({
       header: 'Appointment Reminder',
-      cssClass:'alert-warning',
+      cssClass:'',
       message: this.T_SVC['ALERT_TEXT.SEND_REMINDER'],
       buttons: [
         {
@@ -594,7 +594,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
                   let alert = this.alertCtrl.create({
                     header: 'Error !',
                     message: message,
-                    cssClass:'alert-danger',
+                    cssClass:'',
                     buttons: ['Okay']
                     });
                     (await alert).present();
@@ -626,7 +626,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
 
     let alert = this.alertCtrl.create({
       header: 'Delete Appointment',
-      cssClass:'alert-warning',
+      cssClass:'',
       message: this.T_SVC['ALERT_TEXT.DELETE_APPOINTMENT'],
       buttons: [
         {
@@ -680,7 +680,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
                   let alert = this.alertCtrl.create({
                     header: 'Error !',
                     message: message,
-                    cssClass:'alert-danger',
+                    cssClass:'',
                     buttons: ['Okay']
                     });
                     (await alert).present();
@@ -720,7 +720,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     let alert = this.alertCtrl.create({
       header: 'Change Appointment Status',
       inputs: inputsShow,
-      cssClass:'alert-warning',
+      cssClass:'',
       message: status,
       buttons: [
         {
@@ -794,7 +794,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
           let alert = this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
             });
             (await alert).present();
@@ -814,8 +814,15 @@ export class AdminAppointmentDetailsPage implements OnInit {
 
     this.apiProvider.AppointmentApprovalByVisitor(params).then(
       (val) => {
-
         // this.navCtrl.pop();
+        var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+        if (qrData) {
+          const QRObj = JSON.parse(qrData);
+          if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+            this.router.navigateByUrl('home-tams');
+            return;
+          }
+        }
         this.navCtrl.navigateRoot('home-view');
         setTimeout(() => {
           this.events.publishDataCompany({
@@ -841,7 +848,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
           let alert = this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
             });
             (await alert).present();
@@ -927,7 +934,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
         let alert = this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass:'alert-danger',
+          cssClass:'',
           buttons: ['Okay']
           });
           (await alert).present();
@@ -940,7 +947,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     let alert = this.alertCtrl.create({
       header: 'Notification',
       message: msg,
-      cssClass:'alert-danger',
+      cssClass:'',
       buttons: ['Okay']
       });
       (await alert).present();
@@ -981,7 +988,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
         let alert = this.alertCtrl.create({
           header: 'Error !',
           message: message,
-          cssClass:'alert-danger',
+          cssClass:'',
           buttons: ['Okay']
           });
           (await alert).present();
@@ -1061,7 +1068,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
           let alert = this.alertCtrl.create({
             header: 'Error !',
             message: message,
-            cssClass:'alert-danger',
+            cssClass:'',
             buttons: ['Okay']
             });
             (await alert).present();
