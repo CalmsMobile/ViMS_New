@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar color="danger">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-buttons slot="start" *ngIf="isFacilityApp">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back" *ngIf="!isFacilityApp"></ion-icon>
     <ion-title>{{'FACILITY_HISTORY.TITLE' | translate}}</ion-title>
     <ion-buttons slot="end" *ngIf= "false">
         <ion-button slot="icon-only" (click)="createBooking()">

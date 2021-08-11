@@ -274,7 +274,7 @@ export class SecurityAppointmentListPage implements OnInit {
           this.apiProvider.showAlert(err.Table1[0].Description);
           return;
           }
-        this.apiProvider.showAlert("<span class='failed'>" + this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE'] + '</span>');
+        this.apiProvider.showAlert(this.T_SVC['ACC_MAPPING.CANT_FIND_LICENSE']);
       }
     );
   }

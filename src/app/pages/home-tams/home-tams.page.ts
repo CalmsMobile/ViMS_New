@@ -158,40 +158,47 @@ export class HomeTAMSPage implements OnInit {
         }
         myScheduleList.forEach(element => {
           const currentDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+          element.scheduleDate = this.dateformat.transform(element.scheduleDate + "", "yyyy-MM-dd");
           if (new Date(currentDate) > new Date(element.scheduleDate)) {
             element.isAvailable = false;
           } else {
             element.isAvailable = true;
           }
+          if (element.fromTime && element.fromTime != null){
+            element.fromTime1 = this.dateformat.transform(element.fromTime + "", "HH:mm");
+            element.fromTime = this.dateformat.transform(element.fromTime + "", "HH:mm a");
+          }
           element.shiftName = element.shiftName.trim();
-          element.fromTime1 = element.fromTime;
-          element.toTime1 = element.toTime;
-          if (element.fromTime) {
-            if (element.fromTime.split(":")[0] > 11) {
-              let hours: any = (element.fromTime.split(":")[0] % 12);
-              if (element.fromTime.split(":")[0] === '12') {
-                hours = 12;
-              } else if (hours < 10) {
-                hours = '0' + hours;
-              }
-              element.fromTime = hours + ':' + element.fromTime.split(":")[1] + 'pm ';
-            } else {
-              element.fromTime = element.fromTime + 'am';
-            }
+          if (element.toTime && element.fromTime != null){
+            element.toTime1 = this.dateformat.transform(element.toTime + "", "HH:mm");
+            element.toTime = this.dateformat.transform(element.toTime + "", "HH:mm a");
           }
-          if (element.toTime) {
-            if (element.toTime.split(":")[0] > 11) {
-              let hours: any = (element.toTime.split(":")[0] % 12);
-              if (element.toTime.split(":")[0] === '12') {
-                hours = 12;
-              } else if (hours < 10) {
-                hours = '0' + hours;
-              }
-              element.toTime = hours + ':' + element.toTime.split(":")[1] + 'pm ';
-            } else {
-              element.toTime = element.toTime + 'am';
-            }
-          }
+          // if (element.fromTime) {
+          //   if (element.fromTime.split(":")[0] > 11) {
+          //     let hours: any = (element.fromTime.split(":")[0] % 12);
+          //     if (element.fromTime.split(":")[0] === '12') {
+          //       hours = 12;
+          //     } else if (hours < 10) {
+          //       hours = '0' + hours;
+          //     }
+          //     element.fromTime = hours + ':' + element.fromTime.split(":")[1] + 'pm ';
+          //   } else {
+          //     element.fromTime = element.fromTime + 'am';
+          //   }
+          // }
+          // if (element.toTime) {
+          //   if (element.toTime.split(":")[0] > 11) {
+          //     let hours: any = (element.toTime.split(":")[0] % 12);
+          //     if (element.toTime.split(":")[0] === '12') {
+          //       hours = 12;
+          //     } else if (hours < 10) {
+          //       hours = '0' + hours;
+          //     }
+          //     element.toTime = hours + ':' + element.toTime.split(":")[1] + 'pm ';
+          //   } else {
+          //     element.toTime = element.toTime + 'am';
+          //   }
+          // }
         });
         localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SCHEDULE, JSON.stringify(myScheduleList));
       },

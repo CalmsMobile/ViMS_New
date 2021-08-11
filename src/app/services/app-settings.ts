@@ -251,7 +251,6 @@ export const AppSettings = Object.freeze({
         "APPLICATION_ACK_SETTINGS": "ApplicationAcknowledgemntSettings",
         "APPLICATION_SECURITY_SETTINGS": "ApplicationSecuritySettings",
         "APPOINTMENT_VISITOR_DATA": "appointmentVisitorData",
-        "FACILITY_VISITOR_DATA": "facilityVisitorData",
         "TAMS_SCHEDULE": "TAMS_My_Schedule",
         "TAMS_CLOCK_TYPE": "TAMS_CLOCK_TYPE",
         "TAMS_CLOCK_IN_ALREADY": "TAMS_CLOCK_IN_ALREADY",

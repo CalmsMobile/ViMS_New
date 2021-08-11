@@ -136,7 +136,7 @@ export class TamsregisterattendancePage implements OnInit {
             }
           }
           if (this.myTodaySchedule.toTime) {
-            const outTime = this.dateformat.transform(this.myTodaySchedule.scheduleDate + " "+ this.myTodaySchedule.toTime1, "yyyy-MM-dd HH:mm:ss");
+            const outTime = this.dateformat.transform(this.myTodaySchedule.scheduleDate + " "+ this.myTodaySchedule.toTime1, "yyyy-MM-dd HH:mm a");
             if (new Date(this.currentTime) < new Date(outTime) && !alreadyClockout) {
               this.timeExpired = true;
             } else {
@@ -155,7 +155,7 @@ export class TamsregisterattendancePage implements OnInit {
             }
           }
           if (this.myTodaySchedule.fromTime) {
-            const inTime = this.dateformat.transform(this.myTodaySchedule.scheduleDate + " "+ this.myTodaySchedule.fromTime1, "yyyy-MM-dd HH:mm:ss");
+            const inTime = this.dateformat.transform(this.myTodaySchedule.scheduleDate + " "+ this.myTodaySchedule.fromTime1, "yyyy-MM-dd HH:mm a");
             if (new Date(this.currentTime) > new Date(inTime)  && !alreadyClockin) {
               this.timeExpired = true;
             } else {

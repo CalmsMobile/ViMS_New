@@ -162,7 +162,6 @@ export class FacilityBookingPage implements OnInit {
           toTimeSession:"AM",
           appointment: {}
         }
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
         var today = new Date();
 
         var hours = today.getHours();
@@ -200,10 +199,6 @@ export class FacilityBookingPage implements OnInit {
   }
 
   ionViewWillLeave(){
-
-    if(this.VM.visitors && this.VM.visitors.length > 0 && !this.edit){
-      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, JSON.stringify(this.VM));
-    }
   }
 
 
@@ -310,10 +305,6 @@ export class FacilityBookingPage implements OnInit {
       title: "CreateFacilityPage",
       message: ''
     });
-    var appntmntData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA);
-    if(appntmntData && !this.edit){
-      this.VM.visitors = JSON.parse(appntmntData).visitors;
-    }
     this.loadVimsAppFacilityMasterList();
 
   }

@@ -81,7 +81,9 @@ export class FacilityTimeSlotPage implements OnInit {
           if(QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
             if(JSON.parse(settings).Table1 && JSON.parse(settings).Table1.length > 0){
               this.hostSettings = JSON.parse(settings).Table1[0];
-            }else{
+            } else if(JSON.parse(settings).Table2 && JSON.parse(settings).Table2.length > 0){
+              this.hostSettings = JSON.parse(settings).Table2[0];
+            } else{
               let toast = await this.toastCtrl.create({
                 message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
                 duration: 3000,
@@ -97,14 +99,20 @@ export class FacilityTimeSlotPage implements OnInit {
             if(sett && sett.length > 0){
               this.hostSettings = sett[0];
             }else{
-              this.hostSettings.ShowExpiredSlot = false;
-              let toast = await this.toastCtrl.create({
-                message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
-                duration: 3000,
-                color: 'primary',
-                position: 'bottom'
-              });
-              toast.present();
+              var sett = JSON.parse(settings).Table2;
+              if(sett && sett.length > 0){
+                this.hostSettings = sett[0];
+              } else {
+                this.hostSettings.ShowExpiredSlot = false;
+                let toast = await this.toastCtrl.create({
+                  message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],
+                  duration: 3000,
+                  color: 'primary',
+                  position: 'bottom'
+                });
+                toast.present();
+              }
+
             }
 
           }
@@ -200,7 +208,7 @@ export class FacilityTimeSlotPage implements OnInit {
       }
 
       let loginConfirm = this.alertController.create({
-        header:"<span class='failed'>" + "Cancel Slot" + '</span>',
+        header:"Cancel Slot",
         message: this.T_SVC['ALERT_TEXT.WISH_TO_CANCEL_SLOT'],
         cssClass:'',
         buttons: [

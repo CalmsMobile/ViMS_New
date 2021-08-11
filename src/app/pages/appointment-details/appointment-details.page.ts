@@ -271,7 +271,9 @@ export class AppointmentDetailsPage implements OnInit {
         const QRObj = JSON.parse(qrData);
         if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
           this.router.navigateByUrl('home-tams');
-        } else {
+        } if (QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY) {
+          this.navCtrl.pop();
+        }else {
           this.router.navigateByUrl(this.fromPage);
         }
       } else {
@@ -1097,7 +1099,7 @@ export class AppointmentDetailsPage implements OnInit {
       var startDate = slot.StartDateTime;
 
       let loginConfirm = this.alertCtrl.create({
-        header:"<span class='failed'>" + "Cancel Slot" + '</span>',
+        header:"Cancel Slot",
         message: this.T_SVC['ALERT_TEXT.WISH_TO_CANCEL_SLOT'],
         cssClass:'',
         buttons: [
@@ -1120,7 +1122,7 @@ export class AppointmentDetailsPage implements OnInit {
 
       if(this.Editable){
         let loginConfirm = this.alertCtrl.create({
-          header:"<span class='failed'>" + "End Booking" + '</span>',
+          header:'End Booking',
           message: this.T_SVC['ALERT_TEXT.WISH_TO_END_BOOK'],
           cssClass:'',
           buttons: [
@@ -1187,7 +1189,7 @@ export class AppointmentDetailsPage implements OnInit {
 
     }else if(this.Editable){
       let loginConfirm = this.alertCtrl.create({
-        header:"<span class='failed'>" + "Cancel Booking" + '</span>',
+        header:"Cancel Booking",
         message: "You cannot cancel expired Booking",
         cssClass:'',
         buttons: [

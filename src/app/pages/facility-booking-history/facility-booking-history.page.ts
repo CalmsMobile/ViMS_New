@@ -22,6 +22,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 	T_SVC:any;
 	loadingFinished = true;
   alertShowing = false;
+  isFacilityApp = false;
 	constructor(public navCtrl: NavController,
 		private  translate : TranslateService,
     private router: Router,
@@ -38,6 +39,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 		console.log('ionViewDidEnter FacilityBookingHistoryPage');
     var MAppId = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
 		if(MAppId == AppSettings.LOGINTYPES.FACILITY){
+      this.isFacilityApp = true;
 			this.events.publishDataCompany({
         action: "page",
         title: "home-view",

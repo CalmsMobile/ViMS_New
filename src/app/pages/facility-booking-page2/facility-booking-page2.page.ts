@@ -88,10 +88,12 @@ export class FacilityBookingPage2Page implements OnInit {
                 this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
               }
             }else{
-              var sett = JSON.parse(settings).Table1;
-              if(sett && sett.length > 0){
-                this.hostSettings = sett[0];
-              }else{
+              var sett = JSON.parse(settings);
+              if(sett.Table1 && sett.Table1.length > 0){
+                this.hostSettings = sett.Table1[0];
+              } else if(sett.Table2 && sett.Table2.length > 0){
+                this.hostSettings = sett.Table2[0];
+              } else{
                 this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
               }
 
@@ -448,7 +450,6 @@ export class FacilityBookingPage2Page implements OnInit {
               position: 'bottom'
             });
             toast.present();
-            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
             this.navCtrl.pop().then((data)=>{
               this.navCtrl.pop();
             });
@@ -625,7 +626,6 @@ export class FacilityBookingPage2Page implements OnInit {
           alert.present();
           return;
       }else if(result && result.Status == 1){
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FACILITY_VISITOR_DATA, "");
         this.showAlert(this.T_SVC['FACILITY_BOOKING.ADD_APPOINTMENT_DONE_SUCCESS']);
         this.events.publishDataCompany({
           action: 'addAppointmentSuccess',
