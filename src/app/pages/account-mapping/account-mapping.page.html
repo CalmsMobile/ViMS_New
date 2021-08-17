@@ -51,17 +51,17 @@
             <ion-card sp-card-map-acc-org>
                 <ion-item>
                   <img style="width: 52px;
-                  height: 52px;
+                  height: 52px;margin: 0px;
                   border-radius: 50%;" slot="start" [src]="companyImage" onError="this.src='../../assets/logo/2.png';">
                   <div>
-                    <ion-label class="sticky">{{companyInfo.comp_name}}</ion-label>
-                    <p *ngIf="companyInfo.comp_fax_no"><b>Fax:</b>{{companyInfo.comp_fax_no}}</p>
-                    <p *ngIf="companyInfo.comp_email"><b>Email:</b>{{companyInfo.comp_email}}</p>
-                    <p *ngIf="companyInfo.comp_office_no"><b>Office:</b>{{companyInfo.comp_office_no}}</p>
+                    <ion-label style="margin: 5px;" class="sticky">{{companyInfo.comp_name}}</ion-label>
+                    <p style="margin: 5px;" *ngIf="companyInfo.comp_fax_no"><b>Fax:</b>{{companyInfo.comp_fax_no}}</p>
+                    <p style="margin: 5px;" *ngIf="companyInfo.comp_email"><b>Email:</b>{{companyInfo.comp_email}}</p>
+                    <p style="margin: 5px;" *ngIf="companyInfo.comp_office_no"><b>Office:</b>{{companyInfo.comp_office_no}}</p>
                   </div>
                 </ion-item>
-                <ion-card-content *ngIf="companyInfo.comp_address_1 || companyInfo.comp_address_2 || companyInfo.comp_address_3">
-                  <p><b>Address:</b> {{companyInfo.comp_address_1}} {{companyInfo.comp_address_2}} {{companyInfo.comp_address_3}} {{companyInfo.comp_postcode}} {{companyInfo.comp_city}} , {{companyInfo.comp_state}} , {{companyInfo.comp_country}}</p>
+                <ion-card-content *ngIf="companyInfo.comp_address_1">
+                  <p><b>Address:</b> {{companyInfo.comp_address_1}}</p>
                 </ion-card-content>
             </ion-card>
           </div>

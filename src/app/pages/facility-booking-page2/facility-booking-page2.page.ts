@@ -19,8 +19,6 @@ export class FacilityBookingPage2Page implements OnInit {
   @ViewChild(IonContent) content:IonContent;
   facilitySlots = [];
   addAppointmentModel = new AddAppointmentModel();
-  START_TIME = "PM";
-  END_TIME = "PM";
   VISITOR_SIZE = 0;
   edit = false;
   onedit = false;
@@ -133,18 +131,6 @@ export class FacilityBookingPage2Page implements OnInit {
             var data = JSON.parse(passData.data);
             this.addAppointmentModel.START_DATE = data.fromDate;
             this.addAppointmentModel.END_DATE = data.toDate;
-            this.addAppointmentModel.START_TIME = data.fromTime;
-            this.addAppointmentModel.END_TIME = data.toTime;
-            if(this.addAppointmentModel.START_TIME.split(":")[0] < 12){
-              this.START_TIME = data.fromTime+" AM";
-            }else{
-              this.START_TIME = data.fromTime+" PM";
-            }
-            if(this.addAppointmentModel.END_TIME.split(":")[0] < 12){
-              this.END_TIME = data.toTime + " AM";
-            }else{
-              this.END_TIME = data.toTime + " PM";
-            }
 
             if(data.appointment&& data.appointment[0]){
               this.edit = true;

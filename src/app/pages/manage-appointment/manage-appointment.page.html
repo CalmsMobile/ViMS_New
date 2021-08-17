@@ -47,7 +47,7 @@
 
               <ion-col size="2" class="colIcons">
 
-                <div (click)="openTooltip($event, 'Visitors')">
+                <div (click)="openTooltip($event, 'Visitors')" *ngIf="isAdmin">
                   <!-- <ion-badge color="danger">3</ion-badge> -->
                   <div class="outer-circle2">
                     <div class="inner-circle2">
@@ -111,7 +111,7 @@
             <ion-icon name="sync" style="position:relative">
             </ion-icon>
         </ion-button>
-        <ion-button *ngIf= "isAdmin" slot="icon-only" (click)="gotoAdminPage()">
+        <ion-button *ngIf="isAdmin" slot="icon-only" (click)="gotoAdminPage()">
                 <ion-icon name="customicon"></ion-icon>
         </ion-button>
         <ion-button slot="icon-only" (click)="gotoNotification()">

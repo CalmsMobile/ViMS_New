@@ -5,6 +5,7 @@ import { NavController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
+import { EventsService } from 'src/app/services/EventsService';
 
 @Component({
   selector: 'app-facility-upcoming',
@@ -26,6 +27,7 @@ export class FacilityUpcomingPage implements OnInit {
     private router: Router,
     private  translate : TranslateService,
     private datePipe: DatePipe,
+    private events: EventsService,
     private alertCtrl: AlertController, public apiProvider: RestProvider) {
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
@@ -41,6 +43,12 @@ export class FacilityUpcomingPage implements OnInit {
     if(count){
       this.notificationCount = parseInt(count);
     }
+
+    this.events.publishDataCompany({
+      action: "page",
+      title: "home-view",
+      message: ''
+    });
 
   }
 
@@ -141,6 +149,35 @@ export class FacilityUpcomingPage implements OnInit {
         }
         );
       }
+    }
+
+    openTooltip(event, message) {
+      this.apiProvider.presentPopover(event, message);
+    }
+
+    logDrag(event, item, slideDOM) {
+      let percent = event.detail.ratio;
+      if (percent > 0) {
+        this.closeSlide(slideDOM);
+        // this.showAlertForSlide('delete', item);
+      } else {
+        this.closeSlide(slideDOM);
+        // this.showAlertForSlide('edit', item);
+
+      }
+      if (Math.abs(percent) > 1) {
+        // console.log('overscroll');
+      }
+    }
+
+    closeSlide(slideDOM) {
+      setTimeout(() => {
+        slideDOM.close();
+      }, 100);
+    }
+
+    editVisitors(slideDOM, action, item){
+
     }
 
     checkIsToday(fromDate, dateCondition){
