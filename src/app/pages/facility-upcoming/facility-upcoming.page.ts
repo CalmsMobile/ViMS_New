@@ -22,7 +22,7 @@ export class FacilityUpcomingPage implements OnInit {
   todayAppointments = [];
   tomorrowAppointments = [];
   T_SVC:any;
-  loadingFinished = true;
+  loadingFinished = false;
   constructor(public navCtrl: NavController,
     private router: Router,
     private  translate : TranslateService,
@@ -33,16 +33,30 @@ export class FacilityUpcomingPage implements OnInit {
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
         this.T_SVC = t;
     });
+    events.observeDataCompany().subscribe((data1:any) => {
+      if (data1.action === "NotificationReceived") {
+        console.log("Notification Received: " + data1.title);
+        this.showNotificationCount();
+      } else if (data1.action === 'refreshApproveList' || data1.action === 'delete' || data1.action === 'RefreshUpcoming') {
+        this.OffSet = 0;
+        this.appointments = [];
+        this.getAppointmentHistory(null);
+      }
+    });
   }
 
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter FacilityBookingHistoryPage');
-    this.OffSet = 0;
-    this.getAppointmentHistory(null);
+  showNotificationCount(){
     var count = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT);
     if(count){
       this.notificationCount = parseInt(count);
     }
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter FacilityBookingUpcomingPage');
+    this.OffSet = 0;
+    this.getAppointmentHistory(null);
+    this.showNotificationCount();
 
     this.events.publishDataCompany({
       action: "page",
@@ -81,6 +95,10 @@ export class FacilityUpcomingPage implements OnInit {
     // });
     // console.log("encrypted :" + encrypted);
 
+    if(!refresher){
+      this.OffSet = 0;
+    }
+
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
       var hostId = JSON.parse(hostData).HOSTIC;
@@ -103,23 +121,23 @@ export class FacilityUpcomingPage implements OnInit {
             this.appointments = aList;
           }
 
-            this.OffSet = this.OffSet + aList.length;
+          this.OffSet = this.OffSet + aList.length;
 
-            this.todayAppointments = [];
-            this.tomorrowAppointments = [];
-            this.futureAppointments = [];
+          this.todayAppointments = [];
+          this.tomorrowAppointments = [];
+          this.futureAppointments = [];
 
-            for(let items in this.appointments){
-              var cObj = this.appointments[items];
-              if(this.checkIsToday(cObj.StartDateTime, "Today")){
-                this.todayAppointments.push(cObj);
-              }else if(this.checkIsToday(cObj.StartDateTime, "Tomorrow")){
-                this.tomorrowAppointments.push(cObj);
-              }else if(this.checkIsToday(cObj.StartDateTime, "Future")){
-                this.futureAppointments.push(cObj);
-              }
-
+          for(let items in this.appointments){
+            var cObj = this.appointments[items];
+            if(this.checkIsToday(cObj.StartDateTime, "Today")){
+              this.todayAppointments.push(cObj);
+            }else if(this.checkIsToday(cObj.StartDateTime, "Tomorrow")){
+              this.tomorrowAppointments.push(cObj);
+            }else if(this.checkIsToday(cObj.StartDateTime, "Future")){
+              this.futureAppointments.push(cObj);
             }
+
+          }
 
         },
         async (err) => {

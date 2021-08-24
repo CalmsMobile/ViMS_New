@@ -26,18 +26,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-item-divider *ngIf="false" color="asent">UpComing</ion-item-divider>
-  <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="loadingFinished && appointments.length == 0">
-        <ion-col size="12" size-sm size-md>
-                <img app-logo-img class="animated fadeInDown delay-1s" style="
-                display: block;
-                margin: 0 auto;
-                margin-top: 10px;
-                margin-bottom: 10px;
-                width: 200px;
-            " src="assets/images/box.png">
-                <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'FACILITY_HISTORY.NO_LIST' | translate}}</h5> -->
-        </ion-col>
-  </ion-row>
+
   <ion-list>
     <ion-row *ngIf="todayAppointments.length > 0">
       <ion-col size="12" size-sm size-md>
@@ -305,7 +294,7 @@
             </ion-list>
       </ion-col>
     </ion-row>
-    <ion-row style="height: 100%; width: 100%; margin-top:100px; display: flex; justify-content: center; align-items: center;" *ngIf="loadingFinished && todayAppointments.length == 0 && tomorrowAppointments.length == 0 && futureAppointments.length == 0">
+    <ion-row style="height: 100%; width: 100%; margin-top:100px; display: flex; justify-content: center; align-items: center;" *ngIf="loadingFinished && todayAppointments.length === 0 && tomorrowAppointments.length === 0 && futureAppointments.length === 0">
       <ion-col size="12" size-sm size-md>
               <img app-logo-img class="animated fadeInDown delay-1s" style="
               display: block;

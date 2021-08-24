@@ -65,26 +65,6 @@ export class HomeViewPage implements OnInit {
     private statusBar: StatusBar,
     public events: EventsService, public apiProvider: RestProvider) {
         this.statusBar.backgroundColorByHexString(AppSettings.STATUS_BAR_COLOR);
-        this.events.publishDataCompany({
-          action: 'user:created',
-          title: "ReloadMenu",
-          message: "ReloadMenu"
-        });
-        this.platform.ready().then(() => {
-
-          if(this.platform.is('cordova')) {
-            try{
-              this.initializeFirebase();
-              window.addEventListener('load', (data) =>{
-                console.log('page changed' + data);
-             });
-            } catch (error) {
-            }
-          }
-
-
-          this.updateSettings();
-        });
   }
 
   updateSettings(){
@@ -190,6 +170,27 @@ export class HomeViewPage implements OnInit {
   ionViewDidEnter() {
     console.log("ionViewDidEnter");
     this.showFab = true;
+
+    this.events.publishDataCompany({
+      action: 'user:created',
+      title: "ReloadMenu",
+      message: "ReloadMenu"
+    });
+    this.platform.ready().then(() => {
+
+      if(this.platform.is('cordova')) {
+        try{
+          this.initializeFirebase();
+          window.addEventListener('load', (data) =>{
+            console.log('page changed' + data);
+         });
+        } catch (error) {
+        }
+      }
+
+
+      this.updateSettings();
+    });
 
     if(this.currentPage == "quick-pass-dash-board-page"){
       this.events.publishDataCompany({

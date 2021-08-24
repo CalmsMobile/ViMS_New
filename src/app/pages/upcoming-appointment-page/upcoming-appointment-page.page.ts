@@ -21,7 +21,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
   appointments = [];
   notificationCount = 0;
   T_SVC:any;
-  loadingFinished = true;
+  loadingFinished = false;
   alertShowing = false;
   isAdmin = true;
   QRObj: any = {};

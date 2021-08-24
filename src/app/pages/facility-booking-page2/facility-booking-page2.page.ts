@@ -143,6 +143,7 @@ export class FacilityBookingPage2Page implements OnInit {
               this.VM.facility = data.facility;
               if(data.facility && data.facility.length > 0){
                 this.PurposeCode = data.facility[0].PurposeCode;
+                this.addAppointmentModel.Remarks = data.facility[0].Remarks;
                 this.onedit = true;
               }
             }
@@ -259,25 +260,28 @@ export class FacilityBookingPage2Page implements OnInit {
   }
 
   onChangeFacility(event){
-    const FacilityCode = event.detail.value;
-    console.log(""+ FacilityCode);
-    this.VM.FACILITYMASTERLIST.forEach(element => {
-      if (element.FacilityCode === FacilityCode) {
 
-      }
-    });
-    this.FacilityCode = FacilityCode;
-    const navigationExtras: NavigationExtras = {
-      state: {
-        passData: { "FacilityCode": FacilityCode,
-        "START_DATE":this.addAppointmentModel.START_DATE,
-        "END_DATE":this.addAppointmentModel.END_DATE,
-        "facility": this.VM.facility,
-        "edit":this.edit
-      }
-      }
-    };
-    this.router.navigate(['facility-time-slot'], navigationExtras);
+    if (!this.edit) {
+      const FacilityCode = event.detail.value;
+      console.log(""+ FacilityCode);
+      this.VM.FACILITYMASTERLIST.forEach(element => {
+        if (element.FacilityCode === FacilityCode) {
+
+        }
+      });
+      this.FacilityCode = FacilityCode;
+      const navigationExtras: NavigationExtras = {
+        state: {
+          passData: { "FacilityCode": FacilityCode,
+          "START_DATE":this.addAppointmentModel.START_DATE,
+          "END_DATE":this.addAppointmentModel.END_DATE,
+          "facility": this.VM.facility,
+          "edit":this.edit
+        }
+        }
+      };
+      this.router.navigate(['facility-time-slot'], navigationExtras);
+    }
   }
 
   loadVimsAppFacilityMasterList(){
