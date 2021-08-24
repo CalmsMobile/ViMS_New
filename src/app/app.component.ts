@@ -1,6 +1,6 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
+import { FCM } from '@ionic-native/fcm/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AlertController, MenuController, ModalController, NavController, Platform } from '@ionic/angular';
@@ -543,14 +543,20 @@ export class AppComponent {
     })
   }
   initializeFirebaseIOS() {
-    this.fcm.getToken().then(token => {
-      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-      console.log("Token:" + token);
-    });
-    this.fcm.onTokenRefresh().subscribe(token => {
-      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-      console.log("Token:" + token);
-    });
+    this.fcm.hasPermission().then(hasPermission => {
+      if (hasPermission) {
+        console.log("Has permission!");
+        this.fcm.getToken().then(token => {
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+          console.log("Token:" + token);
+        });
+        this.fcm.onTokenRefresh().subscribe(token => {
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+          console.log("Token:" + token);
+        });
+      }
+    })
+    
   }
 
   async presentConfirm() {
