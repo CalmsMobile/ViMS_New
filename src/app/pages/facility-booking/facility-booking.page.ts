@@ -22,21 +22,20 @@ export class FacilityBookingPage implements OnInit {
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
   imageURLType = '&RefType=HP&Refresh='+ new Date().getTime();
-  newImage = "&tes='test'"
+  newImage = "&tes='test'";
+  datepickerFrmDate = '';
+  datepickerToDate = '';
   VM = {
     "visitors":[],
     facility: [],
     fromDate: new Date(),
     toDate: new Date(),
-    fromTime:"02:02",
-    toTime:"02:02",
-    fromTimeSession:"AM",
-    toTimeSession:"AM",
     appointment: {}
   }
   passData:any = {};
   contactsarray:any = [];
   minDate: any = "";
+  minDateTo: any = "";
   edit = false;
   FacilityCode: any = '';
   FACILITYMASTERLIST = [];
@@ -51,15 +50,6 @@ export class FacilityBookingPage implements OnInit {
     public apiProvider: RestProvider,
     private translate:TranslateService) {
       var today = new Date();
-      var hours = today.getHours();
-      var min = today.getMinutes();
-      var minutes = ""+min;
-      var ampm = hours >= 12 ? 'PM' : 'AM';
-      minutes = min < 10 ? '0'+minutes : minutes;
-
-      var strTime = hours + ':' + minutes;
-      this.VM.fromTime = strTime;
-      this.VM.fromTimeSession = ampm;
 
       var dd = today.getDate();
       var mm = today.getMonth()+1; //January is 0!
@@ -76,17 +66,10 @@ export class FacilityBookingPage implements OnInit {
 
     this.VM.fromDate = new Date();
     this.VM.toDate = new Date();
-    // this.VM.fromDate.setTime(this.VM.toDate.getTime() + (1400 * 60 * 1000));
-    this.VM.toDate.setTime(this.VM.toDate.getTime() + (AppSettings.APPOINTMENT_BufferTime * 60 * 1000));
+    this.VM.toDate.setTime(this.VM.toDate.getTime());
+    this.datepickerFrmDate = this.dateformat.transform(new Date(this.VM.fromDate) + '', 'yyyy-MM-dd');
+    this.resetToDate();
 
-    hours = this.VM.toDate.getHours();
-    min = this.VM.toDate.getMinutes();
-    minutes = ""+min;
-    ampm = hours >= 12 ? 'PM' : 'AM';
-    minutes = min < 10 ? '0'+minutes : minutes;
-    var ToTime = hours + ':' + minutes;
-    this.VM.toTime = ToTime;
-    this.VM.toTimeSession = ampm;
     this.translate.get(['ALERT_TEXT.REMOVE_STAFF']).subscribe(t => {
       this.translation = t;
     });
@@ -104,20 +87,8 @@ export class FacilityBookingPage implements OnInit {
             this.VM.appointment[0].END_DATE = this.VM.facility[0].EndDateTime;
           }
 
-          // var edate = this.VM.appointment[0].END_DATE.split(" ")[0];
-          var etime = this.VM.appointment[0].END_DATE.split("T")[1]
           this.VM.fromDate = this.VM.appointment[0].START_DATE;
-          this.VM.fromTime = stime.split(":")[0]+":"+stime.split(":")[1];
           this.VM.toDate = this.VM.appointment[0].END_DATE;
-          this.VM.toTime =  etime.split(":")[0]+":"+etime.split(":")[1];
-
-          if(stime.split(":")[0] > 11){
-            this.VM.fromTimeSession = "PM";
-          }
-
-          if(etime.split(":")[0] > 11){
-            this.VM.toTimeSession = "PM";
-          }
           var visitorsLocal1 = [];
 
           if(this.VM.facility && this.VM.facility.length > 0){
@@ -156,27 +127,8 @@ export class FacilityBookingPage implements OnInit {
           facility : [],
           fromDate: new Date(),
           toDate: new Date(),
-          fromTime:"02:02",
-          toTime:"02:02",
-          fromTimeSession:"AM",
-          toTimeSession:"AM",
           appointment: {}
         }
-        var today = new Date();
-
-        var hours = today.getHours();
-        var min = today.getMinutes();
-        var minutes = ""+min;
-        var ampm = hours >= 12 ? 'PM' : 'AM';
-        // hours = hours % 12;
-        // hours = hours ? hours : 12;
-        minutes = min < 10 ? '0'+minutes : minutes;
-
-        var strTime = hours + ':' + minutes;
-        this.VM.fromTime = strTime;
-        this.VM.toTime = strTime;
-        this.VM.fromTimeSession = ampm;
-        this.VM.toTimeSession = ampm;
       } else if (data1.action === 'user:created') {
         const user = data1.title;
         const dataObj = data1.message;
@@ -200,73 +152,6 @@ export class FacilityBookingPage implements OnInit {
 
   ionViewWillLeave(){
   }
-
-
-  openCalendar(from){
-    var showDate = new Date();
-    if(from){
-      showDate = new Date(this.VM.fromDate);
-    }else{
-      showDate = new Date(this.VM.toDate);
-    }
-    console.log("OpenCalender:Start:"+ this.VM.fromDate);
-    console.log("OpenCalender:End:"+ this.VM.toDate);
-    console.log("OpenCalender:"+ showDate);
-    this.datePicker.show({
-      date: showDate,
-      mode: 'date',
-      minDate : showDate,
-      popoverArrowDirection :  "down" ,
-      // androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
-    }).then(
-      date => {
-       // alert(date)
-        // var hours = date.getHours();
-        // var min = date.getMinutes();
-        // var minutes = ""+min;
-        // var ampm = hours >= 12 ? 'PM' : 'AM';
-        // hours = hours % 12;
-        // hours = hours ? hours : 12;
-        // minutes = min < 10 ? '0'+minutes : minutes;
-
-        // var sdate = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
-        // var smonthh = (date.getMonth()+1) < 10 ? '0'+ (date.getMonth()+1) : (date.getMonth()+1);
-
-        var strTime = '00:00';
-        var ampm = "AM";
-        // var selectedDate =sdate +':'+smonthh+':'+date.getFullYear()+" "+""+strTime+" "+ ampm;
-        // var fTime = new Date(date).getTime();
-        var ftDate = this.dateformat.transform(date+"", "yyyy-MM-ddTHH:mm:ss");
-        if(from){
-          this.VM.fromDate = ftDate;
-          this.VM.fromTime = strTime;
-          this.VM.fromTimeSession = ampm;
-          //alert(this.VM.fromDate)
-
-          var sTime = new Date(ftDate).getTime();
-          //alert(this.VM.fromDate)
-          if(sTime >= new Date(this.VM.toDate).getTime()){
-            this.VM.toDate = new Date(new Date(ftDate).getTime());
-            this.VM.toTime = strTime;
-            this.VM.toTimeSession = ampm;
-          }
-
-        }else{
-          this.VM.toDate = ftDate;
-          this.VM.toTime = strTime;
-          this.VM.toTimeSession = ampm;
-          //alert(this.VM.toDate)
-        }
-
-        // alert(strTime)
-        // alert(ampm)
-
-      },
-      err => console.log('Error occurred while getting date: ', err)
-    );
-  }
-
 
   async removeVisitor(item){
 
@@ -309,36 +194,6 @@ export class FacilityBookingPage implements OnInit {
 
   }
 
-  changeEvent(pickerName){
-    console.log(pickerName + " --- " + (this.VM[pickerName]));
-    if(pickerName == "fromTime"){
-      if(this.VM[pickerName].replace(":",".") < 12){
-        this.VM.fromTimeSession = "AM";
-      }else{
-        this.VM.fromTimeSession = "PM";
-      }
-    }else if(pickerName == "toTime"){
-      if(this.VM[pickerName].replace(":",".") < 12){
-        this.VM.toTimeSession = "AM";
-      }else{
-        this.VM.toTimeSession = "PM";
-      }
-    }else if(pickerName == "fromDate"){
-      if(this.VM[pickerName].split("T")[1].split(":")[0]<12){
-        this.VM.fromTimeSession = "AM";
-      }else{
-        this.VM.fromTimeSession = "PM";
-      }
-      this.VM.fromTime = this.VM[pickerName].split("T")[1].split(":")[0] +":"+this.VM[pickerName].split("T")[1].split(":")[1];
-    }else if(pickerName == "toDate"){
-      if(this.VM[pickerName].split("T")[1].split(":")[0]<12){
-        this.VM.toTimeSession = "AM";
-      }else{
-        this.VM.toTimeSession = "PM";
-      }
-      this.VM.toTime = this.VM[pickerName].split("T")[1].split(":")[0] +":"+this.VM[pickerName].split("T")[1].split(":")[1];
-    }
-  }
   goToAddManageVisitors(){
 
     const navigationExtras: NavigationExtras = {
@@ -352,7 +207,46 @@ export class FacilityBookingPage implements OnInit {
     this.router.navigate(['manage-hosts'], navigationExtras);
   }
 
+  openCalender(picker, action) {
+    if (!this.edit) {
+      if (action === 'START') {
+
+      } else {
+
+      }
+      picker.open();
+    }
+  }
+
+
+  changeCalendar(from){
+    if(!this.edit && (!this.VM.facility || this.VM.facility.length == 0)){
+      let showDate = new Date();
+      if(from){
+        showDate = new Date(this.datepickerFrmDate);
+      }else{
+        showDate = new Date(this.datepickerToDate);
+      }
+      console.log("OpenCalender:Start:"+ this.VM.fromDate);
+      console.log("OpenCalender:End:"+ this.VM.toDate);
+      if(from){
+        this.VM.fromDate = new Date(this.datepickerFrmDate);
+        this.resetToDate();
+      }else{
+        this.VM.toDate = new Date(this.datepickerToDate);
+      }
+    }
+  }
+
+  resetToDate() {
+    this.minDateTo = this.dateformat.transform(this.datepickerFrmDate+"", "yyyy-MM-dd");
+    this.datepickerToDate = this.dateformat.transform(this.datepickerFrmDate +"", "yyyy-MM-dd");
+    this.VM.toDate = new Date(this.datepickerToDate);
+  }
+
   proceedToNextStep(){
+    this.VM.fromDate = this.dateformat.transform(this.datepickerFrmDate+"", "yyyy-MM-dd");
+    this.VM.toDate = this.dateformat.transform(this.datepickerToDate+"", "yyyy-MM-dd");
     const navigationExtras: NavigationExtras = {
       state: {
         passData: {

@@ -13,74 +13,42 @@
 <ion-content>
         <!-- <ion-button (click)="openCalendar()">Open Calendar on Current Date</ion-button> -->
     <div app-bg>
-        <div padding-top class="item item-body" style="border-bottom:1px solid rgba(0,0,0,0.05);">
-            <ion-row class="row" style="padding: 8px;">
-                <ion-col padding-horizontal class="col" style="border-right: 1px solid rgba(0,0,0,0.05);padding: 0px" (click)="openCalendar(true)">
-                    <div text-alpha-caption margin-bottom-10 style="    color: white;">
-                        <i hidden margin-right-10 class="icon siva-icon-calendar-3"></i>{{'FACILITY_BOOKING.FROM_DATE' | translate}}</div>
-                    <div class="row" style="    display: inline-flex;">
-                        <!-- <ion-datetime siv-date-picker (ionChange)="changeEvent('fromDate')" [(ngModel)]="VM.fromDate" pickerFormat="DD/MM/YYYY hh:mm A" min="{{minDate}}"
-                        max="2050-12-31"></ion-datetime> -->
-                        <h3 text-white text-right no-margin class="col">{{VM.fromDate | date : 'dd'}}</h3>
-                        <div text-white text-uppercase style="margin-left: 8px;align-self: center;">
-                            <b>{{VM.fromDate | date : 'MMM'}}</b>
-                        </div>
-                        <h3 text-white text-right no-margin class="col" style="padding-left: 7px;">{{VM.fromDate | date : 'yyyy'}}</h3>
-                        <!-- <h3 text-white text-right no-margin class="col">{{VM.fromTime}}</h3>
-                        <div text-white text-uppercase margin-left style="line-height: 2.6;margin-left: 3px;">
-                            <b>{{VM.fromTimeSession}}</b>
-                        </div> -->
-                    </div>
-                </ion-col>
-                <ion-col padding-horizontal class="col" style="padding:0px" (click)="openCalendar(false)">
-                    <div text-alpha-caption margin-bottom-10 style="    color: white;">
-                        <i hidden margin-right-10 class="icon siva-icon-calendar-3"></i>{{'FACILITY_BOOKING.TO_DATE' | translate}}</div>
-                    <div class="row row-no-padding" style="    display: inline-flex;">
-                        <!-- <ion-datetime siv-date-picker (ionChange)="changeEvent('toDate')" [(ngModel)]="VM.toDate" pickerFormat="DD/MM/YYYY hh:mm A" min="{{minDate}}"
-                        max="2050-12-31"></ion-datetime> -->
-                        <h3 text-white text-right no-margin class="col">
-                                {{VM.toDate | date : 'dd'}}</h3>
-                        <div text-white text-uppercase style="margin-left: 8px; align-self: center;">
-                            <b>{{VM.toDate | date : 'MMM'}}</b>
+      <div padding-top class="item item-body" style="border-bottom:1px solid rgba(0,0,0,0.05);">
+        <ion-row style="padding: 8px;">
+            <ion-col size="6" padding-horizontal class="col" style="border-right: 1px solid rgba(0,0,0,0.05);padding: 0px" (click)="openCalender(picker1, 'START')">
+              <ion-datetime style=" margin-left: 5px;
+              font-size: 14px;display: none;" #picker1 displayFormat="YYYY-MM-DD" min="{{minDate}}" max="2121-12-12" [(ngModel)]="datepickerFrmDate" (ionChange)="changeCalendar(true)"></ion-datetime>
 
-                        </div>
-                        <h3 text-white text-right no-margin class="col" style="padding-left: 7px;">{{VM.toDate | date : 'yyyy'}}</h3>
-                        <!-- <h3 text-right text-white no-margin class="col">{{VM.toTime}}</h3>
-                        <div text-white text-uppercase margin-left style="line-height: 2.6;margin-left: 3px;">
-                            <b>{{VM.toTimeSession}}</b>
-                        </div> -->
-                    </div>
-                </ion-col>
-            </ion-row>
-        </div>
-        <div class="item item-body" *ngIf="false">
-            <div margin-bottom no-padding class="row">
-                <div padding-horizontal class="col" style="border-right: 1px solid rgba(0,0,0,0.05);" ng-click="openTimeBreakInPicker()">
-                    <div text-alpha-caption margin-top-10 margin-bottom-10 style="    color: white;">
-                        <i hidden margin-right-10 class="icon siva-icon-clock-2"></i>{{'FACILITY_BOOKING.FROM_TIME' | translate}}</div>
-                    <div class="row row-no-padding">
-                        <ion-datetime siv-date-picker (ionChange)="changeEvent('fromTime')"
-                            pickerFormat="hh:mm A" [(ngModel)]="VM.fromTime"></ion-datetime>
-                        <h1 text-white text-right no-margin class="col">{{VM.fromTime}}</h1>
-                        <div text-white text-uppercase margin-left style="line-height: 2.6;">
-                            <b>{{VM.fromTimeSession}}</b>
-                        </div>
+                <div text-alpha-caption margin-bottom-10 style="    color: white;">
+                    <i hidden margin-right-10 class="icon siva-icon-calendar-3"></i>{{'ADD_APPOIN.FROM_DATE' | translate}}</div>
+                <div class="row" style="    display: inline-flex;">
+                    <!-- <ion-datetime siv-date-picker (ionChange)="changeEvent('fromDate')" [(ngModel)]="VM.fromDate" pickerFormat="DD/MM/YYYY hh:mm A" min="{{minDate}}"
+                    max="2050-12-31"></ion-datetime> -->
+                    <h3 text-white text-right no-margin class="col" style="padding: 0px;">{{VM.fromDate | date : 'dd'}}</h3>
+                    <div text-white text-uppercase style="margin-left: 10px;width: -webkit-fill-available; display: inline-flex; align-self: center;">
+                        <b>{{VM.fromDate | date : 'MMM'}}</b>
+                        <div style="margin-left: 10px;">{{VM.fromDate | date : 'yyyy'}}</div>
                     </div>
                 </div>
-                <div padding-horizontal col ng-click="openTimeBreakOutPicker()">
-                    <div text-alpha-caption margin-top-10 margin-bottom-10 style="    color: white;">
-                        <i hidden margin-right-10 class="icon siva-icon-clock-2"></i>{{'FACILITY_BOOKING.TO_TIME' | translate}}</div>
-                    <div class="row row-no-padding">
-                        <ion-datetime siv-date-picker (ionChange)="changeEvent('toTime')"
-                          pickerFormat="hh:mm A" [(ngModel)]="VM.toTime"></ion-datetime>
-                        <h1 text-right text-white no-margin class="col">{{VM.toTime}}</h1>
-                        <div text-white text-uppercase margin-left style="line-height: 2.6;">
-                            <b>{{VM.toTimeSession}}</b>
-                        </div>
+              </ion-col>
+            <ion-col size="6" padding-horizontal class="col" style="padding:0px" (click)="openCalender(picker2, 'END')">
+              <ion-datetime style="    display: none;" #picker2 displayFormat="YYYY-MM-DD" min="{{minDateTo}}" max="2121-12-12" [(ngModel)]="datepickerToDate" (ionChange)="changeCalendar(false)"></ion-datetime>
+
+                <div text-alpha-caption margin-bottom-10 style="    color: white;">
+                    <i hidden margin-right-10 class="icon siva-icon-calendar-3"></i>{{'ADD_APPOIN.TO_DATE' | translate}}</div>
+                <div class="row row-no-padding" style="    display: inline-flex;">
+                    <!-- <ion-datetime siv-date-picker (ionChange)="changeEvent('toDate')" [(ngModel)]="VM.toDate" pickerFormat="DD/MM/YYYY hh:mm A" min="{{minDate}}"
+                    max="2050-12-31"></ion-datetime> -->
+                    <h3 text-white text-right no-margin class="col">
+                            {{VM.toDate | date : 'dd'}}</h3>
+                    <div text-white text-uppercase style="margin-left: 10px;width: -webkit-fill-available; display: inline-flex; align-self: center;">
+                        <b>{{VM.toDate | date : 'MMM'}}</b>
+                        <div style="margin-left: 10px;">{{VM.toDate | date : 'yyyy'}}</div>
                     </div>
                 </div>
-            </div>
-        </div>
+              </ion-col>
+        </ion-row>
+    </div>
     </div>
     <!-- <h2>{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</h2> -->
     <ion-label *ngIf="false" style="    font-size: 16px;    margin-left: 5px;" color="danger">{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</ion-label>
@@ -95,13 +63,16 @@
   </ion-item>
 
     <ion-row style="background: rgb(248, 248, 248);">
-        <ion-col size="9">
+        <ion-col size="10">
                 <h3 margin-top padding-horizontal theme-text-color>
                         {{'FACILITY_BOOKING.NUM_VISITORS' | translate}} ({{VM.visitors.length}}) </h3>
         </ion-col>
-        <ion-col size="3">
-          <ion-fab-button (click)="goToAddManageVisitors()">
-            <ion-icon name="person-add-outline" style="font-size:2.0rem;"></ion-icon>
+        <ion-col size="2" style="align-items: center;
+        align-self: center;
+        text-align: end;">
+          <ion-fab-button style="width: 40px;
+          height: 40px;" (click)="goToAddManageVisitors()">
+            <ion-icon name="person-add-outline" style="font-size:20px;"></ion-icon>
            </ion-fab-button>
         </ion-col>
     </ion-row>

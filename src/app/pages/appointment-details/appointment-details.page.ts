@@ -272,7 +272,7 @@ export class AppointmentDetailsPage implements OnInit {
         if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
           this.router.navigateByUrl('home-tams');
         } if (QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY) {
-          this.navCtrl.pop();
+          this.navCtrl.navigateRoot('home-view');
         }else {
           this.router.navigateByUrl(this.fromPage);
         }

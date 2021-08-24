@@ -21,7 +21,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
   appointments = [];
   notificationCount = 0;
   T_SVC:any;
-  loadingFinished = true;
+  loadingFinished = false;
   alertShowing = false;
   isAdmin = true;
   QRObj: any = {};
@@ -260,6 +260,9 @@ export class UpcomingAppointmentPagePage implements OnInit {
 	getAppointmentHistory(refresher){
 
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
+      return;
+    }
     if(hostData){
       this.loadingFinished = false;
       var hostId = JSON.parse(hostData).HOST_ID;
@@ -401,6 +404,9 @@ export class UpcomingAppointmentPagePage implements OnInit {
     var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (qrData) {
       this.QRObj = JSON.parse(qrData);
+      if (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
+        this.isAdmin = false;
+      }
     }
   }
 

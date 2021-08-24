@@ -55,6 +55,9 @@ export class SettingsViewPagePage implements OnInit {
       if (qrinfo) {
         this.QRObj = JSON.parse(qrinfo);
         this.isSecurityApp = this.QRObj.MAppId === AppSettings.LOGINTYPES.SECURITYAPP;
+        if (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
+          this.isAdmin = false;
+        }
       }
 
       this.translate.get([

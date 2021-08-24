@@ -59,6 +59,9 @@ export class ManageAppointmentPage implements OnInit {
           var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
           if(qrInfo && JSON.parse(qrInfo) && JSON.parse(qrInfo).MAppId){
             this.QRObj = JSON.parse(qrInfo);
+            if (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
+              this.isAdmin = false;
+            }
           }
         }catch(e){
 

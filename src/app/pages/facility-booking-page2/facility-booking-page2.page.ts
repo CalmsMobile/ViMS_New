@@ -19,8 +19,6 @@ export class FacilityBookingPage2Page implements OnInit {
   @ViewChild(IonContent) content:IonContent;
   facilitySlots = [];
   addAppointmentModel = new AddAppointmentModel();
-  START_TIME = "PM";
-  END_TIME = "PM";
   VISITOR_SIZE = 0;
   edit = false;
   onedit = false;
@@ -133,18 +131,6 @@ export class FacilityBookingPage2Page implements OnInit {
             var data = JSON.parse(passData.data);
             this.addAppointmentModel.START_DATE = data.fromDate;
             this.addAppointmentModel.END_DATE = data.toDate;
-            this.addAppointmentModel.START_TIME = data.fromTime;
-            this.addAppointmentModel.END_TIME = data.toTime;
-            if(this.addAppointmentModel.START_TIME.split(":")[0] < 12){
-              this.START_TIME = data.fromTime+" AM";
-            }else{
-              this.START_TIME = data.fromTime+" PM";
-            }
-            if(this.addAppointmentModel.END_TIME.split(":")[0] < 12){
-              this.END_TIME = data.toTime + " AM";
-            }else{
-              this.END_TIME = data.toTime + " PM";
-            }
 
             if(data.appointment&& data.appointment[0]){
               this.edit = true;
@@ -157,6 +143,7 @@ export class FacilityBookingPage2Page implements OnInit {
               this.VM.facility = data.facility;
               if(data.facility && data.facility.length > 0){
                 this.PurposeCode = data.facility[0].PurposeCode;
+                this.addAppointmentModel.Remarks = data.facility[0].Remarks;
                 this.onedit = true;
               }
             }
@@ -273,25 +260,28 @@ export class FacilityBookingPage2Page implements OnInit {
   }
 
   onChangeFacility(event){
-    const FacilityCode = event.detail.value;
-    console.log(""+ FacilityCode);
-    this.VM.FACILITYMASTERLIST.forEach(element => {
-      if (element.FacilityCode === FacilityCode) {
 
-      }
-    });
-    this.FacilityCode = FacilityCode;
-    const navigationExtras: NavigationExtras = {
-      state: {
-        passData: { "FacilityCode": FacilityCode,
-        "START_DATE":this.addAppointmentModel.START_DATE,
-        "END_DATE":this.addAppointmentModel.END_DATE,
-        "facility": this.VM.facility,
-        "edit":this.edit
-      }
-      }
-    };
-    this.router.navigate(['facility-time-slot'], navigationExtras);
+    if (!this.edit) {
+      const FacilityCode = event.detail.value;
+      console.log(""+ FacilityCode);
+      this.VM.FACILITYMASTERLIST.forEach(element => {
+        if (element.FacilityCode === FacilityCode) {
+
+        }
+      });
+      this.FacilityCode = FacilityCode;
+      const navigationExtras: NavigationExtras = {
+        state: {
+          passData: { "FacilityCode": FacilityCode,
+          "START_DATE":this.addAppointmentModel.START_DATE,
+          "END_DATE":this.addAppointmentModel.END_DATE,
+          "facility": this.VM.facility,
+          "edit":this.edit
+        }
+        }
+      };
+      this.router.navigate(['facility-time-slot'], navigationExtras);
+    }
   }
 
   loadVimsAppFacilityMasterList(){
