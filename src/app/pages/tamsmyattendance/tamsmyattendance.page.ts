@@ -107,9 +107,12 @@ export class TamsmyattendancePage implements OnInit {
             item.TotalRequiredHours = '0'+ item.TotalWorkHours;
           }
           const schduleDate = this.dateformat.transform(item.ScheduleDate, "yyyy-MM-dd");
-          if (item.actualClockinTime) {
+          if (item.actualClockinTime && item.fromTime) {
             const fromTime = this.dateformat.transform(item.fromTime+ '', "yyyy-MM-dd HH:mm");
-            const outTime = this.dateformat.transform(schduleDate + " "+ item.actualClockinTime, "yyyy-MM-dd HH:mm");
+            if (item.actualClockinTime.indexOf('T') > -1){
+              item.actualClockinTime = schduleDate + ' ' +item.actualClockinTime.split('T')[1];
+            }
+            const outTime = this.dateformat.transform(item.actualClockinTime, "yyyy-MM-dd HH:mm");
             if (new Date(fromTime) < new Date(outTime)) {
               item.InTimeExpired = true;
             } else {
@@ -117,9 +120,12 @@ export class TamsmyattendancePage implements OnInit {
             }
           }
 
-          if (item.actualClockoutTime) {
+          if (item.actualClockoutTime && item.toTime) {
             const toTime = this.dateformat.transform(item.toTime+ '', "yyyy-MM-dd HH:mm");
-            const outTime = this.dateformat.transform(schduleDate + " "+ item.actualClockoutTime, "yyyy-MM-dd HH:mm");
+            if (item.actualClockoutTime.indexOf('T') > -1){
+              item.actualClockoutTime = schduleDate + ' ' + item.actualClockoutTime.split('T')[1];
+            }
+            const outTime = this.dateformat.transform(item.actualClockoutTime, "yyyy-MM-dd HH:mm");
             if (new Date(toTime) > new Date(outTime)) {
               item.outTimeExpired = true;
             } else {

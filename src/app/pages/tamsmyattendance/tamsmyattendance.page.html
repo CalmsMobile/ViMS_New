@@ -32,7 +32,9 @@
   <ion-card class="card_appointment" style="width: 98%;"
     no-padding no-border  *ngIf="myAttendanceListClone.length > 0" >
 
-    <ion-item lines="none" style="--inner-padding-end: 0px;" class="ion-no-padding" *ngFor="let item of myAttendanceListClone">
+    <ion-item lines="none" style="--inner-padding-end: 0px;margin-bottom: 7px; box-shadow: 10px 10px 5px #aaaaaa;
+    border: 1px solid #BFBFBF;
+    background-color: white;    --border-radius: 5px;" class="ion-no-padding" *ngFor="let item of myAttendanceListClone">
       <ion-row lines="none" no-padding full-width>
         <ion-col size="3" class="col apt-left" no-padding>
           <ion-row style="height: 100%;">
@@ -54,7 +56,7 @@
           <ion-item lines="none" [ngStyle]="{'border': '1px solid ' + AppTheme}" style="--padding-start: 2px; background: white;
           border-top-left-radius: 6px;
           border-top-right-radius: 6px;align-self: center;
-          width: 100%;">
+          width: 100%;    padding-bottom: 10px;">
             <div>
               <div style="width: -webkit-fill-available;
               display: inline-flex;">
@@ -65,7 +67,7 @@
 
               </div>
               <ion-label color="dark" style="font-weight: 600;    width: -webkit-fill-available;
-              text-align: center;font-size: 13px;" [ngStyle]="{'color': item.InTimeExpired? 'red':'green'}">{{item.actualClockinTime? item.actualClockinTime: '&nbsp;&nbsp;--'}}</ion-label>
+              text-align: center;font-size: 13px;" [ngStyle]="{'color': item.InTimeExpired? 'red':'green'}">{{item.actualClockinTime? (item.actualClockinTime | date : 'hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
             </div>
           </ion-item>
           </ion-row>
@@ -73,7 +75,7 @@
         <ion-col size="6" style="padding-bottom: 0px;">
           <div class="div-apt-center">
             <ion-icon slot="start" name="layers-outline" color="dark" class="apt-text-icons"></ion-icon>
-            <p class="apt-center-title">{{item.ShiftName?item.ShiftName: '&nbsp;&nbsp;--'}}</p>
+            <p class="apt-center-title">{{item.ShiftName? item.ShiftName: '&nbsp;&nbsp;--'}}</p>
           </div>
 
           <div class="div-apt-center">
@@ -112,7 +114,7 @@
             <ion-item lines="none" [ngStyle]="{'border': '1px solid ' + AppTheme}" style="--padding-start: 2px; background: white;
             border-top-left-radius: 6px;
             border-top-right-radius: 6px;align-self: center;
-            width: 100%;">
+            width: 100%;padding-bottom: 10px;">
               <div>
                 <div style="width: -webkit-fill-available;
                 display: inline-flex;">
@@ -123,7 +125,7 @@
 
                 </div>
                 <ion-label color="dark" [ngStyle]="{'color': item.outTimeExpired? 'red':'green'}" style="font-weight: 600;    width: -webkit-fill-available;
-                text-align: center;font-size: 13px;">{{item.actualClockoutTime? item.actualClockoutTime: '&nbsp;&nbsp;--'}}</ion-label>
+                text-align: center;font-size: 13px;">{{item.actualClockoutTime? (item.actualClockoutTime | date : 'hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
               </div>
             </ion-item>
             </ion-row>
