@@ -28,7 +28,7 @@
     "@ionic-native/core": "^5.31.1",
     "@ionic-native/date-picker": "^5.0.0",
     "@ionic-native/device": "^5.0.0",
-    "@ionic-native/fcm": "^5.35.0",
+    "@ionic-native/fcm": "^5.36.0",
     "@ionic-native/file": "^5.1.0",
     "@ionic-native/file-opener": "^5.32.0",
     "@ionic-native/file-path": "^5.1.0",
