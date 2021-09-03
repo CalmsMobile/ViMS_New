@@ -6,9 +6,9 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
-  // { path: '', redirectTo: 'home-view', pathMatch: 'full' },
+  { path: '', redirectTo: 'home-tams', pathMatch: 'full' },
   {
-    path: '',
+    path: 'home-view',
     loadChildren: () => import('./pages/home-view/home-view.module').then( m => m.HomeViewPageModule)
   },
   {
@@ -202,7 +202,8 @@ const routes: Routes = [
   {
     path: 'home-tams',
     loadChildren: () => import('./pages/home-tams/home-tams.module').then( m => m.HomeTAMSPageModule)
-  },  {
+  },
+  {
     path: 'tamsmyschedule',
     loadChildren: () => import('./pages/tamsmyschedule/tamsmyschedule.module').then( m => m.TamsmyschedulePageModule)
   },

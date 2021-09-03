@@ -197,7 +197,7 @@ export class AppComponent {
             }
             this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
             this.menu.enable(true, "myLeftMenu");
-            this.navCtrl.navigateRoot("");;
+            this.navCtrl.navigateRoot("");
             break;
           case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
             hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -251,6 +251,8 @@ export class AppComponent {
 
             break;
         }
+      } else {
+        this.navCtrl.navigateRoot("account-mapping");
       }
     });
   }

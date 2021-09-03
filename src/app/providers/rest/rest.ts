@@ -246,7 +246,8 @@ deg2rad(deg) {
     }, 100);
   }
 
-  validateUser(data){
+  validateUser(data, url){
+    console.log('validateUser url:' + JSON.stringify(url) + ' >>> validateUser data' + JSON.stringify(data));
     var result = false;
     if(data && data.Table && data.Table.length > 0 && (data.Table[0].Code == 50 || data.Table[0].code == 50)){
       this.eventsService.publishDataCompany({
@@ -264,7 +265,7 @@ deg2rad(deg) {
       return;
     }
     data  = this.setAuthorizedInfo(data, '', '');
-    console.log('Param' + JSON.stringify(data));
+    console.log('GetHostAppSettings Param' + JSON.stringify(data));
     if (loading) {
       this.presentLoading();
     }
@@ -282,7 +283,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         this.dismissLoading();
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         console.log('Result:' + JSON.stringify(output));
@@ -451,7 +452,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         // this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, Api)){
           return;
         }
 
@@ -489,7 +490,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         // this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, Api)){
           return;
         }
 
@@ -663,7 +664,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         this.dismissLoading();
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, '/api/Vims/VimsAdminLogin')){
           return;
         }
         if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
@@ -701,7 +702,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'GetValidateHost')){
           return;
         }
         //Table 2 -- new regis or already diff device
@@ -845,7 +846,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, ApiUrl)){
           return;
         }
         if(output){
@@ -905,7 +906,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output.Table2 != undefined && output.Table2.length > 0){
@@ -942,7 +943,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, '/api/Vims/SearchExistVisitor')){
           return;
         }
         if(output.Table2 != undefined && output.Table2.length > 0){
@@ -984,7 +985,7 @@ deg2rad(deg) {
           this.dismissLoading();
         }
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, URL)){
           return;
         }
         if(output.Table != undefined && output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
@@ -1019,7 +1020,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'GetMasterDetails')){
           return;
         }
         if(output != undefined){
@@ -1051,7 +1052,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'GetAddVisitorSettings')){
           return;
         }
         if(output != undefined){
@@ -1083,7 +1084,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined){
@@ -1117,7 +1118,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined){
@@ -1156,7 +1157,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'GetVisitorCompany')){
           return;
         }
         if(output.Table2 != undefined &&  output.Table2.length > 0){
@@ -1194,7 +1195,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'AddVisitor')){
           return;
         }
         if(output){
@@ -1242,7 +1243,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         this.dismissLoading();
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'UpdateVisitor')){
           return;
         }
         if(output){
@@ -1289,7 +1290,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -1337,7 +1338,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         this.dismissLoading();
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'addVisitorCompany')){
           return;
         }
         if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
@@ -1378,7 +1379,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'AddAppointment')){
           return;
         }
         if(output){
@@ -1426,7 +1427,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'RemindAppointment')){
           return;
         }
         if(output){
@@ -1479,7 +1480,7 @@ deg2rad(deg) {
       }).subscribe(async response => {
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'syncAppointment')){
           return;
         }
         if(output){
@@ -1533,7 +1534,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, URL)){
           return;
         }
         if(output){
@@ -1637,7 +1638,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -1690,7 +1691,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -1740,7 +1741,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -1789,7 +1790,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -1841,7 +1842,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -1887,7 +1888,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -1933,7 +1934,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -1979,7 +1980,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -2025,7 +2026,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -2063,7 +2064,7 @@ deg2rad(deg) {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -2107,7 +2108,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, URL)){
           return;
         }
         if(output){
@@ -2154,7 +2155,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, URL)){
           return;
         }
         if(output){
@@ -2202,7 +2203,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'ChangeApppointmentApprovalSettings')){
           return;
         }
         if(output){
@@ -2250,7 +2251,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'getHostNotification')){
           return;
         }
         if(output){
@@ -2298,7 +2299,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -2343,7 +2344,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -2391,7 +2392,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'GetPreAppointmentSettings')){
           return;
         }
         if(output){
@@ -2441,7 +2442,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'GetAppointmentByGroupId')){
           return;
         }
         if(output){
@@ -2492,7 +2493,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output){
@@ -2540,7 +2541,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'EditAppointment')){
           return;
         }
         if(output ){
@@ -2588,7 +2589,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'UpdateHostInfo')){
           return;
         }
         if(output ){
@@ -2685,7 +2686,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output ){
@@ -2735,7 +2736,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output ){
@@ -2785,7 +2786,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output ){
@@ -2836,7 +2837,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output ){ // 0 - No record  2- Expired
@@ -2885,7 +2886,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, 'VimsAppDeleteFBFacilityBooking')){
           return;
         }
         if(output ){
@@ -2928,7 +2929,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined && output.Table && output.Table[0] && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
@@ -2968,7 +2969,7 @@ deg2rad(deg) {
         if(edit){
           this.dismissLoading();
         }
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
@@ -3003,7 +3004,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined && output.Table && output.Table[0] && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
@@ -3037,7 +3038,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined && output.Table){
@@ -3072,7 +3073,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined && output.Table && output.Table[0]){
@@ -3113,7 +3114,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
@@ -3150,7 +3151,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        // if(this.validateUser(output)){
+        // if(this.validateUser(output, url)){
         //   return;
         // }
         if(output != undefined){
@@ -3185,7 +3186,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
@@ -3223,7 +3224,7 @@ deg2rad(deg) {
         this.dismissLoading();
         if (response[0].Data) {
           var output = JSON.parse(response[0].Data);
-          if(this.validateUser(output)){
+          if(this.validateUser(output, url)){
             return;
           }
           if(output != undefined && output.Table){
@@ -3264,7 +3265,7 @@ deg2rad(deg) {
         console.log(API+ " Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
 
@@ -3308,7 +3309,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, url)){
           return;
         }
         if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
@@ -3401,7 +3402,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         // console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, ApiUrl)){
           return;
         }
         if(output){
@@ -3456,7 +3457,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         // console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, ApiUrl)){
           return;
         }
         if(output){
@@ -3513,7 +3514,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         // console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, ApiUrl)){
           return;
         }
         if(output){
@@ -3574,7 +3575,7 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(this.validateUser(output)){
+        if(this.validateUser(output, ApiUrl)){
           return;
         }
         if(output){
@@ -3621,7 +3622,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, api)){
           return;
         }
         if(output ){
@@ -3673,7 +3674,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, api)){
           return;
         }
         if(output ){
@@ -3721,7 +3722,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, api)){
           return;
         }
         if(output ){ //output.Table[0].Code
@@ -3771,7 +3772,7 @@ deg2rad(deg) {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
-        if(this.validateUser(output)){
+        if(this.validateUser(output, api)){
           return;
         }
         if(output ){

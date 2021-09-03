@@ -136,7 +136,7 @@ export class TamsmyattendancelogsPage implements OnInit {
       "MAppId": "TAMS",
       "HostIc": hostId,
       "START": this.myAttendanceLogsList.length === 0? 0: this.myAttendanceLogsList.length + 1,
-      "LIMIT": 50,
+      "LIMIT": 500,
     };
     this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendanceLogs', this.isFetching? false: true, false, '').then(
       (val: any) => {

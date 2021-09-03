@@ -185,9 +185,9 @@ export class AccountMappingPage {
           if(invalidORG){
             this.STOPS = 'STOP2';
           } else {
-            var  ApiUrl = "http://124.217.235.107:1001/api/";
-            var CompanyId = "2";
-            var HostId = "VijayCalms";
+            var  ApiUrl = "http://124.217.235.107:2008/api";
+            var CompanyId = "11001";
+            var HostId = "vijay";
             var AppId = "1";
            var qrJsonString1 = "{\"ApiUrl\":\""+ApiUrl+ "\",\"CompanyId\":\"" + CompanyId + "\",\"HostId\":\""
            + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS+ "\"}";
@@ -1448,6 +1448,12 @@ export class AccountMappingPage {
           var result = JSON.parse(val+"");
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS,JSON.stringify(this.companyInfo));
           this.hostInfo = result.Table1[0];
+          if (!this.hostInfo.BRANCH_ID){
+            this.hostInfo.BRANCH_ID = result.Table2[0].RefBranchSeqId;
+          }
+          if (!this.hostInfo.HOST_ID){
+            this.hostInfo.HOST_ID = this.hostInfo.HOSTIC;
+          }
           this.hostImage =  JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno='+  Math.round(this.hostInfo.SEQID) + "&RefType=HP&Refresh="+ new Date().getTime();
           if(result && result.Table2 && result.Table2.length > 0){
             if(result.Table2[0].Active){
