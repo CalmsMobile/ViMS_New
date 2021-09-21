@@ -79,7 +79,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
     console.log('ionViewDidEnter UpcomingAppointmentPage');
     this.events.publishDataCompany({
       action: "page",
-      title:   "home-view",
+      title:   "home-tams",
       message: ''
     });
     this.showNotificationCount();
@@ -337,7 +337,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
         state: {
           passData: {
             appointment: list,
-            fromPage: 'home-view'
+            fromPage: 'home-tams'
           }
         }
       };
@@ -360,7 +360,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
           state: {
             passData: {
               appointment: aList,
-              fromPage: 'home-view'
+              fromPage: 'home-tams'
             }
           }
         };

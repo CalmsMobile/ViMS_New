@@ -181,7 +181,7 @@ export class AccountMappingPage {
     } else {
       loadinWeb = true;
     }
-    if (loadinWeb) {
+    if (!loadinWeb) {
       // if (!loadinWeb) {
       //   return;
       // }
@@ -516,6 +516,9 @@ export class AccountMappingPage {
       });
         alert.present();
         return;
+    }
+    if(!this.scannedJson.HostId){
+      this.scannedJson.HostId = this.scannedJson.HostIc;
     }
 
     if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.ACKAPPT){
@@ -1384,11 +1387,11 @@ export class AccountMappingPage {
                 this.navCtrl.navigateRoot('home-tams');
                 break;
               default:
-                this.navCtrl.navigateRoot('home-view');
+                this.navCtrl.navigateRoot('');
                 break;
             }
           }else{
-            this.navCtrl.navigateRoot('home-view');
+            this.navCtrl.navigateRoot('');
           }
 
         },
@@ -1454,6 +1457,12 @@ export class AccountMappingPage {
           var result = JSON.parse(val+"");
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS,JSON.stringify(this.companyInfo));
           this.hostInfo = result.Table1[0];
+          if (!this.hostInfo.BRANCH_ID){
+            this.hostInfo.BRANCH_ID = result.Table2[0].RefBranchSeqId;
+          }
+          if (!this.hostInfo.HOST_ID){
+            this.hostInfo.HOST_ID = this.hostInfo.HOSTIC;
+          }
           this.hostImage =  JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno='+  Math.round(this.hostInfo.SEQID) + "&RefType=HP&Refresh="+ new Date().getTime();
           if(result && result.Table2 && result.Table2.length > 0){
             if(result.Table2[0].Active){

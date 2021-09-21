@@ -96,6 +96,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 	doRefresh(refresher) {
     // this.OffSet = this.OffSet + 20;
 
+		this.OffSet = 0;
     this.getAppointmentHistory(refresher);
     //setTimeout(()=>{refresher.target.complete();},2000)
 	}

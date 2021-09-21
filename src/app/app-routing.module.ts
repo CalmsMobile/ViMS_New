@@ -202,7 +202,8 @@ const routes: Routes = [
   {
     path: 'home-tams',
     loadChildren: () => import('./pages/home-tams/home-tams.module').then( m => m.HomeTAMSPageModule)
-  },  {
+  },
+  {
     path: 'tamsmyschedule',
     loadChildren: () => import('./pages/tamsmyschedule/tamsmyschedule.module').then( m => m.TamsmyschedulePageModule)
   },

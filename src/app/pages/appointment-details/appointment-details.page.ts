@@ -265,20 +265,7 @@ export class AppointmentDetailsPage implements OnInit {
   }
 
   goBack() {
-
-    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-      if (qrData) {
-        const QRObj = JSON.parse(qrData);
-        if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
-          this.router.navigateByUrl('home-tams');
-        } if (QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY) {
-          this.navCtrl.navigateRoot('home-view');
-        }else {
-          this.router.navigateByUrl(this.fromPage);
-        }
-      } else {
-        this.navCtrl.pop();
-      }
+    this.navCtrl.pop();
     console.log('goBack ');
   }
 

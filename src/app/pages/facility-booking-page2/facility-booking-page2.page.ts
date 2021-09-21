@@ -106,7 +106,7 @@ export class FacilityBookingPage2Page implements OnInit {
         try{
           if(qrInfo && JSON.parse(qrInfo) && JSON.parse(qrInfo).MAppId){
             this.QRObj = JSON.parse(qrInfo);
-            this.GetHostAppSettings(this.QRObj.MAppId);
+            this.GetHostAppSettings();
           }
           // this.hostSettings.NameRequired = false;
         }catch(e){
@@ -196,9 +196,9 @@ export class FacilityBookingPage2Page implements OnInit {
     }
   }
 
-  GetHostAppSettings(MAppId){
+  GetHostAppSettings(){
     var params  = {
-       "MAppId": MAppId,
+       "MAppId": AppSettings.LOGINTYPES.FACILITY,
        "HostIc":""
      }
      var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -210,11 +210,7 @@ export class FacilityBookingPage2Page implements OnInit {
            if(result){
             console.log(JSON.stringify(val));
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS,JSON.stringify(val));
-            if(MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-              this.hostSettings = result.Table1[0];
-            }else{
-              this.hostSettings = result.Table1[0];
-            }
+            this.hostSettings = result.Table1[0];
             this.hostSettings.isFacility = true;
           }
          }catch(e){
@@ -622,7 +618,7 @@ export class FacilityBookingPage2Page implements OnInit {
           title: '',
           message: ''
         });
-        this.navCtrl.navigateRoot('home-view').then((data)=> {
+        this.navCtrl.navigateRoot('').then((data)=> {
           if(this.QRObj && this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
             this.router.navigateByUrl("facility-booking-history");
           }else{
