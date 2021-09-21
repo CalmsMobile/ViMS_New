@@ -195,7 +195,7 @@ export class AppComponent {
               console.log("calling login Page: " + hostData);
               return;
             }
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
+            //this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
             this.menu.enable(true, "myLeftMenu");
             this.navCtrl.navigateRoot("");;
             break;
@@ -205,7 +205,7 @@ export class AppComponent {
               console.log("calling login Page: " + hostData);
               return;
             }
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP);
+            //this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP);
             this.menu.enable(true, "myLeftMenu");
             this.navCtrl.navigateRoot("home-view");;
             break;
@@ -216,7 +216,7 @@ export class AppComponent {
               console.log("calling login Page: " + hostData);
               return;
             }
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
+            //this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
             this.getSettingsForTams();
             this.menu.enable(true, "myLeftMenu");
             this.navCtrl.navigateRoot("home-tams");;
@@ -227,9 +227,8 @@ export class AppComponent {
               console.log("calling login Page: " + hostData);
               return;
             }
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.FACILITY);
+            //this.GetHostAppSettings(AppSettings.LOGINTYPES.FACILITY);
             this.menu.enable(true, "myLeftMenu");
-            this.navCtrl.navigateRoot("home-view");;
             break;
           case AppSettings.LOGINTYPES.DISPLAYAPP:
             this.navCtrl.navigateRoot("facility-kiosk-display");;

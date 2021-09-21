@@ -270,12 +270,14 @@ export class UpcomingAppointmentPagePage implements OnInit {
 			"lastSyncDate":"",
 			"OffSet": ""+ this.OffSet,
 			"Rows":"20000"
-		};
+    };
+    console.log('syncAppointment param -> ' + JSON.stringify(params));
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.syncAppointment(params, true, false).then(
 				(val) => {
           this.loadingFinished = true;
 					var aList = JSON.parse(val.toString());
+          console.log('syncAppointment -->' + JSON.stringify(aList));
 					if(refresher){
             // this.appointments = aList.concat(this.appointments);
             this.appointments = aList;
