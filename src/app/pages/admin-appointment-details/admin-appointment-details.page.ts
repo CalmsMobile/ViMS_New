@@ -823,7 +823,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
             return;
           }
         }
-        this.navCtrl.navigateRoot('home-view');
+        this.navCtrl.navigateRoot('');
         setTimeout(() => {
           this.events.publishDataCompany({
             action: 'refreshApproveList',

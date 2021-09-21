@@ -256,6 +256,7 @@ deg2rad(deg) {
         message: data.Table[0].Description
       });
       result = true;
+      this.dismissLoading();
     }
     return result;
   }
@@ -711,6 +712,7 @@ deg2rad(deg) {
           if( output.Table2 && output.Table2.length > 0 && output.Table2[0].Active){
             resolve(JSON.stringify(output));
           }else{
+            this.dismissLoading();
             this.eventsService.publishDataCompany(
               {
                 action: "user:created",

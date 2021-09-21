@@ -618,7 +618,7 @@ export class FacilityBookingPage2Page implements OnInit {
           title: '',
           message: ''
         });
-        this.navCtrl.navigateRoot('home-view').then((data)=> {
+        this.navCtrl.navigateRoot('').then((data)=> {
           if(this.QRObj && this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
             this.router.navigateByUrl("facility-booking-history");
           }else{

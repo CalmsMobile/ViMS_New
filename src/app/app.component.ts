@@ -56,9 +56,9 @@ export class AppComponent {
 
     events.observeDataCompany().subscribe(async (data: any) => {
       if (data.title === "addAppointment") {
-        this.navCtrl.navigateRoot('home-view');
+        this.navCtrl.navigateRoot('');
         setTimeout(() => {
-          this.navCtrl.navigateRoot('home-view');
+          this.navCtrl.navigateRoot('');
         }, 1000);
       } else if (data.title === "ReloadMenu") {
         this.loadMenuData(true);
@@ -193,43 +193,44 @@ export class AppComponent {
             var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
             if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
               console.log("calling login Page: " + hostData);
+              this.navCtrl.navigateRoot("account-mapping");
               return;
             }
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
+            // this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
             this.menu.enable(true, "myLeftMenu");
-            this.navCtrl.navigateRoot("");
             break;
           case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
             hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
             if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
               console.log("calling login Page: " + hostData);
+              this.navCtrl.navigateRoot("account-mapping");
               return;
             }
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP);
+            // this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP);
             this.menu.enable(true, "myLeftMenu");
-            this.navCtrl.navigateRoot("home-view");;
             break;
           case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
             this.showHeader = false;
             hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
             if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
               console.log("calling login Page: " + hostData);
+              this.navCtrl.navigateRoot("account-mapping");
               return;
             }
             this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
             this.getSettingsForTams();
             this.menu.enable(true, "myLeftMenu");
-            this.navCtrl.navigateRoot("home-tams");;
+            this.navCtrl.navigateRoot("home-tams");
             break;
           case AppSettings.LOGINTYPES.FACILITY:
             hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
             if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
               console.log("calling login Page: " + hostData);
+              this.navCtrl.navigateRoot("account-mapping");
               return;
             }
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.FACILITY);
+            // this.GetHostAppSettings(AppSettings.LOGINTYPES.FACILITY);
             this.menu.enable(true, "myLeftMenu");
-            this.navCtrl.navigateRoot("home-view");;
             break;
           case AppSettings.LOGINTYPES.DISPLAYAPP:
             this.navCtrl.navigateRoot("facility-kiosk-display");;
@@ -244,6 +245,7 @@ export class AppComponent {
             hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS);
             if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).MAppDevSeqId) {
               console.log("calling login Page: " + hostData);
+              this.navCtrl.navigateRoot("account-mapping");
               this.navCtrl.navigateRoot("login");
             } else {
               this.navCtrl.navigateRoot("security-dash-board-page");

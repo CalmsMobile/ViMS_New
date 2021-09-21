@@ -185,12 +185,12 @@ export class AccountMappingPage {
           if(invalidORG){
             this.STOPS = 'STOP2';
           } else {
-            var  ApiUrl = "http://124.217.235.107:2008/api";
+            var  ApiUrl = "http://124.217.235.107:1001/api/";
             var CompanyId = "11001";
-            var HostId = "vijay";
+            var HostId = "Vijay";
             var AppId = "1";
            var qrJsonString1 = "{\"ApiUrl\":\""+ApiUrl+ "\",\"CompanyId\":\"" + CompanyId + "\",\"HostId\":\""
-           + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS+ "\"}";
+           + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.FACILITY+ "\"}";
           // var qrJsonString1 = "{\"CompanyId\":\"1\",\"HostId\":\""+AppSettings.TEST_DATA.SAMPLE_HOST_IC+"\",\"AppId\":\"1\",\"ApiUrl\":\"http://124.217.235.107:2026\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP+ "\"}";
           // ACK
           // var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3066\", \"MAppId\":\""+ AppSettings.LOGINTYPES.ACKAPPT+ "\", \"Location\":\"ACKDemo\"}";
@@ -510,6 +510,9 @@ export class AccountMappingPage {
       });
         alert.present();
         return;
+    }
+    if(!this.scannedJson.HostId){
+      this.scannedJson.HostId = this.scannedJson.HostIc;
     }
 
     if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.ACKAPPT){
@@ -1378,11 +1381,11 @@ export class AccountMappingPage {
                 this.navCtrl.navigateRoot('home-tams');
                 break;
               default:
-                this.navCtrl.navigateRoot('home-view');
+                this.navCtrl.navigateRoot('');
                 break;
             }
           }else{
-            this.navCtrl.navigateRoot('home-view');
+            this.navCtrl.navigateRoot('');
           }
 
         },

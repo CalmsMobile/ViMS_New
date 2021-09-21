@@ -6,9 +6,9 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
-  { path: '', redirectTo: 'home-tams', pathMatch: 'full' },
+  // { path: '', redirectTo: 'home-view', pathMatch: 'full' },
   {
-    path: 'home-view',
+    path: '',
     loadChildren: () => import('./pages/home-view/home-view.module').then( m => m.HomeViewPageModule)
   },
   {

@@ -122,10 +122,7 @@ export class HomeViewPage implements OnInit {
       title: "ReloadMenu",
       message: "ReloadMenu"
     });
-    const settings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-    if (!settings) {
-      this.GetHostAppSettings(this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS ? AppSettings.LOGINTYPES.HOSTAPPT: this.QRObj.MAppId);
-    }
+    this.GetHostAppSettings(this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS ? AppSettings.LOGINTYPES.HOSTAPPT: this.QRObj.MAppId);
 
   }
 

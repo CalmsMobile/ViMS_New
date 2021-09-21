@@ -782,7 +782,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
             this.showAlert(this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS']);
             this.apiProvider.dismissLoading();
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-            this.navCtrl.navigateRoot('home-view');
+            this.navCtrl.navigateRoot('');
             return;
         }
         let alert = await this.alertCtrl.create({
@@ -847,7 +847,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
             message: messageArray
           });
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-          this.navCtrl.navigateRoot('home-view').then((data)=>{
+          this.navCtrl.navigateRoot('').then((data)=>{
             setTimeout(() => {
               this.events.publishDataCompany({
                 action:'RefreshUpcoming',

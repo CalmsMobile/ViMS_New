@@ -523,7 +523,7 @@ export class AddAppointmentStep2Page implements OnInit {
           if (this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS) {
             this.navCtrl.navigateRoot('home-tams');
           } else {
-            this.navCtrl.navigateRoot('home-view');
+            this.navCtrl.navigateRoot('');
           }
 
           return;
@@ -729,7 +729,7 @@ export class AddAppointmentStep2Page implements OnInit {
               this.apiProvider.dismissLoading();
             });
           } else {
-            this.navCtrl.navigateRoot('home-view').then((data)=>{
+            this.navCtrl.navigateRoot('').then((data)=>{
               setTimeout(() => {
                 this.events.publishDataCompany({
                   action:'RefreshUpcoming',
