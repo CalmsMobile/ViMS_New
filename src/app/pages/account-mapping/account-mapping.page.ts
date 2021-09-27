@@ -170,7 +170,7 @@ export class AccountMappingPage {
       });
     }
   }
-  async takeActForScanQR(){
+  takeActForScanQR(){
 
     let invalidQRCode = true;
     let invalidORG = true;
@@ -215,7 +215,7 @@ export class AccountMappingPage {
               mode: CryptoJS.mode.CBC,
               padding: CryptoJS.pad.Pkcs7
           });
-            // var qrCodeString = "" + encrypted;
+            var qrCodeString = "" + encrypted;
             // 1001 HOST APP
             // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohZjEU6Evg3rcMxk+/Ugdcex2hFM6P4LE2zMmCF/XoF6kbtLZRrN6d2wZtKDKw7wzf5ZU6E1Ud9RSlXHW9nXhMnyNXs3gJR/8IT4DDzEQdmP+K6TVrX4YXzUbuP+qEN6/U=';
             //HOSTWF 1001
@@ -243,21 +243,7 @@ export class AccountMappingPage {
             this.processJson(qrCodeString);
           }
         } else{
-          let invalidQRConfirm = await this.alertCtrl.create({
-            header: 'Error !',
-            message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-            cssClass: '',
-
-            buttons: [
-              {
-                text: this.T_SVC['COMMON.OK'],
-                role: 'cancel',
-                handler: () => {
-                }
-              }
-            ]
-          });
-          invalidQRConfirm.present();
+          this.showAlert();
         }
     }else {
       this.options = {
@@ -489,6 +475,24 @@ export class AccountMappingPage {
         (await invalidQRConfirm).present();
     });
     }
+  }
+
+  async showAlert(){
+    let invalidQRConfirm = await this.alertCtrl.create({
+      header: 'Error !',
+      message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
+      cssClass: '',
+
+      buttons: [
+        {
+          text: this.T_SVC['COMMON.OK'],
+          role: 'cancel',
+          handler: () => {
+          }
+        }
+      ]
+    });
+    invalidQRConfirm.present();
   }
 
   async processJson(qrCodeString){
