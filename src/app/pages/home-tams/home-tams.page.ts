@@ -241,8 +241,8 @@ export class HomeTAMSPage implements OnInit {
     const hostData = localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     const cmpnyData = localStorage.getItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS);
     if (hostData) {
-      var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/ImageHandler.ashx?RefSlno='
-      + JSON.parse(hostData).SEQID + "&RefType=HP&Refresh=" + new Date().getTime();
+      var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/PortalImageHandler.ashx?RefSlno='
+      + JSON.parse(hostData).SEQID + "&ScreenType=30&Refresh=" + new Date().getTime();
       this.hostObj.hostImage = tempImage;
       this.hostObj.HOSTNAME = JSON.parse(hostData).HOSTNAME;
       this.hostObj.HOST_EMAIL = JSON.parse(hostData).HOST_EMAIL;

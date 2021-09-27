@@ -40,14 +40,14 @@ ion-header.transparent-header::after {
   }
 
   100% {
-    background-color: #eb445a !important;
+    background-color: var(--ion-color-primary);
   }
 }
 .transparent-header ion-navbar.active .toolbar-background,
 .transparent-header ion-navbar.active {
   animation-name: color-change;
   animation-duration: 400ms;
-  background-color: #eb445a !important;
+  background-color: var(--ion-color-primary);
 }
 ion-header.transparent-header.active::after {
   background-image: initial;

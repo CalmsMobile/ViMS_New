@@ -1,10 +1,10 @@
 
 <ion-header>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{title}}</ion-title>
   </ion-toolbar>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-searchbar [(ngModel)]="queryText"
     placeholder="{{'SECURITY_APP.SEARCH_VISITOR' | translate}}" (ionChange)="getVisitorsBySearch(queryText)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
         <!-- (ionChange)="updateSchedule()" -->
@@ -50,18 +50,18 @@
                     </ion-col>
                     <ion-col size="8" style="padding-bottom: 0px;">
                       <div class="div-apt-center">
-                        <ion-icon slot="start" color="danger" name="person-outline" class="apt-text-icons"></ion-icon>
+                        <ion-icon slot="start" color="primary" name="person-outline" class="apt-text-icons"></ion-icon>
                         <p class="apt-center-title">{{list.VisitorName}}</p>
                       </div>
 
                       <div class="div-apt-center">
-                        <ion-icon slot="start" color="danger" name="car-outline" class="apt-text-icons"></ion-icon>
+                        <ion-icon slot="start" color="primary" name="car-outline" class="apt-text-icons"></ion-icon>
                         <p class="apt-center-subtitle" *ngIf="list.VehicleNo">Vehicle No : {{list.VehicleNo}}</p>
                         <p class="apt-center-subtitle" *ngIf="!list.VehicleNo">&nbsp;&nbsp;--</p>
                       </div>
 
                       <div class="div-apt-center">
-                        <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
+                        <ion-icon slot="start" color="primary" name="reader-outline" class="apt-text-icons"></ion-icon>
                         <p class="apt-center-subtitle" *ngIf="list.Purpose">{{list.Purpose}}</p>
                         <p class="apt-center-subtitle" *ngIf="!list.Purpose">&nbsp;&nbsp;--</p>
                       </div>

@@ -95,7 +95,6 @@ export class SignPadIdlePagePage implements OnInit {
     if(QRData){
       var cObj = JSON.parse(QRData);
       if(cObj){
-        // this.QRData = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno='+ cObj.seq_id +"&RefType=CP&Refresh="+ new Date().getTime();
         this.QRData = cObj
       }
 

@@ -158,7 +158,7 @@ $global-opacity: (
 }
 
 .action-sheet-button-inner.sc-ion-action-sheet-ios {
-  color: #ec407a;
+  color: --var(--ion-color-primary);
   font-size: 14px;
 }
 
@@ -614,11 +614,13 @@ ion-icon {
 }
 
 .monthview-primary-with-event {
-  background-color: #e91e63 !important;
+  background-color: var(--ion-color-primary) !important;
 }
 
 .monthview-selected {
-  background-color: #93133e !important;
+  background-color: #f0f0f0 !important;
+  border: 4px solid var(--ion-color-primary) !important;
+  color: var(--ion-color-primary) !important;
 }
 
 .hostAccessModal {
@@ -1300,7 +1302,7 @@ ion-alert {
   }
 }
 [theme-text-color] {
-  color: #ff515a;
+  color: var(--ion-color-primary);
 }
 
 [text-color-white] {
@@ -1336,7 +1338,6 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   background-size: cover;
   background-position: center;
   // background-color: transparent !important;
-  background: linear-gradient(to bottom, #ff3399 0%, #ff0000 100%);
   // @include darkening-blend-mode;
   [header-title] {
     padding-right: 10%;

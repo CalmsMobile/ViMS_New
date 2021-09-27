@@ -63,7 +63,7 @@ export class AppComponent {
       } else if (data.title === "ReloadMenu") {
         this.loadMenuData(true);
       } else if (data.title === "Update Profile Picture") {
-        var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/ImageHandler.ashx?RefSlno=' + data.message + "&RefType=HP&Refresh=" + new Date().getTime();
+        var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/PortalImageHandler.ashx?RefSlno=' + data.message + "&ScreenType=30&Refresh=" + new Date().getTime();
         this.params.hostImage = tempImage;
       } else if (data.title === "AdminEnabled") {
         this.navCtrl.navigateRoot("admin-home");

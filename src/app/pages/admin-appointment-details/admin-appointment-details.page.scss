@@ -10,7 +10,7 @@
     margin: 0px !important;
   }
   [theme-text-color] {
-    color: #ff515a !important;
+    color: var(--ion-color-primary) !important;
   }
 }
 
@@ -182,7 +182,7 @@ ion-col {
 
 ion-grid {
   ion-icon {
-    color: #eb445a !important;
+    color: var(--ion-color-primary) !important;
   }
   p {
     font-size: 14px !important;

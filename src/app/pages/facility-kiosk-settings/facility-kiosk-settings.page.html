@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" style="padding-bottom: 0px !important;
     padding-top: 0px !important;" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>Settings</ion-title>
@@ -11,17 +11,17 @@
       <span>Basic Information</span>
     </ion-item-divider>
     <ion-item>
-      <ion-icon class='siva-icon-mobile' slot="start" color="danger"></ion-icon>
+      <ion-icon class='siva-icon-mobile' slot="start" color="primary"></ion-icon>
       <ion-label color="gray">Device ID</ion-label>
       <ion-note slot="end">{{deviceId}}</ion-note>
    </ion-item>
    <!-- <ion-button ion-item>
-      <ion-icon class='siva-icon-connectdevelop' slot="start" color="danger"></ion-icon>
+      <ion-icon class='siva-icon-connectdevelop' slot="start" color="primary"></ion-icon>
       <ion-label color="gray">Mapping ID</ion-label>
       <ion-note slot="end"></ion-note>
    </ion-button> -->
    <ion-item>
-      <ion-icon class='siva-icon-info-circled-1' slot="start" color="danger"></ion-icon>
+      <ion-icon class='siva-icon-info-circled-1' slot="start" color="primary"></ion-icon>
     <ion-label color="gray">App Version</ion-label>
     <ion-note slot="end">{{'APP_VERSION' | translate}}</ion-note>
    </ion-item>
@@ -29,11 +29,11 @@
       <span>Controls</span>
     </ion-item-divider>
     <!-- <ion-button ion-item>
-        <ion-icon class='siva-icon-help-circled-1' slot="start" color="danger"></ion-icon>
+        <ion-icon class='siva-icon-help-circled-1' slot="start" color="primary"></ion-icon>
         <ion-label>FAQ</ion-label>
       </ion-button> -->
       <ion-item>
-          <ion-icon class='siva-icon-fort-awesome' color="danger" slot="start"></ion-icon>
+          <ion-icon class='siva-icon-fort-awesome' color="primary" slot="start"></ion-icon>
           <ion-label color="gray">Select Your Facility</ion-label>
           <ion-select mode="ios" [(ngModel)]="SELECTED_FACILITIE.FacilityCode"
               (ionChange)="onChangeFacility()"
@@ -46,20 +46,20 @@
           </ion-select>
         </ion-item>
     <!-- <ion-button ion-item (click)="goToUserAbout()">
-        <ion-icon class='siva-icon-plug' slot="start" color="danger"></ion-icon>
+        <ion-icon class='siva-icon-plug' slot="start" color="primary"></ion-icon>
         <ion-label color="gray">Disconnect this device</ion-label>
       </ion-button> -->
     <ion-item (click)="logoutMe()">
-        <ion-icon class='siva-icon-logout-2' slot="start" color="danger"></ion-icon>
-        <ion-label color="danger">Exit from account</ion-label>
+        <ion-icon class='siva-icon-logout-2' slot="start" color="primary"></ion-icon>
+        <ion-label color="primary">Exit from account</ion-label>
     </ion-item>
       <!-- <ion-item >
-          <ion-icon class='siva-icon-adjust' slot="start" color="danger"></ion-icon>
+          <ion-icon class='siva-icon-adjust' slot="start" color="primary"></ion-icon>
           <ion-label>Enable Option 1</ion-label>
           <ion-toggle color="secondary"></ion-toggle>
         </ion-item>
         <ion-item >
-          <ion-icon class='siva-icon-list-add' slot="start" color="danger"></ion-icon>
+          <ion-icon class='siva-icon-list-add' slot="start" color="primary"></ion-icon>
           <ion-label>Enable Option 2</ion-label>
           <ion-toggle color="secondary"></ion-toggle>
         </ion-item>

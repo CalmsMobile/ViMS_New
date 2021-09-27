@@ -376,7 +376,9 @@ export class SettingsViewPagePage implements OnInit {
                   message: "ReloadMenu"
                 });
                 this.getMasterdetails();
-                if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS) {
+                // this.statusBar.backgroundColorByHexString("#0d568b");
+                // this.themeSwitcher.setTheme('Theme1', "#0d568b");
+                if (QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY) {
                   this.getSettingsForTams();
                   this.getMyAttendanceWhitelistedLocations();
                 }

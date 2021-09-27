@@ -5,7 +5,7 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-title>Safety Brief</ion-title>
     <ion-buttons slot="end">
       <ion-button slot="icon-only" style="font-size: 25px;" (click)="addMoreVisitor()" *ngIf="false">
@@ -73,11 +73,11 @@
           </ion-card>
         </ion-item>
         <ion-item-options side="end">
-            <ion-button color="danger" (click)="removeVisitor(slideDOM, item)" style="text-transform: none">
+            <ion-button color="primary" (click)="removeVisitor(slideDOM, item)" style="text-transform: none">
                 <ion-icon name="trash" style="font-size: 18px;"></ion-icon>
                 Remove
               </ion-button>
-          <!-- <ion-button no-padding color="danger" no-border (click)="editVisitors(slideDOM, 'edit', item)">
+          <!-- <ion-button no-padding color="primary" no-border (click)="editVisitors(slideDOM, 'edit', item)">
               <ion-icon name="delete"></ion-icon>
           </ion-button> -->
         </ion-item-options>

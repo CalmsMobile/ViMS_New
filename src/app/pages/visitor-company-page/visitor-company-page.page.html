@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
       <ion-title>{{'VISITORS_COMPANY.TITLE' | translate}}</ion-title>
       <ion-buttons *ngIf= "false" end>
@@ -15,7 +15,7 @@
           </ion-button>
       </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
       <ion-searchbar [(ngModel)]="VM.queryText"
       placeholder="{{'VISITORS_COMPANY.SEARCH_COMPANY' | translate}}" (ionChange)="getVisitorsCompanyBySearch(true, null)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
           <!-- (ionChange)="updateSchedule()" -->

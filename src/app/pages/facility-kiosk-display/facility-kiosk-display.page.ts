@@ -131,7 +131,7 @@ export class FacilityKioskDisplayPage implements OnInit {
     //     this.updateThemeScreen();
     // }, (err) => {
     //   this.alertCtrl.create({
-    //     header: '<h2 color="danger">Error !</h2>',
+    //     header: '<h2 color="primary">Error !</h2>',
     //     subheader: '' + err,
     //     buttons: ['OK']
     //   }).present();

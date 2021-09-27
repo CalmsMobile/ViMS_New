@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{'MANG_VISITORS.TITLE' | translate}}</ion-title>
     <ion-buttons slot="end" >
@@ -11,7 +11,7 @@
         </ion-fab-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-searchbar mode="ios" placeholder="{{'MANG_VISITORS.SEARCH_PLACE' | translate}}" (ionChange)="getVisitorsBySearch($event, true, null)" (ionClear)="onCancel()" (ionCancel)="onCancel()" class="animated fadeIn delay-1s">
         <!-- (ionChange)="updateSchedule()" -->
     </ion-searchbar>
@@ -50,8 +50,8 @@
                 </ion-checkbox>
             </ion-item>
             <ion-item-options side="end">
-                <!-- <ion-button slot="icon-only" color="danger" fill="outline" no-border (click)="editVisitors(slideDOM, 'delete', item)">
-                <ion-icon color="danger" class="siva-icon-trash-empty"></ion-icon>
+                <!-- <ion-button slot="icon-only" color="primary" fill="outline" no-border (click)="editVisitors(slideDOM, 'delete', item)">
+                <ion-icon color="primary" class="siva-icon-trash-empty"></ion-icon>
               </ion-button> -->
               <ion-button slot="icon-only" style="align-self: center;" no-padding color="primary" fill="clear" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                   <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>

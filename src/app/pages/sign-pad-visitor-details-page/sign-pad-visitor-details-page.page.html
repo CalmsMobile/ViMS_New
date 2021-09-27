@@ -63,7 +63,7 @@
                   <img style ="margin: 0 auto;" onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize !== tab_land)}"  src="../../assets/images/user.png"/>
               </ion-avatar>
               <ion-avatar style="margin-top: 0px;" [ngStyle]= "{'margin-bottom' : appSettings.ImageCaptureEnabled? '24px' : '0px'}" *ngIf = "visitor.HostSeqId && appSettings.VisitorDetails.HostImage.value" class="ion-text-center" margin-bottom style="margin-top: 0px;">
-                  <img style ="margin: 0 auto;" onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize !== tab_land)}" [src]="logo+visitor.HostSeqId+ RefType"/>
+                  <img style ="margin: 0 auto;" onError="this.src='../../assets/images/user.png';" [ngClass]="{ 'profile-imageTabLand': (screenSize == tab_land), 'profile-imageNormalLand': (screenSize !== tab_land)}" [src]="hostlogo+visitor.HostSeqId+ RefType"/>
               </ion-avatar>
               <ion-item lines="none" style="margin-top: 10px;">
                   <div slot="start" class="leftDiv">Name</div>

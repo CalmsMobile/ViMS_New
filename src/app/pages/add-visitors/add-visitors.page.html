@@ -2,7 +2,7 @@
   <ion-navbar class="" [ngClass]="{'active':isClassActive()}">
     <ion-toolbar color="primary">
       <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
-      <ion-title color="danger" style="color: white;">{{"ADD_VISITORS.TITLE" | translate}}</ion-title>
+      <ion-title color="primary" style="color: white;">{{"ADD_VISITORS.TITLE" | translate}}</ion-title>
       <ion-buttons slot="end">
         <ion-button (click)="getPhoneBookContact()">
           <!-- <ion-icon name="contact"></ion-icon> -->
@@ -53,7 +53,7 @@
           <!---Input field username-->
 
           <!-- <ion-item lines="none" no-padding transparent *ngIf= "hostSettings || hostSettings.NameRequired">
-              <ion-label color="danger" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
+              <ion-label color="primary" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}}</ion-label>
               <ion-input no-lines required type="text" [(ngModel)]="visitorInfoModal.visitor_name" placeholder="{{'ADD_VISITORS.LAB_PH_USER_NAME' | translate}}"
               formControlName="username" [class.error1]="!visitorProfile.controls.username.valid && visitorProfile.controls.username.dirty"
               ></ion-input>
@@ -237,12 +237,12 @@
               </ion-select> -->
             </ion-item>
           </div>
-          <ion-button *ngIf="!visitor" bottom right icon-right align-items-end shape="round" fill="solid" color="danger"
+          <ion-button *ngIf="!visitor" bottom right icon-right align-items-end shape="round" fill="solid" color="primary"
             style="margin-left: auto;margin-top:15px; display: block;" type="submit"
             [disabled]="visitorProfile.invalid">
             {{'COMMON.ADD' | translate}}</ion-button>
           <ion-button *ngIf="visitor" bottom right icon-right align-items-end shape="round" fill="outline"
-            color="danger" style="margin-left: auto;margin-top:15px; display: block;" type="submit"
+            color="primary" style="margin-left: auto;margin-top:15px; display: block;" type="submit"
             [disabled]="visitorProfile.invalid">
             {{'EDIT_VISITOR.UPDATE' | translate}}</ion-button>
         </ion-col>

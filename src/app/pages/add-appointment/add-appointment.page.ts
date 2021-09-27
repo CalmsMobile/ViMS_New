@@ -21,9 +21,10 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
   // @ViewChild(Navbar) navBar: Navbar;
   @ViewChild(IonContent) content: IonContent;
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
+  hostimageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
   imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
-  imageURLTypeHOST = '&RefType=HP&Refresh='+ new Date().getTime();
+  imageURLTypeHOST = '&ScreenType=30&Refresh='+ new Date().getTime();
   imageURLTypeVPB = '&RefType=VPB&Refresh='+ new Date().getTime();
   newImage = "&tes='test'";
   addAppointmentModel = new AddAppointmentModel();
