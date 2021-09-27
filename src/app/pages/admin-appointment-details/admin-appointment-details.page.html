@@ -1,7 +1,7 @@
 
 <ion-header>
 
-    <ion-toolbar color="danger">
+    <ion-toolbar color="primary">
       <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
       <ion-title>{{'ALERT_TEXT.APPOINTMENT_DETAILS' | translate }}</ion-title>
     </ion-toolbar>
@@ -33,7 +33,7 @@
               <!-- <ion-icon color="secondary" class="iconiconClass" name="share-outline" (click) = "shareQR(visitors)" ></ion-icon> -->
               <ion-icon color="success" class="iconiconClass" name="thumbs-up-outline"
               (click)="showChangeAppointmentStatusAlert('Approved', '', visitors.VisitorBookingSeqId)"></ion-icon>
-              <ion-icon color="danger" class="iconiconClass" name="thumbs-down-outline"
+              <ion-icon color="primary" class="iconiconClass" name="thumbs-down-outline"
               *ngIf="getShowRejectButton(visitors)"
               (click)="showChangeAppointmentStatusAlert('Cancelled', '', visitors.VisitorBookingSeqId)"></ion-icon>
             </div>

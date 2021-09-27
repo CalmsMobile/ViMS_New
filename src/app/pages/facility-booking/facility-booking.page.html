@@ -1,6 +1,6 @@
 
 <ion-header tra *ngIf = "true">
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{edit? ('FACILITY_BOOKING.U_TITLE' | translate): ('FACILITY_BOOKING.TITLE' | translate)}}</ion-title>
     <ion-buttons slot="end">
@@ -51,7 +51,7 @@
     </div>
     </div>
     <!-- <h2>{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</h2> -->
-    <ion-label *ngIf="false" style="    font-size: 16px;    margin-left: 5px;" color="danger">{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</ion-label>
+    <ion-label *ngIf="false" style="    font-size: 16px;    margin-left: 5px;" color="primary">{{'FACILITY_BOOKING.STEP2.CHECK_AVAILABLITY' | translate}}</ion-label>
     <ion-item *ngIf="false" no-lines no-padding transparent>
       <ion-select mode="ios" class="ionSelect" interface="action-sheet" (ionChange)="onChangeFacility($event)"
       style="font-size: 16px;" [(ngModel)]="FacilityCode" interface="action-sheet" placeholder="{{'FACILITY_BOOKING.STEP2.LAB_FACILITY_NAME' | translate}}">
@@ -98,7 +98,7 @@
                       margin-top: 5px;color: gray;" >{{item.HostExt}}</ion-label>
                     </div>
 
-                    <ion-button slot="end" shape="round" fill="outline" color="danger" style="width: 38px;
+                    <ion-button slot="end" shape="round" fill="outline" color="primary" style="width: 38px;
                     height: 38px;" (click)="removeVisitor(item)">
                         <ion-icon name="close-circle-outline" style="font-size: 35px;padding: 0px;
                         text-align: center;"></ion-icon>
@@ -113,7 +113,7 @@
         </ion-card>
     </ion-list>
     </div>
-    <!-- <ion-button bottom right icon-right align-items-end shape="round" fill="outline" color="danger"
+    <!-- <ion-button bottom right icon-right align-items-end shape="round" fill="outline" color="primary"
     style="padding: 14px 7px 14px 18px;height: 40px;margin-left: auto;display: block;"
     (click)="proceedToNextStep()" [disabled]="(VM.visitors.length == 0)">
         {{'ACC_MAPPING.PROCEED' | translate}}
@@ -126,7 +126,7 @@
 
 <ion-footer transparent>
     <ion-toolbar transparent>
-        <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="danger"
+        <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="primary"
         style="height: 40px;margin-left: auto;display: block;"
         (click)="proceedToNextStep()">
             {{'ACC_MAPPING.PROCEED' | translate}}

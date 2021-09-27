@@ -1,6 +1,6 @@
 <ng-template #template let-showEventDetail="showEventDetail"
  let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
- <ion-toolbar color="danger">
+ <ion-toolbar color="primary">
     <ion-title style="margin-left: -70px;">Appointments</ion-title>
    </ion-toolbar>
 	<ion-list has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false" style="margin:0px">
@@ -25,22 +25,22 @@
               </ion-col>
               <ion-col size="6" style="padding-bottom: 0px;" (click)="viewBooking(event.value.value)">
                 <div class="div-apt-center">
-                  <ion-icon slot="start" color="danger" name="person-outline" class="apt-text-icons"></ion-icon>
+                  <ion-icon slot="start" color="primary" name="person-outline" class="apt-text-icons"></ion-icon>
                   <ion-label class="apt-center-title">{{event.value.value[0].VISITOR_NAME}}</ion-label>
                 </div>
 
                 <div class="div-apt-center">
-                  <ion-icon slot="start" color="danger" name="reader-outline" class="apt-text-icons"></ion-icon>
+                  <ion-icon slot="start" color="primary" name="reader-outline" class="apt-text-icons"></ion-icon>
                   <ion-label class="apt-center-subtitle">{{event.value.value[0].REASON ? event.value.value[0].REASON:'&nbsp;&nbsp;--'}}</ion-label>
                 </div>
 
                 <div class="div-apt-center">
-                  <ion-icon slot="start" color="danger" name="call-outline" class="apt-text-icons"></ion-icon>
+                  <ion-icon slot="start" color="primary" name="call-outline" class="apt-text-icons"></ion-icon>
                   <ion-label class="apt-center-subtitle">{{event.value.value[0].TELEPHONE_NO ? event.value.value[0].TELEPHONE_NO:'&nbsp;&nbsp;--'}}</ion-label>
                 </div>
 
                 <div class="div-apt-center">
-                  <ion-icon slot="start" color="danger" name="mail-outline" class="apt-text-icons"></ion-icon>
+                  <ion-icon slot="start" color="primary" name="mail-outline" class="apt-text-icons"></ion-icon>
                   <ion-label class="apt-center-subtitle">{{event.value.value[0].EMAIL ? event.value.value[0].EMAIL:'&nbsp;&nbsp;--'}}</ion-label>
                 </div>
               </ion-col>
@@ -48,7 +48,7 @@
               <ion-col size="2" class="colIcons">
 
                 <div (click)="openTooltip($event, 'Visitors')" *ngIf="isAdmin">
-                  <!-- <ion-badge color="danger">3</ion-badge> -->
+                  <!-- <ion-badge color="primary">3</ion-badge> -->
                   <div class="outer-circle2">
                     <div class="inner-circle2">
                       <span id="inside-content">{{event.value.value.length}}</span>
@@ -98,7 +98,7 @@
 </ng-template>
 
 <ion-header>
-	<ion-toolbar color="danger">
+	<ion-toolbar color="primary">
     <ion-buttons slot="start" *ngIf="(QRObj.MAppId !== HOSTWTTAMS && QRObj.MAppId !== TAMS)">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -123,7 +123,7 @@
         </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-title>{{viewTitle}}</ion-title>
     <ion-buttons slot="end">
 			<ion-button [disabled]="isToday" (click)="today()">Today</ion-button>

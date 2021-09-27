@@ -23,9 +23,10 @@ export class SignPadVisitorDetailsPagePage implements OnInit {
   HostImage = "";
   visitor : any = {};
   logo = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
+  hostlogo = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=';
   coverImage = "assets/images/profile_bg.jpg";
   appSettings : any;
-  RefType = '&RefType=HP&Refresh='+ new Date().getTime();
+  RefType = '&ScreenType=30&Refresh='+ new Date().getTime();
   RefTypeVP= '&RefType=VP&Refresh='+ new Date().getTime();
   screenHeight = 1;
   screenWidth = 0;

@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>Facility TimeSlot</ion-title>
     <ion-buttons slot="end" *ngIf="showDone">
@@ -22,20 +22,20 @@
 <ion-content>
   <ion-card style="display:flex; padding: 10px;margin: 0px;border-radius: 0px;width: auto;">
     <ion-row>
-      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: #00a1e1;margin: 5px"></ion-col>
+      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: #00a1e1;margin: 5px;align-self: center;"></ion-col>
       <ion-col> <strong>Available</strong></ion-col>
     </ion-row>
     <ion-row>
-      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: red;    margin: 5px"></ion-col>
+      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: red;    margin: 5px;align-self: center;"></ion-col>
       <ion-col> <strong>Booked</strong></ion-col>
     </ion-row>
     <ion-row>
-      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: rgb(91, 93, 94);   margin: 5px">
+      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: rgb(91, 93, 94);   margin: 5px;align-self: center;">
       </ion-col>
       <ion-col> <strong>Expired</strong></ion-col>
     </ion-row>
     <ion-row>
-      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: rgb(26, 122, 151);   margin: 5px">
+      <ion-col style="max-width: 3px;max-height: 3px;border-radius: 50%;background: rgb(26, 122, 151);   margin: 5px;align-self: center;">
       </ion-col>
       <ion-col> <strong>Ended</strong></ion-col>
     </ion-row>
@@ -59,7 +59,7 @@
 
     <ion-grid [ngClass]="'activateButton'" style="margin-right: 1px;
     color: white;
-    background-color: #f53d3d;    margin: 0 auto;
+    background-color: var(--ion-color-primary);    margin: 0 auto;
 width: 100%;
 display: block;    padding: 5px;
 text-align: -webkit-center;">

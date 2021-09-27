@@ -1,6 +1,6 @@
 <ion-header>
 
-    <ion-toolbar color="danger">
+    <ion-toolbar color="primary">
         <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
         <ion-title>{{'ALERT_TEXT.APPOINTMENT_DETAILS' | translate }}</ion-title>
     </ion-toolbar>
@@ -25,7 +25,7 @@
                 justify-content: center;
                 display: block;
                 align-items: center;" onError="this.src='../../assets/images/user.png';"
-                    [src]="data.logo+visitors.SEQID + imageURLTypeHOST">
+                    [src]="data.hostlogo+visitors.SEQID + imageURLTypeHOST">
 
             <div>
               <ion-label (click)="openVisitorDetails(visitors)">{{visitors.Name}}</ion-label>
@@ -458,15 +458,15 @@
 
 
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" #fab *ngIf="Editable && !isPastAppointment">
-        <ion-fab-button ion-fab color="danger"><i class="siva-icon-ellipsis-vert" style="font-size: 22px;"></i>
+        <ion-fab-button ion-fab color="primary"><i class="siva-icon-ellipsis-vert" style="font-size: 22px;"></i>
         </ion-fab-button>
         <ion-fab-list side="top">
-            <ion-fab-button color="danger"
+            <ion-fab-button color="primary"
                 *ngIf="appointment && appointment[0] && !appointment[0].isFacilityAlone && appointment[0].Approval_Status === 'Approved'"
                 (click)="remindAppintment(fab)"><i class="siva-icon-calendar-1"></i></ion-fab-button>
             <ion-fab-button color="primary" (click)="editAppintment(fab)"><i class="siva-icon-pencil"></i>
             </ion-fab-button>
-            <ion-fab-button color="danger" (click)="deleteAppintment(fab, '')"><i class="siva-icon-trash-empty"></i>
+            <ion-fab-button color="primary" (click)="deleteAppintment(fab, '')"><i class="siva-icon-trash-empty"></i>
             </ion-fab-button>
         </ion-fab-list>
     </ion-fab>

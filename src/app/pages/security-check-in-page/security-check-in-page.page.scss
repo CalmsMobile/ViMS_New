@@ -23,7 +23,7 @@ ion-thumbnail {
   background-repeat: no-repeat !important;
   height: 180px;
   padding-top: 40px !important;
-  background: linear-gradient(to bottom, #ff3399 0%, #ff0000 100%);
+  background: var(--ion-color-primary);
 }
 .circle-pic {
   width: 92px;
@@ -55,14 +55,14 @@ ion-header.transparent-header::after {
   }
 
   100% {
-    background-color: #eb445a !important;
+    background-color: var(--ion-color-primary);
   }
 }
 .transparent-header ion-navbar.active .toolbar-background,
 .transparent-header ion-navbar.active {
   animation-name: color-change;
   animation-duration: 400ms;
-  background-color: #eb445a !important;
+  background-color: var(--ion-color-primary);
 }
 ion-header.transparent-header.active::after {
   background-image: initial;

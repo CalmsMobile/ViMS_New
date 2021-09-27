@@ -191,12 +191,12 @@ export class AccountMappingPage {
           if(invalidORG){
             this.STOPS = 'STOP2';
           } else {
-            var  ApiUrl = "http://210.3.134.76:1001/api/";
-            var CompanyId = "11001";
-            var HostId = "9404301";
+            var  ApiUrl = "http://124.217.235.107:1001/api/";
+            var CompanyId = "0";
+            var HostId = "VijayCalms";
             var AppId = "1";
            var qrJsonString1 = "{\"ApiUrl\":\""+ApiUrl+ "\",\"CompanyId\":\"" + CompanyId + "\",\"HostId\":\""
-           + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.FACILITY+ "\"}";
+           + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS+ "\"}";
           // var qrJsonString1 = "{\"CompanyId\":\"1\",\"HostId\":\""+AppSettings.TEST_DATA.SAMPLE_HOST_IC+"\",\"AppId\":\"1\",\"ApiUrl\":\"http://124.217.235.107:2026\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP+ "\"}";
           // ACK
           // var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3066\", \"MAppId\":\""+ AppSettings.LOGINTYPES.ACKAPPT+ "\", \"Location\":\"ACKDemo\"}";
@@ -341,7 +341,7 @@ export class AccountMappingPage {
                 console.log("val : "+JSON.stringify(val));
                 this.companyInfo = val;
                 window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS,JSON.stringify(this.companyInfo));
-                this.companyImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno='+Math.round(this.companyInfo.seq_id)+"&RefType=CP&Refresh="+ new Date().getTime();
+                this.companyImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno='+ this.scannedJson.CompanyId+"&ScreenType=20&Refresh="+ new Date().getTime();
 
                 if(this.scannedJson.MAppId){
                   switch(this.scannedJson.MAppId){
@@ -547,7 +547,7 @@ export class AccountMappingPage {
       (val) => {
         this.companyInfo = val;
         window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS,JSON.stringify(this.companyInfo));
-        this.companyImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno='+ Math.round(this.companyInfo.seq_id) +"&RefType=CP&Refresh="+ new Date().getTime();
+        this.companyImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno='+ this.scannedJson.CompanyId +"&ScreenType=20&Refresh="+ new Date().getTime();
         if(this.scannedJson.MAppId){
           switch(this.scannedJson.MAppId){
             case AppSettings.LOGINTYPES.HOSTAPPT:
@@ -1463,7 +1463,7 @@ export class AccountMappingPage {
           if (!this.hostInfo.HOST_ID){
             this.hostInfo.HOST_ID = this.hostInfo.HOSTIC;
           }
-          this.hostImage =  JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno='+  Math.round(this.hostInfo.SEQID) + "&RefType=HP&Refresh="+ new Date().getTime();
+          this.hostImage =  JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno='+  Math.round(this.hostInfo.SEQID) + "&ScreenType=30&Refresh="+ new Date().getTime();
           if(result && result.Table2 && result.Table2.length > 0){
             if(result.Table2[0].Active){
               this.VM.DevicePlatform = result.Table2[0].DevicePlatform;

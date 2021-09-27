@@ -1,6 +1,6 @@
 <ion-header>
 
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-title style="padding-left: 56px;">Visitor Details</ion-title>
     <ion-icon name="share-social-outline" slot="end" size="large" *ngIf="visitor && visitor.Approval_Status === 'Approved'" (click)="share()" style="margin-right: 15px;">
     </ion-icon>
@@ -16,59 +16,59 @@
         <ion-row>
           <ion-col size="12">
             <ion-label style="display: inline-flex;align-items: center;    font-weight: 600;">
-              <ion-icon slot="start" color="danger" name="person-outline"></ion-icon>
+              <ion-icon slot="start" color="primary" name="person-outline"></ion-icon>
               {{visitor.VISITOR_NAME? visitor.VISITOR_NAME :'&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
-              <ion-icon name="id-card-outline" slot="start" color="danger"></ion-icon>
+              <ion-icon name="id-card-outline" slot="start" color="primary"></ion-icon>
               {{visitor.VISITOR_IC? visitor.VISITOR_IC: '&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
-              <ion-icon name="copy-outline" slot="start" color="danger"></ion-icon>
+              <ion-icon name="copy-outline" slot="start" color="primary"></ion-icon>
               {{(visitor.Visitor_category ? visitor.Visitor_category : visitor.VisitorCategory?visitor.VisitorCategory:'&nbsp;&nbsp;--') }}
             </ion-label>
           </ion-col>
 
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
-              <ion-icon name="locate-outline" slot="start" color="danger"></ion-icon>
+              <ion-icon name="locate-outline" slot="start" color="primary"></ion-icon>
               {{visitor.Country?visitor.Country: '&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
 
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
-              <ion-icon name="business-outline" slot="start" color="danger"></ion-icon>
+              <ion-icon name="business-outline" slot="start" color="primary"></ion-icon>
               {{visitor.VISITOR_COMPANY? visitor.VISITOR_COMPANY :'&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
 
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
-              <ion-icon name="mail-outline" slot="start" color="danger"></ion-icon>
+              <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
               {{visitor.EMAIL? visitor.EMAIL :'&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
 
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
-              <ion-icon name="call-outline" slot="start" color="danger"></ion-icon>
+              <ion-icon name="call-outline" slot="start" color="primary"></ion-icon>
               {{visitor.TELEPHONE_NO ? visitor.TELEPHONE_NO :'&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
-              <ion-icon name="bicycle-outline" slot="start" color="danger"></ion-icon>
+              <ion-icon name="bicycle-outline" slot="start" color="primary"></ion-icon>
               {{visitor.PLATE_NUM ? visitor.PLATE_NUM :'&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
           <ion-col size="12">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
-              <ion-icon name="male-female-outline" slot="start" color="danger"></ion-icon>
+              <ion-icon name="male-female-outline" slot="start" color="primary"></ion-icon>
               {{(visitor.VISITOR_GENDER === 0 || visitor.VISITOR_GENDER === '0') ? 'Female': (visitor.VISITOR_GENDER === 1 || visitor.VISITOR_GENDER === '1') ? 'Male': 'Other' }}
             </ion-label>
           </ion-col>
@@ -78,8 +78,7 @@
       <ion-col size="4">
         <ion-row>
           <ion-col>
-            <img style="width: 82px;
-            height: 82px;" class="animated fadeInDown delay-1s qrCodeImage" onError="this.src='../../assets/images/user.png';"
+            <img style="width: 82px;height: 82px;    border-radius: 50%;" class="animated fadeInDown delay-1s qrCodeImage" onError="this.src='../../assets/images/user.png';"
           [src]="userImgPath" />
           </ion-col>
         </ion-row>
@@ -92,172 +91,10 @@
           display: block;"  [src]="qrCodePath">
           </ion-col>
         </ion-row>
-        <!-- <ion-row>
-          <ion-col>
-            <img class="animated fadeInDown delay-1s qrCodeImage" onError="this.src='../../assets/images/user.png';"
-          [src]="qrCodeString" />
-          </ion-col>
-        </ion-row> -->
       </ion-col>
     </ion-row>
 
   </ion-grid>
-
-
-  <!-- <div class="" style="padding: 5px;">
-    <ion-row>
-      <ion-col size="4">
-        <ion-label>Name</ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <ion-label text-wrap *ngIf="visitor.VISITOR_NAME == '' || visitor.VISITOR_NAME == undefined "> -- </ion-label>
-        <ion-label text-wrap *ngIf="visitor.VISITOR_NAME != '' || visitor.VISITOR_NAME != undefined ">
-          {{visitor.VISITOR_NAME}}</ion-label>
-
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <ion-label>IC</ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <ion-label text-wrap *ngIf="visitor.VISITOR_IC == '' || visitor.VISITOR_IC == undefined "> -- </ion-label>
-        <ion-label text-wrap *ngIf="visitor.VISITOR_IC != '' || visitor.VISITOR_IC != undefined ">{{visitor.VISITOR_IC}}
-        </ion-label>
-
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <ion-label>Category</ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <ion-label text-wrap *ngIf="visitor.VisitorCategory == '' || visitor.VisitorCategory == undefined "> --
-        </ion-label>
-        <ion-label text-wrap *ngIf="visitor.VisitorCategory != '' || visitor.VisitorCategory != undefined ">
-          {{visitor.VisitorCategory}}</ion-label>
-
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <ion-label>Designation</ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <ion-label text-wrap *ngIf="visitor.VisitorDesignation == '' || visitor.VisitorDesignation == undefined "> --
-        </ion-label>
-        <ion-label text-wrap *ngIf="visitor.VisitorDesignation != '' || visitor.VisitorDesignation != undefined ">
-          {{visitor.VisitorDesignation}}</ion-label>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <ion-label>Company</ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <ion-label text-wrap *ngIf="visitor.VISITOR_COMPANY == '' || visitor.VISITOR_COMPANY == undefined "> --
-        </ion-label>
-        <ion-label text-wrap *ngIf="visitor.VISITOR_COMPANY != '' || visitor.VISITOR_COMPANY != undefined ">
-          {{visitor.VISITOR_COMPANY}}</ion-label>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <ion-label>Email</ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <ion-label text-wrap *ngIf="visitor.EMAIL == '' || visitor.EMAIL == undefined "> -- </ion-label>
-        <ion-label text-wrap *ngIf="visitor.EMAIL != '' || visitor.EMAIL != undefined ">{{visitor.EMAIL}}</ion-label>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <ion-label>Telephone No</ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <ion-label text-wrap *ngIf="visitor.TELEPHONE_NO == '' || visitor.TELEPHONE_NO == undefined "> --
-        </ion-label>
-        <ion-label text-wrap *ngIf="visitor.TELEPHONE_NO != '' || visitor.TELEPHONE_NO != undefined ">
-          {{visitor.TELEPHONE_NO}}</ion-label>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <ion-label>Gender</ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <ion-label text-wrap *ngIf="visitor.VisitorDesignation == '' || visitor.VisitorDesignation == undefined "> --
-        </ion-label>
-        <ion-label text-wrap *ngIf="visitor.VisitorDesignation != '' || visitor.VisitorDesignation != undefined ">
-          {{visitor.VisitorDesignation}}</ion-label>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <ion-label>QR</ion-label>
-      </ion-col>
-      <ion-col size="8">
-        <img class="animated fadeInDown delay-1s" style="
-          width: 150px;
-          height: 150px;
-          margin: 0 auto;
-          margin-left: -20px;
-          display: block;
-      " onError="this.src='../../assets/images/user.png';" [src]="qrCodePath">
-      </ion-col>
-    </ion-row>
-
-  </div> -->
-
-
-
-
-  <!-- <ion-list lines="none">
-      <div class="login-top" color="primary">
-        <h4 style="color: white;
-        margin: 0px;
-        background: #eb445a;
-        padding: 10px;" class="ion-text-center" text-white="">
-           {{visitor.VISITOR_NAME}}
-           <span style="text-align: right;">
-          </span>
-
-          </h4>
-
-      </div>
-
-
-      <ion-item>
-          <img class="animated fadeInDown delay-1s" style="
-          width: 150px;
-          height: 150px;
-          margin: 0 auto;
-          display: block;
-      " onError="this.src='../../assets/images/user.png';" [src]="qrCodePath">
-      </ion-item>
-      <div style="padding-left: 35px; padding-right:35px;">
-        <ion-button shape="round" color='danger'
-              style="display: block;
-              margin: 0 auto;min-width: 150px;"
-              (click)="share()" >
-              Share QR Code</ion-button>
-              <ion-button shape="round" fill="outline" color='danger'
-              style="display: block;
-              margin: 0 auto;min-width: 150px;margin-top: 15px;"
-              (click)="dismiss()" >
-              Cancel
-      </ion-button>
-      </div>
-
-      </ion-list> -->
 </ion-content>
 
 <ion-footer *ngIf="IsDynamicQR">

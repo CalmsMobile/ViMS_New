@@ -17,12 +17,12 @@ import { EventsService } from 'src/app/services/EventsService';
 export class UserProfilePagePage implements OnInit {
 
   data: any = {
-    "logo": JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/ImageHandler.ashx?RefSlno=',
+    "logo": JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/PortalImageHandler.ashx?RefSlno=',
     "coverImage": "assets/images/profile_bg.jpg",
     "profile": {},
     "AVAIL_FLOOR": []
   };
-  RefType = '&RefType=HP&Refresh=' + new Date().getTime();
+  RefType = '&ScreenType=30&Refresh=' + new Date().getTime();
   userUpdateModal = new HostInfoModel();
   public error: string;
   userProfile: FormGroup;

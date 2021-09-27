@@ -26,7 +26,6 @@ export class SecurityVisitorListPagePage implements OnInit {
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
   imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
-  imageURLTypeHOST = '&RefType=HP&Refresh='+ new Date().getTime();
   imageURLTypeVPB = '&RefType=VPB&Refresh='+ new Date().getTime();
   appointment:FormGroup;
   hostSettings : any = {};

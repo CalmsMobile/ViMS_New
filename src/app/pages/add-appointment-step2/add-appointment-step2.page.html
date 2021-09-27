@@ -1,9 +1,9 @@
 <ion-header>
-  <ion-toolbar color="danger">
+  <ion-toolbar color="primary">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>Additional Details</ion-title>
   </ion-toolbar>
-  <!-- <ion-toolbar color="danger">
+  <!-- <ion-toolbar color="primary">
     <ion-title style="font-size: 14px">{{addAppointmentModel.START_DATE | date: "MMM dd, yyyy HH:mm a"}} to {{addAppointmentModel.END_DATE | date: "MMM dd, yyyy HH:mm a"}}</ion-title>
     <h1 *ngIf="VISITOR_SIZE == 0 || VISITOR_SIZE == 1" style="color:white">{{VISITOR_SIZE}} Visitor</h1>
     <h1 *ngIf="VISITOR_SIZE > 1" style="color:white">{{VISITOR_SIZE}} Visitors</h1>
@@ -198,7 +198,7 @@
           </ion-item>
 
           <div style="margin-top: 20px;">
-            <!-- <ion-button slot="end" shape="round" fill="outline" color="danger" type="submit" style="font-size: 22px;
+            <!-- <ion-button slot="end" shape="round" fill="outline" color="primary" type="submit" style="font-size: 22px;
                 padding: 6px;
                 margin-left: auto;
                 display: table;" [disabled]="appointment.invalid">
@@ -207,7 +207,7 @@
                   font-size: 24px;" class="icon siva-icon-right-open"></ion-icon>
             </ion-button> -->
 
-            <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="danger"
+            <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="primary"
               style="margin-left: auto;margin-top:0px; display: block;" type="submit" [disabled]="appointment.invalid">
               {{edit? ('ACC_MAPPING.UPDATE' | translate): ('ACC_MAPPING.PROCEED' | translate)}}</ion-button>
           </div>

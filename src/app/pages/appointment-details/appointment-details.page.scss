@@ -10,7 +10,7 @@
     margin: 0px !important;
   }
   [theme-text-color] {
-    color: #ff515a !important;
+    color: var(--ion-color-primary) !important;
   }
 }
 
@@ -174,7 +174,7 @@ ion-col {
 
 ion-grid {
   ion-icon {
-    color: #eb445a !important;
+    color: var(--ion-color-primary);
   }
   p {
     font-size: 14px !important;
@@ -216,7 +216,7 @@ ion-avatar {
   position: relative;
   //background: #385a94;
   border-radius: 50%;
-  border: 1px solid #eb445a;
+  border: 1px solid var(--ion-color-primary);
   height: 25px;
   width: 25px;
   margin-bottom: 3px;
@@ -224,7 +224,7 @@ ion-avatar {
 
 .inner-circle2 {
   position: absolute;
-  background: #eb445a;
+  background: var(--ion-color-primary);
   border-radius: 50%;
   right: 2px;
   left: 2px;

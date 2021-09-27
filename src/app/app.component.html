@@ -3,29 +3,27 @@
       <!-- Menu Main Top -->
       <ion-menu side="start" menuId="myLeftMenu" id="myLeftMenu" contentId="myLeftMenu" [content]="content"
           *ngIf="params != null">
-          <ion-header *ngIf="showHeader">
+          <ion-header *ngIf="showHeader" color="primary">
               <!-- <div header-background-image [ngStyle]="{'background-image': 'url(' + params.background + ')'}"> -->
               <div header-background-image [ngStyle]="{'background-image': ''}"
-                  style="text-align: center;background: linear-gradient(to bottom, #ff0066 0%, #3366ff 100%);">
+                  style="text-align: center;background: var(--ion-color-primary);">
 
-                  <ion-avatar slot="start" style="background:transparent;padding: 5px 0 0 0;margin: 0 auto;">
-                      <img [src]="params.hostImage" onError="this.src='../assets/images/user.png';" style="padding: 2px;width: 70px;background-color: #e8e8e8;object-fit: cover;
-            height: 70px;">
-                  </ion-avatar>
-                  <div style="padding-top: 35px;">
+                  <img [src]="params.hostImage" onError="this.src='../assets/images/user.png';" style="padding: 2px;width: 70px;background-color: #e8e8e8;object-fit: cover;
+                  height: 70px;border-radius: 50%; margin-top: 15px;">
+                  <div>
                       <!-- <p style="font-size: 20px">{{params.title}}</p>
                       <p style="font-size: 12px">{{params.company}}</p>
                       <p style="font-size: 12px">{{params.email}}</p> -->
                       <ion-label>
                           <h3>
                               {{params.title}}</h3>
-                          <h5>
+                          <h5 style="padding: 0px;">
                               <span>
                                   <ion-icon name="podium-outline" color="light" style="font-size: 20px;"></ion-icon>
                               </span>
                               {{params.company}}
                           </h5>
-                          <h5>
+                          <h5 style="padding: 0px;">
                               <span>
                                   <ion-icon name="mail-outline" color="light" style="font-size: 20px;"></ion-icon>
                               </span>
@@ -46,8 +44,8 @@
               <ion-menu-toggle auto-hide="true" no-margin *ngFor="let p of pages" class="custom-menu-item">
                   <ion-item item-title main-menu lines="none" (click)="openPage(p)" class="no-padding"
                       style="pointer-events: auto !important;background: #f9f6f6;">
-                      <ion-icon slot="start" [name]="p.icon" color="danger" class="sideIcon"></ion-icon>
-                      <span class="sideMenuTitle">
+                      <ion-icon slot="start" [name]="p.icon" color="primary" class="sideIcon"></ion-icon>
+                      <span class="sideMenuTitle" style="color: var(--ion-color-primary);">
                           {{p.title}}
                       </span>
                   </ion-item>
@@ -64,18 +62,8 @@
               </ion-menu-toggle>
           </ion-content>
 
-          <!-- <ion-footer no-lines no-border>
-              <ion-row item-end no-lines no-border >
-                  <ion-col color="danger">
-                      <p class="versionP">{{'APP_NAME' | translate}} V{{'APP_VERSION' | translate}}</p>
-                  </ion-col>
-
-
-              </ion-row>
-          </ion-footer> -->
-
           <ion-footer class="ion-no-border ">
-              <ion-toolbar class="myColor">
+              <ion-toolbar color="primary" class="myColor">
                   <ion-label text-right>{{'APP_NAME' | translate}} V{{'APP_VERSION' | translate}}</ion-label>
               </ion-toolbar>
           </ion-footer>

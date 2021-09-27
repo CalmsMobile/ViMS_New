@@ -19,9 +19,9 @@ export class FacilityBookingPage implements OnInit {
   // @ViewChild(Navbar) navBar: Navbar;
   @ViewChild(IonContent) content: IonContent;
   translation:any = {};
-  imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
+  imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
-  imageURLType = '&RefType=HP&Refresh='+ new Date().getTime();
+  imageURLType = '&ScreenType=30&Refresh='+ new Date().getTime();
   newImage = "&tes='test'";
   datepickerFrmDate = '';
   datepickerToDate = '';

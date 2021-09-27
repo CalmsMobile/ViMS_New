@@ -5,7 +5,7 @@ ion-content .scroll-content {
   margin-bottom: 0px;
 }
 [theme-text-color] {
-  color: #ff515a !important;
+  color: var(--ion-color-primary) !important;
 }
 [text-white] {
   color: white;
