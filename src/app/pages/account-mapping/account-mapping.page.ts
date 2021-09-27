@@ -11,7 +11,8 @@ import { RestProvider } from 'src/app/providers/rest/rest';
 import * as CryptoJS from 'crypto-js';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { NavigationExtras, Router } from '@angular/router';
-import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
+import { FCM } from '@ionic-native/fcm/ngx';
+
 @Component({
   selector: 'app-account-mapping',
   templateUrl: './account-mapping.page.html',
@@ -144,14 +145,19 @@ export class AccountMappingPage {
     })
   }
   initializeFirebaseIOS() {
-    this.fcm.getToken().then(token => {
-      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-      console.log("Token:" + token);
-    });
-    this.fcm.onTokenRefresh().subscribe(token => {
-      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-      console.log("Token:" + token);
-    });
+    this.fcm.hasPermission().then(hasPermission => {
+      if (hasPermission) {
+        console.log("Has permission!");
+        this.fcm.getToken().then(token => {
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+          console.log("Token:" + token);
+        });
+        this.fcm.onTokenRefresh().subscribe(token => {
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+          console.log("Token:" + token);
+        });
+      }
+    })
   }
 
 
@@ -175,7 +181,7 @@ export class AccountMappingPage {
     } else {
       loadinWeb = true;
     }
-    if (loadinWeb) {
+    if (!loadinWeb) {
       // if (!loadinWeb) {
       //   return;
       // }

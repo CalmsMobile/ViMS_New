@@ -58,7 +58,7 @@ import { CommonUtil } from './services/util/CommonUtil';
 import { TooltipsModule } from 'ionic-tooltips';
 import { ToolTipComponent } from './components/tool-tip/tool-tip.component';
 import { ThemeSwitcherService } from './services/ThemeSwitcherService';
-import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
+import { FCM } from '@ionic-native/fcm/ngx';
 import { ViewImageComponent } from './components/view-image/view-image.component';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';

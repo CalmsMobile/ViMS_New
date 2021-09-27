@@ -1,6 +1,6 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
+import { FCM } from '@ionic-native/fcm/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AlertController, MenuController, ModalController, NavController, Platform } from '@ionic/angular';
@@ -196,7 +196,6 @@ export class AppComponent {
               this.navCtrl.navigateRoot("account-mapping");
               return;
             }
-            // this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
             this.menu.enable(true, "myLeftMenu");
             break;
           case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
@@ -206,7 +205,6 @@ export class AppComponent {
               this.navCtrl.navigateRoot("account-mapping");
               return;
             }
-            // this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP);
             this.menu.enable(true, "myLeftMenu");
             break;
           case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
@@ -217,7 +215,7 @@ export class AppComponent {
               this.navCtrl.navigateRoot("account-mapping");
               return;
             }
-            this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
+            //this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
             this.getSettingsForTams();
             this.menu.enable(true, "myLeftMenu");
             this.navCtrl.navigateRoot("home-tams");
@@ -229,7 +227,6 @@ export class AppComponent {
               this.navCtrl.navigateRoot("account-mapping");
               return;
             }
-            // this.GetHostAppSettings(AppSettings.LOGINTYPES.FACILITY);
             this.menu.enable(true, "myLeftMenu");
             break;
           case AppSettings.LOGINTYPES.DISPLAYAPP:
@@ -547,14 +544,20 @@ export class AppComponent {
     })
   }
   initializeFirebaseIOS() {
-    this.fcm.getToken().then(token => {
-      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-      console.log("Token:" + token);
-    });
-    this.fcm.onTokenRefresh().subscribe(token => {
-      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-      console.log("Token:" + token);
-    });
+    this.fcm.hasPermission().then(hasPermission => {
+      if (hasPermission) {
+        console.log("Has permission!");
+        this.fcm.getToken().then(token => {
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+          console.log("Token:" + token);
+        });
+        this.fcm.onTokenRefresh().subscribe(token => {
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+          console.log("Token:" + token);
+        });
+      }
+    })
+    
   }
 
   async presentConfirm() {
