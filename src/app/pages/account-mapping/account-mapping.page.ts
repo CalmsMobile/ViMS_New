@@ -181,7 +181,7 @@ export class AccountMappingPage {
     } else {
       loadinWeb = true;
     }
-    if (!loadinWeb) {
+    if (loadinWeb) {
       // if (!loadinWeb) {
       //   return;
       // }
