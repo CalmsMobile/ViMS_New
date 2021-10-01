@@ -65,7 +65,7 @@ export class QuestionDocPopupComponent implements OnInit {
               });
               loading.present();
               console.log('Has permission?',result.hasPermission);
-              fileTransfer.download(url, targetPath).then((entry) => {
+              fileTransfer.download(encodeURI(url), targetPath).then((entry) => {
                 loading.dismiss();
 
                 this.previewAnyFile.preview(targetPath)

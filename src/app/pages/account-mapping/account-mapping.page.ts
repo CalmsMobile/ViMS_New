@@ -181,7 +181,7 @@ export class AccountMappingPage {
     } else {
       loadinWeb = true;
     }
-    if (loadinWeb) {
+    if (!loadinWeb) {
         var  ApiUrl = "http://124.217.235.107:1001/api/";
         var CompanyId = "0";
         var HostId = "VijayCalms";
