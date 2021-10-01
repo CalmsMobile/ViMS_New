@@ -112,7 +112,7 @@ export class LoginPage implements OnInit {
         const security_device = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
         if(security_device) {
           const sDObj = JSON.parse(security_device);
-          sDObj.LoginTime = this.loginData.LoginTime;
+          sDObj.LoginTime = this.loginData.LoginTime.replace('-', '/');
           sDObj.userID = this.loginData.userID;
           sDObj.UserName = val.Table1[0].UserName;
           sDObj.userImage = val.Table1[0].userImage;

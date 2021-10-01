@@ -156,6 +156,7 @@ export class SettingsViewPagePage implements OnInit {
     const userInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
     if (userInfo) {
       const userInfoObj = JSON.parse(userInfo);
+      userInfoObj.LoginTime = userInfoObj.LoginTime.replace('-', '/');
       const startDate = new Date(userInfoObj.LoginTime);
       let difference = endDate.getTime() - startDate.getTime();
       const dDays = this.apiProvider.twoDecimals(parseInt('' +difference/(24*60*60*1000)));

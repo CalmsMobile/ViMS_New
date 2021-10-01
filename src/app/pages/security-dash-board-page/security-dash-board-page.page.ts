@@ -648,6 +648,8 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   }
 
   getDuration(endDate) {
+
+    this.userInfoObj.LoginTime = this.userInfoObj.LoginTime.replace('-', '/');
     const startDate = new Date(this.userInfoObj.LoginTime);
     let difference = endDate.getTime() - startDate.getTime();
 
