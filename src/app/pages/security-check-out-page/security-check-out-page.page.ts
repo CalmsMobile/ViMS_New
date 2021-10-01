@@ -351,8 +351,12 @@ export class SecurityCheckOutPagePage implements OnInit {
             element.PLATE_NUM = element.att_car_no ? element.att_car_no: element.PLATE_NUM;
 
             if (element.WorkPermitExpiry) {
+              element.WorkPermitExpiry = element.WorkPermitExpiry.replace('-', '/');
+              element.WorkPermitExpiry = element.WorkPermitExpiry.replace('-', '/');
               const expireTime =  this.dateformat.transform(element.WorkPermitExpiry, 'yyyy-MM-dd HH:mm:ss');
               let currentDate;
+              element.att_check_out_time = element.att_check_out_time.replace('-', '/');
+              element.att_check_out_time = element.att_check_out_time.replace('-', '/');
               if (element.att_check_out_time) {
                 currentDate =  this.dateformat.transform(element.att_check_out_time, 'yyyy-MM-dd HH:mm:ss');
               } else {

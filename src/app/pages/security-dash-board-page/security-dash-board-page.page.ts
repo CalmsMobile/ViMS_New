@@ -294,7 +294,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
           {
             text: t['COMMON.EXIT1'],
             handler: () => {
-              const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+              const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy/MM/dd HH:mm:ss'));
                 const data = {
                   'LogoutTime': endDate,
                   'Duration': this.getDurationToLogout(endDate)
@@ -664,6 +664,8 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     if (userInfo) {
       const userInfoObj = JSON.parse(userInfo);
       const startDate = new Date(userInfoObj.LoginTime);
+      userInfoObj.LoginTime = userInfoObj.LoginTime.replace('-', '/');
+      userInfoObj.LoginTime = userInfoObj.LoginTime.replace('-', '/');
       let difference = endDate.getTime() - startDate.getTime();
       const dDays = this.apiProvider.twoDecimals(parseInt('' +difference/(24*60*60*1000)));
       const dHours = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*60*1000)) % 24)) ;
@@ -676,7 +678,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
 
   refreshLastLoggedIn() {
    this.loggedInInterval = setInterval(() => {
-      const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+      const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy/MM/dd HH:mm:ss'));
       this.getDuration(endDate);
     }, 1000);
   }

@@ -157,6 +157,7 @@ export class SettingsViewPagePage implements OnInit {
     if (userInfo) {
       const userInfoObj = JSON.parse(userInfo);
       userInfoObj.LoginTime = userInfoObj.LoginTime.replace('-', '/');
+      userInfoObj.LoginTime = userInfoObj.LoginTime.replace('-', '/');
       const startDate = new Date(userInfoObj.LoginTime);
       let difference = endDate.getTime() - startDate.getTime();
       const dDays = this.apiProvider.twoDecimals(parseInt('' +difference/(24*60*60*1000)));
@@ -187,7 +188,7 @@ export class SettingsViewPagePage implements OnInit {
             text: (action === 'exit') ? t['COMMON.EXIT1']: t['COMMON.OK'],
             handler: () => {
               if(this.isSecurityApp) {
-                const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+                const endDate = new Date(this.datePipe.transform(new Date(), 'yyyy/MM/dd HH:mm:ss'));
                 const data = {
                   'LogoutTime': endDate,
                   'Duration': this.getDuration(endDate)
