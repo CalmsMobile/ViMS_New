@@ -97,6 +97,8 @@ export class VisitorInformationPage implements OnInit {
           this.appointmentInfo = vOb;
           this.appointmentInfo.att_check_in_time = att_check_in_time;
           this.appointmentInfo.att_check_out_time = att_check_out_time;
+          this.appointmentInfo.Address = this.appointmentInfo.VISITOR_ADDRESS;
+
           this.appointmentInfo.PLATE_NUM = PLATE_NUM? PLATE_NUM: this.appointmentInfo.PLATE_NUM;
           this.appointmentInfo.Remarks = att_remark?att_remark: this.appointmentInfo.Remarks;
           this.appointmentInfo.Hexcode = hexData;

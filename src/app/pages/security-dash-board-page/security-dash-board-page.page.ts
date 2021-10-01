@@ -129,6 +129,21 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       this.getSecurityStats();
       this.updateSyncInterval();
       this.enableMyKad();
+      const masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+      if (!masterDetails) {
+        this.apiProvider.GetSecurityMasterDetails().then(
+          (result: any) => {
+            if(result){
+              window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+            }
+          },
+          (err) => {
+
+          }
+        );
+      }
+
+
     } else {
       this.getSecuritySettings();
     }
@@ -178,7 +193,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
           this.composeRunTimeCss();
           this.getSecurityStats();
           this.updateSyncInterval();
-          this.apiProvider.GetMasterDetails().then(
+          this.apiProvider.GetSecurityMasterDetails().then(
             (result: any) => {
               if(result){
                 window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
@@ -464,7 +479,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "0001105743" //"C4B9F365";
+      var data = "0205526883" //"C4B9F365";
       var params = {"hexcode":""+ data};
       this.getAppointmentByQR(params);
     }else{

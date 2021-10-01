@@ -12,20 +12,18 @@
       <ion-card mode="ios" style="padding: 12px;
       margin-top: 5px !important;
       text-align: center;" no-margin >
-        <div>
-          <ion-label style="font-size: 14px;">{{ques.Description}}</ion-label>
-          <ion-radio-group value="{{ques.Answer}}" style="display: inline-flex;">
-            <ion-item lines="none">
-              <ion-label>Yes</ion-label>
-              <ion-radio [disabled]="ques.Answer === 0 || ques.Answer === '0'" mode="ios" slot="end" value="1"></ion-radio>
-            </ion-item>
 
-            <ion-item lines="none">
-              <ion-label>No</ion-label>
-              <ion-radio [disabled]="ques.Answer === 1 || ques.Answer === '1'" mode="ios" slot="end" value="0"></ion-radio>
-            </ion-item>
-            </ion-radio-group>
-        </div>
+      <ion-card-header>
+        <ion-label style="font-size: 14px;">{{ques.Description}}</ion-label>
+      </ion-card-header>
+       <ion-card-subtitle>
+        <ion-radio-group value="0" style="display: inline-flex;">
+          <ion-item lines="none">
+            <ion-label>{{(ques.Answer === 0 || ques.Answer === '0')? 'No': 'Yes'}}</ion-label>
+            <ion-radio mode="ios" slot="end" value="0"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+       </ion-card-subtitle>
       </ion-card>
     </div>
   </div>

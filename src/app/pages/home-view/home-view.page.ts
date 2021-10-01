@@ -9,6 +9,7 @@ import { HostAccessComponent } from 'src/app/components/host-access/host-access.
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
+import { ThemeSwitcherService } from 'src/app/services/ThemeSwitcherService';
 
 @Component({
   selector: 'app-home-view',
@@ -63,6 +64,7 @@ export class HomeViewPage implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private statusBar: StatusBar,
+    private themeSwitcher: ThemeSwitcherService,
     public events: EventsService, public apiProvider: RestProvider) {
         this.statusBar.backgroundColorByHexString(AppSettings.STATUS_BAR_COLOR);
   }
@@ -114,6 +116,16 @@ export class HomeViewPage implements OnInit {
       const settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
       var hostSettings = JSON.parse(settings).Table1[0];
       this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
+
+
+      const appTheme = hostSettings.AppTheme;
+      if (appTheme) {
+        const appThemeObj = JSON.parse(appTheme);
+        if (appThemeObj.primThemeColor) {
+          this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+          this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+        }
+      }
     }catch(e){
     }
 
@@ -142,6 +154,15 @@ export class HomeViewPage implements OnInit {
           var result = JSON.parse(JSON.stringify(val));
           if (result) {
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, JSON.stringify(val));
+          }
+
+          const appTheme = result.Table1[0].AppTheme;
+          if (appTheme) {
+            const appThemeObj = JSON.parse(appTheme);
+            if (appThemeObj.primThemeColor) {
+              this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+              this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+            }
           }
         } catch (e) {
 
@@ -334,7 +355,7 @@ initializeFirebaseIOS() {
       this.subscribeToPushNotifications();
     }
   })
-    
+
   }
   subscribeToPushNotifications() {
     this.fcm.onNotification().subscribe((response) => {

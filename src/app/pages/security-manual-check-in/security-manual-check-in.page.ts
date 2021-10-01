@@ -126,6 +126,11 @@ export class SecurityManualCheckInPage implements OnInit {
           } else if (this.appointmentInfo.visitor_comp_code) {
             this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, true);
           }
+
+          if (this.appointmentInfo.VISITOR_COUNTRY) {
+            this.appointmentInfo.VISITOR_COUNTRY = this.commonUtil.getCountry(this.appointmentInfo.VISITOR_COUNTRY, true);
+          }
+
           this.appointmentInfo.REASON = this.commonUtil.getPurposeCode(this.appointmentInfo.REASON, true);
           this.appointmentInfo.VISITOR_GENDER = this.commonUtil.getGender(this.appointmentInfo.VISITOR_GENDER, true);
           this.checkAllInputs();

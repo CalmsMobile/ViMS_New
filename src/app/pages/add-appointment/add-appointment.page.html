@@ -4,7 +4,7 @@
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{edit? ('ADD_APPOIN.U_TITLE' | translate) : ('ADD_APPOIN.TITLE' | translate)}}</ion-title>
     <ion-buttons slot="end" *ngIf="showFacility">
-        <ion-button slot="icon-only" (click)="checkFacilityAvailability()">
+        <ion-button color="btnthm" slot="icon-only" (click)="checkFacilityAvailability()">
             <img app-logo-img class="animated fadeInDown delay-1s" style="display: block; margin: 0 auto;width: 30px;height: 30px;margin-right: 10px;" src="../../assets/images/room_available.png">
         </ion-button>
       </ion-buttons>
@@ -124,7 +124,7 @@
           margin-right: 10px;"><ion-icon name="person-add-outline" style="font-size:1.3rem;" ></ion-icon></ion-fab-button> -->
 
         <ion-button color="light" fill="clear" (click)="goToAddManageVisitors()" *ngIf="!edit">
-            <ion-icon size="small" name="person-add-outline" color="primary"></ion-icon>
+            <ion-icon size="small" name="person-add-outline" color="btnthm"></ion-icon>
             <ion-label style="margin-left: -7px;"><span class="dot">{{VM.visitors.length}}</span></ion-label>
           </ion-button>
 
@@ -157,7 +157,7 @@
                     </ion-item>
                    </div>
                     <!-- <ion-note slot="end">{{item.phone}}</ion-note> -->
-                    <ion-button slot="end" shape="round" color="primary" style="width: 38px;
+                    <ion-button slot="end" shape="round" color="btnthm" style="width: 38px;
                     height: 38px;" (click)="removeVisitor(item)" *ngIf="!item.IsAckVerified">
                         <ion-icon name="close-circle-outline" style="font-size: 35px;padding: 0px;
                         text-align: center;"></ion-icon>
@@ -167,8 +167,8 @@
                     <!-- <ion-button slot="icon-only" color="primary" fill="outline" no-border (click)="editVisitors(slideDOM)">
                     <ion-icon color="primary" class="siva-icon-trash-empty"></ion-icon>
                 </ion-button> -->
-                <ion-button slot="icon-only" style="align-self: center;" shape="round" no-padding color="primary" fill="clear" no-border (click)="editVisitors(slideDOM, 'edit', item)">
-                    <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>
+                <ion-button slot="icon-only" style="align-self: center;" shape="round" no-padding color="btnthm" fill="clear" no-border (click)="editVisitors(slideDOM, 'edit', item)">
+                    <ion-icon color="btnthm" class="siva-icon-pencil-2"></ion-icon>
                 </ion-button>
                 </ion-item-options>
             </ion-item-sliding>
@@ -186,7 +186,7 @@
 
 <ion-footer transparent>
     <ion-toolbar transparent>
-        <ion-button bottom slot="end" icon-right align-items-end shape="round" fill="solid" color="primary"
+        <ion-button bottom slot="end" icon-right align-items-end shape="round" fill="solid" color="btnthm"
         style="height: 40px;margin-left: auto;display: block;"
         (click)="proceedToNextStep()" [disabled]="(VM.visitors.length == 0)">
             {{'ACC_MAPPING.PROCEED' | translate}}

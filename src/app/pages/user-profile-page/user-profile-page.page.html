@@ -23,8 +23,8 @@
         class="simple-form">
         <ion-col no-padding size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
           <ion-row>
-            <h6 style="margin: 0 auto;display: flex;" ion-text color="primary">
-              <ion-icon style="align-self: center;" color="primary" name="mail-outline"></ion-icon>{{data.profile.HOST_EMAIL}}</h6>
+            <h6 style="margin: 0 auto;display: flex;" ion-text  color="btnthm">
+              <ion-icon style="align-self: center;"  color="btnthm" name="mail-outline"></ion-icon>{{data.profile.HOST_EMAIL}}</h6>
           </ion-row>
           <!---Input field username-->
           <ion-item class="box_round_corner" lines="none" no-padding transparent>
@@ -91,13 +91,13 @@
                   <ion-toggle formControlName="emailAlert" color="primary" [(ngModel)]="data.profile.EMAIL_ALERT" [checked]="data.profile.EMAIL_ALERT"></ion-toggle>
               </ion-item> -->
           <ion-col align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6>
-            <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="primary"
+            <ion-button bottom right icon-right align-items-end shape="round" fill="solid"  color="btnthm"
               style="margin-left: auto;margin-top:10px; display: block;" type="submit" [disabled]="userProfile.invalid">
               {{'USER_PROFILE.UPDATE_PROFILE' | translate}}</ion-button>
           </ion-col>
           <ion-col *ngIf="false" align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3
             col-xl-6>
-            <ion-button shape="round" expand="full" text-capitalize color="primary" fill="solid"
+            <ion-button shape="round" expand="full" text-capitalize color="btnthm" fill="solid"
               (click)="onEvent('onChangePassword')">
               {{'USER_PROFILE.CHANGE_PASSWORD' | translate}}</ion-button>
           </ion-col>

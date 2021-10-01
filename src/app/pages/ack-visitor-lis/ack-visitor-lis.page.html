@@ -8,17 +8,17 @@
   <ion-toolbar color="primary">
     <ion-title>Safety Brief</ion-title>
     <ion-buttons slot="end">
-      <ion-button slot="icon-only" style="font-size: 25px;" (click)="addMoreVisitor()" *ngIf="false">
+      <ion-button color="btnthm" slot="icon-only" style="font-size: 25px;" (click)="addMoreVisitor()" *ngIf="false">
           <ion-icon name="add-circle"></ion-icon>
       </ion-button>
       <ion-row>
         <ion-col size="6">
-            <ion-button fill="clear" slot="icon-only" style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="manualScan()">
+            <ion-button color="btnthm" fill="clear" slot="icon-only" style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="manualScan()">
                 <img class="navBtnImg" src="../../assets/images/keypad_white.png"  />
               </ion-button>
         </ion-col>
         <ion-col size="6">
-            <ion-button fill="clear" slot="icon-only" style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="ConfirmQrAfterBriefing1(false)">
+            <ion-button color="btnthm" fill="clear" slot="icon-only" style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="ConfirmQrAfterBriefing1(false)">
                 <img class="navBtnImg1" src="../../assets/images/qrcodescan2.png" />
               </ion-button>
         </ion-col>
@@ -73,11 +73,11 @@
           </ion-card>
         </ion-item>
         <ion-item-options side="end">
-            <ion-button color="primary" (click)="removeVisitor(slideDOM, item)" style="text-transform: none">
+            <ion-button color="btnthm" (click)="removeVisitor(slideDOM, item)" style="text-transform: none">
                 <ion-icon name="trash" style="font-size: 18px;"></ion-icon>
                 Remove
               </ion-button>
-          <!-- <ion-button no-padding color="primary" no-border (click)="editVisitors(slideDOM, 'edit', item)">
+          <!-- <ion-button no-padding color="btnthm" no-border (click)="editVisitors(slideDOM, 'edit', item)">
               <ion-icon name="delete"></ion-icon>
           </ion-button> -->
         </ion-item-options>

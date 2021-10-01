@@ -277,8 +277,7 @@
             'font-weight': appSettings.FooterTab.FooterFontWeight}">Appointment</ion-label>
           </ion-tab-button>
 
-          <ion-tab-button
-          (click)="proceedNext('QUICK_PASS')" mode="ios">
+          <ion-tab-button (click)="proceedNext('QUICK_PASS')" mode="ios" *ngIf="appSettings.showQuickPass">
             <ion-icon class="tabIcon" name="barcode-outline"[ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
             <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
             'font-weight': appSettings.FooterTab.FooterFontWeight}">Quick Pass</ion-label>

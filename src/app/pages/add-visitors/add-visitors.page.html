@@ -4,7 +4,7 @@
       <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
       <ion-title color="primary" style="color: white;">{{"ADD_VISITORS.TITLE" | translate}}</ion-title>
       <ion-buttons slot="end">
-        <ion-button (click)="getPhoneBookContact()">
+        <ion-button (click)="getPhoneBookContact()" color="btnthm">
           <!-- <ion-icon name="contact"></ion-icon> -->
           <img slot="end" style="width: 35px;height: 35px; padding: 3px;" src="../../assets/images/phone-book.png">
         </ion-button>
@@ -237,12 +237,12 @@
               </ion-select> -->
             </ion-item>
           </div>
-          <ion-button *ngIf="!visitor" bottom right icon-right align-items-end shape="round" fill="solid" color="primary"
+          <ion-button *ngIf="!visitor" bottom right icon-right align-items-end shape="round" fill="solid" color="btnthm"
             style="margin-left: auto;margin-top:15px; display: block;" type="submit"
             [disabled]="visitorProfile.invalid">
             {{'COMMON.ADD' | translate}}</ion-button>
           <ion-button *ngIf="visitor" bottom right icon-right align-items-end shape="round" fill="outline"
-            color="primary" style="margin-left: auto;margin-top:15px; display: block;" type="submit"
+          color="btnthm" style="margin-left: auto;margin-top:15px; display: block;" type="submit"
             [disabled]="visitorProfile.invalid">
             {{'EDIT_VISITOR.UPDATE' | translate}}</ion-button>
         </ion-col>

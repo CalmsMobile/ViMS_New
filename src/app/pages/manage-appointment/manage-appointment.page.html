@@ -107,11 +107,11 @@
     <ion-title>Manage Appointments</ion-title>
 
     <ion-buttons slot="end" >
-        <ion-button *ngIf="false" slot="icon-only" (click)="syncFromGoogleCalender()">
+        <ion-button *ngIf="false" slot="icon-only" color="btnthm" (click)="syncFromGoogleCalender()">
             <ion-icon name="sync" style="position:relative">
             </ion-icon>
         </ion-button>
-        <ion-button *ngIf="isAdmin" slot="icon-only" (click)="gotoAdminPage()">
+        <ion-button *ngIf="isAdmin" slot="icon-only" color="btnthm" (click)="gotoAdminPage()">
                 <ion-icon name="customicon"></ion-icon>
         </ion-button>
         <ion-button slot="icon-only" (click)="gotoNotification()">

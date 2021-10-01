@@ -269,6 +269,19 @@ export class SettingsViewPagePage implements OnInit {
     );
   }
 
+  getSecurityMasterdetails(){
+    this.apiProvider.GetSecurityMasterDetails().then(
+      (result: any) => {
+        if(result){
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+        }
+      },
+      (err) => {
+
+      }
+    );
+  }
+
   getSettingsForTams() {
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
@@ -344,7 +357,7 @@ export class SettingsViewPagePage implements OnInit {
             if(result1){
               var result = JSON.parse(result1.SettingDetail);
               console.log(val+"");
-              this.getMasterdetails();
+              this.getSecurityMasterdetails();
               this.composeRunTimeCss(result);
               window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, JSON.stringify(result));
             }
@@ -375,9 +388,15 @@ export class SettingsViewPagePage implements OnInit {
                   title: "ReloadMenu",
                   message: "ReloadMenu"
                 });
+                const appTheme = result.Table1[0].AppTheme;
+                if (appTheme) {
+                  const appThemeObj = JSON.parse(appTheme);
+                  if (appThemeObj.primThemeColor) {
+                    this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+                    this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+                  }
+                }
                 this.getMasterdetails();
-                // this.statusBar.backgroundColorByHexString("#0d568b");
-                // this.themeSwitcher.setTheme('Theme1', "#0d568b");
                 if (QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY) {
                   this.getSettingsForTams();
                   this.getMyAttendanceWhitelistedLocations();

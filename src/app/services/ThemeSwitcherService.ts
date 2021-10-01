@@ -79,6 +79,64 @@ export class ThemeSwitcherService {
 
   }
 
+  resetThemeNew(primaryColor,  texColor, buttonColor, buttonTextColor) {
+    this.themes = [
+      {
+        name: 'Theme1',
+        styles: [
+          { themeVariable: '--ion-color-primary', value: primaryColor},
+          { themeVariable: '--ion-color-primary-rgb', value: '248,56,58'},
+          { themeVariable: '--ion-color-primary-contrast', value: texColor},
+          { themeVariable: '--ion-color-primary-contrast-rgb', value: '255,255,255'},
+          { themeVariable: '--ion-color-primary-shade', value: primaryColor},
+          { themeVariable: '--ion-color-primary-tint', value: primaryColor},
+          { themeVariable: '--ion-item-ios-background-color', value: '#ffffff'},
+          { themeVariable: '--ion-item-md-background-color', value: '#ffffff'},
+          { themeVariable: '--ion-tabbar-background-color', value: '#fff'},
+          { themeVariable: '--ion-tabbar-ios-text-color-active', value: texColor},
+          { themeVariable: '--ion-tabbar-md-text-color-active', value: texColor},
+
+          { themeVariable: '--ion-color-btnthm', value: buttonColor},
+          { themeVariable: '--ion-color-btnthm-rgb', value: '248,56,58'},
+          { themeVariable: '--ion-color-btnthm-contrast', value: buttonTextColor},
+          { themeVariable: '--ion-color-btnthm-contrast-rgb', value: '255,255,255'},
+          { themeVariable: '--ion-color-btnthm-shade', value: buttonColor},
+          { themeVariable: '--ion-color-btnthm-tint', value: buttonColor}
+        ]
+      },
+      {
+        name: 'Theme2',
+        styles: [
+          { themeVariable: '--ion-color-primary', value: this.themeColor['Theme2']},
+          { themeVariable: '--ion-color-primary-rgb', value: '34,34,34'},
+          { themeVariable: '--ion-color-primary-contrast', value: '#ffffff'},
+          { themeVariable: '--ion-color-primary-contrast-rgb', value: '255,255,255'},
+          { themeVariable: '--ion-color-primary-shade', value: '#1e2023'},
+          { themeVariable: '--ion-color-primary-tint', value: '#383a3e'},
+          { themeVariable: '--ion-item-ios-background-color', value: '#717171'},
+          { themeVariable: '--ion-item-md-background-color', value: '#717171'},
+          { themeVariable: '--ion-tabbar-background-color', value: '#222428'},
+          { themeVariable: '--ion-tabbar-ios-text-color-active', value: '#ffffff'},
+          { themeVariable: '--ion-tabbar-md-text-color-active', value: '#ffffff'},
+        ]
+      }
+    ]
+  }
+
+  setThemeNew(primaryColor,  texColor, buttonColor, buttonTextColor): void {
+    this.resetThemeNew(primaryColor,  texColor, buttonColor, buttonTextColor);
+    let theme = this.themes.find(theme => theme.name === "Theme1");
+
+    this.domCtrl.write(() => {
+
+      theme.styles.forEach(style => {
+        document.documentElement.style.setProperty(style.themeVariable, style.value);
+      });
+
+    });
+
+  }
+
   setTheme(name, color): void {
     this.resetTheme(color);
     let theme = this.themes.find(theme => theme.name === name);

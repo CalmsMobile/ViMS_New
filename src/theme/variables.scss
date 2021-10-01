@@ -3,6 +3,14 @@
 
 /** Ionic CSS Variables **/
 :root {
+  /** buttontheme **/
+  --ion-color-btnthm: #eb445a;
+  --ion-color-btnthm-rgb: 15, 206, 219;
+  --ion-color-btnthm-contrast: #ffffff;
+  --ion-color-btnthm-contrast-rgb: 255, 255, 255;
+  --ion-color-btnthm-shade: #eb445a;
+  --ion-color-btnthm-tint: #eb445a;
+
   /** primary **/
   --ion-color-primary: #eb445a;
   --ion-color-primary-rgb: 56, 128, 255;
@@ -92,6 +100,15 @@
   --ion-color-transparent-tint: transparent;
 }
 
+.ion-color-btnthm {
+  --ion-color-base: var(--ion-color-btnthm);
+  --ion-color-base-rgb: var(--ion-color-btnthm-rgb);
+  --ion-color-contrast: var(--ion-color-btnthm-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-btnthm-contrast-rgb);
+  --ion-color-shade: var(--ion-color-btnthm-shade);
+  --ion-color-tint: var(--ion-color-btnthm-tint);
+}
+
 @media (prefers-color-scheme: dark) {
   /*
    * Dark Colors
@@ -99,6 +116,14 @@
    */
 
   body {
+    /** buttontheme **/
+    --ion-color-btnthm: #0fcedb;
+    --ion-color-btnthm-rgb: 15, 206, 219;
+    --ion-color-btnthm-contrast: #ffffff;
+    --ion-color-btnthm-contrast-rgb: 255, 255, 255;
+    --ion-color-btnthm-shade: #0db5c1;
+    --ion-color-btnthm-tint: #27d3df;
+
     --ion-color-primary: #eb445a;
     --ion-color-primary-rgb: 56, 128, 255;
     --ion-color-primary-contrast: #ffffff;

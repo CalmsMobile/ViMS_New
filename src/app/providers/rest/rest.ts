@@ -751,6 +751,7 @@ deg2rad(deg) {
       branchID = MAppDevSeqId ? JSON.parse(MAppDevSeqId).RefBranchSeqId: '';
     }
     data.Branch = branchID;
+    data.RefBranchSeqId = branchID;
     return data;
   }
 
@@ -814,7 +815,7 @@ deg2rad(deg) {
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
       var AuHostSeqId = IsWEB;
       let branchId = '';
-      if(hostData && JSON.parse(hostData) && !IsWEB){
+      if(hostData && JSON.parse(hostData) && IsWEB !== 'WEB'){
         AuHostSeqId = JSON.parse(hostData).SEQID;
         branchId = JSON.parse(hostData).BRANCH_ID;
       }
@@ -824,6 +825,13 @@ deg2rad(deg) {
         "AuMAppDevSeqId":''
       };
       data.Branch = branchID? (branchID === 'All' ? '' :branchID): branchId;
+      if (!data.Branch) {
+        if(hostData && JSON.parse(hostData)){
+          branchId = JSON.parse(hostData).BRANCH_ID;
+        }
+        data.Branch = branchId;
+      }
+      data.RefBranchSeqId = branchID;
     return data;
   }
 

@@ -4,7 +4,7 @@
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{edit? ('FACILITY_BOOKING.U_TITLE' | translate): ('FACILITY_BOOKING.TITLE' | translate)}}</ion-title>
     <ion-buttons slot="end">
-      <ion-button slot="icon-only" (click)="checkFacilityAvailability()">
+      <ion-button slot="icon-only" color="btnthm" (click)="checkFacilityAvailability()">
           <img app-logo-img class="animated fadeInDown delay-1s" style="display: block; margin: 0 auto;width: 30px;height: 30px;margin-right: 10px;" src="../../assets/images/room_available.png">
       </ion-button>
     </ion-buttons>
@@ -71,7 +71,7 @@
         align-self: center;
         text-align: end;">
           <ion-fab-button style="width: 40px;
-          height: 40px;" (click)="goToAddManageVisitors()">
+          height: 40px;" color="btnthm" (click)="goToAddManageVisitors()">
             <ion-icon name="person-add-outline" style="font-size:20px;"></ion-icon>
            </ion-fab-button>
         </ion-col>
@@ -98,7 +98,7 @@
                       margin-top: 5px;color: gray;" >{{item.HostExt}}</ion-label>
                     </div>
 
-                    <ion-button slot="end" shape="round" fill="outline" color="primary" style="width: 38px;
+                    <ion-button slot="end" shape="round" fill="outline" color="btnthm" style="width: 38px;
                     height: 38px;" (click)="removeVisitor(item)">
                         <ion-icon name="close-circle-outline" style="font-size: 35px;padding: 0px;
                         text-align: center;"></ion-icon>
@@ -126,7 +126,7 @@
 
 <ion-footer transparent>
     <ion-toolbar transparent>
-        <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="primary"
+        <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="btnthm"
         style="height: 40px;margin-left: auto;display: block;"
         (click)="proceedToNextStep()">
             {{'ACC_MAPPING.PROCEED' | translate}}

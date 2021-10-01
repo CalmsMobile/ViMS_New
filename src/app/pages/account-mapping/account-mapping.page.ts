@@ -213,7 +213,7 @@ export class AccountMappingPage {
         //  var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
 
         //3026 FB
-        var qrCodeString = 'JAjy9LN8AB8wHRt0BMJ4MqSSSCw4WjBwUHv8LzmWM/5fagcSKXILTm615e9l5H8mIfGEW+44G7/xXLUNEbSsewgrv5c3b8dC1uXbknygWZNylFcLYacwMhQ7BQ991ssvnBTWRS8cfHbufkNpXbDi2A==';
+        // var qrCodeString = 'JAjy9LN8AB8wHRt0BMJ4MqSSSCw4WjBwUHv8LzmWM/5fagcSKXILTm615e9l5H8mIfGEW+44G7/xXLUNEbSsewgrv5c3b8dC1uXbknygWZNylFcLYacwMhQ7BQ991ssvnBTWRS8cfHbufkNpXbDi2A==';
           //FAcility Display
           // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmsOWXsylRj+rCMMx0EgAXhUReWw865+hTAeDCEKjxB1Ow==';
           //HOST 2001
@@ -226,8 +226,8 @@ export class AccountMappingPage {
           //Facility Display App 1001
           // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmvsXGxqidWW1oDwCCbeG7M0xYw+SnR7J6F5RAATHeqKnA==';
 
-          //SeCurity 1001
-          // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWDtgM55EUQmYhBsvTNChQlCXQQRiyNBiYsT0t4NO12QYz0oPttc41Ff950KHToVze5nrSu80C7kZkDIZeyhONnU4JQBGuE/gUdNMVci8mW0Sw==';
+          //SeCurity airselangor
+          var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWBuNTz/WeO1qvVIB2bfjhlh8F5RiV6x8WP7PjLLxdXuKZnutNzQ9KOC6/WyhPL9d70OW5cZ42DimysEsV8ekfffe28a1fuZWV12fXua98y9RZAGsbvuX2LFpPraYXR1mep8jcgBSBEjfAm++nm14UOZIJSY5BDNw/JXiAai3/u71w==';
 
           //Security 2001
           // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWAq0MmJMwqMEnJN+/FqmOCBtUYX+1nAL+E2I+YaxcatPrwLlf/RgyvUhluRZaDnUGNL5t2YLmGq4DpPZkpyqVzG';

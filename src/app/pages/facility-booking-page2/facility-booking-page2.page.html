@@ -84,12 +84,12 @@
           </ion-item>
 
           <!-- <div style="margin-top: 20px;"> -->
-          <ion-button (click)="proceedToNextStep()" *ngIf="!edit" icon-right shape="round" fill="solid" color="primary"
+          <ion-button (click)="proceedToNextStep()" *ngIf="!edit" icon-right shape="round" fill="solid" color="btnthm"
             style="margin-left: auto;margin-top:25px; display: block;padding-left: 15px;"
             [disabled]="facilityBooking.invalid">
             {{'ACC_MAPPING.PROCEED' | translate}}
           </ion-button>
-          <ion-button (click)="proceedToNextStep()" *ngIf="edit" icon-right shape="round" fill="solid" color="primary"
+          <ion-button (click)="proceedToNextStep()" *ngIf="edit" icon-right shape="round" fill="solid" color="btnthm"
             style="margin-left: auto;margin-top:25px; display: block;padding-left: 15px;"
             [disabled]="facilityBooking.invalid">
             {{'ACC_MAPPING.UPDATE' | translate}}

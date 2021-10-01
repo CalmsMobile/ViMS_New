@@ -14,6 +14,7 @@ import { MenuService } from './services/menu-service';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { ThemeSwitcherService } from './services/ThemeSwitcherService';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -39,6 +40,7 @@ export class AppComponent {
     public statusBar: StatusBar,
     public events: EventsService,
     private fcm: FCM,
+    private themeSwitcher: ThemeSwitcherService,
     private androidPermissions: AndroidPermissions,
     private locationAccuracy: LocationAccuracy,
     private geolocation: Geolocation,
@@ -126,6 +128,15 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
 
+      document.body.classList.toggle('dark', false);
+
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+      // Listen for changes to the prefers-color-scheme media query
+      prefersDark.addListener((e) => {
+        document.body.classList.toggle('dark', false);
+      });
+
       this.translate.get(['ALERT_TEXT.ON_BACK', 'ALERT_TEXT.USER_INACTIVE']).subscribe(t => {
         this.T_SVC = t;
       });
@@ -180,7 +191,7 @@ export class AppComponent {
         }
       }
 
-      this.menu.enable(false, "myLeftMenu");
+      // this.menu.enable(false, "myLeftMenu");
 
       var qrCodeInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
       if (qrCodeInfo && JSON.parse(qrCodeInfo) && JSON.parse(qrCodeInfo).ApiUrl) {
@@ -219,6 +230,10 @@ export class AppComponent {
             this.getSettingsForTams();
             this.menu.enable(true, "myLeftMenu");
             this.navCtrl.navigateRoot("home-tams");
+            setTimeout(() => {
+              this.navCtrl.navigateRoot("home-tams");
+              this.menu.enable(true, "myLeftMenu");
+            }, 5000);
             break;
           case AppSettings.LOGINTYPES.FACILITY:
             hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -464,6 +479,14 @@ export class AppComponent {
           if (result) {
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, JSON.stringify(val));
             this.loadMenuData(true);
+            const appTheme = result.Table1[0].AppTheme;
+            if (appTheme) {
+              const appThemeObj = JSON.parse(appTheme);
+              if (appThemeObj.primThemeColor) {
+                this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+                this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+              }
+            }
           }
         } catch (e) {
 
@@ -557,7 +580,7 @@ export class AppComponent {
         });
       }
     })
-    
+
   }
 
   async presentConfirm() {

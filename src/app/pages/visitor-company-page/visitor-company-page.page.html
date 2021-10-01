@@ -10,7 +10,7 @@
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
       <ion-title>{{'VISITORS_COMPANY.TITLE' | translate}}</ion-title>
       <ion-buttons *ngIf= "false" end>
-          <ion-button slot="icon-only" (click)="goToAddVisitorCompany()">
+          <ion-button slot="icon-only"  color="btnthm" (click)="goToAddVisitorCompany()">
             <ion-icon name="add"></ion-icon>
           </ion-button>
       </ion-buttons>
@@ -28,7 +28,7 @@
       <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
           <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
-      <ion-button *ngIf="(VM.companyList.length == 0 && VM.queryText.length > 2)" expand="full" (click)="addVisitors()">ADD</ion-button>
+      <ion-button *ngIf="(VM.companyList.length == 0 && VM.queryText.length > 2)"  color="btnthm" expand="full" (click)="addVisitors()">ADD</ion-button>
       <ion-radio-group
       (ionChange)="selectCompany($event)" [(ngModel)]="relationship">
           <ion-item *ngFor="let company of VM.companyList">
