@@ -109,7 +109,6 @@
     "rxjs": "~6.6.0",
     "signature_pad": "^3.0.0-beta.4",
     "tslib": "^2.0.0",
-    "uk.co.workingedge.phonegap.plugin.launchnavigator": "^5.0.5",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
