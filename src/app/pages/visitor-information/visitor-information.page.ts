@@ -299,7 +299,7 @@ export class VisitorInformationPage implements OnInit {
       }
     }
 
-    if (this.appointmentInfo.WorkPermitExpiry) {
+    if (this.appointmentInfo.WorkPermitExpiry && this.appointmentInfo.att_check_in_time) {
       const expireTime =  this.dateformat.transform(this.appointmentInfo.WorkPermitExpiry, 'yyyy-MM-dd HH:mm:ss');
       let currentDate;
       if (this.appointmentInfo.att_check_out_time) {
