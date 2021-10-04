@@ -351,14 +351,28 @@ export class SecurityCheckOutPagePage implements OnInit {
             element.PLATE_NUM = element.att_car_no ? element.att_car_no: element.PLATE_NUM;
 
             if (element.WorkPermitExpiry) {
-              element.WorkPermitExpiry = element.WorkPermitExpiry.replace('-', '/');
-              element.WorkPermitExpiry = element.WorkPermitExpiry.replace('-', '/');
-              const expireTime =  this.dateformat.transform(element.WorkPermitExpiry, 'yyyy-MM-dd HH:mm:ss');
+              let expireTime;
+              try {
+                element.WorkPermitExpiry = element.WorkPermitExpiry.replace('-', '/');
+                element.WorkPermitExpiry = element.WorkPermitExpiry.replace('-', '/');
+                expireTime =  this.dateformat.transform(element.WorkPermitExpiry, 'yyyy/MM/dd HH:mm:ss');
+              } catch (error) {
+                element.WorkPermitExpiry = element.WorkPermitExpiry.replace('/', '-');
+                element.WorkPermitExpiry = element.WorkPermitExpiry.replace('/', '-');
+                expireTime =  this.dateformat.transform(element.WorkPermitExpiry, 'yyyy-MM-dd HH:mm:ss');
+              }
               let currentDate;
-              element.att_check_out_time = element.att_check_out_time.replace('-', '/');
-              element.att_check_out_time = element.att_check_out_time.replace('-', '/');
+
               if (element.att_check_out_time) {
-                currentDate =  this.dateformat.transform(element.att_check_out_time, 'yyyy-MM-dd HH:mm:ss');
+                try {
+                  element.att_check_out_time = element.att_check_out_time.replace('-', '/');
+                  element.att_check_out_time = element.att_check_out_time.replace('-', '/');
+                  currentDate =  this.dateformat.transform(element.att_check_out_time, 'yyyy/MM/dd HH:mm:ss');
+                } catch (error) {
+                  element.att_check_out_time = element.att_check_out_time.replace('/', '-');
+                  element.att_check_out_time = element.att_check_out_time.replace('/', '-');
+                  currentDate =  this.dateformat.transform(element.att_check_out_time, 'yyyy-MM-dd HH:mm:ss');
+                }
               } else {
                 currentDate =  this.dateformat.transform(new Date() + '', 'yyyy-MM-dd HH:mm:ss');
               }
