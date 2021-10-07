@@ -66,7 +66,6 @@ export class HomeViewPage implements OnInit {
     private statusBar: StatusBar,
     private themeSwitcher: ThemeSwitcherService,
     public events: EventsService, public apiProvider: RestProvider) {
-        this.statusBar.backgroundColorByHexString(AppSettings.STATUS_BAR_COLOR);
   }
 
   updateSettings(){

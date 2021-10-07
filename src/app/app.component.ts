@@ -618,6 +618,23 @@ export class AppComponent {
   }
 
   loadMenuData(show) {
+
+  try {
+    const sett = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+    if (sett){
+      const appTheme = JSON.parse(sett).Table1[0].AppTheme;
+      if (appTheme) {
+        const appThemeObj = JSON.parse(appTheme);
+        if (appThemeObj.primThemeColor) {
+          this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+          this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+        }
+      }
+    }
+  } catch (error) {
+
+  }
+
     this.pages = this.menuService.getAllPages();
     this.leftMenuTitle = this.menuService.getTitle();
     this.menuService.load(null).subscribe(snapshot => {

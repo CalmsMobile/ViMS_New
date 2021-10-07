@@ -634,6 +634,11 @@ ionViewDidEnter() {
       this.visitorInfoModal.visitor_ic = this.visitorInfoModal.visitor_id;
     }
 
+    if (!this.visitorInfoModal.visitor_id) {
+      this.proceddAddorUpdate();
+      return;
+    }
+
     const params1 = {"VISITOR_IC": this.visitorInfoModal.visitor_id};
     params1["Authorize"] = {
       "AuMAppDevSeqId":'',

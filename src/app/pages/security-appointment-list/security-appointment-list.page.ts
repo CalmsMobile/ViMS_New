@@ -107,6 +107,11 @@ export class SecurityAppointmentListPage implements OnInit {
     let inputsShow = [];
     if ((item.att_check_in === 0 && item.att_check_out === 0) || (item.att_check_in === 1 && item.att_check_out === 1)) {
       message1 = "Do you wish to check-in ";
+      const endT = item.END_TIME.replace('T', ' ');
+      const eDate = this.dateformat.transform(endT, "yyyy-MM-dd HH:mm");
+      if (new Date().getTime() > new Date(eDate).getTime()) {
+       return;
+      }
     } else if (item.att_check_in === 1 && (!item.att_check_out || item.att_check_out === 0)) {
       message1 = "Do you wish to check-out ";
       if (item.overStayTime) {

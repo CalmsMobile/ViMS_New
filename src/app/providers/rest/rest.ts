@@ -831,6 +831,9 @@ deg2rad(deg) {
         }
         data.Branch = branchId;
       }
+      if (!branchID){
+        branchID = branchId;
+      }
       data.RefBranchSeqId = branchID;
     return data;
   }

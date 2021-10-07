@@ -49,7 +49,6 @@ export class HomeTAMSPage implements OnInit {
     this.GetHostAppSettings();
     this.getSettingsForTams();
     this.menu.enable(true, "myLeftMenu");
-    this.statusBar.backgroundColorByHexString(AppSettings.STATUS_BAR_COLOR);
     this.getMySchedules();
     this.getMyAttendanceWhitelistedLocations();
   }

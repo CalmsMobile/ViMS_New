@@ -22,6 +22,7 @@ export class VisitorInformationPage implements OnInit {
   isPastAppointment = false;
   appointmentInfo: any;
   fromAppointment = false;
+  fromAppointmentWalkin = false;
   preAppointmentInfo: any;
   appSettings:any = {};
   visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
@@ -92,16 +93,25 @@ export class VisitorInformationPage implements OnInit {
           if (att_check_in_time && !att_check_out_time) {
             this.validQRCode = true;
           }
+          if ((!att_check_in_time && !att_check_out_time) || (att_check_in_time && att_check_out_time)) {
+            const endT = vOb.END_TIME.replace('T', ' ');
+            const eDate = this.dateformat.transform(endT, "yyyy-MM-dd HH:mm");
+            if (new Date().getTime() > new Date(eDate).getTime()) {
+              this.validQRCode = false;
+            }
+          }
           const PLATE_NUM = this.appointmentInfo.att_car_no ? this.appointmentInfo.att_car_no: this.appointmentInfo.PLATE_NUM;
           const att_remark = this.appointmentInfo.att_remark ? this.appointmentInfo.att_remark: this.appointmentInfo.Remarks;
+          const WorkPermitExpiry = this.appointmentInfo.WorkPermitExpiry;
           this.appointmentInfo = vOb;
           this.appointmentInfo.att_check_in_time = att_check_in_time;
           this.appointmentInfo.att_check_out_time = att_check_out_time;
           this.appointmentInfo.Address = this.appointmentInfo.VISITOR_ADDRESS;
-
+          this.appointmentInfo.WorkPermitExpiry = WorkPermitExpiry;
           this.appointmentInfo.PLATE_NUM = PLATE_NUM? PLATE_NUM: this.appointmentInfo.PLATE_NUM;
           this.appointmentInfo.Remarks = att_remark?att_remark: this.appointmentInfo.Remarks;
           this.appointmentInfo.Hexcode = hexData;
+          this.fromAppointmentWalkin = true;
           if (this.appointmentInfo.SettingDetail) {
             this.QuestionnaireEnabled = JSON.parse(this.appointmentInfo.SettingDetail).QuestionnaireEnabled;
             this.MaterialDeclareEnabled = JSON.parse(this.appointmentInfo.SettingDetail).MaterialDeclareEnabled
@@ -294,7 +304,7 @@ export class VisitorInformationPage implements OnInit {
   getOverstayTime() {
 
     if (this.fromAppointment) {
-      if (!this.appointmentInfo.WorkPermitExpiry) {
+      if (!this.appointmentInfo.WorkPermitExpiry || this.appointmentInfo.WorkPermitExpiry.indexOf("1900") >= 0) {
         this.appointmentInfo.WorkPermitExpiry = this.appointmentInfo.END_TIME;
       }
     }

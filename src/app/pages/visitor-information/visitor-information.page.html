@@ -116,7 +116,7 @@
           <ion-label>{{fromAppointment? 'Appointment Information' : 'Additional Information'}}</ion-label>
         </ion-item>
         <ion-grid style="font-size: 15px;">
-          <ion-row *ngIf="fromAppointment">
+          <ion-row *ngIf="fromAppointment || fromAppointmentWalkin">
             <ion-col size="5">
               <ion-text>Start Time</ion-text>
             </ion-col>
@@ -124,7 +124,7 @@
               <ion-text class="ansColor">: {{appointmentInfo.START_TIME ? (appointmentInfo.START_TIME | date : 'dd MMM yyyy hh:mm a'): '&nbsp;&nbsp;--'}}</ion-text>
             </ion-col>
           </ion-row>
-          <ion-row *ngIf="fromAppointment">
+          <ion-row *ngIf="fromAppointment || fromAppointmentWalkin">
             <ion-col size="5">
               <ion-text>End Time</ion-text>
             </ion-col>

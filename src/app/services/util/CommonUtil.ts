@@ -187,13 +187,13 @@ export class CommonUtil{
   }
 
   checkQRCode(START_DATE, END_DATE, dateformat: DateFormatPipe) {
-    var startDate = START_DATE.split("T")[0];
-    var fDate = dateformat.transform(startDate+"", "yyyy-MM-dd");
+    var startDate = START_DATE.replace("T", " ");
+    var fDate = dateformat.transform(startDate+"", "yyyy-MM-dd HH:mm:ss");
     var fTime = new Date(fDate).getTime();
-    var endDate = END_DATE.split("T")[0];
-    var eDate = dateformat.transform(endDate+"", "yyyy-MM-dd");
+    var endDate = END_DATE.replace("T", " ");
+    var eDate = dateformat.transform(endDate+"", "yyyy-MM-dd HH:mm:ss");
     var eTime = new Date(eDate).getTime();
-    var cDate = dateformat.transform(new Date()+"", "yyyy-MM-dd");
+    var cDate = dateformat.transform(new Date()+"", "yyyy-MM-dd HH:mm:ss");
     var cTime = new Date(cDate).getTime();
     const resultObj = {
       isExpired: false,
