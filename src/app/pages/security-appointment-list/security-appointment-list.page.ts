@@ -22,7 +22,7 @@ export class SecurityAppointmentListPage implements OnInit {
   showAlert = false;
   appSettings: any = {};
   visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
-  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   constructor(private router: Router,
     public apiProvider: RestProvider,
     private commonUtil: CommonUtil,

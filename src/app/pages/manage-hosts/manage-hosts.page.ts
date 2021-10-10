@@ -27,7 +27,7 @@ export class ManageHostsPage implements OnInit {
   OffSet = 0;
   newImage = "&tes='test'"
   isAnyoneSelected = false;
-  imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=';
+  imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'Handler/PortalImageHandler.ashx?RefSlno=';
   imageURLType = '&ScreenType=30&Refresh='+ new Date().getTime();
 
 

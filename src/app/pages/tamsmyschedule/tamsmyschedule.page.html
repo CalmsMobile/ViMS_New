@@ -54,27 +54,11 @@
 
 
 <ion-list>
-  <!-- <ion-card class="card" *ngFor="let item of myScheduleListCone" >
-    <div>
-      <div style="    display: flex;
-      width: -webkit-fill-available;
-      justify-content: space-between;
-      align-items: center;">
-        <ion-label style="margin-bottom: 5px;font-weight: 600;
-    font-size: 15px;">{{item.scheduleDate | date: 'dd MMM yyyy'}}</ion-label>
-      <ion-label style="    font-size: 13px;font-weight: 600;">{{(item.fromTime? item.fromTime: '--') + '&nbsp;&nbsp;-&nbsp;&nbsp;' + (item.fromTime?item.toTime: '--')}}</ion-label>
-      </div>
-    <ion-label [ngClass]="{ 'holiday': item.shiftName === 'Public Day', 'offDay': item.shiftName === 'Off Day' , 'flexiDay': item.shiftName === 'Flexi Hours Test'}">
-      {{item.shiftName}}
-    </ion-label>
-    </div>
-
-  </ion-card> -->
 
   <ion-card class="card" *ngFor="let item of myScheduleListCone" >
     <ion-row>
       <ion-col class="right_line">
-        <ion-label class="other" [ngClass]="{ 'holiday': item.shiftName === 'Public Day', 'offDay': item.shiftName === 'Off Day' , 'flexiDay': item.shiftName === 'Rest Day'}">
+        <ion-label class="other" [ngClass]="{ 'holiday': (item.shiftName === 'Public Day' || item.shiftName === 'Public Holiday'), 'offDay': item.shiftName === 'Off Day' , 'flexiDay': item.shiftName === 'Rest Day'}">
           {{item.shiftName}}
         </ion-label>
       </ion-col>

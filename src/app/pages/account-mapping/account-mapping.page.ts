@@ -11,7 +11,7 @@ import { RestProvider } from 'src/app/providers/rest/rest';
 import * as CryptoJS from 'crypto-js';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { NavigationExtras, Router } from '@angular/router';
-import { FCM } from '@ionic-native/fcm/ngx';
+import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM';
 
 @Component({
   selector: 'app-account-mapping',
@@ -228,7 +228,8 @@ export class AccountMappingPage {
 
           //SeCurity airselangor
           // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWBuNTz/WeO1qvVIB2bfjhlh8F5RiV6x8WP7PjLLxdXuKZnutNzQ9KOC6/WyhPL9d70OW5cZ42DimysEsV8ekfffe28a1fuZWV12fXua98y9RZAGsbvuX2LFpPraYXR1mep8jcgBSBEjfAm++nm14UOZIJSY5BDNw/JXiAai3/u71w==';
-          var qrCodeString = 'KiplL0xpBgjPN7tMEcHd2AU4ytzuXCrfwzzTdoo4sf12HLSOTinn19RTxTPxA5X9b4ersp4+tE8PEPOLIiO7sNOsGM/34oSrrDQyE+m4i2DvsZoRy5Eaz5tXY1zzUhdVvUzjLPnYc+LwTxMPcLRXJBQjR2kCQAmM6RKSpC+DoJs=';
+          //izza
+          var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ogCl4F+Mp4/+kIqPagZ82uT1IIrrsfL872SursVNN3ksVjuiAfs9bXehYS5t22sU4HB1SQuLuAAghARiPDzPsukIGEUL75JAe1M+w3Iyyif7GcKB8RljTkamm9RfgIIPSs=';
           //Security 2001
           // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWAq0MmJMwqMEnJN+/FqmOCBtUYX+1nAL+E2I+YaxcatPrwLlf/RgyvUhluRZaDnUGNL5t2YLmGq4DpPZkpyqVzG';
           this.processJson(qrCodeString);
@@ -538,7 +539,7 @@ export class AccountMappingPage {
       (val) => {
         this.companyInfo = val;
         window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS,JSON.stringify(this.companyInfo));
-        this.companyImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno='+ this.scannedJson.CompanyId +"&ScreenType=20&Refresh="+ new Date().getTime();
+        this.companyImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=10001&ScreenType=10&Refresh='+ new Date().getTime();
         if(this.scannedJson.MAppId){
           switch(this.scannedJson.MAppId){
             case AppSettings.LOGINTYPES.HOSTAPPT:
@@ -1454,7 +1455,7 @@ export class AccountMappingPage {
           if (!this.hostInfo.HOST_ID){
             this.hostInfo.HOST_ID = this.hostInfo.HOSTIC;
           }
-          this.hostImage =  JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno='+  Math.round(this.hostInfo.SEQID) + "&ScreenType=30&Refresh="+ new Date().getTime();
+          this.hostImage =  JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'Handler/PortalImageHandler.ashx?RefSlno='+  Math.round(this.hostInfo.SEQID) + "&ScreenType=30&Refresh="+ new Date().getTime();
           if(result && result.Table2 && result.Table2.length > 0){
             if(result.Table2[0].Active){
               this.VM.DevicePlatform = result.Table2[0].DevicePlatform;

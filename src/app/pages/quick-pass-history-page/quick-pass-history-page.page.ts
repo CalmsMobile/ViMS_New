@@ -135,7 +135,7 @@ export class QuickPassHistoryPagePage implements OnInit {
   GetAllQuickPassVisitorsHistory(refresher, showLoading){
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
-      var HOST_ID = JSON.parse(hostData).HOST_ID;
+      var HOST_ID = JSON.parse(hostData).HOSTIC?JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
       var params = {
       "HostIC": HOST_ID,
       "OffSet": ""+ this.OffSet,

@@ -98,6 +98,8 @@ export class VisitorInformationPage implements OnInit {
             const eDate = this.dateformat.transform(endT, "yyyy-MM-dd HH:mm");
             if (new Date().getTime() > new Date(eDate).getTime()) {
               this.validQRCode = false;
+            } else {
+              this.validQRCode = true;
             }
           }
           const PLATE_NUM = this.appointmentInfo.att_car_no ? this.appointmentInfo.att_car_no: this.appointmentInfo.PLATE_NUM;

@@ -50,9 +50,10 @@
             <!-- <h5 padding-horizontal margin-vertical ion-text>{{'ACC_MAPPING.ACC_HOLD_ORG_DETAILS' | translate}}</h5> -->
             <ion-card sp-card-map-acc-org>
                 <ion-item>
-                  <img style="width: 52px;height: 52px;margin: 0px;border-radius: 50%;    margin-left: 10px;object-fit: cover;margin-bottom: 10px;" slot="start" [src]="companyImage" onError="this.src='../../assets/logo/2.png';">
+                  <img style="height: 26px;margin: 0px;" slot="start" [src]="companyImage" onError="this.src='../../assets/logo/2.png';">
                   <div>
-                    <ion-label style="margin: 5px;" class="sticky">{{companyInfo.comp_name}}</ion-label>
+                    <ion-label style="margin: 5px;font-size: 14px;
+                    font-weight: 700;" class="sticky">{{companyInfo.comp_name}}</ion-label>
                     <p style="margin: 5px;" *ngIf="companyInfo.comp_fax_no"><b>Fax:</b>{{companyInfo.comp_fax_no}}</p>
                     <p style="margin: 5px;" *ngIf="companyInfo.comp_email"><b>Email:</b>{{companyInfo.comp_email}}</p>
                     <p style="margin: 5px;" *ngIf="companyInfo.comp_office_no"><b>Office:</b>{{companyInfo.comp_office_no}}</p>

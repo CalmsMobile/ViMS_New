@@ -121,7 +121,7 @@ export class AppointmentHistoryPage implements OnInit {
 		this.loadingFinished = false;
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
-      var hostId = JSON.parse(hostData).HOST_ID;
+      var hostId = JSON.parse(hostData).HOSTIC? JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
 			var params = {"hostID":hostId,
 			"lastSyncDate":"",
 			"OffSet": ""+ this.OffSet,

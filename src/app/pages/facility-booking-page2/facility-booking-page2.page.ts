@@ -350,8 +350,8 @@ export class FacilityBookingPage2Page implements OnInit {
       }
     }else{
       this.apiProvider.GetMasterDetails().then(
-        (val) => {
-          var result = JSON.parse(JSON.stringify(val));
+        (val: any) => {
+          var result = val;
           if(result){
             // this.VM.AVAIL_ROOMS = result.Table1;
             this.VM.AVAIL_FLOOR = result.Table2;
@@ -380,7 +380,7 @@ export class FacilityBookingPage2Page implements OnInit {
     if(hostData){
       this.addAppointmentModel.STAFF_IC = JSON.parse(hostData).HOSTIC;
       this.addAppointmentModel.Booked_By = "Host";
-      this.addAppointmentModel.bookedby_id = JSON.parse(hostData).HOST_ID;
+      this.addAppointmentModel.bookedby_id = JSON.parse(hostData).HOSTIC?JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
 
       this.addAppointmentModel.CC = "";
       this.addAppointmentModel.RemarksforSecurity = "";

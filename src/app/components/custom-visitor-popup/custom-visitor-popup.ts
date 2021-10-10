@@ -30,7 +30,7 @@ export class CustomVisitorPopupComponent{
     "coverImage":"assets/images/profile_bg.jpg"
   };
   imageURLType: any = "&RefType=QR&Refresh="+ new Date().getTime();
-  visitorType ="&RefType=VPB&Refresh=";
+  visitorType ="&RefType=VP&Refresh=";
   aptid:any = "";
   aptgid:any = "";
   cid:any = "";

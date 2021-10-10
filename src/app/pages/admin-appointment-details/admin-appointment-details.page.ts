@@ -156,7 +156,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
   FACILITYSLOTLIST = [];
   facilityBooking : any;
   T_SVC:any;
-  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   constructor(public navCtrl: NavController,
     public apiProvider: RestProvider,
     private plt: Platform,
@@ -556,11 +556,6 @@ export class AdminAppointmentDetailsPage implements OnInit {
           text: 'Send',
           handler: () => {
             console.log('Reminder clicked');
-            // var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-            // var hostId = '';
-            // if(hostData){
-            //   hostId = JSON.parse(hostData).HOST_ID;
-            // }
             var params = {
               "STAFF_IC":this.appointment[0].STAFF_IC,
               "appointment_group_id":this.appointment[0].appointment_group_id
@@ -643,7 +638,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
             var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
             var hostId = '';
             if(hostData){
-              hostId = JSON.parse(hostData).HOST_ID;
+              hostId = JSON.parse(hostData).HOSTIC? JSON.parse(hostData).HOSTIC: JSON.parse(hostData).HOST_ID;
             }
             var params = {
               "hostID":hostId,
@@ -872,7 +867,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
     }
   }
 
-  async openCustomDialog(action) {
+  async openCustomDialog(action, visitor) {
     let api = '/api/Vims/GetVisitorQuestionariesByAppointmentId';
     if (action === 'doc') {
       api = '/api/Vims/GetVisitorDocsBySeqId';
@@ -881,8 +876,8 @@ export class AdminAppointmentDetailsPage implements OnInit {
     }
 
     var params = {
-      "SEQ_ID": this.appointment[0].VisitorBookingSeqId,
-      "STAFF_IC": this.appointment[0].STAFF_IC
+      "SEQ_ID": visitor.VisitorBookingSeqId,
+      "STAFF_IC": visitor.STAFF_IC
   };
   // this.VM.host_search_id = "adam";
   this.apiProvider.requestApi(params, api, true, '', '').then(
@@ -1037,7 +1032,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
             var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
             var hostId = "";
             if(hostData){
-              hostId = JSON.parse(hostData).HOST_ID;
+              hostId = JSON.parse(hostData).HOSTIC? JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
             }
             for(var i = 0 ; i< result.Table2.length ; i++){
               if(result.Table2[i].MemberID != hostId){

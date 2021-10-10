@@ -188,12 +188,12 @@ export class CommonUtil{
 
   checkQRCode(START_DATE, END_DATE, dateformat: DateFormatPipe) {
     var startDate = START_DATE.replace("T", " ");
-    var fDate = dateformat.transform(startDate+"", "yyyy-MM-dd HH:mm:ss");
+    var fDate = dateformat.transform(startDate+"", "yyyy-MM-dd");
     var fTime = new Date(fDate).getTime();
     var endDate = END_DATE.replace("T", " ");
-    var eDate = dateformat.transform(endDate+"", "yyyy-MM-dd HH:mm:ss");
+    var eDate = dateformat.transform(endDate+"", "yyyy-MM-dd");
     var eTime = new Date(eDate).getTime();
-    var cDate = dateformat.transform(new Date()+"", "yyyy-MM-dd HH:mm:ss");
+    var cDate = dateformat.transform(new Date()+"", "yyyy-MM-dd");
     var cTime = new Date(cDate).getTime();
     const resultObj = {
       isExpired: false,

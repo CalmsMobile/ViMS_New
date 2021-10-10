@@ -1,6 +1,5 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { FCM } from '@ionic-native/fcm/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AlertController, MenuController, ModalController, NavController, Platform } from '@ionic/angular';
@@ -15,6 +14,7 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ThemeSwitcherService } from './services/ThemeSwitcherService';
+import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -65,7 +65,7 @@ export class AppComponent {
       } else if (data.title === "ReloadMenu") {
         this.loadMenuData(true);
       } else if (data.title === "Update Profile Picture") {
-        var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/PortalImageHandler.ashx?RefSlno=' + data.message + "&ScreenType=30&Refresh=" + new Date().getTime();
+        var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + 'Handler/PortalImageHandler.ashx?RefSlno=' + data.message + "&ScreenType=30&Refresh=" + new Date().getTime();
         this.params.hostImage = tempImage;
       } else if (data.title === "AdminEnabled") {
         this.navCtrl.navigateRoot("admin-home");

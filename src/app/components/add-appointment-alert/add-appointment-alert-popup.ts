@@ -19,7 +19,7 @@ export class AddAppointmentAlertPopupComponent {
   reaponseArray: any = [];
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
-  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   newImage = "&tes='test'";
 
   constructor(public viewCtrl: ModalController,
@@ -43,7 +43,6 @@ export class AddAppointmentAlertPopupComponent {
     if(hostData){
       hostName = JSON.parse(hostData).HOSTNAME;
     }
-    // var qrCodeString = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=' + this.qrCodeString + '&RefType=QR&Refresh='+ new Date().getTime();
 
   }
 

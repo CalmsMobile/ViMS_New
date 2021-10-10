@@ -3,7 +3,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AlertController, MenuController, NavController, Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { FCM } from '@ionic-native/fcm/ngx';
+import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -96,7 +96,25 @@ export class HomeTAMSPage implements OnInit {
         }
       );
     }
+    const masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+    if (!masterDetails){
+      this.getMasterdetails();
+    }
+  }
 
+
+  getMasterdetails(){
+    this.apiProvider.GetMasterDetails().then(
+      (val: any) => {
+        var result = val;
+        if(result){
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+        }
+      },
+      (err) => {
+
+      }
+    );
   }
 
   getSettingsForTams() {
@@ -420,7 +438,7 @@ initializeFirebaseIOS() {
     const hostData = localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     const cmpnyData = localStorage.getItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS);
     if (hostData) {
-      var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/PortalImageHandler.ashx?RefSlno='
+      var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + 'Handler/PortalImageHandler.ashx?RefSlno='
       + JSON.parse(hostData).SEQID + "&ScreenType=30&Refresh=" + new Date().getTime();
       this.hostObj.hostImage = tempImage;
       this.hostObj.HOSTNAME = JSON.parse(hostData).HOSTNAME;

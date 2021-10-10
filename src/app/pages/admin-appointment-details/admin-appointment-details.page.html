@@ -163,23 +163,6 @@
             </ion-row>
         </ion-grid>
     </ion-item-divider>
-    <ion-item-divider transparent *ngIf="appointment[0].PLATE_NUM" style="padding: 0px;">
-        <ion-grid style="--padding-end: 0px;
-        padding-inline-end: 0px;">
-            <ion-row style="padding: 0px;">
-                <ion-col size="4">
-                  <ion-icon name="bicycle-outline"></ion-icon>
-                  <span class="visitorDesc">
-                    Vehicle No
-                  </span>
-                </ion-col>
-                <ion-col>
-                    <p no-margin>{{appointment[0].PLATE_NUM}}</p>
-                    <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
-                </ion-col>
-            </ion-row>
-        </ion-grid>
-    </ion-item-divider>
     <ion-item-divider transparent *ngIf="appointment[0].Remarks" style="padding: 0px;">
         <ion-grid style="--padding-end: 0px;
         padding-inline-end: 0px;">
@@ -275,25 +258,6 @@ class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.lengt
         </ion-row>
     </ion-grid>
 </ion-item-divider>
-<ion-item-divider transparent *ngIf="appointment && appointment[0] && appointment[0].PLATE_NUM"
-    style="padding: 0px;">
-    <ion-grid style="--padding-end: 0px;
-    padding-inline-end: 0px;">
-        <ion-row style="padding: 0px;">
-            <ion-col size="4">
-              <ion-icon name="bicycle-outline"></ion-icon>
-              <span class="visitorDesc">
-                Vehicle No
-              </span>
-            </ion-col>
-            <ion-col size="1"></ion-col>
-            <ion-col>
-                <p no-margin>{{appointment[0].PLATE_NUM}}</p>
-                <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-</ion-item-divider>
 <ion-item-divider transparent
     *ngIf="(appointment && appointment[0]  && appointment[0].Remarks) && (!facilityBooking || !facilityBooking[0]  || !facilityBooking[0].Remarks)"
     style="padding: 0px;">
@@ -335,9 +299,18 @@ class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.lengt
 </ion-card>
 
 
+<div *ngIf="appointment.showQuestion || appointment.showDocument && appointment.showDelaration">
+  <div *ngFor="let visitors of appointment" style="    padding-top: 18px;">
+    <ion-label style="
+    width: 100%;
+    background: lightgray;
+    display: block;
+    padding: 8px;
+    border-radius: 10px;
+    text-align: start;" *ngIf="appointment.length > 1">{{visitors.VISITOR_NAME}}</ion-label>
     <ion-card no-margin mode="ios" style="margin-top: 15px !important;
     padding: 10px;
-    padding-left: 0px;" (click)="openCustomDialog('question')" *ngIf="appointment.showQuestion">
+    padding-left: 0px;" (click)="openCustomDialog('question', visitors)" *ngIf="appointment.showQuestion">
       <ion-item lines="none">
         <ion-icon color="primary" slot="start" name="document-text-outline"></ion-icon>
         <ion-label>Questionaries</ion-label>
@@ -347,7 +320,7 @@ class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.lengt
 
 
     <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
-    padding-left: 0px;" (click)="openCustomDialog('doc')" *ngIf="appointment.showDocument">
+    padding-left: 0px;" (click)="openCustomDialog('doc', visitors)" *ngIf="appointment.showDocument">
       <ion-item lines="none">
         <ion-icon color="primary" slot="start" name="document-attach-outline"></ion-icon>
         <ion-label>Verification Documents</ion-label>
@@ -356,13 +329,15 @@ class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.lengt
     </ion-card>
 
     <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
-    padding-left: 0px;" (click)="openCustomDialog('declaration')" *ngIf="appointment.showDelaration">
+    padding-left: 0px;" (click)="openCustomDialog('declaration', visitors)" *ngIf="appointment.showDelaration">
       <ion-item lines="none">
         <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
         <ion-label>Item Checklist</ion-label>
         <ion-icon name="chevron-forward-outline"></ion-icon>
       </ion-item>
     </ion-card>
+  </div>
+</div>
 
 
 <ion-card no-margin mode="ios" style="width:100%;margin: 0px !important;padding: 0px;

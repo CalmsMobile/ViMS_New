@@ -30,7 +30,7 @@ export class AppointmentDetailsPage implements OnInit {
   notifyMin  = 0;
   data: any = {
     "logo": JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=',
-    "hostlogo": JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=',
+    "hostlogo": JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'Handler/PortalImageHandler.ashx?RefSlno=',
     "coverImage":"assets/images/profile_bg.jpg"
   };
   myDate:any;
@@ -161,7 +161,7 @@ export class AppointmentDetailsPage implements OnInit {
   showDocument = false;
   showDelaration = false;
   FACILITYSLOTLIST = [];
-  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   imageURLTypeHOST = '&ScreenType=30&Refresh='+ new Date().getTime();
   constructor(public navCtrl: NavController,
     public apiProvider: RestProvider,
@@ -577,11 +577,6 @@ export class AppointmentDetailsPage implements OnInit {
           text: 'Send',
           handler: () => {
             console.log('Reminder clicked');
-            // var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-            // var hostId = '';
-            // if(hostData){
-            //   hostId = JSON.parse(hostData).HOST_ID;
-            // }
             var params = {
               "STAFF_IC":this.appointment[0].STAFF_IC,
               "appointment_group_id":this.appointment[0].appointment_group_id
@@ -742,7 +737,7 @@ export class AppointmentDetailsPage implements OnInit {
             var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
             var hostId = '';
             if(hostData){
-              hostId = JSON.parse(hostData).HOST_ID;
+              hostId = JSON.parse(hostData).HOSTIC? JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
             }
             var bookingID= this.appointment[0].FacilityBookingID;
             if(!bookingID || bookingID === '0'){
@@ -941,7 +936,7 @@ export class AppointmentDetailsPage implements OnInit {
           if(result.Table2){
             var hostId = "";
             if(hostData){
-              hostId = JSON.parse(hostData).HOST_ID;
+              hostId = JSON.parse(hostData).HOSTIC?JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
             }
             for(var i = 0 ; i< result.Table2.length ; i++){
               if(result.Table2[i].MemberID == hostId){

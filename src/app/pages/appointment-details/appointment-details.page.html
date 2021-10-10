@@ -205,23 +205,6 @@
             padding-inline-end: 0px;">
                 <ion-row style="padding: 0px;">
                     <ion-col size="4">
-                      <ion-icon name="bicycle-outline"></ion-icon>
-                      <span class="visitorDesc">
-                        Vehicle No
-                      </span>
-                    </ion-col>
-                    <ion-col>
-                        <p no-margin>{{appointment[0].PLATE_NUM?appointment[0].PLATE_NUM: '&nbsp;&nbsp;--'}}</p>
-                        <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-item-divider>
-        <ion-item-divider transparent style="padding: 0px;">
-            <ion-grid style="--padding-end: 0px;
-            padding-inline-end: 0px;">
-                <ion-row style="padding: 0px;">
-                    <ion-col size="4">
                         <ion-icon name="reader-outline"></ion-icon>
                         <span class="visitorDesc">
                             Remarks
@@ -312,25 +295,6 @@
                 </ion-row>
             </ion-grid>
         </ion-item-divider>
-        <ion-item-divider transparent *ngIf="appointment && appointment[0] && appointment[0].PLATE_NUM"
-            style="padding: 0px;">
-            <ion-grid style="--padding-end: 0px;
-            padding-inline-end: 0px;">
-                <ion-row style="padding: 0px;">
-                    <ion-col size="4">
-                      <ion-icon name="bicycle-outline"></ion-icon>
-                      <span class="visitorDesc">
-                        Vehicle No
-                      </span>
-                    </ion-col>
-                    <ion-col size="1"></ion-col>
-                    <ion-col>
-                        <p no-margin>{{appointment[0].PLATE_NUM}}</p>
-                        <!-- <p class='stable'>{{appointment[0].END_DATE | date:'h:mm a'}}</p> -->
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-item-divider>
         <ion-item-divider transparent
             *ngIf="(appointment && appointment[0]  && appointment[0].Remarks) && (!facilityBooking || !facilityBooking[0]  || !facilityBooking[0].Remarks)"
             style="padding: 0px;">
@@ -416,7 +380,7 @@
         </ion-item>
     </ion-card>
 
-    <div *ngIf="showQuestion && showQuestion && showQuestion">
+    <div *ngIf="showQuestion || showDocument && showDelaration">
       <div *ngFor="let visitors of appointment" style="    padding-top: 18px;">
         <ion-label style="
         width: 100%;

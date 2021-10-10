@@ -19,7 +19,7 @@ export class FacilityBookingPage implements OnInit {
   // @ViewChild(Navbar) navBar: Navbar;
   @ViewChild(IonContent) content: IonContent;
   translation:any = {};
-  imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=';
+  imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'Handler/PortalImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
   imageURLType = '&ScreenType=30&Refresh='+ new Date().getTime();
   newImage = "&tes='test'";

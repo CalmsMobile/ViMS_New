@@ -243,7 +243,7 @@ export class MenuService implements IService {
             dept = JSON.parse(hostData).DEPARTMENT_REFID;
             email = JSON.parse(hostData).HOST_EMAIL;
             companyImage = companyImage + '/Handler/PortalImageHandler.ashx?RefSlno=' + JSON.parse(qrData).CompanyId + "&ScreenType=10&Refresh=" + new Date().getTime();
-            image = image + '/Handler/PortalImageHandler.ashx?RefSlno=' + Math.round(JSON.parse(hostData).SEQID) + "&ScreenType=30&Refresh=" + new Date().getTime();
+            image = image + 'Handler/PortalImageHandler.ashx?RefSlno=' + Math.round(JSON.parse(hostData).SEQID) + "&ScreenType=30&Refresh=" + new Date().getTime();
         }
         var companyData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS);
         if (companyData) {

@@ -21,11 +21,11 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
   // @ViewChild(Navbar) navBar: Navbar;
   @ViewChild(IonContent) content: IonContent;
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
-  hostimageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=';
+  hostimageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'Handler/PortalImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
   imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   imageURLTypeHOST = '&ScreenType=30&Refresh='+ new Date().getTime();
-  imageURLTypeVPB = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLTypeVPB = '&RefType=VP&Refresh='+ new Date().getTime();
   newImage = "&tes='test'";
   addAppointmentModel = new AddAppointmentModel();
   T_SVC:any;
@@ -199,7 +199,17 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
         case 'AddVisitorNew':
           const data = data1.title;
           const aData = data1.message;
-          this.contactsarray = data;
+
+          this.contactsarray = [];
+          if (data) {
+            data.forEach(element => {
+              const visi = this.contactsarray.find(item => (item.EMAIL === element.EMAIL && item.visitor_id === element.visitor_id));
+              if (!visi) {
+                this.contactsarray.push(element);
+              }
+
+            });
+          }
           if(aData){
             this.VM = JSON.parse(aData);
           }
@@ -263,7 +273,16 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
             const user = data1.title;
             const dataObj = data1.message;
             if(user == "ManageVisitor"){
-              this.contactsarray = dataObj.data;
+              this.contactsarray = [];
+              if (dataObj.data) {
+                dataObj.data.forEach(element => {
+                  const visi = this.contactsarray.find(item => (item.EMAIL === element.EMAIL && item.visitor_id === element.visitor_id));
+                  if (!visi) {
+                    this.contactsarray.push(element);
+                  }
+
+                });
+              }
               if(this.passData.aData){
                 this.VM = JSON.parse(dataObj.aData);
               }
@@ -636,7 +655,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     if(hostData){
       this.addAppointmentModel.STAFF_IC = JSON.parse(hostData).HOSTIC;
       this.addAppointmentModel.Booked_By = "Host";
-      this.addAppointmentModel.bookedby_id = JSON.parse(hostData).HOST_ID;
+      this.addAppointmentModel.bookedby_id = JSON.parse(hostData).HOSTIC ? JSON.parse(hostData).HOSTIC: JSON.parse(hostData).HOST_ID;
 
       this.addAppointmentModel.CC = "";
       this.addAppointmentModel.RemarksforSecurity = "";
@@ -1093,8 +1112,8 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
       }
     }else{
       this.apiProvider.GetMasterDetails().then(
-        (val) => {
-          var result = JSON.parse(JSON.stringify(val));
+        (val: any) => {
+          var result = val;
           if(result){
             //this.storage.set(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(val));

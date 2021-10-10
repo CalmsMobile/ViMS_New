@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { FCM } from '@ionic-native/fcm/ngx';
+import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { NavController, Platform, MenuController, IonTabs, ModalController } from '@ionic/angular';
@@ -163,6 +163,7 @@ export class HomeViewPage implements OnInit {
               this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
             }
           }
+
         } catch (e) {
 
         }
@@ -171,6 +172,10 @@ export class HomeViewPage implements OnInit {
       (err) => {
       }
     );
+    const masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+    if (!masterDetails){
+      this.getMasterdetails();
+    }
   }
 
   createBooking(){
@@ -311,7 +316,7 @@ export class HomeViewPage implements OnInit {
   getMasterdetails(){
     this.apiProvider.GetMasterDetails().then(
       (val) => {
-        var result = JSON.parse(val.toString());
+        var result = val;
         if(result){
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
         }

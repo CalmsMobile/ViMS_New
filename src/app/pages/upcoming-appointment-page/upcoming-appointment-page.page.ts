@@ -265,7 +265,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
     }
     if(hostData){
       this.loadingFinished = false;
-      var hostId = JSON.parse(hostData).HOST_ID;
+      var hostId = JSON.parse(hostData).HOSTIC?JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
 			var params = {"hostID":hostId,
 			"lastSyncDate":"",
 			"OffSet": ""+ this.OffSet,

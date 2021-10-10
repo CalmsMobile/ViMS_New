@@ -129,7 +129,7 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
             }
 
             if(this.visitor.VisitorBookingSeqId){
-              this.imageType = "&RefType=VPB&Refresh="+ new Date().getTime();
+              this.imageType = "&RefType=VP&Refresh="+ new Date().getTime();
             }
             this.data.profile = this.visitor.VISITOR_IMG ? this.visitor.VISITOR_IMG : "";
             if(this.visitor.VISITOR_IMG){

@@ -17,7 +17,7 @@ import { EventsService } from 'src/app/services/EventsService';
 export class UserProfilePagePage implements OnInit {
 
   data: any = {
-    "logo": JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/PortalImageHandler.ashx?RefSlno=',
+    "logo": JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + 'Handler/PortalImageHandler.ashx?RefSlno=',
     "coverImage": "assets/images/profile_bg.jpg",
     "profile": {},
     "AVAIL_FLOOR": []
@@ -100,8 +100,8 @@ export class UserProfilePagePage implements OnInit {
       this.data.AVAIL_FLOOR = JSON.parse(masterDetails).Table2;
     } else {
       this.apiProvider.GetMasterDetails().then(
-        (val) => {
-          var result = JSON.parse(JSON.stringify(val));
+        (val:any) => {
+          var result = val;
           if (result) {
             this.data.AVAIL_FLOOR = result.Table2;
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS, JSON.stringify(result));
@@ -222,7 +222,7 @@ export class UserProfilePagePage implements OnInit {
     if (hostData) {
       this.data.profile.HOSTIC = JSON.parse(hostData).HOSTIC;
       if (!this.data.profile.HOSTIC) {
-        this.data.profile.HOSTIC = JSON.parse(hostData).HOST_ID;
+        this.data.profile.HOSTIC = JSON.parse(hostData).HOSTIC?JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
       }
     }
     if (!this.data.profile.HOSTIC) {

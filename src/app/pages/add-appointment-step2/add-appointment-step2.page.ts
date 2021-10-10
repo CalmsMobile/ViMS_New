@@ -410,7 +410,7 @@ export class AddAppointmentStep2Page implements OnInit {
     if(hostData){
       this.addAppointmentModel.STAFF_IC = JSON.parse(hostData).HOSTIC;
       this.addAppointmentModel.Booked_By = "Host";
-      this.addAppointmentModel.bookedby_id = JSON.parse(hostData).HOST_ID;
+      this.addAppointmentModel.bookedby_id = JSON.parse(hostData).HOSTIC? JSON.parse(hostData).HOSTIC: JSON.parse(hostData).HOST_ID;
 
       this.addAppointmentModel.CC = "";
       this.addAppointmentModel.RemarksforSecurity = "";
@@ -611,7 +611,7 @@ export class AddAppointmentStep2Page implements OnInit {
     if(hostData){
       this.addAppointmentModel.STAFF_IC = JSON.parse(hostData).HOSTIC;
       this.addAppointmentModel.Booked_By = "Host";
-      this.addAppointmentModel.bookedby_id = JSON.parse(hostData).HOST_ID;
+      this.addAppointmentModel.bookedby_id = JSON.parse(hostData).HOSTIC? JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
 
       this.addAppointmentModel.CC = "";
       this.addAppointmentModel.RemarksforSecurity = "";

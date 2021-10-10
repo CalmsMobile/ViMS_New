@@ -107,7 +107,7 @@ export class CreateQuickPassPage implements OnInit {
           this.visitorInfoModal.visitor_id = preVisitor.VISITOR_IC;
           this.visitorInfoModal.VisitorBookingSeqId = preVisitor.VisitorBookingSeqId;
           if (preVisitor.VisitorBookingSeqId) {
-            this.imageType = "&RefType=VPB&Refresh=" + new Date().getTime();
+            this.imageType = "&RefType=VP&Refresh=" + new Date().getTime();
           }
           this.data.profile = preVisitor.VISITOR_IMG ? preVisitor.VISITOR_IMG : "";
           if (preVisitor.VISITOR_IMG) {
@@ -217,7 +217,7 @@ export class CreateQuickPassPage implements OnInit {
 
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if (hostData) {
-      var hostId = JSON.parse(hostData).HOST_ID;
+      var hostId = JSON.parse(hostData).HOSTIC? JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
       var visitorObj = {
         HostIC: hostId,
         ExpiryTime: this.expiryTime,
