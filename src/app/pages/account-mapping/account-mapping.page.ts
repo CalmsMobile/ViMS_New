@@ -229,9 +229,9 @@ export class AccountMappingPage {
           //SeCurity airselangor
           // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWBuNTz/WeO1qvVIB2bfjhlh8F5RiV6x8WP7PjLLxdXuKZnutNzQ9KOC6/WyhPL9d70OW5cZ42DimysEsV8ekfffe28a1fuZWV12fXua98y9RZAGsbvuX2LFpPraYXR1mep8jcgBSBEjfAm++nm14UOZIJSY5BDNw/JXiAai3/u71w==';
           //izza
-          var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ogCl4F+Mp4/+kIqPagZ82uT1IIrrsfL872SursVNN3ksVjuiAfs9bXehYS5t22sU4HB1SQuLuAAghARiPDzPsukIGEUL75JAe1M+w3Iyyif7GcKB8RljTkamm9RfgIIPSs=';
-          //Security 2001
-          // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWAq0MmJMwqMEnJN+/FqmOCBtUYX+1nAL+E2I+YaxcatPrwLlf/RgyvUhluRZaDnUGNL5t2YLmGq4DpPZkpyqVzG';
+          // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ogCl4F+Mp4/+kIqPagZ82uT1IIrrsfL872SursVNN3ksVjuiAfs9bXehYS5t22sU4HB1SQuLuAAghARiPDzPsukIGEUL75JAe1M+w3Iyyif7GcKB8RljTkamm9RfgIIPSs=';
+          //Security 2008
+          var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWDgpukNimB3begKQGzVF9j5TTrZ8je74e3X0lu8yu1NMn4vzPe24G7x5Wbb8ioqfbRFpyqssDRBW5GImh460lUaAQSQcT/vMeaGrHj9ieulS8Itj0Q6Xi0ekK0xU9AuzfCMzP/tnPvbLCb3QLznBst7';
           this.processJson(qrCodeString);
     }else {
       this.options = {
