@@ -161,6 +161,7 @@ export class AppointmentDetailsPage implements OnInit {
   showDocument = false;
   showDelaration = false;
   FACILITYSLOTLIST = [];
+  appointmentSettingsDetails: any;
   imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   imageURLTypeHOST = '&ScreenType=30&Refresh='+ new Date().getTime();
   constructor(public navCtrl: NavController,
@@ -394,7 +395,8 @@ export class AppointmentDetailsPage implements OnInit {
           aptid: this.appointment[0].VisitorBookingSeqId,
           aptgid : title,
           cid: this.appointment[0].cid,
-          HexCode: visitor.HexCode
+          HexCode: visitor.HexCode,
+          appointmentSettingsDetails: this.appointmentSettingsDetails
         }
       },
       showBackdrop: true,
@@ -1386,10 +1388,11 @@ getRefVisitorCateg(visitor_ctg_id) {
       if(result){
         if (result.Table.length > 0) {
           if (result.Table[0].Code === 10 && result.Table1 && result.Table1[0]) {
-            const settingsDetails = JSON.parse(result.Table1[0].SettingDetail);
-            this.showQuestion = settingsDetails.QuestionnaireEnabled;
-            this.showDelaration = settingsDetails.MaterialDeclareEnabled;
-            this.showDocument = settingsDetails.AttachmentUploadEnabled;
+            const SettingsDetails = JSON.parse(result.Table1[0].SettingDetail);
+            this.showQuestion = SettingsDetails.QuestionnaireEnabled;
+            this.showDelaration = SettingsDetails.MaterialDeclareEnabled;
+            this.showDocument = SettingsDetails.AttachmentUploadEnabled;
+            this.appointmentSettingsDetails = result.Table1[0].HostSettingDetail;
           }
         }
 
