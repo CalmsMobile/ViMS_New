@@ -216,8 +216,8 @@ export class AccountMappingPage {
         // var qrCodeString = 'JAjy9LN8AB8wHRt0BMJ4MqSSSCw4WjBwUHv8LzmWM/5fagcSKXILTm615e9l5H8mIfGEW+44G7/xXLUNEbSsewgrv5c3b8dC1uXbknygWZNylFcLYacwMhQ7BQ991ssvnBTWRS8cfHbufkNpXbDi2A==';
           //FAcility Displaya
           // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmsOWXsylRj+rCMMx0EgAXhUReWw865+hTAeDCEKjxB1Ow==';
-          //HOST 2001
-          // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5oiFeX7BsAqxUzljIRJdDWo7fjFdjd5CYtyMqUPAqE82J7INYJg3yt8iYa+5P2zoCB+8qNoUbmH80zVyCrzpZJobcHl1pkIWqja9wnesvEJzOw==';
+          //HOST 2008
+          var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUcdBBcncnJbai/bxBSij/QALARigcOOAhpyMll9L68aTUHCArXODqM850yDc3R0pT0fa8zJy/2ji+vu2dXn7uyuZtQC9WYPVkRiLqWLXleXwyfJKXi7Zv/NEPxENS53knfOtrYu9msetLxJCglUq2bQ=';
           //ACK
           // var qrCodeString = 'qYNb75lXZms19Ri+u9GuOKEOnI+Bw2rOjRNRz3F3gK5yStsC7HV5d0FoZmKl97l5D/TzMTQCqKnahYPuTqZ6TrHijxnIJnXGCrbD93loR9n/96rUnC+77Vl8D/VZ3XTIwc3axSyZQ7DQC4g4NiQGJlH8pY7wGwxGkeDBwIRR7GA=';
 
@@ -229,9 +229,9 @@ export class AccountMappingPage {
           //SeCurity airselangor
           // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWBuNTz/WeO1qvVIB2bfjhlh8F5RiV6x8WP7PjLLxdXuKZnutNzQ9KOC6/WyhPL9d70OW5cZ42DimysEsV8ekfffe28a1fuZWV12fXua98y9RZAGsbvuX2LFpPraYXR1mep8jcgBSBEjfAm++nm14UOZIJSY5BDNw/JXiAai3/u71w==';
           //izza
-          var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ogCl4F+Mp4/+kIqPagZ82uT1IIrrsfL872SursVNN3ksVjuiAfs9bXehYS5t22sU4HB1SQuLuAAghARiPDzPsukIGEUL75JAe1M+w3Iyyif7GcKB8RljTkamm9RfgIIPSs=';
-          //Security 2001
-          // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWAq0MmJMwqMEnJN+/FqmOCBtUYX+1nAL+E2I+YaxcatPrwLlf/RgyvUhluRZaDnUGNL5t2YLmGq4DpPZkpyqVzG';
+          // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ogCl4F+Mp4/+kIqPagZ82uT1IIrrsfL872SursVNN3ksVjuiAfs9bXehYS5t22sU4HB1SQuLuAAghARiPDzPsukIGEUL75JAe1M+w3Iyyif7GcKB8RljTkamm9RfgIIPSs=';
+          //Security 2008
+          // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWDgpukNimB3begKQGzVF9j5TTrZ8je74e3X0lu8yu1NMn4vzPe24G7x5Wbb8ioqfbRFpyqssDRBW5GImh460lUaAQSQcT/vMeaGrHj9ieulS8Itj0Q6Xi0ekK0xU9AuzfCMzP/tnPvbLCb3QLznBst7';
           this.processJson(qrCodeString);
     }else {
       this.options = {

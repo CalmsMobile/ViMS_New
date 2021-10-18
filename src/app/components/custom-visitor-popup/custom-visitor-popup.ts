@@ -42,6 +42,7 @@ export class CustomVisitorPopupComponent{
   INTERVAL: any;
   TIMEOUT = 0;
   IsDynamicQR = false;
+  settings: any;
   constructor(public viewCtrl: ModalController,
     public toastCtrl: ToastController,
     private apiProvider: RestProvider,
@@ -59,6 +60,10 @@ export class CustomVisitorPopupComponent{
       this.aptgid = navParams.data.data.aptgid;
       this.cid = navParams.data.data.cid;
       var HexCode = navParams.data.data.HexCode;
+      const sett = navParams.data.data.appointmentSettingsDetails;
+      if (sett) {
+        this.settings = JSON.parse(sett);
+      }
       this.userImgPath = this.data.logo + this.visitor.VisitorBookingSeqId + this.visitorType + new Date().getTime();
 
       this.visitor.VisitorCategory = commonUtil.getCategory(this.visitor.VisitorCategory, false);

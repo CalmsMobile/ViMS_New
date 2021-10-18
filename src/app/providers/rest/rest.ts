@@ -2337,7 +2337,7 @@ deg2rad(deg) {
   }
 
   async DeleteNotification(data){
-    data  = this.setAuthorizedInfo(data, '', '');
+    data  = this.setAuthorizedInfo(data, 'WEB', '');
     var loading = await this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemovePushNotification';
     console.log("API: "+ url);

@@ -25,6 +25,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
 
 
   appointment : any;
+  appointmentSettingsDetails: any;
   notifyTime  = 0;
   notifyMin  = 0;
   autoApproval: any = false;
@@ -245,6 +246,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
               this.appointment.showQuestion = settingsDetails.QuestionnaireEnabled;
               this.appointment.showDelaration = settingsDetails.MaterialDeclareEnabled;
               this.appointment.showDocument = settingsDetails.AttachmentUploadEnabled;
+              this.appointmentSettingsDetails = result.Table1[0].HostSettingDetail;
             }
           }
 
@@ -375,7 +377,8 @@ export class AdminAppointmentDetailsPage implements OnInit {
             aptid: this.appointment[0].VisitorBookingSeqId,
             aptgid : this.appointment[0].appointment_group_id,
             cid: this.appointment[0].cid,
-            HexCode: visitor.HexCode
+            HexCode: visitor.HexCode,
+            appointmentSettingsDetails: this.appointmentSettingsDetails
           }
         },
         showBackdrop: true,

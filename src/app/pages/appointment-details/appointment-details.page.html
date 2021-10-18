@@ -426,9 +426,9 @@
         </ion-fab-button>
         <ion-fab-list side="top">
             <ion-fab-button color="btnthm"
-                *ngIf="appointment && appointment[0] && !appointment[0].isFacilityAlone && appointment[0].Approval_Status === 'Approved'"
+                *ngIf="appointment && appointment[0] && !appointment[0].isFacilityAlone"
                 (click)="remindAppintment(fab)"><i class="siva-icon-calendar-1"></i></ion-fab-button>
-            <ion-fab-button color="btnthm" (click)="editAppintment(fab)"><i class="siva-icon-pencil"></i>
+            <ion-fab-button *ngIf="appointment[0].Approval_Status !== 'Approved'" color="btnthm" (click)="editAppintment(fab)"><i class="siva-icon-pencil"></i>
             </ion-fab-button>
             <ion-fab-button color="btnthm" (click)="deleteAppintment(fab, '')"><i class="siva-icon-trash-empty"></i>
             </ion-fab-button>
