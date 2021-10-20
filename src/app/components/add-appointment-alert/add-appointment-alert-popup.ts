@@ -19,7 +19,7 @@ export class AddAppointmentAlertPopupComponent {
   reaponseArray: any = [];
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   hoursMinutes = new Date().toString().split(':');
-  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
   newImage = "&tes='test'";
 
   constructor(public viewCtrl: ModalController,

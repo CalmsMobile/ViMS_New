@@ -26,7 +26,7 @@ export class AckVisitorLisPage implements OnInit {
   isGroup = false;
   showConfirmScanBtns = false;
   logo = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
-  RefTypeVP= '&RefType=VP&Refresh='+ new Date().getTime();
+  RefTypeVP= '&RefType=VPB&Refresh='+ new Date().getTime();
   VisitorCategory = "";
   constructor(public navCtrl: NavController,
     public apiProvider : RestProvider,

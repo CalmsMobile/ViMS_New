@@ -25,7 +25,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
   hoursMinutes = new Date().toString().split(':');
   imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   imageURLTypeHOST = '&ScreenType=30&Refresh='+ new Date().getTime();
-  imageURLTypeVPB = '&RefType=VP&Refresh='+ new Date().getTime();
+  imageURLTypeVPB = '&RefType=VPB&Refresh='+ new Date().getTime();
   newImage = "&tes='test'";
   addAppointmentModel = new AddAppointmentModel();
   T_SVC:any;

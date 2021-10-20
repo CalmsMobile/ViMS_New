@@ -731,7 +731,7 @@ ionViewDidEnter() {
     if(this.VM.visitors) {
       this.VM.visitors.forEach(element => {
         if (((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
-        (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) &&
+        (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) ||
         (element.EMAIL && element.EMAIL.toLowerCase() === this.visitorInfoModal.visitor_email.toLowerCase())) {
           dublicate = true;
           return;

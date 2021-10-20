@@ -157,7 +157,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
   FACILITYSLOTLIST = [];
   facilityBooking : any;
   T_SVC:any;
-  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
   constructor(public navCtrl: NavController,
     public apiProvider: RestProvider,
     private plt: Platform,

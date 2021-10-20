@@ -162,7 +162,7 @@ export class AppointmentDetailsPage implements OnInit {
   showDelaration = false;
   FACILITYSLOTLIST = [];
   appointmentSettingsDetails: any;
-  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
   imageURLTypeHOST = '&ScreenType=30&Refresh='+ new Date().getTime();
   constructor(public navCtrl: NavController,
     public apiProvider: RestProvider,

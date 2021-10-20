@@ -231,7 +231,7 @@ export class AccountMappingPage {
           //izza
           // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ogCl4F+Mp4/+kIqPagZ82uT1IIrrsfL872SursVNN3ksVjuiAfs9bXehYS5t22sU4HB1SQuLuAAghARiPDzPsukIGEUL75JAe1M+w3Iyyif7GcKB8RljTkamm9RfgIIPSs=';
           //Security 2008
-          var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWDgpukNimB3begKQGzVF9j5TTrZ8je74e3X0lu8yu1NMn4vzPe24G7x5Wbb8ioqfbRFpyqssDRBW5GImh460lUaAQSQcT/vMeaGrHj9ieulS8Itj0Q6Xi0ekK0xU9AuzfCMzP/tnPvbLCb3QLznBst7';
+          // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWDgpukNimB3begKQGzVF9j5TTrZ8je74e3X0lu8yu1NMn4vzPe24G7x5Wbb8ioqfbRFpyqssDRBW5GImh460lUaAQSQcT/vMeaGrHj9ieulS8Itj0Q6Xi0ekK0xU9AuzfCMzP/tnPvbLCb3QLznBst7';
           this.processJson(qrCodeString);
     }else {
       this.options = {
