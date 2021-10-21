@@ -607,6 +607,16 @@ export class AppointmentDetailsPage implements OnInit {
                 } else if(err && JSON.parse(err) && JSON.parse(err).message){
                   message =JSON.parse(err).message;
                 }
+                if(!message){
+                  try {
+                    const errRes = JSON.parse(err);
+                    if (errRes && errRes.Table1 && errRes.Table1.length > 0){
+                      message = errRes.Table1[0].Description
+                    }
+                  } catch (error) {
+
+                  }
+                }
                 if(message){
                   // message = " Unknown"
                   let alert = this.alertCtrl.create({
