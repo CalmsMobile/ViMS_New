@@ -229,9 +229,9 @@ export class AccountMappingPage {
           //SeCurity airselangor
           // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWBuNTz/WeO1qvVIB2bfjhlh8F5RiV6x8WP7PjLLxdXuKZnutNzQ9KOC6/WyhPL9d70OW5cZ42DimysEsV8ekfffe28a1fuZWV12fXua98y9RZAGsbvuX2LFpPraYXR1mep8jcgBSBEjfAm++nm14UOZIJSY5BDNw/JXiAai3/u71w==';
           //izza
-          // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ogCl4F+Mp4/+kIqPagZ82uT1IIrrsfL872SursVNN3ksVjuiAfs9bXehYS5t22sU4HB1SQuLuAAghARiPDzPsukIGEUL75JAe1M+w3Iyyif7GcKB8RljTkamm9RfgIIPSs=';
+          // var qrCodeString = 'JAjy9LN8AB8wHRt0BMJ4MqSSSCw4WjBwUHv8LzmWM/5fagcSKXILTm615e9l5H8mIfGEW+44G7/xXLUNEbSsewgrv5c3b8dC1uXbknygWZNylFcLYacwMhQ7BQ991ssvnBTWRS8cfHbufkNpXbDi2A==';
           //Security 2008
-          // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWDgpukNimB3begKQGzVF9j5TTrZ8je74e3X0lu8yu1NMn4vzPe24G7x5Wbb8ioqfbRFpyqssDRBW5GImh460lUaAQSQcT/vMeaGrHj9ieulS8Itj0Q6Xi0ekK0xU9AuzfCMzP/tnPvbLCb3QLznBst7';
+          var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWBSsU2NhgGhIXri8n+WoeqWYAiyDLjqnXLUqc2VLywUxsGpCi6lq14kBFt5IoOmFK9RcmldgpHZ6ZBvVWfbXYmQey9SrAeQOQ5qtZzSJTJKK5D0vqF8oxNU38P6PDl70Tdpn1S4cIyMstrTDkT6CCXCUORTeJPzlPv2WIfBZrgkEQ==';
           this.processJson(qrCodeString);
     }else {
       this.options = {

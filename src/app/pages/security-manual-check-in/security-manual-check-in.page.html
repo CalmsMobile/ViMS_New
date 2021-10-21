@@ -29,13 +29,13 @@
                 <ion-row *ngIf="appSettings.addVisitor.NameEnabled">
                   <ion-col size="12" class="bDets">
                     <ion-icon name="person-sharp" class="bDets"></ion-icon>
-                    <input type="text" (input)="onInputChange($event, 'Name')" [(ngModel)]="appointmentInfo.VISITOR_NAME"
+                    <input maxlength="100" type="text" (input)="onInputChange($event, 'Name')" [(ngModel)]="appointmentInfo.VISITOR_NAME"
                     placeholder="{{appSettings.addVisitor.NameLable}}" [ngStyle]="{'border-left': appSettings.addVisitor.showVisitorNameError? '3px solid red': ''}"/>
                   </ion-col>
                 </ion-row>
                 <ion-row *ngIf="appSettings.addVisitor.IdProofEnabled">
                   <ion-col size="12" class="bDets">
-                    <ion-icon name="id-card-sharp" class="bDets"></ion-icon>
+                    <ion-icon maxlength="100" name="id-card-sharp" class="bDets"></ion-icon>
                     <input type="text" (input)='onChangeID($event)' [(ngModel)]="appointmentInfo.VISITOR_IC"
                     [disabled]="preAppointmentInfo.VISITOR_IC"
                     [ngStyle]="{'border-left': appSettings.addVisitor.showVisitorICError? '3px solid red': ''}"
@@ -45,7 +45,7 @@
                 <ion-row *ngIf="appSettings.addVisitor.EmailEnabled">
                   <ion-col size="12" class="bDets">
                     <ion-icon name="mail-sharp" class="bDets"></ion-icon>
-                    <input type="text" (input)="onInputChange($event, 'Email')" [(ngModel)]="appointmentInfo.EMAIL"
+                    <input maxlength="100" type="text" (input)="onInputChange($event, 'Email')" [(ngModel)]="appointmentInfo.EMAIL"
                     placeholder="{{appSettings.addVisitor.EmailLable}}"
                     [ngStyle]="{'border-left': appSettings.addVisitor.showEmailError? '3px solid red': ''}"/>
                   </ion-col>
@@ -53,7 +53,7 @@
                 <ion-row *ngIf="appSettings.addVisitor.ContactNumberEnabled">
                   <ion-col size="12" class="bDets">
                     <ion-icon name="phone-portrait-sharp" class="bDets"></ion-icon>
-                    <input type="text" (input)="onInputChange($event, 'Contact')" [(ngModel)]="appointmentInfo.TELEPHONE_NO"
+                    <input maxlength="20" type="number" (input)="onInputChange($event, 'Contact')" [(ngModel)]="appointmentInfo.TELEPHONE_NO"
                     placeholder="{{appSettings.addVisitor.ContactNumberLable}}"
                     [ngStyle]="{'border-left': appSettings.addVisitor.showPhoneNumberError? '3px solid red': ''}"/>
                   </ion-col>
@@ -74,7 +74,7 @@
               <ion-text>{{appSettings.addVisitor.AddressLable}}</ion-text>
             </ion-col>
             <ion-col size="8" class="classCol">
-              <ion-textarea (input)="onInputChange($event, 'Address')" [(ngModel)]="appointmentInfo.VISITOR_ADDRESS"
+              <ion-textarea maxlength="250" (input)="onInputChange($event, 'Address')" [(ngModel)]="appointmentInfo.VISITOR_ADDRESS"
               placeholder="{{appSettings.addVisitor.AddressLable}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showAddressError? '3px solid red': ''}"></ion-textarea>
             </ion-col>
@@ -140,7 +140,7 @@
               <ion-text>{{appSettings.addVisitor.VehicleNumberLable}}</ion-text>
             </ion-col>
             <ion-col size="8" class="classCol">
-              <input type="text" (input)="onInputChange($event, 'VehicleNumber')" mode="ios" class="inputCountry"
+              <input type="text" maxlength="50" (input)="onInputChange($event, 'VehicleNumber')" mode="ios" class="inputCountry"
               placeholder="{{appSettings.addVisitor.VehicleNumberLable}}" [(ngModel)]="appointmentInfo.PLATE_NUM"
               [ngStyle]="{'border-left': appSettings.addVisitor.showVehicleNumberError? '3px solid red': ''}"/>
             </ion-col>
@@ -168,7 +168,7 @@
               <ion-text style="font-size: 90%;">{{appSettings.addVisitor.TemperatureLable}}</ion-text>
             </ion-col>
             <ion-col size="8" class="classCol">
-              <input (input)="onInputChange($event, 'Temperature')" type="text" mode="ios"
+              <input maxlength="20" (input)="onInputChange($event, 'Temperature')" type="number" mode="ios"
               [(ngModel)]="appointmentInfo.att_bodytemperature" class="inputCountry"
               placeholder="{{appSettings.addVisitor.TemperatureLable}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showTemperatureError? '3px solid red': ''}"/>
@@ -280,7 +280,7 @@
               <ion-text>Remarks</ion-text>
             </ion-col>
             <ion-col size="8" class="classCol">
-              <ion-textarea (input)="onInputChange($event, 'Remarks')" placeholder="Remarks"
+              <ion-textarea maxlength="250" (input)="onInputChange($event, 'Remarks')" placeholder="Remarks"
               [(ngModel)]="appointmentInfo.Remarks" [ngStyle]="{'border-left': appSettings.addVisitor.showRemarksError? '3px solid red': ''}"></ion-textarea>
             </ion-col>
           </ion-row>

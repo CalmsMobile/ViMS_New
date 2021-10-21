@@ -76,12 +76,16 @@ export class VisitorInformationPage implements OnInit {
         if(vOb1 && vOb1.Table1 && vOb1.Table1.length > 0) {
           var vOb = vOb1.Table1[0];
           var startDate = vOb.START_TIME.split("T")[0];
-          var fDate = this.dateformat.transform(startDate+"", "yyyy-MM-dd");
+          startDate = startDate.replace('-', '/');
+          startDate = startDate.replace('-', '/');
+          var fDate = this.dateformat.transform(startDate+"", "yyyy/MM/dd");
           var fTime = new Date(fDate).getTime();
           var endDate = vOb.END_TIME.split("T")[0];
-          var eDate = this.dateformat.transform(endDate+"", "yyyy-MM-dd");
+          endDate = endDate.replace('-', '/');
+          endDate = endDate.replace('-', '/');
+          var eDate = this.dateformat.transform(endDate+"", "yyyy/MM/dd");
           var eTime = new Date(eDate).getTime();
-          var cDate = this.dateformat.transform(new Date()+"", "yyyy-MM-dd");
+          var cDate = this.dateformat.transform(new Date()+"", "yyyy/MM/dd");
           var cTime = new Date(cDate).getTime();
           if((fDate == cDate) || (fTime <= cTime && cTime <= eTime)){
             this.validQRCode = this.fromAppointment? true: false;
@@ -94,9 +98,12 @@ export class VisitorInformationPage implements OnInit {
             this.validQRCode = true;
           }
           if ((!att_check_in_time && !att_check_out_time) || (att_check_in_time && att_check_out_time)) {
-            const endT = vOb.END_TIME.replace('T', ' ');
-            const eDate = this.dateformat.transform(endT, "yyyy-MM-dd HH:mm");
-            if (new Date().getTime() > new Date(eDate).getTime()) {
+            let endT = vOb.END_TIME.replace('T', ' ');
+            endT = vOb.END_TIME.replace('-', '/');
+            endT = vOb.END_TIME.replace('-', '/');
+            const eDate = this.dateformat.transform(endT, "yyyy/MM/dd");
+            const crnDate = this.dateformat.transform(new Date()+'', "yyyy/MM/dd");
+            if (crnDate.getTime() > new Date(eDate).getTime()) {
               this.validQRCode = false;
             } else {
               this.validQRCode = true;

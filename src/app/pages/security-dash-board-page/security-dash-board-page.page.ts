@@ -479,7 +479,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "0003596860" //"C4B9F365";
+      var data = "0003362582" //"C4B9F365";
       var params = {"hexcode":""+ data};
       this.getAppointmentByQR(params);
     }else{
