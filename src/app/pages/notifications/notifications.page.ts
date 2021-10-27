@@ -345,6 +345,8 @@ export class NotificationsPage implements OnInit {
       const QRObj = JSON.parse(qrData);
       if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
         this.router.navigateByUrl('home-tams');
+      } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS) {
+        this.router.navigateByUrl('qraccess');
       } else {
         if (this.isSecurityApp) {
           this.router.navigateByUrl('security-dash-board-page');

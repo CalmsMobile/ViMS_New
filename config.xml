@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.vims.host" version="2.4.30" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>VIMS Host</name>
-    <description>VIMS Host App for Booking Appointment.</description>
+<widget id="com.vims.host" version="2.4.32" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>CALMS Host</name>
+    <description>CALMS Host App for Booking Appointment.</description>
     <author email="vijay@calms.com.my" href="https://www.calms.com.my">Vijay Velusamy</author>
     <content src="index.html" />
     <allow-intent href="*" />

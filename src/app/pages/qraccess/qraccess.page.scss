@@ -1,0 +1,17 @@
+.center {
+  text-align: center;
+  margin: 0 auto;
+  display: block;
+  color: #5b6a7c;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+ion-grid {
+  height: 100%;
+}
+ion-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

@@ -7,10 +7,12 @@
 <ion-header lines="none" class="ion-no-border">
   <ion-toolbar lines="none" class="ion-no-border" color="primary" *ngIf="appSettings.Header">
     <ion-item lines="none" class="no-border" style="--padding-start: 0px;">
-      <img src="../../../assets/images/user.png" slot="start" class="ion-text-left"  style="width: 52px;
+      <img src="{{hostImage}}" onError="this.src='../../../assets/images/user.png'" slot="start" class="ion-text-left"  style="width: 52px;
       height: 52px;
       margin-right: 5px;
-      padding: 8px;">
+      padding: 8px;
+      border-radius: 50%;
+    object-fit: cover;">
       <div style="line-height: 22px;">
         <ion-label [ngStyle]="{'color': appSettings.Header.HeaderColor, 'font-size': appSettings.Header.HeaderSize + 'px',
       'font-weight': appSettings.Header.HeaderFontWeight}">{{userInfoObj.UserName}}<br></ion-label>

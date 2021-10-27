@@ -222,7 +222,11 @@ const routes: Routes = [
   {
     path: 'tamsregisterattendance',
     loadChildren: () => import('./pages/tamsregisterattendance/tamsregisterattendance.module').then( m => m.TamsregisterattendancePageModule)
+  },  {
+    path: 'qraccess',
+    loadChildren: () => import('./pages/qraccess/qraccess.module').then( m => m.QRAccessPageModule)
   }
+
 
 
 

@@ -99,11 +99,11 @@ export class VisitorInformationPage implements OnInit {
           }
           if ((!att_check_in_time && !att_check_out_time) || (att_check_in_time && att_check_out_time)) {
             let endT = vOb.END_TIME.replace('T', ' ');
-            endT = vOb.END_TIME.replace('-', '/');
-            endT = vOb.END_TIME.replace('-', '/');
+            endT = endT.replace('-', '/');
+            endT = endT.replace('-', '/');
             const eDate = this.dateformat.transform(endT, "yyyy/MM/dd");
             const crnDate = this.dateformat.transform(new Date()+'', "yyyy/MM/dd");
-            if (crnDate.getTime() > new Date(eDate).getTime()) {
+            if (new Date(crnDate).getTime() > new Date(eDate).getTime()) {
               this.validQRCode = false;
             } else {
               this.validQRCode = true;

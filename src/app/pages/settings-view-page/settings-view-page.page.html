@@ -2,16 +2,16 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start" >
-      <ion-menu-button *ngIf="!isSecurityApp && (QRObj.MAppId !== HOSTWTTAMS && QRObj.MAppId !== TAMS)"></ion-menu-button>
-      <ion-icon *ngIf="isSecurityApp || QRObj.MAppId === HOSTWTTAMS || QRObj.MAppId === TAMS" slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+      <ion-menu-button *ngIf="!showBackIcon"></ion-menu-button>
+      <ion-icon *ngIf="showBackIcon" slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     </ion-buttons>
       <ion-title>{{"SETTINGS.TITLE" | translate}}
       </ion-title>
-      <ion-buttons slot="end" *ngIf="!isSecurityApp">
+      <ion-buttons slot="end" *ngIf="showAdmin">
         <ion-button *ngIf= "isAdmin" slot="icon-only" (click)="gotoAdminPage()">
             <ion-icon name="customicon"></ion-icon>
         </ion-button>
-        <ion-button slot="icon-only" (click)="gotoNotification()" >
+        <ion-button slot="icon-only"  *ngIf="showNotification" (click)="gotoNotification()" >
           <ion-icon name="notifications-outline" style="position:relative">
                   <span *ngIf= "notificationCount > 0" style="position: absolute;
                   font-size: 16px;

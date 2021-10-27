@@ -141,6 +141,19 @@ ion-toolbar {
     ion-segment-button {
       padding: 5px 30px;
     }
-    
   }
+}
+.center {
+  text-align: center;
+  margin: 0 auto;
+  display: block;
+}
+ion-grid {
+  height: 100%;
+}
+ion-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }

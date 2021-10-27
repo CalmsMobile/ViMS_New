@@ -1,0 +1,54 @@
+<ion-header lines="none" class="ion-no-border">
+  <ion-toolbar lines="none" class="ion-no-border" color="primary">
+    <ion-item lines="none" class="no-border" style="--padding-start: 0px;">
+      <img src="{{hostObj.hostImage}}" onError="this.src='../../../assets/images/user.png'" slot="start" class="ion-text-left"  style="width: 52px;
+      height: 52px;
+      margin-right: 5px;
+      padding: 8px;
+      border-radius: 50%;
+    object-fit: cover;">
+      <div style="line-height: 22px;">
+        <ion-label color="light" style="font-weight: bold;">{{hostObj.HOSTNAME}}<br></ion-label>
+        <div style="display: flex; font-size: 14px;">
+          <ion-icon color="light" style="align-self: center;" name="mail-outline"></ion-icon>
+          <ion-label color="light">{{hostObj.HOST_EMAIL}}</ion-label>
+        </div>
+      </div>
+    </ion-item>
+
+    <ion-buttons slot="end">
+      <ion-icon style="font-size: 26px;padding-right: 10px;" color="light" name="notifications-outline" (click)="gotoNotifiations()"></ion-icon>
+      <ion-icon style="font-size: 26px;padding-right: 10px;" name="settings-sharp" color="light" (click)="gotoSettings()"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid class="ion-text-center">
+    <ion-row>
+      <ion-col size="12">
+        <ion-list lines="none">
+          <ion-button *ngIf="!showQRImage" (click)="showQR()">Click to generate QR</ion-button>
+          <div class="login-top" *ngIf="showQRImage" >
+            <img class="animated fadeInDown delay-1s" style="
+          width: 45vh;
+          height: 45vh;
+          margin: 0 auto;
+          display: block;
+          border-radius: 20px;
+          padding: 10px;
+          background: #173444;
+          margin-bottom: 15px;" [src]="'data:image/jpeg;base64,'+ qrCodePath">
+          </div>
+          <ion-label class="center" *ngIf="showQRImage && TIMEOUT > 0">Your access will refresh in {{TIMEOUT}} sec.</ion-label>
+
+          <ion-icon color="primary" *ngIf="showQRImage" style="font-size: 62px;" (click)="showQR()" name="close-circle-outline"></ion-icon>
+
+          </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>

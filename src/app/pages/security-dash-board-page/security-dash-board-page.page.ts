@@ -68,6 +68,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   loading : any;
   QRData : any = {};
   appSettings: any = {};
+  hostImage = '';
   userInfoObj: any;
   statsCountData: any = {};
   lastLoggedIn: any;
@@ -122,6 +123,12 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   ionViewDidEnter() {
     console.log('ionViewDidEnter SecurityDashBoardPage');
     this.refreshLastLoggedIn();
+    const hostData = localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if (hostData) {
+      var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/PortalImageHandler.ashx?RefSlno='
+      + JSON.parse(hostData).SEQID + "&ScreenType=30&Refresh=" + new Date().getTime();
+      this.hostImage = tempImage;
+    }
     const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
     if (ackSeettings) {
       this.appSettings = JSON.parse(ackSeettings);
@@ -479,7 +486,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "0003362582" //"C4B9F365";
+      var data = "0003140252" //"C4B9F365";
       var params = {"hexcode":""+ data};
       this.getAppointmentByQR(params);
     }else{

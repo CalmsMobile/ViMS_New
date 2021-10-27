@@ -17,13 +17,12 @@
 </ion-header>
 
 <ion-content>
-
-  <ion-searchbar mode="ios" *ngIf="(selectedTap == 'general')" (ionChange)="filterTechnologies($event)"
+  <ion-searchbar mode="ios" *ngIf="(loadingFinished && selectedTap == 'general'&& VM.searchGeneralNotificationList.length > 0)" (ionChange)="filterTechnologies($event)"
     color="light" placeholder="  Search" animated>
   </ion-searchbar>
 
 
-  <ion-searchbar mode="ios" *ngIf="(selectedTap == 'in')" (ionChange)="filterTechnologies($event)"
+  <ion-searchbar mode="ios" *ngIf="(loadingFinished && selectedTap == 'in' && VM.searchInNotificationList.length > 0)" (ionChange)="filterTechnologies($event)"
     color="light" placeholder="  Search" animated>
   </ion-searchbar>
 
@@ -36,7 +35,6 @@
     <ion-card style="margin-top: 0px;">
       <ion-item-sliding #slideDOM *ngFor="let notification of VM.searchGeneralNotificationList"
         (ionDrag)="ondrag($event, slideDOM, notification)">
-        <!-- <ion-item-divider style="padding:0px"> -->
         <ion-item lines="full"
           [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
@@ -49,18 +47,10 @@
 
         </ion-item>
         <ion-item-options no-border no-lines side="end">
-          <!-- <ion-button slot="icon-only" color="primary" fill="outline" no-border (click)="deleteNotification(slideDOM, notification)">
-                  <ion-icon color="primary" class="siva-icon-trash-empty"></ion-icon>
-                </ion-button> -->
         </ion-item-options>
       </ion-item-sliding>
     </ion-card>
   </ion-list>
-
-  <!-- Start Static Code-->
-
-
-  <!-- End Static Code-->
 
   <ion-list *ngIf="(selectedTap == 'in')">
     <ion-card style="margin-top: 0px;">
@@ -80,14 +70,11 @@
 
         </ion-item>
         <ion-item-options side="end">
-          <!-- <ion-button slot="icon-only" color="primary" fill="outline" no-border (click)="deleteNotification(slideDOM, notification)">
-                  <ion-icon color="primary" class="siva-icon-trash-empty"></ion-icon>
-                </ion-button> -->
         </ion-item-options>
       </ion-item-sliding>
     </ion-card>
   </ion-list>
-  <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"
+  <!-- <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"
     *ngIf="loadingFinished && (selectedTap == 'general' && VM.searchGeneralNotificationList.length == 0) || (selectedTap == 'in' && VM.searchInNotificationList.length == 0)">
     <ion-col size="12" size-sm size-md>
       <img app-logo-img class="animated fadeInDown delay-1s" style="
@@ -98,10 +85,33 @@
                   width: 200px;
                   height: 200px;
               " src="assets/images/notification_empty.jpeg">
-      <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">
-        {{'NOTIFICATION.NO_NOTIFICATION' | translate}}</h5> -->
     </ion-col>
-  </ion-row>
+  </ion-row> -->
+  <ion-grid class="ion-text-center" *ngIf="loadingFinished && (selectedTap == 'general' && VM.searchGeneralNotificationList.length == 0) || (selectedTap == 'in' && VM.searchInNotificationList.length == 0)">
+    <ion-row>
+      <ion-col size="12">
+        <img app-logo-img class="animated fadeInDown delay-1s" style="
+        display: block;
+        margin: 0 auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 200px;
+        height: 200px;
+    " src="assets/images/notification_empty.jpeg">
+    <div style="display: grid;">
+      <ion-label style="    color: #585663;
+    font-size: 22px;
+    letter-spacing: 2px;
+    font-weight: 500;">{{'NOTIFICATION.NO_NOTIFICATION' | translate}}</ion-label>
+
+    <div style="color: #173444; font-weight: bold;">________</div>
+      <ion-text style="    color: #585663;
+      font-size: 16px; margin-top: 25px;
+      font-weight: 500;">{{'NOTIFICATION.NO_NOTIFICATION_SUB_TEXT' | translate}}</ion-text>
+    </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles"
       loadingText="{{ 'COMMON.LOADER_MSG.LOADING_MORE_DATA' | translate }}">

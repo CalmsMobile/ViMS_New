@@ -35,6 +35,10 @@ export class SettingsViewPagePage implements OnInit {
   isSecurityApp = false;
   QRObj: any = {};
   HOSTWTTAMS = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
+  NOTIFICATION = AppSettings.LOGINTYPES.NOTIFICATIONS;
+  showBackIcon = true;
+  showNotification = true;
+  showAdmin = true;
   TAMS = AppSettings.LOGINTYPES.TAMS;
   constructor(public navCtrl: NavController,
      private alertCtrl: AlertController,
@@ -57,6 +61,33 @@ export class SettingsViewPagePage implements OnInit {
         this.isSecurityApp = this.QRObj.MAppId === AppSettings.LOGINTYPES.SECURITYAPP;
         if (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
           this.isAdmin = false;
+        }
+        switch (this.QRObj.MAppId) {
+          case AppSettings.LOGINTYPES.SECURITYAPP:
+            this.showBackIcon = true;
+            this.showAdmin = false;
+            this.showNotification = true;
+            break;
+          case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
+            this.showBackIcon = true;
+            this.showAdmin = true;
+            this.showNotification = true;
+            break;
+          case AppSettings.LOGINTYPES.NOTIFICATIONS:
+            this.showBackIcon = true;
+            this.showAdmin = false;
+            this.showNotification = false;
+            break;
+          case AppSettings.LOGINTYPES.QR_ACCESS:
+              this.showBackIcon = true;
+              this.showAdmin = false;
+              this.showNotification = false;
+              break;
+          default:
+            this.showAdmin = true;
+            this.showNotification = true;
+            this.showBackIcon = false;
+            break;
         }
       }
 
@@ -374,7 +405,7 @@ export class SettingsViewPagePage implements OnInit {
           return;
         }
         var params1  = {
-          "MAppId": QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS ? AppSettings.LOGINTYPES.HOSTAPPT: QRObj.MAppId,
+          "MAppId": QRObj.MAppId !== AppSettings.LOGINTYPES.FACILITY ? AppSettings.LOGINTYPES.HOSTAPPT: AppSettings.LOGINTYPES.FACILITY,
           "HostIc":""
         }
         params1.HostIc = JSON.parse(hostData).HOSTIC;
@@ -398,10 +429,17 @@ export class SettingsViewPagePage implements OnInit {
                     this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
                   }
                 }
-                this.getMasterdetails();
-                if (QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY) {
+
+                if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS) {
+                  this.getMasterdetails();
                   this.getSettingsForTams();
                   this.getMyAttendanceWhitelistedLocations();
+                } else if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPT){
+                  this.getMasterdetails();
+                } else if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
+                  this.getMasterdetails();
+                } else if (QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
+                  this.getMasterdetails();
                 }
                 this.apiProvider.showAlert('Device sync successfully.');
               }
@@ -426,6 +464,8 @@ export class SettingsViewPagePage implements OnInit {
         const QRObj = JSON.parse(qrData);
         if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
           this.router.navigateByUrl('home-tams');
+        } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS) {
+          this.router.navigateByUrl('qraccess');
         } else {
           if (this.isSecurityApp) {
             this.router.navigateByUrl('security-dash-board-page');

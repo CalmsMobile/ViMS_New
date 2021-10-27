@@ -168,11 +168,13 @@ export const AppSettings = Object.freeze({
 
     LOGINTYPES : {
         "HOSTAPPT": "HOSTAPPT",
-        "HOSTAPPTWITHTAMS": "HOSTAPPT,TAMSAPP",
+        "FACILITY": "FB",
         "TAMS": "TAMS",
+        "NOTIFICATIONS": "NOTIFICATIONS",
+        "QR_ACCESS": "QR_ACCESS",
+        "HOSTAPPTWITHTAMS": "HOSTAPPT,TAMSAPP",
         "HOSTAPPT_FACILITYAPP": "HOSTWITHFB",
         "ACKAPPT": "ACKMT",
-        "FACILITY": "FB",
         "DISPLAYAPP": "FBDISPLAY",
         "SECURITYAPP": "SECAPP",
     },

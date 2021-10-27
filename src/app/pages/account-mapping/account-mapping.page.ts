@@ -187,7 +187,7 @@ export class AccountMappingPage {
         var HostId = "VijayCalms";
         var AppId = "1";
         var qrJsonString1 = "{\"ApiUrl\":\""+ApiUrl+ "\",\"CompanyId\":\"" + CompanyId + "\",\"HostId\":\""
-        + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS+ "\"}";
+        + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.QR_ACCESS+ "\"}";
         // var qrJsonString1 = "{\"CompanyId\":\"1\",\"HostId\":\""+AppSettings.TEST_DATA.SAMPLE_HOST_IC+"\",\"AppId\":\"1\",\"ApiUrl\":\"http://124.217.235.107:2026\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP+ "\"}";
         // ACK
         // var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3066\", \"MAppId\":\""+ AppSettings.LOGINTYPES.ACKAPPT+ "\", \"Location\":\"ACKDemo\"}";
@@ -217,7 +217,7 @@ export class AccountMappingPage {
           //FAcility Displaya
           // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmsOWXsylRj+rCMMx0EgAXhUReWw865+hTAeDCEKjxB1Ow==';
           //HOST 2008
-          var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohEEiqE+KBmYE4KM17rI8XpCV76Eh4YoGtZ3rccRZlsR6+XsUF/ir9buGRVNult1XtIk7VCAtxB+50hiHMiqymK6JhPs30Pq+/pb37JNvEioYfpGmEIoLAUb/zpMbRGO4I=';
+          // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohEEiqE+KBmYE4KM17rI8XpCV76Eh4YoGtZ3rccRZlsR6+XsUF/ir9buGRVNult1XtIk7VCAtxB+50hiHMiqymK6JhPs30Pq+/pb37JNvEioYfpGmEIoLAUb/zpMbRGO4I=';
           //ACK
           // var qrCodeString = 'qYNb75lXZms19Ri+u9GuOKEOnI+Bw2rOjRNRz3F3gK5yStsC7HV5d0FoZmKl97l5D/TzMTQCqKnahYPuTqZ6TrHijxnIJnXGCrbD93loR9n/96rUnC+77Vl8D/VZ3XTIwc3axSyZQ7DQC4g4NiQGJlH8pY7wGwxGkeDBwIRR7GA=';
 
@@ -227,7 +227,7 @@ export class AccountMappingPage {
           // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmvsXGxqidWW1oDwCCbeG7M0xYw+SnR7J6F5RAATHeqKnA==';
 
           //SeCurity airselangor
-          // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWBuNTz/WeO1qvVIB2bfjhlh8F5RiV6x8WP7PjLLxdXuKZnutNzQ9KOC6/WyhPL9d70OW5cZ42DimysEsV8ekfffe28a1fuZWV12fXua98y9RZAGsbvuX2LFpPraYXR1mep8jcgBSBEjfAm++nm14UOZIJSY5BDNw/JXiAai3/u71w==';
+          // var qrCodeString = 'sndRQG13Bqkcb0eqGqGl+6DchZDforbmV48Mzg95uWBSsU2NhgGhIXri8n+WoeqWYAiyDLjqnXLUqc2VLywUxsGpCi6lq14kBFt5IoOmFK9RcmldgpHZ6ZBvVWfbXYmQey9SrAeQOQ5qtZzSJTJKK5D0vqF8oxNU38P6PDl70Tdpn1S4cIyMstrTDkT6CCXCUORTeJPzlPv2WIfBZrgkEQ==';
           //izza
           // var qrCodeString = 'JAjy9LN8AB8wHRt0BMJ4MqSSSCw4WjBwUHv8LzmWM/5fagcSKXILTm615e9l5H8mIfGEW+44G7/xXLUNEbSsewgrv5c3b8dC1uXbknygWZNylFcLYacwMhQ7BQ991ssvnBTWRS8cfHbufkNpXbDi2A==';
           //Security 2008
@@ -543,17 +543,10 @@ export class AccountMappingPage {
         if(this.scannedJson.MAppId){
           switch(this.scannedJson.MAppId){
             case AppSettings.LOGINTYPES.HOSTAPPT:
-              this.STOPS = 'STOP2';
-              break;
+            case AppSettings.LOGINTYPES.QR_ACCESS:
             case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
-              this.STOPS = 'STOP2';
-              break;
             case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
-              this.STOPS = 'STOP2';
-              break;
             case AppSettings.LOGINTYPES.FACILITY:
-              this.STOPS = 'STOP2';
-              break;
             case AppSettings.LOGINTYPES.SECURITYAPP:
               this.STOPS = 'STOP2';
               break;
@@ -1377,6 +1370,9 @@ export class AccountMappingPage {
                 break;
               case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
                 this.navCtrl.navigateRoot('home-tams');
+                break;
+              case AppSettings.LOGINTYPES.QR_ACCESS:
+                this.navCtrl.navigateRoot('qraccess');
                 break;
               default:
                 this.navCtrl.navigateRoot('');
