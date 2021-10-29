@@ -263,6 +263,7 @@ export class AppComponent {
               this.navCtrl.navigateRoot("security-dash-board-page");
             }
             break;
+          case AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS:
           case AppSettings.LOGINTYPES.QR_ACCESS:
                 hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
                 if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
@@ -270,6 +271,15 @@ export class AppComponent {
                   this.navCtrl.navigateRoot("account-mapping");
                 } else {
                   this.navCtrl.navigateRoot("qraccess");
+                }
+              break;
+            case AppSettings.LOGINTYPES.NOTIFICATIONS:
+                hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+                if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+                  console.log("calling login Page: " + hostData);
+                  this.navCtrl.navigateRoot("account-mapping");
+                } else {
+                  this.navCtrl.navigateRoot("notifications");
                 }
               break;
         }

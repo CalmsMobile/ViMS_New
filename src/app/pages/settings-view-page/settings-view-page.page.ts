@@ -22,7 +22,7 @@ export class SettingsViewPagePage implements OnInit {
 
   selecLang = AppSettings.DEFAULT_LANGUAGE_ID['id'];
   languageSelect:any;
-
+  showSyncBtn = true;
   hostInfo :any = {};
   name = "";
   notificationCount = 0;
@@ -73,16 +73,19 @@ export class SettingsViewPagePage implements OnInit {
             this.showAdmin = true;
             this.showNotification = true;
             break;
-          case AppSettings.LOGINTYPES.NOTIFICATIONS:
+          case AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS:
             this.showBackIcon = true;
             this.showAdmin = false;
             this.showNotification = false;
             break;
           case AppSettings.LOGINTYPES.QR_ACCESS:
-              this.showBackIcon = true;
-              this.showAdmin = false;
-              this.showNotification = false;
-              break;
+            this.showBackIcon = true;
+            this.showAdmin = false;
+            this.showNotification = false;
+            break;
+          case AppSettings.LOGINTYPES.NOTIFICATIONS:
+            this.showSyncBtn = false;
+            break;
           default:
             this.showAdmin = true;
             this.showNotification = true;
@@ -466,6 +469,10 @@ export class SettingsViewPagePage implements OnInit {
           this.router.navigateByUrl('home-tams');
         } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS) {
           this.router.navigateByUrl('qraccess');
+        }  else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS) {
+          this.router.navigateByUrl('qraccess');
+        } else if (QRObj.MAppId === AppSettings.LOGINTYPES.NOTIFICATIONS) {
+          this.router.navigateByUrl('notifications');
         } else {
           if (this.isSecurityApp) {
             this.router.navigateByUrl('security-dash-board-page');

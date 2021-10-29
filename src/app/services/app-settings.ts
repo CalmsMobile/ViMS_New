@@ -171,6 +171,7 @@ export const AppSettings = Object.freeze({
         "FACILITY": "FB",
         "TAMS": "TAMS",
         "NOTIFICATIONS": "NOTIFICATIONS",
+        "QR_ACCESS_NOTIFICATIONS": "QR_ACCESS,NOTIFICATIONS",
         "QR_ACCESS": "QR_ACCESS",
         "HOSTAPPTWITHTAMS": "HOSTAPPT,TAMSAPP",
         "HOSTAPPT_FACILITYAPP": "HOSTWITHFB",

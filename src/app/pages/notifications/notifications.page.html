@@ -1,30 +1,51 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar color="primary" *ngIf="!qrCodeInfo || qrCodeInfo.MAppId !== NOTIFICATION_ALONE">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{'NOTIFICATION.TITLE' | translate}}</ion-title>
   </ion-toolbar>
 
-  <ion-toolbar color="primary" mode="ios" *ngIf="!isSecurityApp">
-    <ion-segment [(ngModel)]="selectedTap" mode="ios" >
+  <ion-toolbar lines="none" class="ion-no-border" color="primary" *ngIf="qrCodeInfo && qrCodeInfo.MAppId === NOTIFICATION_ALONE">
+    <ion-item lines="none" class="no-border" style="--padding-start: 0px;">
+      <img src="{{hostObj.hostImage}}" onError="this.src='../../../assets/images/user.png'" slot="start" class="ion-text-left"  style="width: 52px;
+      height: 52px;
+      margin-right: 5px;
+      padding: 8px;
+      border-radius: 50%;
+    object-fit: cover;">
+      <div style="line-height: 22px;">
+        <ion-label color="light" style="font-weight: bold;">{{hostObj.HOSTNAME}}<br></ion-label>
+        <div style="display: flex; font-size: 14px;">
+          <ion-icon color="light" style="align-self: center;" name="mail-outline"></ion-icon>
+          <ion-label color="light">{{hostObj.HOST_EMAIL}}</ion-label>
+        </div>
+      </div>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-icon style="font-size: 26px;padding-right: 10px;" name="settings-sharp" color="light" (click)="gotoSettings()"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar color="primary" mode="ios" *ngIf="!isSecurityApp && (loadingFinished && selectedTap == 'general'&& VM.searchGeneralNotificationList.length > 0)" style="margin-top: -10px;">
+    <!-- <ion-segment [(ngModel)]="selectedTap" mode="ios" >
       <ion-segment-button value="general" (click)="showNotification('general')">
         General
       </ion-segment-button>
       <ion-segment-button value="in" (click)="showNotification('in')">
         Visitor
       </ion-segment-button>
-    </ion-segment>
+    </ion-segment> -->
+    <ion-searchbar mode="ios" (ionChange)="filterTechnologies($event)" placeholder="  Search">
+    </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-searchbar mode="ios" *ngIf="(loadingFinished && selectedTap == 'general'&& VM.searchGeneralNotificationList.length > 0)" (ionChange)="filterTechnologies($event)"
-    color="light" placeholder="  Search" animated>
-  </ion-searchbar>
+<ion-content style="--background:#fffcf7">
 
 
-  <ion-searchbar mode="ios" *ngIf="(loadingFinished && selectedTap == 'in' && VM.searchInNotificationList.length > 0)" (ionChange)="filterTechnologies($event)"
+
+  <!-- <ion-searchbar mode="ios" *ngIf="(loadingFinished && selectedTap == 'in' && VM.searchInNotificationList.length > 0)" (ionChange)="filterTechnologies($event)"
     color="light" placeholder="  Search" animated>
-  </ion-searchbar>
+  </ion-searchbar> -->
 
   <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
     <ion-refresher-content></ion-refresher-content>
@@ -32,24 +53,23 @@
 
   <!-- <ion-card no-margin mode="ios" style="width:100%;margin-top:14px !important; ">  -->
   <ion-list *ngIf="(selectedTap == 'general')">
-    <ion-card style="margin-top: 0px;">
-      <ion-item-sliding #slideDOM *ngFor="let notification of VM.searchGeneralNotificationList"
+    <ion-item-sliding #slideDOM *ngFor="let notification of VM.searchGeneralNotificationList"
         (ionDrag)="ondrag($event, slideDOM, notification)">
-        <ion-item lines="full"
+        <ion-item lines="none"
           [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
           (click)="viewNotification(notification)">
-          <ion-icon name="{{(notification.IsRead === true || notification.IsRead === 'true') ? 'mail-open-outline': 'mail-unread-outline'}}" slot="start"></ion-icon>
+          <ion-icon style="border: 1px solid #383a3e;padding: 5px;border-radius: 5px;" name="{{(notification.IsRead === true || notification.IsRead === 'true') ? 'mail-open-outline': 'mail-unread-outline'}}" slot="start"></ion-icon>
           <ion-label text-wrap [innerHTML]="notification.HtmlContent.trim()">
 
             <p class="text-muted">{{(notification.CreatedOn| date : 'MMM dd') + ' at ' +
               (notification.CreatedOn| date : 'hh:mm a')}} April 28 at 3:23 PM</p>
           </ion-label>
-
+          <img src="../../../assets/images/visitor.jpg" style="width: 40px; height: 40px;" *ngIf="notification.NotificationType == '20'"/>
+          <!-- <ion-icon *ngIf="notification.NotificationType == '20'" style="padding: 5px ;box-shadow: none;" color="primary" name="person-circle-outline" slot="end"></ion-icon> -->
         </ion-item>
         <ion-item-options no-border no-lines side="end">
         </ion-item-options>
       </ion-item-sliding>
-    </ion-card>
   </ion-list>
 
   <ion-list *ngIf="(selectedTap == 'in')">

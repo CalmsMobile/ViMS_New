@@ -685,7 +685,6 @@ deg2rad(deg) {
   }
 
   async GetValidateHost(data){
-    var loading = await this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetValidateHost');
     console.log("Params: "+ JSON.stringify(data));
 

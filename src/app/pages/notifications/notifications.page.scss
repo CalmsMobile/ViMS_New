@@ -131,9 +131,41 @@ ion-content.has-refresher > .scroll-content {
 }
 
 .read-notify {
-  background-color: #ff496138;
+  // background-color: #ff496138;
+  margin: 10px;
+  border-left: 5px solid var(--ion-color-primary);
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
+    rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
   ion-icon {
-    color: #ed576b;
+    // color: #ed576b;
+    box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+  }
+
+  ion-label {
+    font-weight: 600;
+    align-items: center;
+    display: flex;
+    font-size: 12px;
+  }
+}
+.unread-notify {
+  margin: 10px;
+  border-left: 5px solid var(--ion-color-primary);
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
+    rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+  ion-label {
+    font-weight: 600;
+    color: lightslategrey;
+    align-items: center;
+    display: flex;
+    font-size: 12px;
+  }
+  ion-icon {
+    color: lightslategrey;
   }
 }
 ion-toolbar {

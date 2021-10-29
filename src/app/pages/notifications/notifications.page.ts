@@ -39,6 +39,10 @@ export class NotificationsPage implements OnInit {
 	showDelete = false;
   qrCodeInfo: any = {};
   isSecurityApp = false;
+  hostObj: any = {
+
+  };
+  NOTIFICATION_ALONE = AppSettings.LOGINTYPES.NOTIFICATIONS;
   constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     private toastCtrl:ToastController,
@@ -162,25 +166,33 @@ export class NotificationsPage implements OnInit {
     }, 500);
   }
 
-	showNotification(type){
 
-		if(type == 'general'){
-			this.VM.searchGeneralNotificationList = [];
-			for(var i = 0 ; i < this.VM.notificationList.length ; i++){
-				if(this.VM.notificationList[i].NotificationType == '10'){
-					this.VM.searchGeneralNotificationList.push(this.VM.notificationList[i]);
-				}
-			}
-			//alert("size:" + this.VM.searchGeneralNotificationList.length);
-		}else{
-			this.VM.searchInNotificationList = [];
-			for(i = 0 ; i < this.VM.notificationList.length ; i++){
-				if(this.VM.notificationList[i].NotificationType == '20'){
-					this.VM.searchInNotificationList.push(this.VM.notificationList[i]);
-				}
-			}
-			//alert("size:" + this.VM.searchInNotificationList.length);
-		}
+  gotoSettings(){
+    this.router.navigateByUrl('settings-view-page');
+  }
+
+	showNotification(type){
+    this.VM.searchGeneralNotificationList = [];
+    for(var i = 0 ; i < this.VM.notificationList.length ; i++){
+        this.VM.searchGeneralNotificationList.push(this.VM.notificationList[i]);
+    }
+		// if(type == 'general'){
+		// 	this.VM.searchGeneralNotificationList = [];
+		// 	for(var i = 0 ; i < this.VM.notificationList.length ; i++){
+		// 		// if(this.VM.notificationList[i].NotificationType == '10'){
+		// 			this.VM.searchGeneralNotificationList.push(this.VM.notificationList[i]);
+		// 		// }
+		// 	}
+		// 	//alert("size:" + this.VM.searchGeneralNotificationList.length);
+		// }else{
+		// 	this.VM.searchInNotificationList = [];
+		// 	for(i = 0 ; i < this.VM.notificationList.length ; i++){
+		// 		if(this.VM.notificationList[i].NotificationType == '20'){
+		// 			this.VM.searchInNotificationList.push(this.VM.notificationList[i]);
+		// 		}
+		// 	}
+		// 	//alert("size:" + this.VM.searchInNotificationList.length);
+		// }
 		//alert("selectedTap:" + this.selectedTap);
 		//alert("type:" + type);
 	}
@@ -203,35 +215,41 @@ export class NotificationsPage implements OnInit {
 		 if (val && val.trim() !== '')
 		 {
 			 var lList= this.VM.notificationList;
-			 if(this.selectedTap == 'general'){
-				this.VM.searchGeneralNotificationList = lList;
+       this.VM.searchGeneralNotificationList = lList;
 				this.VM.searchGeneralNotificationList =  this.VM.searchGeneralNotificationList.filter((item) =>
 				{
-					return item.NotificationType == '10' && item.HtmlContent.toLowerCase().indexOf(val.toLowerCase()) > -1;
+					return item.HtmlContent.toLowerCase().indexOf(val.toLowerCase()) > -1;
 				})
-			 }else{
-				this.VM.searchInNotificationList = lList;
-				this.VM.searchInNotificationList =  this.VM.searchInNotificationList.filter((item) =>
-				{
-					return item.NotificationType == '20' && item.HtmlContent.toLowerCase().indexOf(val.toLowerCase()) > -1;
-				})
-			 }
+			//  if(this.selectedTap == 'general'){
+			// 	this.VM.searchGeneralNotificationList = lList;
+			// 	this.VM.searchGeneralNotificationList =  this.VM.searchGeneralNotificationList.filter((item) =>
+			// 	{
+			// 		return item.NotificationType == '10' && item.HtmlContent.toLowerCase().indexOf(val.toLowerCase()) > -1;
+			// 	})
+			//  }else{
+			// 	this.VM.searchInNotificationList = lList;
+			// 	this.VM.searchInNotificationList =  this.VM.searchInNotificationList.filter((item) =>
+			// 	{
+			// 		return item.NotificationType == '20' && item.HtmlContent.toLowerCase().indexOf(val.toLowerCase()) > -1;
+			// 	})
+			//  }
 
 		 }else{
 			lList= this.VM.notificationList;
-			if(this.selectedTap == 'general'){
-				this.VM.searchGeneralNotificationList = lList;
-        this.VM.searchGeneralNotificationList =  this.VM.searchGeneralNotificationList.filter((item) =>
-				{
-					return item.NotificationType == '10';
-				})
-			}else{
-				this.VM.searchInNotificationList = lList;
-        this.VM.searchInNotificationList =  this.VM.searchInNotificationList.filter((item) =>
-				{
-					return item.NotificationType == '20';
-				})
-			}
+      this.VM.searchGeneralNotificationList = lList;
+			// if(this.selectedTap == 'general'){
+			// 	this.VM.searchGeneralNotificationList = lList;
+      //   this.VM.searchGeneralNotificationList =  this.VM.searchGeneralNotificationList.filter((item) =>
+			// 	{
+			// 		return item.NotificationType == '10';
+			// 	})
+			// }else{
+			// 	this.VM.searchInNotificationList = lList;
+      //   this.VM.searchInNotificationList =  this.VM.searchInNotificationList.filter((item) =>
+			// 	{
+			// 		return item.NotificationType == '20';
+			// 	})
+			// }
 
 
 		 }
@@ -345,7 +363,7 @@ export class NotificationsPage implements OnInit {
       const QRObj = JSON.parse(qrData);
       if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
         this.router.navigateByUrl('home-tams');
-      } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS) {
+      } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS) {
         this.router.navigateByUrl('qraccess');
       } else {
         if (this.isSecurityApp) {
@@ -549,6 +567,14 @@ export class NotificationsPage implements OnInit {
   	}
 
   ngOnInit() {
+    const hostData = localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if (hostData) {
+      var tempImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/Handler/PortalImageHandler.ashx?RefSlno='
+      + JSON.parse(hostData).SEQID + "&ScreenType=30&Refresh=" + new Date().getTime();
+      this.hostObj.hostImage = tempImage;
+      this.hostObj.HOSTNAME = JSON.parse(hostData).HOSTNAME;
+      this.hostObj.HOST_EMAIL = JSON.parse(hostData).HOST_EMAIL;
+    }
   }
 
 }

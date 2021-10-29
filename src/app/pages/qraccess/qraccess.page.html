@@ -17,7 +17,7 @@
     </ion-item>
 
     <ion-buttons slot="end">
-      <ion-icon style="font-size: 26px;padding-right: 10px;" color="light" name="notifications-outline" (click)="gotoNotifiations()"></ion-icon>
+      <ion-icon style="font-size: 26px;padding-right: 10px;" color="light" name="notifications-outline" *ngIf="showNotification" (click)="gotoNotifiations()"></ion-icon>
       <ion-icon style="font-size: 26px;padding-right: 10px;" name="settings-sharp" color="light" (click)="gotoSettings()"></ion-icon>
     </ion-buttons>
   </ion-toolbar>

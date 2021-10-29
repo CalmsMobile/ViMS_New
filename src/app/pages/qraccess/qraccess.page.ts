@@ -20,6 +20,7 @@ export class QRAccessPage implements OnInit {
   HOST_QRVALUE = '';
   HOST_ACCESS_INTERVAL: any;
   showQRImage= false;
+  showNotification = false;
   constructor(private router: Router,
     private translate: TranslateService,
     private navCtrl: NavController,
@@ -37,6 +38,13 @@ export class QRAccessPage implements OnInit {
       this.hostObj.HOSTNAME = JSON.parse(hostData).HOSTNAME;
       this.hostObj.HOST_EMAIL = JSON.parse(hostData).HOST_EMAIL;
       this.hostObj.comp_name = JSON.parse(cmpnyData).comp_name;;
+    }
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS) {
+        this.showNotification = true;
+      }
     }
   }
 

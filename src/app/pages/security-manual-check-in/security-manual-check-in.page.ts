@@ -42,10 +42,10 @@ export class SecurityManualCheckInPage implements OnInit {
   CATEGORYLIST = [];
   GENDERLIST = [{
     code: 0,
-    name: 'Male'
+    name: 'FeMale'
   },{
     code: 1,
-    name: 'FeMale'
+    name: 'Male'
   },{
     code: 2,
     name: 'Other'
@@ -114,6 +114,11 @@ export class SecurityManualCheckInPage implements OnInit {
         if (passData && passData.PreAppointment) {
           this.preAppointmentInfo = passData.PreAppointment;
           this.appointmentInfo = passData.PreAppointment;
+          if (this.appointmentInfo.STAFF_IC){
+            this.preAppointmentInfo.Host_IC = this.appointmentInfo.STAFF_IC;
+            this.appointmentInfo.Host_IC = this.appointmentInfo.STAFF_IC;
+          }
+
           if (this.appointmentInfo.SettingDetail) {
             this.QuestionnaireEnabled = JSON.parse(this.appointmentInfo.SettingDetail).QuestionnaireEnabled;
             this.MaterialDeclareEnabled = JSON.parse(this.appointmentInfo.SettingDetail).MaterialDeclareEnabled

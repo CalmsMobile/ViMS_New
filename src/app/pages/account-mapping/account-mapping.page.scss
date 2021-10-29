@@ -15,6 +15,25 @@ h3 {
   color: var(--ion-color-primary);
 }
 
+.logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+}
+
+.hostProfile {
+  background: white;
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: rgb(0 0 0 / 20%) 0px 12px 28px 0px,
+    rgb(0 0 0 / 10%) 0px 2px 4px 0px,
+    rgb(255 255 255 / 5%) 0px 0px 0px 1px inset;
+  margin: 5px;
+  --padding-start: 0px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .manualRegIcon {
   max-width: 48px;
   max-height: 48px;
@@ -61,11 +80,8 @@ h3 {
 
 .cardQR1 {
   width: 120px;
-  margin: 0 auto;
-  display: block;
   padding: 20px;
   border-radius: 50%;
-  margin-bottom: 50px;
   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
     0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.3);
 }
@@ -76,6 +92,24 @@ h3 {
   margin: 0 auto;
   display: block;
   border-radius: 20px;
+}
+
+.center {
+  text-align: center;
+  margin: 0 auto;
+  display: block;
+  color: #5b6a7c;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+ion-grid {
+  height: 100%;
+}
+ion-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .myHandImage {

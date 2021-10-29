@@ -121,10 +121,10 @@ export class CommonUtil{
     if (code === undefined || code === null || code === '') {
       return '';
     }
-    if (code === "Male" || code === "MALE" || code === "0" || code === 0) {
-      result = isReturnID ? 0: 'Male';
-    } else if (code === "FeMale" || code === "Female" || code === "FEMALE" || code === 1 || code === "1") {
-      result = isReturnID ? 1: 'Female';
+    if (code === "Male" || code === "MALE" || code === "1" || code === 1) {
+      result = isReturnID ? 1: 'Male';
+    } else if (code === "FeMale" || code === "Female" || code === "FEMALE" || code === 0 || code === "0") {
+      result = isReturnID ? 0: 'Female';
     } else if (code === "Other" || code === 2 || code === "2") {
       result = isReturnID ? 2: 'Other';
     }

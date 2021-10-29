@@ -187,7 +187,7 @@ export class AccountMappingPage {
         var HostId = "VijayCalms";
         var AppId = "1";
         var qrJsonString1 = "{\"ApiUrl\":\""+ApiUrl+ "\",\"CompanyId\":\"" + CompanyId + "\",\"HostId\":\""
-        + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.QR_ACCESS+ "\"}";
+        + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT+ "\"}";
         // var qrJsonString1 = "{\"CompanyId\":\"1\",\"HostId\":\""+AppSettings.TEST_DATA.SAMPLE_HOST_IC+"\",\"AppId\":\"1\",\"ApiUrl\":\"http://124.217.235.107:2026\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP+ "\"}";
         // ACK
         // var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3066\", \"MAppId\":\""+ AppSettings.LOGINTYPES.ACKAPPT+ "\", \"Location\":\"ACKDemo\"}";
@@ -250,218 +250,8 @@ export class AccountMappingPage {
         var dd = barcodeData.text;
         // var dd = this.findAndReplace(barcodeData.text, " ", "+");
         console.log(dd);
-        var scanData = this.decrypt(dd);
-        console.log(scanData);
-        if(scanData == ""){
-          invalidQRCode = true;
-          this.scannedJson = null;
-        } else{
-          try{
-            this.scannedJson = JSON.parse(scanData);
-            if(this.scannedJson.ApiUrl.indexOf("/api") > -1){
-              this.scannedJson.ApiUrl = this.scannedJson.ApiUrl.split("/api")[0];
-            }
-          }catch(e){
-            var message  = this.T_SVC['ACC_MAPPING.INVALID_QR'];
-            let alert = this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass:'',
-              buttons: ['Okay']
-              });
-              (await alert).present();
-              return;
-          }
-
-          this.VM.host_search_id = this.scannedJson.HostId;
-          //Comment this line
-          // this.scannedJson.MAppId = AppSettings.LOGINTYPES.HOSTAPPT;
-          if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.SECURITYAPP || this.scannedJson.MAppId == AppSettings.LOGINTYPES.ACKAPPT || this.scannedJson.MAppId == AppSettings.LOGINTYPES.DISPLAYAPP){
-            invalidORG = invalidQRCode = false;
-          }else{
-            invalidORG = invalidQRCode = this.scannedJson.CompanyId == undefined || this.scannedJson.CompanyId == null || this.scannedJson.CompanyId == "" ;
-          }
-
-        }
-
-        if(!invalidQRCode){
-          if(invalidORG){
-            this.STOPS = 'STOP2';
-          } else {
-            if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.ACKAPPT){
-              if(!this.scannedJson.MAppDevSeqId){
-                this.scannedJson.MAppDevSeqId = this.scannedJson.MAppSeqId;
-              }
-              this.checkDeviceRegisteredOrNot();
-              return;
-            }else if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.DISPLAYAPP){
-              if(!this.scannedJson.MAppDevSeqId){
-                this.scannedJson.MAppDevSeqId = this.scannedJson.MAppSeqId;
-              }
-              this.GetDisplayAppDeviceInfo();
-              return;
-            }
-            else if(this.scannedJson.MAppId == AppSettings.LOGINTYPES.SECURITYAPP){
-              if(!this.scannedJson.MAppDevSeqId){
-                this.scannedJson.MAppDevSeqId = this.scannedJson.MAppSeqId;
-              }
-              this.GetSecurityAppDeviceInfo();
-              return;
-            }
-            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO,JSON.stringify(this.scannedJson));
-            var params = {"CompanyID":""+this.scannedJson.CompanyId};
-            this.apiProvider.GetAppDetails(params).then(
-              (val) => {
-                console.log("val : "+JSON.stringify(val));
-                this.companyInfo = val;
-                window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS,JSON.stringify(this.companyInfo));
-                this.companyImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=10001&ScreenType=10&Refresh='+ new Date().getTime();
-
-                if(this.scannedJson.MAppId){
-                  switch(this.scannedJson.MAppId){
-                    case AppSettings.LOGINTYPES.HOSTAPPT:
-                      this.STOPS = 'STOP2';
-                      break;
-                    case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
-                      this.STOPS = 'STOP2';
-                      break;
-                    case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
-                      this.STOPS = 'STOP2';
-                      break;
-                    case AppSettings.LOGINTYPES.FACILITY:
-                      this.STOPS = 'STOP2';
-                      break;
-                    case AppSettings.LOGINTYPES.SECURITYAPP:
-                      this.STOPS = 'STOP2';
-                      break;
-                    case AppSettings.LOGINTYPES.DISPLAYAPP:
-                      this.navCtrl.navigateRoot('facility-kiosk-display');
-                      break;
-                    case AppSettings.LOGINTYPES.ACKAPPT:
-                      this.navCtrl.navigateRoot('sign-pad-idle-page');
-                      break;
-                    default:
-                      this.STOPS = 'STOP2';
-                      console.log("default : "+ this.scannedJson.MAppId);
-                      break;
-
-                  }
-
-                }else{
-                  this.STOPS = 'STOP2';
-                }
-
-              },
-              async (err) => {
-                console.log("error : "+JSON.stringify(err));
-                if(err && err.message == "No Internet"){
-                  return;
-                }
-
-                try {
-                  var result = JSON.parse(err.toString());
-                  if(result.message){
-                    let alert = this.alertCtrl.create({
-                      header: 'Error !',
-                      message: result.message,
-                      cssClass:'',
-                      buttons: ['Okay']
-                      });
-                      (await alert).present();
-                      return;
-                  }
-                } catch (error) {
-
-                }
-
-                if(err && err.message && err.message.indexOf("404 Not Found")){
-                  message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-                  let alert = this.alertCtrl.create({
-                    header: 'Error !',
-                    message: message,
-                    cssClass:'',
-                    buttons: ['Okay']
-                    });
-                    (await alert).present();
-                    return;
-                }
-
-                if(err.Table1 && err.Table1.length == 0){
-                  var message  = this.T_SVC['ALERT_TEXT.DATA_NOT_FOUND'];
-                  let alert = this.alertCtrl.create({
-                    header: 'Error !',
-                    message: message,
-                    cssClass:'',
-                    buttons: ['Okay']
-                    });
-                    (await alert).present();
-                    return;
-                }
-
-                if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-                  message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-                  let alert = this.alertCtrl.create({
-                    header: 'Error !',
-                    message: message,
-                    cssClass:'',
-                    buttons: ['Okay']
-                    });
-                    (await alert).present();
-                    return;
-                }
-                let invalidORGConfirm = this.alertCtrl.create({
-                  header:"<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_ORG_TITLE'] + '</span>',
-                  message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_ORG_DETAIL'] + '</span>',
-                  cssClass:'',
-                  buttons: [
-                    {
-                      text: this.T_SVC['COMMON.OK'],
-                      role: 'cancel',
-                      handler: () => {
-                      }
-                    }
-                  ]
-                });
-                (await invalidORGConfirm).present();
-              }
-            );
-          }
-        } else {
-          console.log("Error occured : " + JSON.stringify(this.scannedJson));
-          let invalidQRConfirm = await this.alertCtrl.create({
-            header: 'Error !',
-            message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-
-            cssClass: '',
-            buttons: [
-              {
-                text: this.T_SVC['COMMON.OK'],
-                role: 'cancel',
-                handler: () => {
-                }
-              }
-            ]
-          });
-          invalidQRConfirm.present();
-        }
-    }, async (err) => {
-        console.log("Error occured : " + err);
-        let invalidQRConfirm = this.alertCtrl.create({
-          header: 'Error !',
-          message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-
-          cssClass: '',
-          buttons: [
-            {
-              text: this.T_SVC['COMMON.OK'],
-              role: 'cancel',
-              handler: () => {
-              }
-            }
-          ]
-        });
-        (await invalidQRConfirm).present();
-    });
+        this.processJson(dd);
+      });
     }
   }
 
@@ -483,7 +273,7 @@ export class AccountMappingPage {
     invalidQRConfirm.present();
   }
 
-  async processJson(qrCodeString){
+  processJson(qrCodeString){
 
     console.log("New encrypt: "+ qrCodeString);
     var testQr = qrCodeString;
@@ -495,19 +285,13 @@ export class AccountMappingPage {
     console.log(scanData);
     try{
       this.scannedJson = JSON.parse(scanData);
-      if(this.scannedJson.ApiUrl.indexOf("/api") > -1){
-        this.scannedJson.ApiUrl = this.scannedJson.ApiUrl.split("/api")[0];
+      if(this.scannedJson.ApiUrl.indexOf("api") > -1){
+        this.scannedJson.ApiUrl = this.scannedJson.ApiUrl.split("api")[0];
       }
     }catch(e){
-      var message  = "Invalid Data";
-      let alert = await this.alertCtrl.create({
-        header: 'Error !',
-        message: message,
-        cssClass: '',
-        buttons: ['Okay']
-      });
-        alert.present();
-        return;
+      var message  = "Invalid QR";
+      this.apiProvider.showAlert(message);
+      return;
     }
     if(!this.scannedJson.HostId){
       this.scannedJson.HostId = this.scannedJson.HostIc;
@@ -544,11 +328,13 @@ export class AccountMappingPage {
           switch(this.scannedJson.MAppId){
             case AppSettings.LOGINTYPES.HOSTAPPT:
             case AppSettings.LOGINTYPES.QR_ACCESS:
+            case AppSettings.LOGINTYPES.NOTIFICATIONS:
+            case AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS:
             case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
             case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
             case AppSettings.LOGINTYPES.FACILITY:
             case AppSettings.LOGINTYPES.SECURITYAPP:
-              this.STOPS = 'STOP2';
+              this.takeActionForProceed('STOP2');
               break;
             case AppSettings.LOGINTYPES.DISPLAYAPP:
               this.navCtrl.navigateRoot('facility-kiosk-display');
@@ -1371,8 +1157,12 @@ export class AccountMappingPage {
               case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
                 this.navCtrl.navigateRoot('home-tams');
                 break;
+              case AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS:
               case AppSettings.LOGINTYPES.QR_ACCESS:
                 this.navCtrl.navigateRoot('qraccess');
+                break;
+              case AppSettings.LOGINTYPES.NOTIFICATIONS:
+                this.navCtrl.navigateRoot('notifications');
                 break;
               default:
                 this.navCtrl.navigateRoot('');
@@ -1451,6 +1241,7 @@ export class AccountMappingPage {
           if (!this.hostInfo.HOST_ID){
             this.hostInfo.HOST_ID = this.hostInfo.HOSTIC;
           }
+          this.STOPS = stop;
           this.hostImage =  JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'Handler/PortalImageHandler.ashx?RefSlno='+  Math.round(this.hostInfo.SEQID) + "&ScreenType=30&Refresh="+ new Date().getTime();
           if(result && result.Table2 && result.Table2.length > 0){
             if(result.Table2[0].Active){

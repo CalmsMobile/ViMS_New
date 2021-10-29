@@ -84,7 +84,7 @@
           <ion-label class="labelClassLeft">{{'SETTINGS.PROFILE' | translate}}</ion-label>
           <ion-note slot="end">{{name}}</ion-note>
        </ion-item>
-       <ion-item (click)="syncSettings()" class="itemClass">
+       <ion-item (click)="syncSettings()" class="itemClass" *ngIf="showSyncBtn">
         <ion-icon name="settings" slot="start" color="primary"></ion-icon>
         <ion-label class="labelClassLeft">{{'SETTINGS.SYNC_NOW' | translate}}</ion-label>
       </ion-item>
