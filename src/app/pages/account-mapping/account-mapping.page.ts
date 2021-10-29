@@ -251,7 +251,10 @@ export class AccountMappingPage {
         // var dd = this.findAndReplace(barcodeData.text, " ", "+");
         console.log(dd);
         this.processJson(dd);
-      });
+      }, (err) => {
+        console.log('Error occured : ' + err);
+        this.apiProvider.showAlert(this.T_SVC['ACC_MAPPING.INVALID_QR']);
+    });
     }
   }
 
