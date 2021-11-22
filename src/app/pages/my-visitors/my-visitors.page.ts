@@ -10,7 +10,7 @@ import { AppSettings } from 'src/app/services/app-settings';
   styleUrls: ['./my-visitors.page.scss'],
 })
 export class MyVisitorsPage implements OnInit {
-
+  loadingFinished = false;
   T_SVC:any;
   imageURL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
@@ -88,6 +88,7 @@ export class MyVisitorsPage implements OnInit {
   }
 
   getAllMyVisitors(showLoading, refresher){
+    this.loadingFinished = false;
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
       var STAFF_IC = JSON.parse(hostData).HOSTIC;
@@ -99,6 +100,7 @@ export class MyVisitorsPage implements OnInit {
      }
      this.apiProvider.GetVisitorsListByHost(params, showLoading).then(
        (val) => {
+        this.loadingFinished = true;
         var searchContactsArray= JSON.parse(val.toString());
         if(refresher){
           this.VM.visitors = searchContactsArray.concat(this.VM.visitors);
@@ -109,6 +111,7 @@ export class MyVisitorsPage implements OnInit {
         this.VM.searchContactsArray = this.VM.visitors;
        },
        async (err) => {
+        this.loadingFinished = true;
          if(refresher){
           refresher.target.complete();
          }else{

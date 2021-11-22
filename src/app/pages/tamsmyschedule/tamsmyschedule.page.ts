@@ -18,11 +18,12 @@ export class TamsmyschedulePage implements OnInit {
   T_SVC: any;
   myScheduleList = [];
   myScheduleListCone = [];
-  isFetching = false;
+  loadingFinished = false;
   showAlert = false;
   startDate = '';
   selectedTab = 'tab1';
   searchText = '';
+  showMenu = false;
   constructor(private router: Router,
     private dateformat : DateFormatPipe,
     private translate:TranslateService,
@@ -35,6 +36,13 @@ export class TamsmyschedulePage implements OnInit {
     }
 
   ngOnInit() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.showMenu = true;
+      }
+    }
     this.getMySchedules('');
   }
 
@@ -103,6 +111,7 @@ export class TamsmyschedulePage implements OnInit {
   }
 
   getMySchedules(refresher) {
+    this.loadingFinished = false;
     const scheduleList = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_SCHEDULE);
     if (scheduleList) {
       this.myScheduleList = JSON.parse(scheduleList);
@@ -152,7 +161,7 @@ export class TamsmyschedulePage implements OnInit {
 
       // App logic to determine if all data is loaded
       // and disable the infinite scroll
-      if(!currentClass.isFetching){
+      if(!currentClass.loadingFinished){
         // currentClass.isFetching = true;
         // setTimeout(()=>{
           // currentClass.getMySchedules(null, true);
@@ -177,6 +186,7 @@ export class TamsmyschedulePage implements OnInit {
     if (this.content) {
       this.content.scrollToTop(400);
     }
+    this.loadingFinished = true;
 
   }
 
@@ -191,8 +201,15 @@ export class TamsmyschedulePage implements OnInit {
           return (item.shiftName.toLowerCase().indexOf(val.toLowerCase()) > -1);
         })
       } else if (this.selectedTab === 'tab2') {
+        let datfor = 'dd-MM-yyyy';
+        if (this.myScheduleList.length > 0 && this.myScheduleList[0].scheduleDate.indexOf('/') > -1) {
+          val = val.replace('-', '/');
+          val = val.replace('-', '/');
+          datfor = 'dd/MM/yyyy';
+        }
+
         this.myScheduleListCone =  this.myScheduleList.filter((item) =>{
-          return (item.scheduleDate.toLowerCase().indexOf(val.toLowerCase()) > -1);
+          return (this.dateformat.transform(item.scheduleDate + "", datfor).toLowerCase().indexOf(val.toLowerCase()) > -1);
         })
       } else if (this.selectedTab === 'tab3') {
         this.myScheduleListCone =  this.myScheduleList.filter((item) =>{

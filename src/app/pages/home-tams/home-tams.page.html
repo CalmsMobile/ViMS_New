@@ -5,10 +5,15 @@
     </ion-buttons>
     <ion-title>{{'APP_NAME' | translate}}</ion-title>
     <ion-buttons slot="end">
-      <ion-button slot="icon-only" (click)="gotoAdminPage()">
-        <ion-icon name="customicon"></ion-icon>
+
+      <ion-button slot="icon-only" (click)="gotoQRProfile()" *ngIf="isAdmin">
+        <ion-icon name="qr-code-outline"></ion-icon>
       </ion-button>
-      <ion-button slot="icon-only" (click)="gotoNotification()">
+      <ion-button slot="icon-only" (click)="gotoAdminPage()" *ngIf="isAdmin">
+        <!-- <ion-icon name="customicon"></ion-icon> -->
+        <ion-icon name="thumbs-up-outline"></ion-icon>
+      </ion-button>
+      <ion-button slot="icon-only" (click)="gotoNotification()" *ngIf="showNotification">
         <ion-icon name="notifications-outline" style="position:relative" style="color: #FFF;">
           <span *ngIf="notificationCount > 0" style="position: absolute;
                       font-size: 16px;
@@ -21,7 +26,7 @@
 
 <ion-content>
 
-<div class="container"  style="background: url('../../../assets/images/background/app_bg.png') no-repeat center center fixed;">
+<div class="container">
   <div class="curveBackground">
   </div>
   <div class="overlay">
@@ -45,58 +50,113 @@
     </ion-item>
     <ion-grid>
       <ion-row style="padding-top: 5px;">
-        <ion-col size="4">
+        <!-- HOST APP -->
+        <ion-col size="4" *ngIf="showHOST">
           <ion-card class="card1" (click)="statesClicked('add-appointment')" style="color: var(--ion-color-primary);">
             <ion-icon class="cardIcon" name="create-outline"></ion-icon>
-            <ion-card-subtitle class="ion-tittle">{{'Create Appointment'}}</ion-card-subtitle>
+            <ion-card-subtitle class="ion-tittle">{{'Add Appointment'}}</ion-card-subtitle>
           </ion-card>
         </ion-col>
-        <ion-col size="4">
+        <ion-col size="4" *ngIf="showHOST">
           <ion-card class="card1" style="color: var(--ion-color-primary);" (click)="statesClicked('upcoming-appointment-page')">
             <ion-icon class="cardIcon" name="options-outline"></ion-icon>
             <ion-card-subtitle class="ion-tittle" >{{'Upcoming Appointment'}}</ion-card-subtitle>
           </ion-card>
         </ion-col>
-        <ion-col size="4">
+        <ion-col size="4" *ngIf="showHOST">
           <ion-card class="card1" (click)="statesClicked('appointment-history')" style="color: var(--ion-color-primary);">
             <ion-icon class="cardIcon" name="list-outline"></ion-icon>
             <ion-card-subtitle class="ion-tittle">{{'Appointment List View'}}</ion-card-subtitle>
           </ion-card>
         </ion-col>
-        <ion-col size="4" >
+        <ion-col size="4" *ngIf="showHOST">
           <ion-card class="card1" style="color: var(--ion-color-primary);" (click)="statesClicked('manage-appointment')">
             <ion-icon class="cardIcon" name="calendar-outline"></ion-icon>
             <ion-card-subtitle class="ion-tittle">{{'Appointment Calendar View'}}</ion-card-subtitle>
           </ion-card>
         </ion-col>
-        <ion-col size="4">
+
+        <!-- QUICK PASS -->
+        <ion-col size="4" *ngIf="showQP">
+          <ion-card class="card1" (click)="statesClicked('create-quick-pass')" style="color: var(--ion-color-primary);">
+            <ion-icon class="cardIcon" name="create-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Create Quick Pass'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4" *ngIf="showQP">
+          <ion-card class="card1" (click)="statesClicked('quick-pass-dash-board-page')" style="color: var(--ion-color-primary);">
+            <ion-icon class="cardIcon" name="analytics-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Quick Pass Dashboard'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+
+        <!-- FACILITY -->
+        <ion-col size="4" *ngIf="showFacility">
+          <ion-card class="card1" (click)="statesClicked('facility-booking')" style="color: var(--ion-color-primary);">
+            <ion-icon class="cardIcon" name="create-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Add Facility Booking'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4" *ngIf="showFacility">
+          <ion-card class="card1" (click)="statesClicked('facility-booking-history')" style="color: var(--ion-color-primary);">
+            <ion-icon class="cardIcon" name="list-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Facility History'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="4" *ngIf="showFacilityAlone">
+          <ion-card class="card1" style="color: var(--ion-color-primary);" (click)="statesClicked('manage-appointment')">
+            <ion-icon class="cardIcon" name="calendar-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Appointment Calendar View'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+
+        <!-- TAMS -->
+
+        <ion-col size="4" *ngIf="showTAMS">
           <ion-card class="card1" style="color: var(--ion-color-primary);"  (click)="statesClicked('tamsmyschedule')">
             <ion-icon class="cardIcon" name="newspaper-outline"></ion-icon>
             <ion-card-subtitle class="ion-tittle">{{'My Schedule'}}</ion-card-subtitle>
           </ion-card>
         </ion-col>
-        <ion-col size="4">
+        <ion-col size="4" *ngIf="showTAMS">
           <ion-card class="card1" (click)="statesClicked('tamsmyattendance')" style="color: var(--ion-color-primary);">
             <ion-icon class="cardIcon" name="calendar-number-outline"></ion-icon>
             <ion-card-subtitle class="ion-tittle" >{{'My Attendance'}}</ion-card-subtitle>
           </ion-card>
         </ion-col>
-        <ion-col size="4">
+        <ion-col size="4" *ngIf="showTAMS">
           <ion-card class="card1" style="color: var(--ion-color-primary);" (click)="statesClicked('tamsregisterattendance')">
             <ion-icon class="cardIcon" name="checkbox-outline"></ion-icon>
             <ion-card-subtitle class="ion-tittle" >{{'Register Attendance'}}</ion-card-subtitle>
           </ion-card>
         </ion-col>
-        <ion-col size="4">
+        <ion-col size="4" *ngIf="showTAMS">
           <ion-card class="card1" style="color: var(--ion-color-primary);"  (click)="statesClicked('tamsmyattendancelocation')">
             <ion-icon class="cardIcon" name="location-outline"></ion-icon>
-            <ion-card-subtitle class="ion-tittle">{{'Whitelisted Location'}}</ion-card-subtitle>
+            <ion-card-subtitle class="ion-tittle">{{'Geo Location'}}</ion-card-subtitle>
           </ion-card>
         </ion-col>
-        <ion-col size="4">
+        <ion-col size="4" *ngIf="showTAMS">
           <ion-card class="card1" (click)="statesClicked('tamsmyattendancelogs')" style="color: var(--ion-color-primary)">
             <ion-icon class="cardIcon" name="locate-outline"></ion-icon>
             <ion-card-subtitle class="ion-tittle" >{{'Attendance Logs'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+
+        <!-- QR ACCESS -->
+        <ion-col size="4" *ngIf="showQRAccess">
+          <ion-card class="card1" (click)="statesClicked('qraccess')" style="color: var(--ion-color-primary)">
+            <ion-icon class="cardIcon" name="qr-code-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle" >{{'QR Access'}}</ion-card-subtitle>
+          </ion-card>
+        </ion-col>
+
+
+        <ion-col size="4">
+          <ion-card class="card1" style="color: var(--ion-color-primary);" (click)="statesClicked('settings-view-page')">
+            <ion-icon class="cardIcon" name="settings-outline"></ion-icon>
+            <ion-card-subtitle class="ion-tittle">{{'Settings'}}</ion-card-subtitle>
           </ion-card>
         </ion-col>
       </ion-row>

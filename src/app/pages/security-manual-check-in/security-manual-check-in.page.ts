@@ -4,7 +4,7 @@ import { RestProvider } from 'src/app/providers/rest/rest';
 import { QuestionDocPopupComponent } from 'src/app/components/question-doc-popup/question-doc-popup.component';
 import { Camera } from '@ionic-native/camera/ngx';
 import {AppSettings} from '../../services/app-settings';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { CommonUtil } from 'src/app/services/util/CommonUtil';
 import { ToolTipComponent } from 'src/app/components/tool-tip/tool-tip.component';
 import { DocumentModalComponent } from 'src/app/components/document-modal/document-modal.component';
@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { ItemChecklistModalComponent } from 'src/app/components/item-checklist-modal/item-checklist-modal.component';
+import { EventsService } from 'src/app/services/EventsService';
 
 @Component({
   selector: 'app-security-manual-check-in',
@@ -66,6 +67,7 @@ export class SecurityManualCheckInPage implements OnInit {
     private camera: Camera,
     private cdr: ChangeDetectorRef,
     private dateformat : DateFormatPipe,
+    public events: EventsService,
     public toastCtrl: ToastController,
     private translate : TranslateService,
     public sanitizer: DomSanitizer) {
@@ -144,6 +146,23 @@ export class SecurityManualCheckInPage implements OnInit {
         }
       }
     });
+    this.events.observeDataCompany().subscribe(async (data: any) => {
+      const user = data.title;
+      const time = data.message;
+    // events.observeDataCompany('user:created', (user, data) => {
+      // user and time are the same arguments passed in `events.publish(user, time)`
+      console.log('Welcome', user, 'at', time);
+      // this.params.hostImage = "assets/images/logo/2.png";
+      // alert(this.params.hostImage);
+      if(data.action === 'user:created' && user == "visitorCompany"){
+        var cData= JSON.parse(time);
+        this.appointmentInfo.visitor_comp_name = cData.visitor_comp_name;
+        this.appointmentInfo.visitor_comp_code = cData.visitor_comp_code;
+        this.appointmentInfo.VISITOR_COMPANY_ID = cData.visitor_comp_code;
+      }
+
+    });
+
   }
 
   onSelectChange(event, action) {
@@ -164,6 +183,17 @@ export class SecurityManualCheckInPage implements OnInit {
    onChangeInput($event, type) {
     this.presentPopover($event, type);
    }
+
+   openVisitorCompany(){
+    const navigationExtras: NavigationExtras = {
+      state: {
+        passData: {
+          data: {}
+        }
+      }
+    };
+    this.router.navigate(['visitor-company-page'], navigationExtras);
+  }
 
    async presentPopover(ev: any, type) {
     const popover = await this.popoverController.create({
@@ -323,22 +353,27 @@ export class SecurityManualCheckInPage implements OnInit {
       this.apiProvider.requestApi(params, api, false, 'WEB', '').then(
         async (val) => {
           var result = JSON.parse(val.toString());
+
           if (result.Table && result.Table.length > 0 && result.Table2 && result.Table2.length > 0) {
             console.log(JSON.stringify(result.Table2[0]));
             const visitorData = result.Table2[0];
-            this.appointmentInfo.VISITOR_IC = value;
-            this.appointmentInfo.VisitorCategory = visitorData.VisitorCategory;
-            this.appointmentInfo.VisitorCategory_ID = visitorData.VisitorCategory;
-            this.appointmentInfo.TELEPHONE_NO = visitorData.TELEPHONE_NO;
-            this.appointmentInfo.EMAIL = visitorData.EMAIL;
-            this.appointmentInfo.VISITOR_NAME = visitorData.VISITOR_NAME;
-            this.appointmentInfo.VISITOR_COMPANY = visitorData.VISITOR_COMPANY;
-            this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(visitorData.VISITOR_COMPANY_ID, true);
-            this.appointmentInfo.VISITOR_COMPANY_ID = this.appointmentInfo.visitor_comp_code;
-            this.appointmentInfo.VISITOR_GENDER = this.commonUtil.getGender(visitorData.VISITOR_GENDER, true);
-            this.appointmentInfo.VISITOR_ADDRESS = visitorData.visitor_address_1;
-            this.appointmentInfo.VISITOR_COUNTRY = visitorData.visitor_country;
-            this.appointmentInfo.PLATE_NUM = visitorData.PLATE_NUM;
+            if (this.appointmentInfo.VISITOR_IC === visitorData.VISITOR_IC) {
+              this.appointmentInfo.VISITOR_IC = visitorData.VISITOR_IC;
+              this.appointmentInfo.VisitorCategory = visitorData.VisitorCategory;
+              this.appointmentInfo.VisitorCategory_ID = visitorData.VisitorCategory;
+              this.appointmentInfo.TELEPHONE_NO = visitorData.TELEPHONE_NO;
+              this.appointmentInfo.EMAIL = visitorData.EMAIL;
+              this.appointmentInfo.VISITOR_NAME = visitorData.VISITOR_NAME;
+              this.appointmentInfo.VISITOR_COMPANY = visitorData.VISITOR_COMPANY;
+              this.appointmentInfo.visitor_comp_name = visitorData.VISITOR_COMPANY_NAME;
+              this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(visitorData.VISITOR_COMPANY_ID, true);
+              this.appointmentInfo.VISITOR_COMPANY_ID = this.appointmentInfo.visitor_comp_code;
+              this.appointmentInfo.VISITOR_GENDER = this.commonUtil.getGender(visitorData.VISITOR_GENDER, true);
+              this.appointmentInfo.VISITOR_ADDRESS = visitorData.visitor_address_1;
+              this.appointmentInfo.VISITOR_COUNTRY = visitorData.visitor_country;
+              this.appointmentInfo.PLATE_NUM = visitorData.PLATE_NUM;
+            }
+
           }
           },
         async (err) => {

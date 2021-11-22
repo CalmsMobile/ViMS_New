@@ -16,6 +16,7 @@ export class FacilityUpcomingPage implements OnInit {
 
   films: any;
   OffSet = 0;
+  showNotification = false;
   notificationCount = 0;
   appointments:any = [];
   futureAppointments = [];
@@ -348,6 +349,10 @@ export class FacilityUpcomingPage implements OnInit {
   }
 
   ngOnInit() {
+    const MAppId = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
+    if (MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+      this.showNotification = true;
+    }
   }
 
 }

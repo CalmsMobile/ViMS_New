@@ -2,13 +2,14 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, MenuController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
 import { ThemeSwitcherService } from 'src/app/services/ThemeSwitcherService';
 import { ToastService } from 'src/app/services/util/Toast.service';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 
 @Component({
   selector: 'app-settings-view-page',
@@ -26,7 +27,7 @@ export class SettingsViewPagePage implements OnInit {
   hostInfo :any = {};
   name = "";
   notificationCount = 0;
-  isAdmin = true;
+  isAdmin = false;
   customActionSheetOptions: any = {
     header: '',
     subHeader: ''
@@ -34,7 +35,6 @@ export class SettingsViewPagePage implements OnInit {
   T_SVC: any;
   isSecurityApp = false;
   QRObj: any = {};
-  HOSTWTTAMS = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
   NOTIFICATION = AppSettings.LOGINTYPES.NOTIFICATIONS;
   showBackIcon = true;
   showNotification = true;
@@ -47,6 +47,8 @@ export class SettingsViewPagePage implements OnInit {
      private events : EventsService,
      private datePipe: DatePipe,
      private router: Router,
+     public menu: MenuController,
+     private splashscreen: SplashScreen,
      private statusBar: StatusBar,
      private themeSwitcher: ThemeSwitcherService,
      private translate:TranslateService) {
@@ -59,57 +61,67 @@ export class SettingsViewPagePage implements OnInit {
       if (qrinfo) {
         this.QRObj = JSON.parse(qrinfo);
         this.isSecurityApp = this.QRObj.MAppId === AppSettings.LOGINTYPES.SECURITYAPP;
-        if (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
-          this.isAdmin = false;
-        }
-        switch (this.QRObj.MAppId) {
-          case AppSettings.LOGINTYPES.SECURITYAPP:
-            this.showBackIcon = true;
-            this.showAdmin = false;
-            this.showNotification = true;
-            break;
-          case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
-            this.showBackIcon = true;
-            this.showAdmin = true;
-            this.showNotification = true;
-            break;
-          case AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS:
-            this.showBackIcon = true;
-            this.showAdmin = false;
+        this.isAdmin = this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1;
+        if (this.QRObj.MAppId.split(",").length === 1 && this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) === -1) {
+          switch (this.QRObj.MAppId) {
+            case AppSettings.LOGINTYPES.SECURITYAPP:
+              this.showBackIcon = true;
+              this.showAdmin = false;
+              this.showNotification = true;
+              break;
+            case AppSettings.LOGINTYPES.QR_ACCESS:
+              this.showBackIcon = true;
+              this.showAdmin = false;
+              this.showNotification = false;
+              break;
+            case AppSettings.LOGINTYPES.NOTIFICATIONS:
+              this.showBackIcon = true;
+              this.showSyncBtn = true;
+              this.showAdmin = false;
+              break;
+            case AppSettings.LOGINTYPES.TAMS:
+              this.showBackIcon = true;
+              this.showAdmin = false;
+              this.showNotification = false;
+              break;
+            default:
+              this.showAdmin = true;
+              this.showNotification = false;
+              this.showBackIcon = false;
+              break;
+          }
+        } else {
+          this.showBackIcon = true;
+          if (this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) === -1) {
             this.showNotification = false;
-            break;
-          case AppSettings.LOGINTYPES.QR_ACCESS:
-            this.showBackIcon = true;
-            this.showAdmin = false;
-            this.showNotification = false;
-            break;
-          case AppSettings.LOGINTYPES.NOTIFICATIONS:
-            this.showSyncBtn = false;
-            break;
-          default:
-            this.showAdmin = true;
-            this.showNotification = true;
-            this.showBackIcon = false;
-            break;
+          }
         }
+
       }
 
       this.translate.get([
-        'SETTINGS.APP_LANGUAGE', 'SETTINGS.SELECT_LANGUAGE']).subscribe(t => {
+        'SETTINGS.APP_LANGUAGE', 'SETTINGS.SELECT_LANGUAGE', 'COMMON.OK', 'COMMON.CANCEL', 'COMMON.NOTICE', 'COMMON.MODULE_CHANGE_TEXT',]).subscribe(t => {
           this.T_SVC = t;
       });
 
-      var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-      if(hostData){
-        this.hostInfo = JSON.parse(hostData);
-        this.name = this.hostInfo.HOSTNAME;
+      if (this.isSecurityApp) {
+        const userInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+        if (userInfo) {
+          const userInfoObj = JSON.parse(userInfo);
+          this.name = userInfoObj.Name;
+        }
+      } else {
+        var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+        if(hostData){
+          this.hostInfo = JSON.parse(hostData);
+          this.name = this.hostInfo.HOSTNAME;
+        }
       }
 
-      const userInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
-      if (userInfo) {
-        const userInfoObj = JSON.parse(userInfo);
-        this.name = userInfoObj.Name;
-      }
+
+
+
+
 
       this.languageSelect = {
         "title" : this.T_SVC['SETTINGS.APP_LANGUAGE'],
@@ -164,6 +176,10 @@ export class SettingsViewPagePage implements OnInit {
 		this.router.navigateByUrl("admin-home");
 	}
 
+  gotoQRProfile() {
+    this.router.navigateByUrl('qr-profile');
+  }
+
   gotoNotification(){
     this.router.navigateByUrl("notifications");
   }
@@ -184,7 +200,7 @@ export class SettingsViewPagePage implements OnInit {
   }
 
   goToUserProfile(){
-    this.router.navigateByUrl('user-profile-page');
+    this.router.navigateByUrl('qr-profile');
   }
   getDuration(endDate) {
     const userInfo = localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
@@ -408,7 +424,7 @@ export class SettingsViewPagePage implements OnInit {
           return;
         }
         var params1  = {
-          "MAppId": QRObj.MAppId !== AppSettings.LOGINTYPES.FACILITY ? AppSettings.LOGINTYPES.HOSTAPPT: AppSettings.LOGINTYPES.FACILITY,
+          "MAppId": QRObj.MAppId.split(",")[0].replace(" ", ""),
           "HostIc":""
         }
         params1.HostIc = JSON.parse(hostData).HOSTIC;
@@ -433,18 +449,28 @@ export class SettingsViewPagePage implements OnInit {
                   }
                 }
 
-                if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS) {
+                if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.TAMS) > -1) {
                   this.getMasterdetails();
                   this.getSettingsForTams();
                   this.getMyAttendanceWhitelistedLocations();
-                } else if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPT){
+                } else if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
                   this.getMasterdetails();
-                } else if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-                  this.getMasterdetails();
-                } else if (QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
+                } else if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
                   this.getMasterdetails();
                 }
-                this.apiProvider.showAlert('Device sync successfully.');
+
+                const cMAppId = result.Table1[0].MAppId;
+                let showAlert = true;
+                if (cMAppId) {
+                  if (cMAppId !== QRObj.MAppId) {
+                    showAlert = false;
+                    this.showAlertForReload(cMAppId);
+                  }
+                }
+
+                if (showAlert){
+                  this.apiProvider.showAlert('Device sync successfully.');
+                }
               }
             }catch(e){
             }
@@ -457,6 +483,144 @@ export class SettingsViewPagePage implements OnInit {
   }
   }
 
+
+  async showAlertForReload(cMAppId) {
+    const alert = this.alertCtrl.create({
+      header: this.T_SVC['COMMON.NOTICE'],
+      message: this.T_SVC['COMMON.MODULE_CHANGE_TEXT'],
+      cssClass: 'alert-warning',
+      buttons: [
+        {
+          text: this.T_SVC['COMMON.CANCEL'],
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: this.T_SVC['COMMON.OK'],
+          handler: () => {
+            console.log('Yes clicked');
+            this.reload(cMAppId);
+          }
+        }
+      ]
+    });
+    (await alert).present();
+  }
+
+  reload(apps) {
+    // const cclass = this;
+    // this.navCtrl.pop();
+    // this.navCtrl.navigateRoot('/');
+    // // cclass.navCtrl.navigateRoot('/');
+    // this.splashscreen.show();
+    // window.location.reload();
+    // this.splashscreen.hide();
+
+
+    this.QRObj.MAppId = apps;
+    localStorage.setItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO, JSON.stringify(this.QRObj));
+
+    if (apps.split(",").length === 1 && apps.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) === -1) {
+      switch (apps.split(",")[0]) {
+        case AppSettings.LOGINTYPES.HOSTAPPT:
+          var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+          if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+            console.log("calling login Page: " + hostData);
+            this.navCtrl.navigateRoot("account-mapping");
+            return;
+          }
+          this.menu.enable(true, "myLeftMenu");
+          this.router.navigateByUrl('home-view');
+        break;
+        case AppSettings.LOGINTYPES.FACILITY:
+          hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+          if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+            console.log("calling login Page: " + hostData);
+            this.navCtrl.navigateRoot("account-mapping");
+            return;
+          }
+          this.menu.enable(true, "myLeftMenu");
+          this.router.navigateByUrl('home-view');
+        break;
+        case AppSettings.LOGINTYPES.DISPLAYAPP:
+          this.navCtrl.navigateRoot("facility-kiosk-display");;
+          this.menu.enable(false, "myLeftMenu");
+          break;
+        case AppSettings.LOGINTYPES.ACKAPPT:
+          this.menu.enable(false, "myLeftMenu");
+          this.navCtrl.navigateRoot("sign-pad-idle-page");
+          break;
+        case AppSettings.LOGINTYPES.SECURITYAPP:
+          hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS);
+          if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).MAppDevSeqId) {
+            console.log("calling login Page: " + hostData);
+            this.navCtrl.navigateRoot("account-mapping");
+            this.navCtrl.navigateRoot("login");
+          } else {
+            this.navCtrl.navigateRoot("security-dash-board-page");
+          }
+          break;
+        case AppSettings.LOGINTYPES.QR_ACCESS:
+              hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+              if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+                console.log("calling login Page: " + hostData);
+                this.navCtrl.navigateRoot("account-mapping");
+              } else {
+                this.navCtrl.navigateRoot("qraccess");
+              }
+          break;
+        case AppSettings.LOGINTYPES.NOTIFICATIONS:
+            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+            if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+              console.log("calling login Page: " + hostData);
+              this.navCtrl.navigateRoot("account-mapping");
+            } else {
+              this.navCtrl.navigateRoot("notifications");
+            }
+          break;
+
+        case AppSettings.LOGINTYPES.TAMS:
+          hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+          if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+            console.log("calling login Page: " + hostData);
+            this.navCtrl.navigateRoot("account-mapping");
+          } else {
+            this.menu.enable(true, "myLeftMenu");
+            this.navCtrl.navigateRoot("tamshome");
+          }
+        break;
+      }
+    } else if (apps.split(",").length === 2 && apps.indexOf(AppSettings.LOGINTYPES.QR_ACCESS) > -1 && apps.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+      this.navCtrl.navigateRoot("qraccess");
+    } else {
+      hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+      if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+        console.log("calling login Page: " + hostData);
+        this.navCtrl.navigateRoot("account-mapping");
+        return;
+      }
+      if (apps.indexOf(AppSettings.LOGINTYPES.TAMS) > -1) {
+        this.getSettingsForTams();
+      }
+      this.events.publishDataCompany({
+        action: 'user:created',
+        title: "ReloadMenu",
+        message: "ReloadMenu"
+      });
+      this.events.publishDataCompany({
+        action: 'user:created',
+        title: "ReloadTAMS",
+        message: "ReloadTAMS"
+      });
+
+
+      this.menu.enable(true, "myLeftMenu");
+      this.navCtrl.navigateRoot("home-tams");
+    }
+  }
+
   goBack() {
 
     if (this.isSecurityApp) {
@@ -465,21 +629,26 @@ export class SettingsViewPagePage implements OnInit {
       var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
       if (qrData) {
         const QRObj = JSON.parse(qrData);
-        if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        if (QRObj.MAppId.split(",").length === 2 && QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.QR_ACCESS) > -1 && QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+          this.router.navigateByUrl('qraccess');
+        } else if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
           this.router.navigateByUrl('home-tams');
-        } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS) {
-          this.router.navigateByUrl('qraccess');
-        }  else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS) {
-          this.router.navigateByUrl('qraccess');
-        } else if (QRObj.MAppId === AppSettings.LOGINTYPES.NOTIFICATIONS) {
-          this.router.navigateByUrl('notifications');
         } else {
-          if (this.isSecurityApp) {
-            this.router.navigateByUrl('security-dash-board-page');
+          if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+            this.router.navigateByUrl('tamshome');
+          } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS) {
+            this.router.navigateByUrl('qraccess');
+          } else if (QRObj.MAppId === AppSettings.LOGINTYPES.NOTIFICATIONS) {
+            this.router.navigateByUrl('notifications');
           } else {
-            this.router.navigateByUrl('home-view');
+            if (this.isSecurityApp) {
+              this.router.navigateByUrl('security-dash-board-page');
+            } else {
+              this.router.navigateByUrl('home-view');
+            }
           }
         }
+
       } else {
         this.navCtrl.pop();
       }
@@ -494,5 +663,52 @@ export class SettingsViewPagePage implements OnInit {
     let _css = `
     `;
     document.getElementById("MY_RUNTIME_CSS").innerHTML = _css;
+  }
+
+  getUserProfile() {
+
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData){
+      this.QRObj = JSON.parse(qrData);
+    }
+    if(hostData && JSON.parse(hostData) && JSON.parse(hostData).SEQID){
+      const UserSeqId = JSON.parse(hostData).SEQID;
+      const memberID = JSON.parse(hostData).HOSTIC;
+
+
+      var params  = {
+        "UserSeqId": "",
+        "MemberId":memberID,
+      }
+
+      if (!params.MemberId) {
+        params.UserSeqId = UserSeqId;
+      }
+
+      if (!params.MemberId && !params.UserSeqId) {
+        this.apiProvider.showAlert("User not found.");
+        return;
+      }
+
+      this.apiProvider.requestApi(params, '/api/Vims/GetUserProfile', false, 'WEB', '').then(
+        (val) => {
+          try{
+            var result = JSON.parse(JSON.stringify(val));
+            if(result){
+            try{
+                const userProfile = JSON.parse(result).Table1[0];
+                window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_PROFILE_DETAILS,JSON.stringify(userProfile));
+              }catch(e){
+              }
+            }
+          }catch(e){
+          }
+
+        },
+        (err) => {
+        }
+      );
+    }
   }
 }

@@ -88,10 +88,15 @@ export class AddAppointmentStep2Page implements OnInit {
       if(settings && JSON.parse(settings)){
         try{
           if(this.QRObj && this.QRObj.MAppId){
-            if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-              var sett = JSON.parse(settings).Table1;
-              if(sett && sett.length > 0){
-                this.hostSettings = sett[0];
+            if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
+              let sett1 = JSON.parse(settings).Table1;
+              let sett2 = JSON.parse(settings).Table1;
+              if(sett2 && sett2.length > 0){
+                this.hostSettings = sett2[0];
+                this.hostSettings.available = true;
+                this.hostSettings.isFacility = true;
+              }else if(sett1 && sett1.length > 0){
+                this.hostSettings = sett1[0];
                 this.hostSettings.available = true;
                 this.hostSettings.isFacility = true;
               }else{
@@ -99,7 +104,7 @@ export class AddAppointmentStep2Page implements OnInit {
               }
 
             }else{
-              sett = JSON.parse(settings).Table1;
+              let sett = JSON.parse(settings).Table1;
               if(sett && sett.length > 0){
                 this.hostSettings = sett[0];
                 this.hostSettings.available = true;
@@ -189,7 +194,7 @@ export class AddAppointmentStep2Page implements OnInit {
 
   ionViewDidEnter() {
 
-    if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT || this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS){
+    if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) === -1){
       this.loadMasterData();
     }else{
       this.loadVimsAppFacilityMasterList();
@@ -520,7 +525,7 @@ export class AddAppointmentStep2Page implements OnInit {
           }
           this.showAlert(this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS']);
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-          if (this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS) {
+          if (this.QRObj.MAppId.split(",").length > 1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
             this.navCtrl.navigateRoot('home-tams');
           } else {
             this.navCtrl.navigateRoot('');
@@ -716,8 +721,7 @@ export class AddAppointmentStep2Page implements OnInit {
             message: messageArray
           });
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-
-          if (this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS) {
+          if (this.QRObj.MAppId.split(",").length > 1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
             this.navCtrl.navigateRoot('home-tams').then((data)=>{
               setTimeout(() => {
                 this.events.publishDataCompany({

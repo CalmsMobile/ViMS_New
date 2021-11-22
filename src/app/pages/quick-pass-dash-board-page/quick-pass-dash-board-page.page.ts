@@ -27,8 +27,10 @@ export class QuickPassDashBoardPagePage implements OnInit {
   OffSet = 0;
   appointments = [];
   notificationCount = 0;
-  isAdmin = true;
-
+  isAdmin = false;
+  QRObj: any = {};
+  showNotification = false;
+  showMenu = true;
   TotalGuestInsideAppointments = [];
   TotalUnusedExpiredPassAppointments = [];
   TotalUsedPassAppointments = [];
@@ -76,6 +78,10 @@ export class QuickPassDashBoardPagePage implements OnInit {
 
   gotoAdminPage(){
     this.router.navigateByUrl("admin-home");
+  }
+
+  gotoQRProfile() {
+    this.router.navigateByUrl('qr-profile');
   }
 
   showNotificationCount(){
@@ -290,6 +296,32 @@ export class QuickPassDashBoardPagePage implements OnInit {
   }
 
   ngOnInit() {
+    try{
+      var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+      if(qrInfo && JSON.parse(qrInfo) && JSON.parse(qrInfo).MAppId){
+        this.QRObj = JSON.parse(qrInfo);
+        if (this.QRObj.MAppId.split(",").length > 1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+          this.showMenu = false;
+        }
+        this.isAdmin = this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1|| this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1;
+        if (this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+          this.showNotification = true;
+        }
+      }
+    }catch(e){
+
+    }
   }
+
+  goBack() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+        this.router.navigateByUrl('home-tams');
+      }
+    }
+    console.log('goBack ');
+   }
 
 }

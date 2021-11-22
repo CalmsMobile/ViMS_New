@@ -88,11 +88,12 @@ ion-icon {
   position: absolute;
   background: #ffeb3b;
   border-radius: 50%;
-  right: 2px;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  padding: 0px;
+  right: 1px;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  padding: 2px;
+  padding-top: 3px;
   text-align: center;
   color: #000000;
   font-weight: bold;
@@ -119,29 +120,7 @@ ion-icon {
   padding: 0px;
   text-align: center;
   color: #ffffff;
-}
-
-.outer-circle2 {
-  position: relative;
-  //background: #385a94;
-  border-radius: 50%;
-  border: 1px solid var(--ion-color-primary);
-  height: 25px;
-  width: 25px;
-  margin-bottom: 3px;
-}
-
-.inner-circle2 {
-  position: absolute;
-  background: var(--ion-color-primary);
-  border-radius: 50%;
-  right: 2px;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  padding: 0px;
-  text-align: center;
-  color: #ffffff;
+  padding-top: 2px;
 }
 
 .colIcons {
@@ -195,6 +174,7 @@ ion-icon {
   margin: 0px;
   font-size: 14px;
   font-weight: 600;
+  align-self: center;
 }
 
 .apt-center-subtitle {
@@ -203,6 +183,7 @@ ion-icon {
   margin-top: 1px;
   margin-bottom: 1px;
   color: #989aa2;
+  align-self: center;
 }
 .apt-text-icons {
   font-size: 16px;

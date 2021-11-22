@@ -73,6 +73,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
   statsCountData: any = {};
   lastLoggedIn: any;
   footerHeight = '0px';
+  networkError = false;
   constructor(public navCtrl: NavController,
     private platform : Platform,
     private router: Router,
@@ -263,6 +264,8 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     } else if(type == 'APPOINTMENT'){
       this.scanPreAppointmentQR();
       // this.enableMyKad();
+    } else if(type === 'QR_PROFILE'){
+      this.scanVerifyHostQR();
     } else if(type == 'QUICK_PASS_OUT'){
       this.quickPassOut();
     }else if(type == 'QUICK_PASS'){
@@ -486,7 +489,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "0003140252" //"C4B9F365";
+      var data = "0002721385" //"C4B9F365";
       var params = {"hexcode":""+ data};
       this.getAppointmentByQR(params);
     }else{
@@ -609,13 +612,127 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
           this.apiProvider.showAlert(message);
           return;
         }
+        if (err.message){
+          this.apiProvider.showAlert(err.message);
+          return;
+        }
         message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
 
         if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
           message = JSON.parse(err).Table[0].description;
+        }else if(err && JSON.parse(err) && JSON.parse(err).message){
+          message = JSON.parse(err).message;
         }
-        message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         this.apiProvider.showAlert(message);
+      }
+    );
+  }
+
+  scanVerifyHostQR(){
+    let invalidQRCode = false;
+
+    var loadinWeb = true;
+    if(!this.platform.is('cordova')) {
+      loadinWeb = true;
+    } else {
+      loadinWeb = false;
+    }
+    if (loadinWeb) {
+      var data = "VijayCalmwws"
+      this.getUserProfile(data);
+    }else{
+      this.options = {
+        prompt : "Scan your QR Code ",
+        preferFrontCamera : false, // iOS and Android
+        showFlipCameraButton : true, // iOS and Android
+        showTorchButton : true, // iOS and Android
+        torchOn: false, // Android, launch with the torch switched on (if available)
+        resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+        formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+        disableAnimations : false, // iOS
+        disableSuccessBeep: false // iOS and Android
+      }
+      this.barcodeScanner.scan(this.options).then(async (barcodeData) => {
+        var data = barcodeData.text;
+        console.log("barcodeScanner data: "+data);
+        // console.log(scanData); D20A6A48
+        if(data == ""){
+          invalidQRCode = true;
+        }
+
+        if(!invalidQRCode){
+            this.getUserProfile(data);
+        } else{
+          let invalidQRConfirm = await this.alertCtrl.create({
+            header: 'Error !',
+            message: this.T_SVC['ACC_MAPPING.INVALID_QR'],
+            cssClass: '',
+            buttons: [
+              {
+                text: this.T_SVC['COMMON.OK'],
+                role: 'cancel',
+                handler: () => {
+                }
+              }
+            ]
+          });
+          invalidQRConfirm.present();
+        }
+    }, async (err) => {
+        console.log("Error occured : " + err);
+        let invalidQRConfirm = await this.alertCtrl.create({
+          header: 'Error !',
+          message: this.T_SVC['ACC_MAPPING.INVALID_QR'],
+          cssClass: '',
+          buttons: [
+            {
+              text: this.T_SVC['COMMON.OK'],
+              role: 'cancel',
+              handler: () => {
+              }
+            }
+          ]
+        });
+        invalidQRConfirm.present();
+    });
+    }
+  }
+
+
+  getUserProfile(QRData) {
+    var params  = {
+      "UserSeqId": "",
+      "MemberId":"",
+    }
+    params.MemberId = QRData;
+    if (!params.MemberId) {
+      this.apiProvider.showAlert("User not found.");
+      return;
+    }
+
+    this.apiProvider.requestApi(params, '/api/Vims/GetUserProfile', false, 'WEB', '').then(
+      (val) => {
+        try{
+          var result = JSON.parse(JSON.stringify(val));
+          if(result){
+            const userProfile = JSON.parse(result).Table1[0];
+            if (userProfile.Code && userProfile.Code > 10) {
+              this.apiProvider.showAlert('QR code is invalid, please verify the QR code or contact system administrator for further assistance');
+            } else {
+              const navigationExtras: NavigationExtras = {
+                state: {
+                  passData: userProfile
+                }
+              };
+              this.router.navigate(['qr-profile'], navigationExtras);
+            }
+
+          }
+        }catch(e){
+        }
+
+      },
+      (err) => {
       }
     );
   }
@@ -695,6 +812,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
     }
     this.apiProvider.VimsAppGetSecurityStats(params).then(
       (data: any) => {
+        this.networkError = false;
        const result = JSON.parse(data);
        this.statsCountData = result.Table1[0];
        this.dataSets1.labels = [];
@@ -798,6 +916,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
 
       },
       (err) => {
+        this.networkError = true;
         if(err && err.message == "No Internet"){
           return;
         }

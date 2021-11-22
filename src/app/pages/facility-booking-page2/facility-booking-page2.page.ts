@@ -79,18 +79,20 @@ export class FacilityBookingPage2Page implements OnInit {
         try{
           if(this.QRObj && this.QRObj.MAppId){
 
-            if(this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-              if(JSON.parse(settings).Table1 && JSON.parse(settings).Table1.length > 0){
+            if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
+              if(JSON.parse(settings).Table2 && JSON.parse(settings).Table2.length > 0){
+                this.hostSettings = JSON.parse(settings).Table2[0];
+              }else if(JSON.parse(settings).Table1 && JSON.parse(settings).Table1.length > 0){
                 this.hostSettings = JSON.parse(settings).Table1[0];
               }else{
                 this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
               }
             }else{
               var sett = JSON.parse(settings);
-              if(sett.Table1 && sett.Table1.length > 0){
-                this.hostSettings = sett.Table1[0];
-              } else if(sett.Table2 && sett.Table2.length > 0){
+              if(sett.Table2 && sett.Table2.length > 0){
                 this.hostSettings = sett.Table2[0];
+              }else if(sett.Table1 && sett.Table1.length > 0){
+                this.hostSettings = sett.Table1[0];
               } else{
                 this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
               }
@@ -619,7 +621,7 @@ export class FacilityBookingPage2Page implements OnInit {
           message: ''
         });
         this.navCtrl.navigateRoot('').then((data)=> {
-          if(this.QRObj && this.QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
+          if(this.QRObj && this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
             this.router.navigateByUrl("facility-booking-history");
           }else{
             var page = {

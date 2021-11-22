@@ -63,11 +63,12 @@
   position: absolute;
   background: #ffeb3b;
   border-radius: 50%;
-  right: 2px;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  padding: 0px;
+  right: 1px;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  padding: 2px;
+  padding-top: 3px;
   text-align: center;
   color: #000000;
   font-weight: bold;
@@ -87,11 +88,11 @@
   position: absolute;
   background: #17be17;
   border-radius: 50%;
-  right: 2px;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  padding: 0px;
+  right: 1px;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  padding: 2px;
   text-align: center;
   color: #ffffff;
 }
@@ -104,19 +105,6 @@
   height: 25px;
   width: 25px;
   margin-bottom: 3px;
-}
-
-.inner-circle2 {
-  position: absolute;
-  background: var(--ion-color-primary);
-  border-radius: 50%;
-  right: 2px;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  padding: 0px;
-  text-align: center;
-  color: #ffffff;
 }
 
 .colIcons {
@@ -170,6 +158,7 @@
   font-size: 14px;
   font-weight: 600;
   margin-top: 3px;
+  align-self: center;
 }
 
 .apt-center-subtitle {
@@ -177,6 +166,7 @@
   font-size: 12px;
   margin-top: 1px;
   margin-bottom: 1px;
+  align-self: center;
 }
 
 .apt-text-icons {

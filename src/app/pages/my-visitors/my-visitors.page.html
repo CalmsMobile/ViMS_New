@@ -14,11 +14,17 @@
     <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
+    <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="loadingFinished && (VM.visitors == undefined || VM.visitors == null || VM.visitors.length == 0)">
+      <ion-col size="12" size-sm size-md>
+              <img app-logo-img class="animated fadeInDown delay-1s empty_image" src="../../../assets/images/icon_no_records.png">
+              <div style="display: grid;text-align: center;">
+                <ion-label class="empty_title">{{'EMPTY.NO_VISITOR_RECORD_TITLE' | translate}}</ion-label>
+                <div class="empty_line">________</div>
+                <ion-text class="empty_desc">{{'EMPTY.NO_VISITOR_RECORD' | translate}}</ion-text>
+              </div>
+      </ion-col>
+  </ion-row>
     <ion-list #visitorsList>
-      <div style="margin: 50% auto;
-      text-align: center;" *ngIf="VM.visitors == undefined || VM.visitors == null || VM.visitors.length == 0">
-          <ion-label>{{'MANG_VISITORS.NO_VISITORS_AVAILABLE' | translate}}</ion-label>
-      </div>
         <ion-item-sliding #slideDOM no-lines *ngFor="let item of VM.visitors">
             <ion-item sp-visitor-item class="myItem">
                   <img class="vImage" slot="start" onError="this.src='../../assets/images/user.png';" [src]="imageURL + item.SEQ_ID + imageURLType">

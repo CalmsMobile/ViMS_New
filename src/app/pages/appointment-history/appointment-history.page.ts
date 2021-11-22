@@ -20,11 +20,12 @@ export class AppointmentHistoryPage implements OnInit {
 	notificationCount = 0;
 	appointments:any = [];
 	T_SVC:any;
-	loadingFinished = true;
-	isAdmin = true;
+	loadingFinished = false;
+	isAdmin = false;
   alertShowing = false;
   QRObj: any = {};
-  HOSTWTTAMS = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
+  showMenu = true;
+  showNotification = false;
   TAMS = AppSettings.LOGINTYPES.TAMS;
 	constructor(public navCtrl: NavController,
 		 private events : EventsService,
@@ -103,6 +104,10 @@ export class AppointmentHistoryPage implements OnInit {
 	gotoAdminPage(){
 		this.router.navigateByUrl("admin-home");
 	}
+
+  gotoQRProfile() {
+    this.router.navigateByUrl('qr-profile');
+  }
 
 	getDayofDate(dateString){
 		let dateObject = new Date(dateString);
@@ -312,16 +317,19 @@ export class AppointmentHistoryPage implements OnInit {
     var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (qrData) {
       this.QRObj = JSON.parse(qrData);
+      if(this.QRObj.MAppId.split(",").length > 1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
+        this.showMenu = false;
+      }
+      if (this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+        this.showNotification = true;
+      }
+      this.isAdmin = this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1;
     }
   }
 
   goBack() {
-    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    if (qrData) {
-      const QRObj = JSON.parse(qrData);
-      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
-        this.router.navigateByUrl('home-tams');
-      }
+    if (!this.showMenu) {
+      this.router.navigateByUrl('home-tams');
     }
     console.log('goBack ');
    }

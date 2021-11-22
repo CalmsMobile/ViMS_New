@@ -31,10 +31,15 @@
     <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">
+    <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="isLoadingFinished && appointments.length == 0">
           <ion-col size="12" size-sm size-md>
-                  <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.png">
-                  <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'SECURITY_APP.NO_LIST' | translate}}</h5> -->
+                  <img app-logo-img class="animated fadeInDown delay-1s empty_image" src="../../../assets/images/icon_noappoinment_noschedule.png">
+                  <div style="display: grid;text-align: center;">
+                    <ion-label class="empty_title">{{'EMPTY.NO_APPOINTMENT_TITLE' | translate}}</ion-label>
+
+                  <div class="empty_line">________</div>
+                    <ion-text class="empty_desc">{{'EMPTY.NO_APPOINTMENT' | translate}}</ion-text>
+                  </div>
           </ion-col>
     </ion-row>
     <!-- <h5 style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->

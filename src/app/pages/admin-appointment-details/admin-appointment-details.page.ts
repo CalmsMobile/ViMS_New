@@ -826,7 +826,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
         var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
         if (qrData) {
           const QRObj = JSON.parse(qrData);
-          if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+          if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
             this.router.navigateByUrl('home-tams');
             return;
           }

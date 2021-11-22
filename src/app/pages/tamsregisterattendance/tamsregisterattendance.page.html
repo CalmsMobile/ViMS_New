@@ -5,9 +5,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content style="--background: url('assets/images/background/bg1_blank_2.png') 0 0/100% 100% no-repeat;background-size: cover;height: 100%">
+<ion-content>
 
   <div class="ion-text-center">
+
+    <!-- <div class="map-wrapper">
+      <div id="map_center">
+        <ion-icon style="font-size: 30px;" color="primary" name="location-outline"></ion-icon>
+      </div>
+      <div #map id="map"></div>
+    </div> -->
 
     <ion-card class="locationCard">
       <div style="display: inline-flex;" (click)="openMap()">
@@ -15,6 +22,19 @@
         <ion-label class="locationMap">Click here to view your location</ion-label>
       </div>
       <ion-item-divider class="divider"></ion-item-divider>
+    </ion-card>
+
+    <div (click)="presentActionSheet()" *ngIf="tamsSettings.EnableImage">
+      <ion-icon class="camera-icon" name="camera-outline"></ion-icon>
+      <img class="img" src="{{base64Image? ('data:image/jpeg;base64,' +base64Image): '../../../assets/images/user.png'}}"/>
+
+    </div>
+
+    <ion-card class="shiftTimeCard">
+      <div>
+        <ion-icon class="shit_icon1" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings.EnableImage? '35px': '53px'}" slot="start" name="stopwatch-outline"></ion-icon>
+        <ion-label style="vertical-align: middle;" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings.EnableImage? '30px': '48px'}">{{(currentTime | date: 'hh:mm a')}}</ion-label>
+      </div>
     </ion-card>
 
     <ion-card class="shiftCard" *ngIf="myTodaySchedule">
@@ -35,19 +55,7 @@
       <ion-label style="font-size: 16px;">{{(myTodaySchedule.fromTime? myTodaySchedule.fromTime: '--') + '&nbsp;&nbsp;-&nbsp;&nbsp;' + (myTodaySchedule.toTime?myTodaySchedule.toTime: '--')}}</ion-label>
     </ion-card>
 
-    <ion-card class="shiftTimeCard">
-      <div style="margin-bottom: 8px;">
-        <ion-icon class="shit_icon1" slot="start" name="stopwatch-outline"></ion-icon>
-        <ion-label style="vertical-align: middle;">{{toogleModel? 'Clock In Time': 'Clock Out Time'}}</ion-label>
-      </div>
-      <ion-label [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings.EnableImage? '30px': '48px'}">{{(currentTime | date: 'hh:mm a')}}</ion-label>
-    </ion-card>
 
-    <div (click)="presentActionSheet()" *ngIf="tamsSettings.EnableImage">
-      <ion-icon class="camera-icon" name="camera-outline"></ion-icon>
-      <img class="img" src="{{base64Image? ('data:image/jpeg;base64,' +base64Image): '../../../assets/images/user.png'}}"/>
-
-    </div>
 
 
 
@@ -58,7 +66,7 @@
 
    <ion-card class="shiftToggleCard" style="margin-top: 14px;">
     <ion-button style="--background: linear-gradient(to right, var(--ion-color-btnthm) 0%, var(--ion-color-btnthm) 51%, var(--ion-color-btnthm) 100%)"  shape="round" mode="ios"  (click)="registerMyAttendance()">
-      <ion-label>Register</ion-label>
+      <ion-label>Clock My Time</ion-label>
     </ion-button>
    </ion-card>
 

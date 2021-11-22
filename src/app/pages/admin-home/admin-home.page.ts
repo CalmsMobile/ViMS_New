@@ -24,7 +24,7 @@ export class AdminHomePage implements OnInit {
   adminName = "VIMS Admin";
   T_SVC:any;
   showFab = true;
-  loadingFinished = true;
+  loadingFinished = false;
   branchList = [];
   branch_id = '';
   constructor(public navCtrl: NavController,
@@ -465,7 +465,7 @@ export class AdminHomePage implements OnInit {
     var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (qrData) {
       const QRObj = JSON.parse(qrData);
-      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+      if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
         this.router.navigateByUrl('home-tams');
       } else {
         this.router.navigateByUrl('home-view');

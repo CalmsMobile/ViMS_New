@@ -1,0 +1,89 @@
+<ion-content>
+  <div class="cardImage">
+
+    <ion-item style="color: white;" lines="none">
+      <ion-icon slot="start" class="commonHeaderMyBackArrow" style="margin-bottom: 0px;" *ngIf="!isSecurityApp" (click)="goBack()" name="chevron-back"></ion-icon>
+      <ion-title style="text-align: left;">Profile</ion-title>
+      <ion-icon slot="end" (click)="closePage()" color="light" *ngIf="isSecurityApp" style="font-size: 40px;"  name="close-circle-outline"></ion-icon>
+    </ion-item>
+
+    <ion-item lines="none" class="itemClass1" color="primary">
+      <ion-text style="    font-size: 22px;
+      font-weight: 600;    margin: 0 auto;
+      margin-top: -24px;">{{(userProfile &&  userProfile.Name) ? userProfile.Name: '&nbsp;&nbsp;--'}}</ion-text>
+    </ion-item>
+    <div style="margin: auto;position: relative;display: flex;">
+      <div style="    position: relative;
+      margin: 0 auto;
+      display: inline-block;
+      text-align: center;
+      align-items: center;
+      align-self: center;
+      align-content: center;
+      justify-content: center;">
+         <img src="{{userImage}}" onError="this.src='../../../assets/images/user.png'" class="userImg" (click)="presentActionSheet()"/>
+         <ion-label [ngClass]="{'active': userProfile.MemberStatus === 'ACTIVE', 'inactive': userProfile.MemberStatus !== 'ACTIVE'}">{{userProfile.MemberStatus === 'ACTIVE' ? 'ACTIVE': 'IN-ACTIVE' }}</ion-label>
+      </div>
+    </div>
+
+  </div>
+    <ion-card style="margin-top: 5px;
+    padding-top: 5px;
+    margin-bottom: 0px;box-shadow: none; background: transparent;">
+
+
+      <!-- <ion-card-header [ngClass]="{'active': userProfile.MemberStatus === 'ACTIVE', 'inactive': userProfile.MemberStatus !== 'ACTIVE'}">
+        <ion-item lines="none">
+          <ion-label style="color: white;">{{userProfile.MemberStatus}}</ion-label>
+          <ion-icon style="color: white;" name="{{userProfile.Gender !== 10? 'woman-outline': 'man-outline'}}"></ion-icon>
+        </ion-item>
+      </ion-card-header> -->
+      <div *ngIf="userProfile">
+
+        <ion-item lines="none" class="itemClass">
+          <ion-icon name="card-outline"></ion-icon>
+          <ion-text>{{userProfile.MemberId}}</ion-text>
+        </ion-item>
+        <ion-item lines="none" class="itemClass">
+          <ion-icon name="mail-outline"></ion-icon>
+          <ion-text>{{userProfile.Email ? userProfile.Email : '&nbsp;&nbsp;--'}}</ion-text>
+        </ion-item>
+        <ion-item lines="none" class="itemClass">
+          <ion-icon name="call-outline"></ion-icon>
+          <ion-text>{{userProfile.ContactNo ? userProfile.ContactNo : '&nbsp;&nbsp;--'}}</ion-text>
+        </ion-item>
+        <ion-item lines="none" class="itemClass" *ngIf="userProfile.MemberType !== 'Student'">
+          <ion-icon name="albums-outline"></ion-icon>
+          <ion-text>{{'Department : ' + (userProfile.Department ? userProfile.Department : '&nbsp;&nbsp;--')}}</ion-text>
+        </ion-item>
+        <ion-item lines="none" class="itemClass" *ngIf="userProfile.MemberType !== 'Student'">
+          <ion-icon name="bag-handle-outline"></ion-icon>
+          <ion-text>{{'Job Desc : ' + (userProfile.JobDesc ? userProfile.JobDesc : '&nbsp;&nbsp;--')}}</ion-text>
+        </ion-item>
+
+        <ion-item lines="none" class="itemClass" *ngIf="userProfile.MemberType === 'Student'">
+          <ion-icon name="medal-outline"></ion-icon>
+          <ion-text>{{'Grade : ' + (userProfile.Grade ? userProfile.Grade : '&nbsp;&nbsp;--')}}</ion-text>
+        </ion-item>
+        <ion-item lines="none" class="itemClass"  *ngIf="userProfile.MemberType === 'Student'">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <ion-text>{{'Year ' + (userProfile.Year ? userProfile.Year : '&nbsp;&nbsp;--')}}</ion-text>
+        </ion-item>
+        <ion-item lines="none" class="itemClass"  *ngIf="userProfile.MemberType === 'Student'">
+          <ion-icon name="school-outline"></ion-icon>
+          <ion-text>{{'Class : ' + (userProfile.Class ? userProfile.Class : '&nbsp;&nbsp;--')}}</ion-text>
+        </ion-item>
+
+        <ion-item lines="none" class="itemClass">
+          <ion-icon name="ribbon-outline"></ion-icon>
+          <ion-text>{{'Member Type : ' + (userProfile.MemberType ? userProfile.MemberType : '&nbsp;&nbsp;--')}}</ion-text>
+        </ion-item>
+      </div>
+
+    </ion-card>
+
+    <ion-card class="cardQR" *ngIf="!isSecurityApp">
+      <img src="{{qrCode}}" onError="this.src='../../../assets/images/default_image.png'" class="qrcodeClass"/>
+    </ion-card>
+
+</ion-content>

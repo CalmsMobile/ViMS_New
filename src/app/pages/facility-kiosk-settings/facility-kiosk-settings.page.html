@@ -32,19 +32,21 @@
         <ion-icon class='siva-icon-help-circled-1' slot="start" color="primary"></ion-icon>
         <ion-label>FAQ</ion-label>
       </ion-button> -->
-      <ion-item>
-          <ion-icon class='siva-icon-fort-awesome' color="primary" slot="start"></ion-icon>
-          <ion-label color="gray">Select Your Facility</ion-label>
-          <ion-select mode="ios" [(ngModel)]="SELECTED_FACILITIE.FacilityCode"
-              (ionChange)="onChangeFacility()"
-              multiple="false"
-              interface="action-sheet"
-              [interfaceOptions]="customActionSheetOptions"
-              okText="Ok"
-              cancelText="Cancel">
-              <ion-select-option *ngFor="let item of AVAIL_FACILITIES" [value]="item.FacilityCode" color="gray">{{item.FacilityName}}</ion-select-option>
-          </ion-select>
-        </ion-item>
+
+      <ion-item lines="none" transparent>
+        <ion-icon class='siva-icon-fort-awesome' color="primary" slot="start"></ion-icon>
+        <ion-label style="font-size: 16px;" position="stacked">Select Your Facility</ion-label>
+            <ion-select mode="ios" interface="action-sheet" (ionChange)="onChangeFacility($event)"
+              [(ngModel)]="FacilityCode"
+              placeholder="Facility">
+              <ion-label position="stacked">Facility</ion-label>
+              <ion-select-option text-left *ngFor="let avl_reason of AVAIL_FACILITIES"
+                [value]="avl_reason.FacilityCode">
+                {{avl_reason.FacilityName}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
     <!-- <ion-button ion-item (click)="goToUserAbout()">
         <ion-icon class='siva-icon-plug' slot="start" color="primary"></ion-icon>
         <ion-label color="gray">Disconnect this device</ion-label>

@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { RestProvider } from 'src/app/providers/rest/rest';
@@ -15,20 +15,25 @@ export class QRAccessPage implements OnInit {
   hostObj: any = {
 
   };
+  showProfileHeader = false;
+  lastGenOn = '';
   TIMEOUT = 0;
   qrCodePath = '';
   HOST_QRVALUE = '';
   HOST_ACCESS_INTERVAL: any;
   showQRImage= false;
   showNotification = false;
+  IsDynamicKey = false;
   constructor(private router: Router,
     private translate: TranslateService,
     private navCtrl: NavController,
     private datePipe: DatePipe,
+    private route: ActivatedRoute,
     private alertCtrl: AlertController,
     private apiProvider: RestProvider) { }
 
   ngOnInit() {
+    console.log('ngOnInit ');
     const hostData = localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     const cmpnyData = localStorage.getItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS);
     if (hostData) {
@@ -42,14 +47,59 @@ export class QRAccessPage implements OnInit {
     var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (qrData) {
       const QRObj = JSON.parse(qrData);
-      if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS) {
+      this.showProfileHeader = QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS;
+      if (QRObj.MAppId.split(',').length === 2 && QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
         this.showNotification = true;
+        this.showProfileHeader = true;
       }
     }
+    this.route.queryParams.subscribe(params => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        const passData = this.router.getCurrentNavigation().extras.state.passData;
+        console.log('passData : ' + passData.isFromLogin);
+        this.showQRImage = passData.ACTION === 'ShowQR';
+        if (this.showQRImage){
+          this.GetHostAccessSettings();
+        }
+
+      }
+    });
+    this.lastGenOn = localStorage.getItem(AppSettings.LOCAL_STORAGE.QR_ACCESS_LAST_GEN_ON);
   }
+
+  goBack() {
+
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId.split(",").length === 2 && QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.QR_ACCESS) > -1 && QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+        this.router.navigateByUrl('qraccess');
+      } else if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+        this.router.navigateByUrl('home-tams');
+      } else {
+        if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+          this.router.navigateByUrl('tamshome');
+        } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS) {
+          this.router.navigateByUrl('qraccess');
+        } else if (QRObj.MAppId === AppSettings.LOGINTYPES.NOTIFICATIONS) {
+          this.router.navigateByUrl('notifications');
+        } else {
+          this.router.navigateByUrl('home-view');
+      }
+      }
+    } else {
+      this.navCtrl.pop();
+    }
+    console.log('goBack ');
+   }
 
   showQR() {
     this.showQRImage = !this.showQRImage;
+    if (this.showQRImage){
+      this.GetHostAccessSettings();
+    } else {
+      clearInterval(this.HOST_ACCESS_INTERVAL);
+    }
   }
 
   gotoNotifiations() {
@@ -87,14 +137,22 @@ export class QRAccessPage implements OnInit {
               } else {
                 this.HOST_QRVALUE = hostAccessSettings.HostCardSerialNo;
               }
+              this.IsDynamicKey = hostAccessSettings.IsDynamicKey;
               this.qrCodePath = hostAccessSettings.DataString;
-              if (hostAccessSettings.QRCodeValidity && hostAccessSettings.QRCodeValidity > 0) {
+              const lastGenOn = this.datePipe.transform(new Date(), 'dd MMM yyyy hh:mm a');
+              this.lastGenOn = localStorage.getItem(AppSettings.LOCAL_STORAGE.QR_ACCESS_LAST_GEN_ON);
+              localStorage.setItem(AppSettings.LOCAL_STORAGE.QR_ACCESS_LAST_GEN_ON, lastGenOn);
+              if (hostAccessSettings.QRCodeValidity && hostAccessSettings.QRCodeValidity > 0 && hostAccessSettings.IsDynamicKey) {
                 clearInterval(this.HOST_ACCESS_INTERVAL);
                 this.refreshHostAccess(hostAccessSettings.QRCodeValidity);
               } else {
                 clearInterval(this.HOST_ACCESS_INTERVAL);
               }
             }catch(e){
+            }
+            if (!this.qrCodePath){
+              clearInterval(this.HOST_ACCESS_INTERVAL);
+              this.showAlert('Unable to get your access code due to server issue, please try again or contact system administrator.');
             }
           }
         }catch(e){
@@ -104,6 +162,24 @@ export class QRAccessPage implements OnInit {
       (err) => {
       }
     );
+}
+
+  async showAlert(msg){
+  let alert = this.alertCtrl.create({
+    header: 'Notification',
+    message: msg,
+    mode:'ios',
+    buttons: [{
+        text: 'Okay',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    (await alert).present();
+    (await alert).onDidDismiss().then(() => {
+      this.showQRImage = false;
+    });
 }
 
 refreshHostAccess(QRCodeValidity) {
@@ -127,14 +203,13 @@ refreshHostAccess(QRCodeValidity) {
 }
 
 ionViewWillEnter(){
-  this.GetHostAccessSettings();
 }
 
-  ionViewWillLeave(){
-    if (this.HOST_ACCESS_INTERVAL){
-      clearInterval(this.HOST_ACCESS_INTERVAL);
-    }
+ionViewWillLeave(){
+  if (this.HOST_ACCESS_INTERVAL){
+    clearInterval(this.HOST_ACCESS_INTERVAL);
   }
+}
 
   logout() {
     this.translate.get(['SETTINGS.ARE_U_SURE_LOGOUT_TITLE','SETTINGS.ARE_U_SURE_LOGOUT',
@@ -149,8 +224,6 @@ ionViewWillEnter(){
           {
             text: t['COMMON.EXIT1'],
             handler: () => {
-              localStorage.setItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS, '');
-              localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS, '');
               localStorage.clear();
               this.apiProvider.showToast(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
               this.navCtrl.navigateRoot('account-mapping');

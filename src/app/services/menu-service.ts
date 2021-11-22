@@ -11,217 +11,85 @@ export class MenuService implements IService {
     getAllPages = (): Array<any> => {
         var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
         var menus = [
-            { "title": "Home", "icon": "home-outline", "component": "home-view" },
-            {
-                "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
-                    { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
-                    { "title": "Appointment History", "icon": "list-circle-outline", "component": "appointment-history" },
-                    { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
-                ]
-            },
-            { "title": "Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" },
-            { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
-            { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
         ];
         if (!qrInfo) {
             return menus;
         }
         var QRObj = JSON.parse(qrInfo);
         if (QRObj && QRObj.MAppId) {
-            switch (QRObj.MAppId) {
-                case AppSettings.LOGINTYPES.HOSTAPPT:
-                    var showQP = false;
-                    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-                    if (settings && JSON.parse(settings)) {
-                        try {
-                            var hostSettings = JSON.parse(settings).Table1[0];
-                            showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
-                        } catch (e) {
 
-                        }
-                    }
-                    if (showQP) {
-                        menus = [
-                            { "title": "Home", "icon": "home-outline", "component": "home-view" },
-                            {
-                                "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
-                                    { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
-                                    { "title": "Appointment History", "icon": "list-circle-outline", "component": "appointment-history" },
-                                    { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
-                                ]
-                            },
-                            { "title": "Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" },
-                            {
-                                "title": "Quick Pass", "icon": "qr-code-outline", "component": "", "subMenu": [
-                                    { "title": "Create Quick Pass", "icon": "create-outline", "component": "create-quick-pass" },
-                                    { "title": "Quick Pass Dashboard", "icon": "analytics-outline", "component": "quick-pass-dash-board-page" }
-                                ]
-                            },
-                            { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
-                            { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
-                        ];
-                    } else {
-                        menus = [
-                            { "title": "Home", "icon": "home-outline", "component": "home-view" },
-                            {
-                                "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
-                                    { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
-                                    { "title": "Appointment History", "icon": "list-circle-outline", "component": "appointment-history" },
-                                    { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
-                                ]
-                            },
-                            { "title": "Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" },
-                            { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
-                            { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
-                        ];
-                    }
+          var showQP = false;
+          var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+          if (settings && JSON.parse(settings)) {
+              try {
+                  var hostSettings = JSON.parse(settings).Table1[0];
+                  showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
+              } catch (e) {
 
-                    break;
-                    case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
-                      var showQP = false;
-                      var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-                      if (settings && JSON.parse(settings)) {
-                          try {
-                              var hostSettings = JSON.parse(settings).Table1[0];
-                              showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
-                          } catch (e) {
-
-                          }
-                      }
-                      if (showQP) {
-                          menus = [
-                              { "title": "Home", "icon": "home-outline", "component": "home-view" },
-                              {
-                                  "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
-                                      { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
-                                      { "title": "Appointment List View", "icon": "list-circle-outline", "component": "appointment-history" },
-                                      { "title": "Appointment Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" },
-                                      { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
-                                  ]
-                              },
-                              {
-                                "title": "Attendance", "icon": "calendar-outline", "component": "", "subMenu": [
-                                    { "title": "My Schedule", "icon": "create-outline", "component": "add-appointment" },
-                                    { "title": "My Attendance", "icon": "list-circle-outline", "component": "appointment-history" },
-                                    { "title": "Register Attendance", "icon": "calendar-number-outline", "component": "manage-appointment" },
-                                ]
-                              },
-                              {
-                                  "title": "Quick Pass", "icon": "qr-code-outline", "component": "", "subMenu": [
-                                      { "title": "Create Quick Pass", "icon": "create-outline", "component": "create-quick-pass" },
-                                      { "title": "Quick Pass Dashboard", "icon": "analytics-outline", "component": "quick-pass-dash-board-page" }
-                                  ]
-                              },
-                              { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
-                              { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
-                          ];
-                      } else {
-                          menus = [
-                              { "title": "Home", "icon": "home-outline", "component": "home-view" },
-                              {
-                                  "title": "Appointment", "icon": "calendar-clear-outline", "component": "", "subMenu": [
-                                      { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
-                                      { "title": "Appointment List View", "icon": "list-circle-outline", "component": "appointment-history" },
-                                      { "title": "Appointment Calendar View", "icon": "calendar-outline", "component": "manage-appointment" },
-                                      { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
-                                  ]
-                              },
-                              {
-                                "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": [
-                                    { "title": "My Schedule", "icon": "create-outline", "component": "add-appointment" },
-                                    { "title": "My Attendance", "icon": "list-circle-outline", "component": "appointment-history" },
-                                    { "title": "Register Attendance", "icon": "calendar-number-outline", "component": "manage-appointment" },
-                                ]
-                              },
-                              { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
-                              { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
-                          ];
-                      }
-
-                      break;
-                case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
-                    showQP = false;
-                    settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-                    if (settings && JSON.parse(settings)) {
-                        try {
-                          hostSettings = JSON.parse(settings).Table1[0];
-                          showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
-                        } catch (e) {
-
-                        }
-                    }
-                    if (showQP) {
-                        menus = [
-                            { "title": "Home", "icon": "home-outline", "component": "home-view" },
-                            {
-                                "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
-                                    { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
-                                    { "title": "Appointment History", "icon": "list-circle-outline", "component": "appointment-history" },
-                                    { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
-                                ]
-                            },
-                            {
-                                "title": "Facility Booking", "icon": "bookmark-outline", "component": "", "subMenu": [
-                                    { "title": "Create Facility Booking", "icon": "create-outline", "component": "facility-booking" },
-                                    { "title": "Facility History", "icon": "list-outline", "component": "facility-booking-history" }
-                                ]
-                            },
-                            { "title": "Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" },
-                            {
-                                "title": "Quick Pass", "icon": "qr-code-outline", "component": "", "subMenu": [
-                                    { "title": "Create Quick Pass", "icon": "create-outline", "component": "create-quick-pass" },
-                                    { "title": "Quick Pass Dashboard", "icon": "analytics-outline", "component": "quick-pass-dash-board-page" }
-                                ]
-                            },
-                            { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
-                            // {"title":"Profile","icon":"siva-icon-user-outline", "component":"UserProfilePage"},
-                            { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
-                        ];
-                    } else {
-                        menus = [
-                            { "title": "Home", "icon": "home-outline", "component": "home-view" },
-                            {
-                                "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
-                                    { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
-                                    { "title": "Appointment History", "icon": "list-circle-outline", "component": "appointment-history" },
-                                    { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
-                                ]
-                            },
-                            {
-                                "title": "Facility Booking", "icon": "bookmark-outline", "component": "", "subMenu": [
-                                    { "title": "Create Facility Booking", "icon": "create-outline", "component": "facility-booking" },
-                                    { "title": "Facility History", "icon": "list-outline", "component": "facility-booking-history" }
-                                ]
-                            },
-                            { "title": "Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" },
-                            { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
-                            // {"title":"Profile","icon":"siva-icon-user-outline", "component":"UserProfilePage"},
-                            { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
-                        ];
-                    }
-                    break;
-                case AppSettings.LOGINTYPES.FACILITY:
-                    menus = [
-                        { "title": "Home", "icon": "home-outline", "component": "facility-upcoming" },
-                        {
-                            "title": "Facility Booking", "icon": "bookmark-outline", "component": "", "subMenu": [
-                                { "title": "Create Facility Booking", "icon": "create-outline", "component": "facility-booking" },
-                                { "title": "Facility History", "icon": "list-outline", "component": "facility-booking-history" }
-                            ]
-                        },
-                        { "title": "Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" },
-                        { "title": "Notification", "icon": "notifications-outline", "component": "notifications" },
-                        { "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" }
-                    ];
-                    break;
-                case AppSettings.LOGINTYPES.DISPLAYAPP:
-                    menus = [];
-                    break;
-                case AppSettings.LOGINTYPES.ACKAPPT:
-                    menus = [];
-                    break;
+              }
+          }
+          menus = [];
+          if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+            menus = [
+              {
+                "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": [
+                    { "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" },
+                    { "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" },
+                    { "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" },
+                    { "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" },
+                    { "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" },
+                ]
+              }
+            ];
+          } else {
+            menus.push({ "title": "Home", "icon": "home-outline", "component": "home-view" });
+            if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+              menus.push({
+                "title": "Appointment", "icon": "calendar-outline", "component": "", "subMenu": [
+                    { "title": "Create Appointment", "icon": "create-outline", "component": "add-appointment" },
+                    { "title": "Appointment History", "icon": "list-circle-outline", "component": "appointment-history" },
+                    { "title": "My Visitors", "icon": "people-outline", "component": "my-visitors" }
+                ]
+              });
             }
-            return menus;
+            if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+              menus.push({
+                "title": "Facility Booking", "icon": "bookmark-outline", "component": "", "subMenu": [
+                    { "title": "Create Facility Booking", "icon": "create-outline", "component": "facility-booking" },
+                    { "title": "Facility History", "icon": "list-outline", "component": "facility-booking-history" }
+                ]
+              });
+            }
+            if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
+              menus.push({ "title": "Calendar View", "icon": "calendar-number-outline", "component": "manage-appointment" });
+            }
+
+            if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.TAMS) > -1) {
+              menus.push({
+                "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": [
+                    { "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" },
+                    { "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" },
+                    { "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" },
+                    { "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" },
+                    { "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" },
+                ]
+              });
+            }
+            if (showQP) {
+              menus.push({
+                "title": "Quick Pass", "icon": "qr-code-outline", "component": "", "subMenu": [
+                    { "title": "Create Quick Pass", "icon": "create-outline", "component": "create-quick-pass" },
+                    { "title": "Quick Pass Dashboard", "icon": "analytics-outline", "component": "quick-pass-dash-board-page" }
+                ]
+              });
+            }
+          }
+          if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+            menus.push({ "title": "Notification", "icon": "notifications-outline", "component": "notifications" });
+          }
+
+          menus.push({ "title": "Settings", "icon": "settings-outline", "component": "settings-view-page" });
+          return menus;
         }
 
     }

@@ -20,10 +20,18 @@ export class HomeTAMSPage implements OnInit {
   hostObj: any = {
 
   };
-
+  QRObj1: any;
   isNotificationClicked = false;
   notificationCount = 0;
   currentPage = "home-view";
+  showFacilityAlone = false;
+  showQP = false;
+  showHOST = false;
+  showFacility = false;
+  showTAMS = false;
+  showNotification = false;
+  showQRAccess = false;
+  isAdmin = false;
   constructor(public navCtrl: NavController,
     private events : EventsService,
     private router: Router,
@@ -41,24 +49,77 @@ export class HomeTAMSPage implements OnInit {
       if (data1.action === "NotificationReceived") {
         console.log("Notification Received: " + data1.title);
         this.showNotificationCount();
+      } else if (data1.action === "ReloadTAMS") {
+        console.log("ReloadMenu Received: " + data1.title);
+        this.ngOnInit();
       }
     });
    }
 
   ngOnInit() {
     this.GetHostAppSettings();
-    this.getSettingsForTams();
+
     this.menu.enable(true, "myLeftMenu");
-    this.getMySchedules();
-    this.getMyAttendanceWhitelistedLocations();
+    if (this.showTAMS) {
+      this.getSettingsForTams();
+      this.getMySchedules();
+      this.getMyAttendanceWhitelistedLocations();
+    }
+
   }
 
 
   GetHostAppSettings() {
     const settings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-    if (!settings) {
+    var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrInfo){
+
+      if (settings && JSON.parse(settings)) {
+          try {
+              var hostSettings = JSON.parse(settings).Table1[0];
+              this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
+          } catch (e) {
+
+          }
+      }
+
+      this.QRObj1 = JSON.parse(qrInfo);
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1|| this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+        this.showHOST = true;
+        this.isAdmin = true;
+      } else{
+        this.showHOST = false;
+        this.isAdmin = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1) {
+        this.showFacility = true;
+      } else {
+        this.showFacility = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) === -1 && this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) === -1 && this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1) {
+        this.showFacilityAlone = true;
+      } else {
+        this.showFacilityAlone = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.TAMS) > -1) {
+        this.showTAMS = true;
+      } else {
+        this.showTAMS = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+        this.showNotification = true;
+      } else {
+        this.showNotification = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.QR_ACCESS) > -1) {
+        this.showQRAccess = true;
+      } else {
+        this.showQRAccess = false;
+      }
+    }
+    if (!settings && qrInfo) {
       var params = {
-        "MAppId": AppSettings.LOGINTYPES.HOSTAPPT,
+        "MAppId": this.QRObj1.MAppId.split(",")[0].replace(" ", ""),
         "HostIc": ""
       }
       var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -265,6 +326,55 @@ export class HomeTAMSPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter UpcomingAppointmentPage');
+
+    const settings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+    var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrInfo){
+
+      if (settings && JSON.parse(settings)) {
+          try {
+              var hostSettings = JSON.parse(settings).Table1[0];
+              this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
+          } catch (e) {
+
+          }
+      }
+
+      this.QRObj1 = JSON.parse(qrInfo);
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1|| this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+        this.showHOST = true;
+        this.isAdmin = true;
+      } else{
+        this.showHOST = false;
+        this.isAdmin = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1) {
+        this.showFacility = true;
+      } else {
+        this.showFacility = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) === -1 && this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) === -1 && this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1) {
+        this.showFacilityAlone = true;
+      } else {
+        this.showFacilityAlone = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.TAMS) > -1) {
+        this.showTAMS = true;
+      } else {
+        this.showTAMS = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+        this.showNotification = true;
+      } else {
+        this.showNotification = false;
+      }
+      if (this.QRObj1.MAppId.indexOf(AppSettings.LOGINTYPES.QR_ACCESS) > -1) {
+        this.showQRAccess = true;
+      } else {
+        this.showQRAccess = false;
+      }
+    }
+
     this.events.publishDataCompany({
       action: 'user:created',
       title: "ReloadMenu",
@@ -452,13 +562,28 @@ initializeFirebaseIOS() {
     this.router.navigateByUrl('admin-home');
   }
 
+  gotoQRProfile() {
+    this.router.navigateByUrl('qr-profile');
+  }
+
   gotoNotification(){
     this.router.navigateByUrl('notifications');
   }
 
   statesClicked(page) {
     console.log(page);
-    this.router.navigateByUrl(page);
+    if (page === 'qraccess'){
+      const navigationExtras: NavigationExtras = {
+        state: {
+          passData: { "ACTION": "ShowQR",
+        }
+        }
+      };
+      this.router.navigate([page], navigationExtras);
+    } else {
+      this.router.navigateByUrl(page);
+    }
+
   }
 
 }

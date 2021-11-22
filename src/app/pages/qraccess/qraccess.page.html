@@ -1,25 +1,35 @@
 <ion-header lines="none" class="ion-no-border">
-  <ion-toolbar lines="none" class="ion-no-border" color="primary">
-    <ion-item lines="none" class="no-border" style="--padding-start: 0px;">
-      <img src="{{hostObj.hostImage}}" onError="this.src='../../../assets/images/user.png'" slot="start" class="ion-text-left"  style="width: 52px;
-      height: 52px;
-      margin-right: 5px;
-      padding: 8px;
-      border-radius: 50%;
-    object-fit: cover;">
-      <div style="line-height: 22px;">
-        <ion-label color="light" style="font-weight: bold;">{{hostObj.HOSTNAME}}<br></ion-label>
-        <div style="display: flex; font-size: 14px;">
-          <ion-icon color="light" style="align-self: center;" name="mail-outline"></ion-icon>
-          <ion-label color="light">{{hostObj.HOST_EMAIL}}</ion-label>
-        </div>
-      </div>
-    </ion-item>
-
-    <ion-buttons slot="end">
+  <ion-toolbar color="primary">
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back" *ngIf="!showProfileHeader"></ion-icon>
+    <ion-title>{{'ALERT_TEXT.QR_ACCESS' | translate}}</ion-title>
+    <ion-buttons slot="end"  *ngIf="showProfileHeader">
       <ion-icon style="font-size: 26px;padding-right: 10px;" color="light" name="notifications-outline" *ngIf="showNotification" (click)="gotoNotifiations()"></ion-icon>
       <ion-icon style="font-size: 26px;padding-right: 10px;" name="settings-sharp" color="light" (click)="gotoSettings()"></ion-icon>
     </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar lines="none" class="ion-no-border" color="primary" *ngIf="showProfileHeader">
+    <ion-card lines="none" class="no-border" style="--padding-start: 0px;    background: transparent;
+    box-shadow: none;padding: 0px;
+    margin: 0px;">
+
+      <ion-card-content style="text-align: center;    padding: 0px;">
+        <div style="line-height: 22px;display: grid; ">
+          <img src="{{hostObj.hostImage}}" onError="this.src='../../../assets/images/user.png'" slot="start" class="ion-text-left"  style="width: 92px;
+      height: 92px;
+      margin-right: 5px;
+      padding: 8px;
+      border-radius: 50%;
+    object-fit: cover;    margin: 0 auto;"/>
+          <ion-label color="light" style="font-weight: bold;    font-size: 24px;">{{hostObj.HOSTNAME}}<br></ion-label>
+          <div style="font-size: 14px;display: flex;justify-content: center;">
+            <ion-icon color="light" style="align-self: center;" name="mail-outline"></ion-icon>
+            <ion-label color="light">{{hostObj.HOST_EMAIL}}</ion-label>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+
   </ion-toolbar>
 </ion-header>
 
@@ -29,7 +39,13 @@
     <ion-row>
       <ion-col size="12">
         <ion-list lines="none">
-          <ion-button *ngIf="!showQRImage" (click)="showQR()">Click to generate QR</ion-button>
+        <div style="display: grid;" (click)="showQR()">
+          <img *ngIf="!showQRImage" style="width: 160px;
+              height: 145px;
+              margin: auto;
+              margin-bottom: 25px;" src="../../../assets/images/qr_access_gen.png" />
+          <ion-label class="empty_title" *ngIf="!showQRImage">{{'Click to Generate QR Code' }}</ion-label>
+        </div>
           <div class="login-top" *ngIf="showQRImage" >
             <img class="animated fadeInDown delay-1s" style="
           width: 45vh;
@@ -41,7 +57,7 @@
           background: #173444;
           margin-bottom: 15px;" [src]="'data:image/jpeg;base64,'+ qrCodePath">
           </div>
-          <ion-label class="center" *ngIf="showQRImage && TIMEOUT > 0">Your access will refresh in {{TIMEOUT}} sec.</ion-label>
+          <ion-label class="center" *ngIf="showQRImage && IsDynamicKey">{{(TIMEOUT > 0) ? ('Your access will refresh in ' + TIMEOUT + ' sec.') : '&nbsp;&nbsp;--' }}</ion-label>
 
           <ion-icon color="primary" *ngIf="showQRImage" style="font-size: 62px;" (click)="showQR()" name="close-circle-outline"></ion-icon>
 
@@ -52,3 +68,10 @@
 
 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-label style="text-align: center;margin: 0 auto;word-spacing: 2px;  line-height: 28px;
+    display: block;">Last access generated on: <b><br>{{lastGenOn ? lastGenOn: '&nbsp;&nbsp;--'}}</b></ion-label>
+  </ion-toolbar>
+</ion-footer>

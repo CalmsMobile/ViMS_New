@@ -155,7 +155,7 @@ export class AppComponent {
       this.platform.backButton.subscribe(() => {
         console.log('Back Pressed');
         try {
-
+          this.apiProvider.dismissLoading();
           if (this.menu.isOpen()) {
             this.menu.close();
           }
@@ -165,11 +165,24 @@ export class AppComponent {
               this.router.navigateByUrl('security-dash-board-page');
               return;
             }
-            if (this.router.url === '/account-mapping' || this.router.url ==='home-tams' || this.router.url === '/home' || this.router.url === 'security-dash-board-page') {
+            if (this.router.url === '/account-mapping' || this.router.url === '/tamshome' ||  this.router.url ==='/home-tams' || this.router.url === '/home' || this.router.url === '/security-dash-board-page') {
               if (!this.alertShown) {
                 this.presentConfirm();
               }
+              return;
             }
+            var scannedJson1 = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+            if (scannedJson1 && JSON.parse(scannedJson1).MAppId) {
+              const apps = JSON.parse(scannedJson1).MAppId;
+              if (apps.split(",").length === 2 && apps.indexOf(AppSettings.LOGINTYPES.QR_ACCESS) > -1 && apps.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1){
+                if (this.router.url === '/qraccess'){
+                  if (!this.alertShown) {
+                    this.presentConfirm();
+                  }
+                }
+              }
+            }
+
           } catch (e) {
             console.log('Back Pressed error: ' + e);
             if (!this.alertShown) {
@@ -199,79 +212,54 @@ export class AppComponent {
       }
       var scannedJson1 = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
       if (scannedJson1 && JSON.parse(scannedJson1).MAppId) {
-        switch (JSON.parse(scannedJson1).MAppId) {
-          case AppSettings.LOGINTYPES.HOSTAPPT:
-            var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-            if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
-              console.log("calling login Page: " + hostData);
-              this.navCtrl.navigateRoot("account-mapping");
-              return;
-            }
-            this.menu.enable(true, "myLeftMenu");
-            break;
-          case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
-            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-            if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
-              console.log("calling login Page: " + hostData);
-              this.navCtrl.navigateRoot("account-mapping");
-              return;
-            }
-            this.menu.enable(true, "myLeftMenu");
-            break;
-          case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
-            this.showHeader = false;
-            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-            if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
-              console.log("calling login Page: " + hostData);
-              this.navCtrl.navigateRoot("account-mapping");
-              return;
-            }
-            //this.GetHostAppSettings(AppSettings.LOGINTYPES.HOSTAPPT);
-            this.getSettingsForTams();
-            this.menu.enable(true, "myLeftMenu");
-            this.navCtrl.navigateRoot("home-tams");
-            setTimeout(() => {
-              this.navCtrl.navigateRoot("home-tams");
+        const apps = JSON.parse(scannedJson1).MAppId;
+        if (apps.split(",").length === 1 && apps.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) === -1) {
+          switch (apps.split(",")[0]) {
+            case AppSettings.LOGINTYPES.HOSTAPPT:
+              var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+              if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+                console.log("calling login Page: " + hostData);
+                this.navCtrl.navigateRoot("account-mapping");
+                return;
+              }
               this.menu.enable(true, "myLeftMenu");
-            }, 5000);
             break;
-          case AppSettings.LOGINTYPES.FACILITY:
-            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-            if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
-              console.log("calling login Page: " + hostData);
-              this.navCtrl.navigateRoot("account-mapping");
-              return;
-            }
-            this.menu.enable(true, "myLeftMenu");
+            case AppSettings.LOGINTYPES.FACILITY:
+              hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+              if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+                console.log("calling login Page: " + hostData);
+                this.navCtrl.navigateRoot("account-mapping");
+                return;
+              }
+              this.menu.enable(true, "myLeftMenu");
             break;
-          case AppSettings.LOGINTYPES.DISPLAYAPP:
-            this.navCtrl.navigateRoot("facility-kiosk-display");;
-            this.menu.enable(false, "myLeftMenu");
-            break;
-          case AppSettings.LOGINTYPES.ACKAPPT:
-            this.getAcknowledgementSettings();
-            this.menu.enable(false, "myLeftMenu");
-            this.navCtrl.navigateRoot("sign-pad-idle-page");
-            break;
-          case AppSettings.LOGINTYPES.SECURITYAPP:
-            hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS);
-            if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).MAppDevSeqId) {
-              console.log("calling login Page: " + hostData);
-              this.navCtrl.navigateRoot("account-mapping");
-              this.navCtrl.navigateRoot("login");
-            } else {
-              this.navCtrl.navigateRoot("security-dash-board-page");
-            }
-            break;
-          case AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS:
-          case AppSettings.LOGINTYPES.QR_ACCESS:
-                hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-                if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
-                  console.log("calling login Page: " + hostData);
-                  this.navCtrl.navigateRoot("account-mapping");
-                } else {
-                  this.navCtrl.navigateRoot("qraccess");
-                }
+            case AppSettings.LOGINTYPES.DISPLAYAPP:
+              this.navCtrl.navigateRoot("facility-kiosk-display");;
+              this.menu.enable(false, "myLeftMenu");
+              break;
+            case AppSettings.LOGINTYPES.ACKAPPT:
+              this.getAcknowledgementSettings();
+              this.menu.enable(false, "myLeftMenu");
+              this.navCtrl.navigateRoot("sign-pad-idle-page");
+              break;
+            case AppSettings.LOGINTYPES.SECURITYAPP:
+              hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS);
+              if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).MAppDevSeqId) {
+                console.log("calling login Page: " + hostData);
+                this.navCtrl.navigateRoot("account-mapping");
+                this.navCtrl.navigateRoot("login");
+              } else {
+                this.navCtrl.navigateRoot("security-dash-board-page");
+              }
+              break;
+            case AppSettings.LOGINTYPES.QR_ACCESS:
+                  hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+                  if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+                    console.log("calling login Page: " + hostData);
+                    this.navCtrl.navigateRoot("account-mapping");
+                  } else {
+                    this.navCtrl.navigateRoot("qraccess");
+                  }
               break;
             case AppSettings.LOGINTYPES.NOTIFICATIONS:
                 hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -282,6 +270,33 @@ export class AppComponent {
                   this.navCtrl.navigateRoot("notifications");
                 }
               break;
+
+            case AppSettings.LOGINTYPES.TAMS:
+              hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+              if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+                console.log("calling login Page: " + hostData);
+                this.navCtrl.navigateRoot("account-mapping");
+              } else {
+                this.menu.enable(true, "myLeftMenu");
+                this.navCtrl.navigateRoot("tamshome");
+              }
+            break;
+          }
+        } else if (apps.split(",").length === 2 && apps.indexOf(AppSettings.LOGINTYPES.QR_ACCESS) > -1 && apps.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+          this.navCtrl.navigateRoot("qraccess");
+        } else {
+          this.showHeader = false;
+          hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+          if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+            console.log("calling login Page: " + hostData);
+            this.navCtrl.navigateRoot("account-mapping");
+            return;
+          }
+          if (apps.indexOf(AppSettings.LOGINTYPES.TAMS) > -1) {
+            this.getSettingsForTams();
+          }
+          this.menu.enable(true, "myLeftMenu");
+          this.navCtrl.navigateRoot("home-tams");
         }
       } else {
         this.navCtrl.navigateRoot("account-mapping");
@@ -477,45 +492,6 @@ export class AppComponent {
      });
   }
 
-  ////getLocationForTAMS Ends
-
-
-  GetHostAppSettings(MAppId) {
-    var params = {
-      "MAppId": MAppId,
-      "HostIc": ""
-    }
-    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-    if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
-      return;
-    }
-    params.HostIc = JSON.parse(hostData).HOSTIC;
-    this.apiProvider.GetHostAppSettings(params, false).then(
-      (val) => {
-        try {
-          var result = JSON.parse(JSON.stringify(val));
-          if (result) {
-            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, JSON.stringify(val));
-            this.loadMenuData(true);
-            const appTheme = result.Table1[0].AppTheme;
-            if (appTheme) {
-              const appThemeObj = JSON.parse(appTheme);
-              if (appThemeObj.primThemeColor) {
-                this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
-                this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
-              }
-            }
-          }
-        } catch (e) {
-
-        }
-
-      },
-      (err) => {
-      }
-    );
-  }
-
   getSettingsForTams() {
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
@@ -654,6 +630,15 @@ export class AppComponent {
   }
 
     this.pages = this.menuService.getAllPages();
+    var scannedJson1 = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (scannedJson1 && JSON.parse(scannedJson1).MAppId) {
+      const apps = JSON.parse(scannedJson1).MAppId;
+      if (apps.split(",").length > 1) {
+        this.showHeader = true;
+      } else {
+        this.showHeader = true;
+      }
+    }
     this.leftMenuTitle = this.menuService.getTitle();
     this.menuService.load(null).subscribe(snapshot => {
       //debugger;
@@ -694,7 +679,7 @@ export class AppComponent {
             message: 1
           });
         }
-      } else if (JSON.parse(scannedJson1).MAppId == AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || JSON.parse(scannedJson1).MAppId == AppSettings.LOGINTYPES.TAMS) {
+      } else if (JSON.parse(scannedJson1).MAppId.split(",").length > 1 || JSON.parse(scannedJson1).MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
         if (page.component === 'home-view') {
           this.router.navigateByUrl('home-tams');
         } else {
@@ -708,34 +693,38 @@ export class AppComponent {
           case "facility-booking":
           case "facility-booking-history":
           case "notifications":
+          case "tamsregisterattendance":
           case "my-visitors":
             this.router.navigateByUrl(page.component);
             break;
           case "home-view":
             var currentClass = this;
             this._zone.run(function () {
-              var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-              if (qrData) {
-                const QRObj = JSON.parse(qrData);
-                if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
-                  currentClass.router.navigateByUrl('home-tams');
-                } else {
-                  currentClass.navCtrl.navigateRoot("home-view");
-                  currentClass.events.publishDataCompany({
-                    action: 'ChangeTab',
-                    title: page,
-                    message: 0
-                  });
-                }
+              if (JSON.parse(scannedJson1).MAppId.split(",").length > 1 || JSON.parse(scannedJson1).MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+                currentClass.router.navigateByUrl('home-tams');
+              } else if(JSON.parse(scannedJson1).MAppId === AppSettings.LOGINTYPES.TAMS){
+                currentClass.router.navigateByUrl('tamshome');
+              } else {
+                currentClass.navCtrl.navigateRoot("home-view");
+                currentClass.events.publishDataCompany({
+                  action: 'ChangeTab',
+                  title: page,
+                  message: 0
+                });
               }
             });
             break;
           default:
-            this.events.publishDataCompany({
-              action: 'ChangeTab',
-              title: page,
-              message: 1
-            });
+            if(JSON.parse(scannedJson1).MAppId === AppSettings.LOGINTYPES.TAMS && page.component === 'settings-view-page'){
+              this.router.navigateByUrl(page.component);
+            } else {
+              this.events.publishDataCompany({
+                action: 'ChangeTab',
+                title: page,
+                message: 1
+              });
+            }
+
             break;
         }
 

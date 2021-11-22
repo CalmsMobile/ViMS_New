@@ -18,7 +18,9 @@ export class TamsmyattendancelogsPage implements OnInit {
   myAttendanceLogsList = [];
   T_SVC:any;
   isFetching = false;
+  loadingFinished = false;
   startDate = '';
+  showMenu = false;
   constructor(private router: Router,
     private apiProvider: RestProvider,
     private iab: InAppBrowser,
@@ -26,6 +28,13 @@ export class TamsmyattendancelogsPage implements OnInit {
     private dateformat : DateFormatPipe) { }
 
   ngOnInit() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.showMenu = true;
+      }
+    }
     this.startDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
@@ -131,6 +140,7 @@ export class TamsmyattendancelogsPage implements OnInit {
     if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
       return;
     }
+    this.loadingFinished = false;
     var hostId = JSON.parse(hostData).HOSTIC;
     var data = {
       "MAppId": "TAMS",
@@ -140,6 +150,7 @@ export class TamsmyattendancelogsPage implements OnInit {
     };
     this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendanceLogs', this.isFetching? false: true, false, '').then(
       (val: any) => {
+        this.loadingFinished = true;
         const response = JSON.parse(val);
         if (response.Table && response.Table.length > 0 && (response.Table[0].Code === 10 || response.Table[0].code === 10)) {
           if (this.isFetching) {
@@ -158,6 +169,7 @@ export class TamsmyattendancelogsPage implements OnInit {
         this.isFetching = false;
       },
       async (err) => {
+        this.loadingFinished = true;
         this.isFetching = false;
         if(refresher){
           refresher.target.complete();

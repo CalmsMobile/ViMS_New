@@ -17,7 +17,7 @@ import { AppSettings } from 'src/app/services/app-settings';
 export class SecurityCheckOutPagePage implements OnInit {
 
   @ViewChild(IonContent)	content:IonContent;
-
+  isLoadingFinished = false;
   isFetching = false;
   appointments = [];
   appointmentsClone = [];
@@ -214,6 +214,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 
   GetQuickPassVisitorList(refresher, showLoading){
 
+    this.isLoadingFinished = false;
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
     if(hostData){
       var MAppDevSeqId = JSON.parse(hostData).MAppDevSeqId;
@@ -225,6 +226,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.GetQuickPassVisitorList(params, showLoading).then(
 				(val) => {
+          this.isLoadingFinished = true;
 					var aList = JSON.parse(val.toString());
 					if(refresher){
 						this.appointments = aList;
@@ -238,7 +240,9 @@ export class SecurityCheckOutPagePage implements OnInit {
           this.appointments.reverse();
           this.appointmentsClone = this.appointments;
 				},
-				async (err) => {
+				(err) => {
+
+          this.isLoadingFinished = true;
 					if(refresher){
 						refresher.target.complete();
 					}
@@ -252,14 +256,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 						message =JSON.parse(err).message;
 					}
 					if(message){
-						// message = " Unknown"
-						let alert = this.alertCtrl.create({
-							header: 'Error !',
-							cssClass:'',
-							message: message,
-							buttons: ['Okay']
-							});
-							(await alert).present();
+						this.apiProvider.showAlert(message);
 					}
 				}
 			);
@@ -267,7 +264,7 @@ export class SecurityCheckOutPagePage implements OnInit {
   }
 
   VimsAppGetCheckInVisitorList(refresher, showLoading){
-
+    this.isLoadingFinished = false;
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
     if(hostData){
       var MAppDevSeqId = JSON.parse(hostData).MAppDevSeqId;
@@ -279,6 +276,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.VimsAppGetCheckInVisitorList(params, showLoading).then(
 				(val) => {
+          this.isLoadingFinished = true;
 					var aList = JSON.parse(val.toString());
 
 					if(refresher){
@@ -293,7 +291,8 @@ export class SecurityCheckOutPagePage implements OnInit {
           this.appointments.reverse();
           this.appointmentsClone = this.appointments;
 				},
-				async (err) => {
+				(err) => {
+          this.isLoadingFinished = true;
 					if(refresher){
 						refresher.target.complete();
 					}
@@ -307,14 +306,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 						message =JSON.parse(err).message;
 					}
 					if(message){
-						// message = " Unknown"
-						let alert = this.alertCtrl.create({
-							header: 'Error !',
-							cssClass:'',
-							message: message,
-							buttons: ['Okay']
-							});
-							(await alert).present();
+						this.apiProvider.showAlert(message);
 					}
 				}
 			);
@@ -324,6 +316,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 
   VimsAppGetStatesList(Type, refresher, showLoading){
 
+    this.isLoadingFinished = false;
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
     if(hostData){
       var MAppDevSeqId = JSON.parse(hostData).MAppDevSeqId;
@@ -336,6 +329,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.VimsAppGetSecurityStatsDetail(params, showLoading).then(
 				(val) => {
+          this.isLoadingFinished = true;
           this.isFetching = false;
           if(!val){
             return;
@@ -403,6 +397,7 @@ export class SecurityCheckOutPagePage implements OnInit {
           this.appointmentsClone = this.appointments;
 				},
 				async (err) => {
+          this.isLoadingFinished = true;
           this.isFetching = false;
 					if(refresher){
 						refresher.target.complete();
@@ -417,14 +412,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 						message =JSON.parse(err).message;
 					}
 					if(message){
-						// message = " Unknown"
-						let alert = this.alertCtrl.create({
-							header: 'Error !',
-							cssClass:'',
-							message: message,
-							buttons: ['Okay']
-							});
-							(await alert).present();
+						this.apiProvider.showAlert(message);
 					}
 				}
 			);

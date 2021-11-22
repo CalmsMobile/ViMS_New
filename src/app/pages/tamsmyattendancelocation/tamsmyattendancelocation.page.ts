@@ -16,12 +16,21 @@ export class TamsmyattendancelocationPage implements OnInit {
   myAttendanceLocationListCone = [];
   T_SVC:any;
   startDate = '';
+  showMenu = false;
+  loadingFinished = false;
   constructor(private router: Router,
     private apiProvider: RestProvider,
     private translate : TranslateService,
     private iab: InAppBrowser,
     private dateformat : DateFormatPipe) { }
   ngOnInit() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.showMenu = true;
+      }
+    }
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
         this.T_SVC = t;
@@ -65,6 +74,7 @@ export class TamsmyattendancelocationPage implements OnInit {
     if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
       return;
     }
+    this.loadingFinished = false;
     var hostId = JSON.parse(hostData).HOSTIC;
     var data = {
       "MAppId": "TAMS",
@@ -72,6 +82,7 @@ export class TamsmyattendancelocationPage implements OnInit {
     };
     this.apiProvider.requestApi(data, '/api/TAMS/getMyWhitelistedLocation', true, false, '').then(
       (val: any) => {
+        this.loadingFinished = true;
         const response = JSON.parse(val);
         if (response.Table && response.Table.length > 0 && (response.Table[0].Code === 10 || response.Table[0].code === 10)) {
 
@@ -86,6 +97,7 @@ export class TamsmyattendancelocationPage implements OnInit {
         }
       },
       async (err) => {
+        this.loadingFinished = true;
         if(err && err.message == "No Internet"){
           return;
         }

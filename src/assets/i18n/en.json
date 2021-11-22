@@ -1,7 +1,7 @@
 {
 	"APP_NAME": "CALMS Host",
   "APP_TEXT": "Peace of mind",
-	"APP_VERSION": "2.4.33",
+	"APP_VERSION": "2.4.34",
 	"COPY_RIGHTS": "@ CALMS Technologies",
 	"COMMON": {
 		"EXIT1": "Exit",
@@ -12,6 +12,8 @@
 		"CODE": "Code",
 		"LOCATION": "Location",
 		"UID": "UID",
+		"NOTICE": "Notice",
+    "MODULE_CHANGE_TEXT": "New features has been added. Restart will required to update the changes. Click 'Ok' to proceed upgrade.",
 		"GO_TO_SETTINGS": "Go to settings",
 		"EXIT": "Exit App",
 		"SELECT": "Select",
@@ -72,7 +74,7 @@
 		"PROCEED": "Proceed",
 		"CREATE": "Create Pass",
 		"UPDATE": "Update",
-		"GO_BACK": "Go Back",
+		"GO_BACK": "Back",
 		"TITLE": "Welcome to Visitor Appointment",
 		"SCAN_TITLE": "Scan your registration QR Code",
 		"TYPE_MANUAL_PLACE_HOLDER": "Type here",
@@ -217,7 +219,7 @@
 		"NO_CANCELED_LIST": "No Canceled Approval"
 	},
 	"FACILITY_HOME": {
-		"TITLE": "Home"
+		"TITLE": "My Facility Bookings"
 	},
 	"MANG_VISITORS": {
 		"TITLE": "My Visitors",
@@ -402,9 +404,7 @@
 		"TAMIL": "Tamil"
 	},
 	"NOTIFICATION": {
-		"TITLE": "Notification",
-		"NO_NOTIFICATION": "No new notifications",
-		"NO_NOTIFICATION_SUB_TEXT": "Clutter cleared! We'll notify you when there is something now"
+		"TITLE": "Notification"
 	},
 	"SETTINGS": {
 		"TITLE": "Settings",
@@ -523,12 +523,32 @@
 		"VISITOR_ALREADY_SCANNED": "Visitor has already scanned.",
 		"VISITOR_NOT_FOUND": "Visitor not found.",
     "HOST_ACCESS_TITLE": "Your Access",
+    "QR_ACCESS": "QR Access",
     "BRANCH": "Branch :",
     "SELECT_BRANCH": "Select Branch",
     "MY_ATTENDANCE": "My Attendance",
     "MY_SCHEDULE": "My Schedule",
     "REGISTER_ATTENDANCE": "Register Attendance",
-    "MY_ATTENDANCE_LOCATION": "My Attendance Location",
-    "MY_ATTENDANCE_LOGS": "My Attendance Logs"
-	}
+    "MY_ATTENDANCE_LOCATION": "Geo Location",
+    "MY_ATTENDANCE_LOGS": "My Attendance Logs",
+    "QRCODE_INVALID_BRANCH": "This QR code is not authorised to check-in at this branch, please contact host or system administrator for further assistance."
+	},
+  "EMPTY": {
+    "NO_NOTIFICATION_TITLE" : "NO NOTIFICATIONS",
+    "NO_NOTIFICATION": "Clutter cleared! We'll notify you when there is something new",
+    "NO_SCHEDULE_TITLE" : "NO SCHEDULE",
+    "NO_SCHEDULE": "You have no schedule! We'll udpate here when there is any new schedule been uploaded",
+    "NO_ATTENDANCE_TITLE" : "NO ATTENDANCE",
+    "NO_ATTENDANCE": "No attendance record found! We'll udpate here when your attendance data is ready to be post",
+    "NO_ATTENDANCE_LOGS_TITLE" : "NO ATTENDANCE LOGS",
+    "NO_ATTENDANCE_LOGS": "No attendance logs found! We'll udpate here when there is any new attendance logs been captured",
+    "NO_BOOKING_TITLE" : "NO BOOKING",
+    "NO_BOOKING": "You don't have anything for today! We'll udpate here when there is any new booking",
+    "NO_APPOINTMENT_TITLE" : "NO APPOINTMENT",
+    "NO_APPOINTMENT": "You don't have anything for today! We'll udpate here when there is any new appointment",
+    "NO_GEO_LOCATION_TITLE" : "NO GEO LOCATION",
+    "NO_GEO_LOCATION": "No Geo location record found! We'll udpate here when there is any new Geo location has been assign to you",
+    "NO_VISITOR_RECORD_TITLE" : "NO VISITOR RECORD FOUND",
+    "NO_VISITOR_RECORD" : "No visitor records found on your directory. You can add new guest from add new visitor option"
+  }
 }

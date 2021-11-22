@@ -225,6 +225,14 @@ const routes: Routes = [
   },  {
     path: 'qraccess',
     loadChildren: () => import('./pages/qraccess/qraccess.module').then( m => m.QRAccessPageModule)
+  },
+  {
+    path: 'tamshome',
+    loadChildren: () => import('./pages/tamshome/tamshome.module').then( m => m.TAMSHomePageModule)
+  },
+  {
+    path: 'qr-profile',
+    loadChildren: () => import('./pages/qr-profile/qr-profile.module').then( m => m.QrProfilePageModule)
   }
 
 

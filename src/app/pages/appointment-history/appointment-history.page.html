@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start" *ngIf="(QRObj.MAppId !== HOSTWTTAMS && QRObj.MAppId !== TAMS)">
+    <ion-buttons slot="start" *ngIf="showMenu">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-icon slot="start" *ngIf="(QRObj.MAppId === HOSTWTTAMS || QRObj.MAppId === TAMS)" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-icon slot="start" *ngIf="!showMenu" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{'APPOIN_HISTORY.TITLE' | translate}}</ion-title>
     <ion-buttons slot="end" *ngIf= "false">
         <ion-button slot="icon-only" (click)="createBooking()">
@@ -11,10 +11,14 @@
         </ion-button>
       </ion-buttons>
       <ion-buttons slot="end">
-        <ion-button *ngIf= "isAdmin" slot="icon-only" (click)="gotoAdminPage()">
-                <ion-icon name="customicon"></ion-icon>
+        <ion-button slot="icon-only" (click)="gotoQRProfile()" *ngIf="isAdmin">
+          <ion-icon name="qr-code-outline"></ion-icon>
         </ion-button>
-        <ion-button slot="icon-only" (click)="gotoNotification()">
+        <ion-button *ngIf= "isAdmin" slot="icon-only" (click)="gotoAdminPage()">
+                <!-- <ion-icon name="customicon"></ion-icon> -->
+          <ion-icon name="thumbs-up-outline"></ion-icon>
+        </ion-button>
+        <ion-button slot="icon-only" (click)="gotoNotification()" *ngIf="showNotification">
           <ion-icon name="notifications-outline" style="position:relative" style="color: #FFF;">
             <span *ngIf="notificationCount > 0" style="position: absolute;
                         font-size: 16px;
@@ -32,14 +36,13 @@
   <ion-item-divider *ngIf="false" color="asent">UpComing</ion-item-divider>
   <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="loadingFinished && appointments.length == 0">
         <ion-col size="12" size-sm size-md>
-                <img app-logo-img class="animated fadeInDown delay-1s" style="
-                display: block;
-                margin: 0 auto;
-                margin-top: 10px;
-                margin-bottom: 10px;
-                width: 200px;
-            " src="assets/images/box.png">
-                <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
+                <img app-logo-img class="animated fadeInDown delay-1s empty_image" src="../../../assets/images/icon_noappoinment_noschedule.png">
+            <div style="display: grid;text-align: center;">
+              <ion-label class="empty_title">{{'EMPTY.NO_APPOINTMENT_TITLE' | translate}}</ion-label>
+
+            <div class="empty_line">________</div>
+              <ion-text class="empty_desc">{{'EMPTY.NO_APPOINTMENT' | translate}}</ion-text>
+            </div>
         </ion-col>
   </ion-row>
   <!-- <h5 style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="appointments.length == 0">{{'APPOIN_HISTORY.NO_LIST' | translate}}</h5> -->
@@ -89,8 +92,8 @@
 
               <div (click)="openTooltip($event, 'Visitors')">
                 <!-- <ion-badge color="primary">3</ion-badge> -->
-                <div class="outer-circle2">
-                  <div class="inner-circle2">
+                <div class="outer-circle3">
+                  <div class="inner-circle3">
                     <span id="inside-content">{{list.value.length}}</span>
                   </div>
                 </div>

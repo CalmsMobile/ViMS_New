@@ -43,6 +43,8 @@
 <ion-content padding class="ion-no-border" style="--background: #f0f0f0;" line="none">
   <div class="main">
 
+    <img *ngIf="networkError" src="../../../assets/images/server_error.png" style="width: 40px;height: 40px;float: right;margin: 0 auto;"/>
+
     <!-- <ion-slides #slides pager style="padding-bottom: 150px" (ionSlideDidChange)="slideChanged()" scrollbar="true">
       <ion-slide> -->
         <ion-grid *ngIf="segment === 'Summary'">
@@ -284,6 +286,13 @@
             <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
             'font-weight': appSettings.FooterTab.FooterFontWeight}">Quick Pass</ion-label>
           </ion-tab-button>
+
+          <ion-tab-button (click)="proceedNext('QR_PROFILE')" mode="ios">
+            <ion-icon class="tabIcon" name="qr-code-outline"[ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.IconSize + 'px'}"></ion-icon>
+            <ion-label style="text-transform: none;" [ngStyle]="{'color': appSettings.FooterTab.FooterColor, 'font-size': appSettings.FooterTab.FooterSize + 'px',
+            'font-weight': appSettings.FooterTab.FooterFontWeight}">Verify host</ion-label>
+          </ion-tab-button>
+
       </ion-tab-bar>
     </ion-tabs>
   </ion-toolbar>

@@ -41,6 +41,7 @@ export class FacilityKioskDisplayPage implements OnInit {
   GET_BOOKING_SLOT_TIMER = null;
   GET_SETTING_TIMER = null;
   T_SVC:any;
+  isNetworkError = false;
   showStopButton = false;
   constructor(
     public navCtrl: NavController,
@@ -243,7 +244,9 @@ export class FacilityKioskDisplayPage implements OnInit {
         "CheckDate":byDate
       }
       if (flag) {
-        this.apiProvider.DisplayApp_GetBookingSlots(param).then((data : any) => {
+        this.apiProvider.DisplayApp_GetBookingSlots(param).then((data : any) =>
+        {
+          this.isNetworkError = false;
           if(event){
             event.target.complete();
           }
@@ -252,9 +255,10 @@ export class FacilityKioskDisplayPage implements OnInit {
               this._calcBookingDetails(result);
             }
           }, (err) => {
-          if(event){
-            event.complete();
-          }
+            this.isNetworkError = true;
+            if(event){
+              event.target.complete();
+            }
         })
         // this.vfkioskAPI.localGetMethod("getBookingSlats", prepare)
         // .subscribe((data:any) => {
@@ -427,7 +431,7 @@ export class FacilityKioskDisplayPage implements OnInit {
             this.showStopButton = false;
             this.resetGetBookingSlotTimer();
           }else{
-            message = "Invalid Code";
+            message = "QR code is invalid, please verify the QR code or contact system administrator for further assistance";
             if(JSON.parse(val+"")[0].Status === "0"){
               message = this.T_SVC['ALERT_TEXT.SLOT_OCCUPIED'];
             }else if(JSON.parse(val+"")[0].Status === "2"){

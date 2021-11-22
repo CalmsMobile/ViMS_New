@@ -97,7 +97,7 @@
   </ion-grid>
 </ion-content>
 
-<ion-footer *ngIf="IsDynamicQR">
+<ion-footer *ngIf="IsDynamicQR && visitor && visitor.Approval_Status === 'Approved'">
   <ion-toolbar color="primary" style="text-align: center;">
     <ion-label class="center">QR image will refresh in {{TIMEOUT}} sec.</ion-label>
   </ion-toolbar>

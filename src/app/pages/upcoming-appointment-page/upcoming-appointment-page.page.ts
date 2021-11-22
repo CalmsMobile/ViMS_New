@@ -23,14 +23,14 @@ export class UpcomingAppointmentPagePage implements OnInit {
   T_SVC:any;
   loadingFinished = false;
   alertShowing = false;
-  isAdmin = true;
+  isAdmin = false;
   QRObj: any = {};
-  HOSTWTTAMS = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
-  TAMS = AppSettings.LOGINTYPES.TAMS;
+  showMenu = true;
+  showNotification = false;
   constructor(public navCtrl: NavController,
     private events : EventsService,
     private router: Router,
-    private translate : TranslateService,
+    private translate: TranslateService,
     private datePipe: DatePipe,
     private alertCtrl: AlertController, public apiProvider: RestProvider) {
     this.translate.get([
@@ -113,18 +113,18 @@ export class UpcomingAppointmentPagePage implements OnInit {
     this.router.navigateByUrl('admin-home');
   }
 
+  gotoQRProfile() {
+    this.router.navigateByUrl('qr-profile');
+  }
+
   gotoNotification(){
     this.router.navigateByUrl('notifications');
   }
 
   goBack() {
 
-    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    if (qrData) {
-      const QRObj = JSON.parse(qrData);
-      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
-        this.router.navigateByUrl('home-tams');
-      }
+    if (!this.showMenu) {
+      this.router.navigateByUrl('home-tams');
     }
     console.log('goBack ');
    }
@@ -406,9 +406,15 @@ export class UpcomingAppointmentPagePage implements OnInit {
     var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (qrData) {
       this.QRObj = JSON.parse(qrData);
-      if (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
-        this.isAdmin = false;
+      this.isAdmin = (this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1);
+      if (this.QRObj.MAppId.split(",").length > 1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+        this.showMenu = false;
       }
+
+      if (this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+        this.showNotification = true;
+      }
+
     }
   }
 

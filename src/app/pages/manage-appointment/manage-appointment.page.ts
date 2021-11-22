@@ -34,12 +34,13 @@ export class ManageAppointmentPage implements OnInit {
     currentDate: new Date()
   }; // these are the variable used by the calendar.
   QRObj : any;
-  HOSTWTTAMS = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
-  TAMS = AppSettings.LOGINTYPES.TAMS;
+  showMenu = true;
+  showNotification = false;
   T_SVC:any;
   notificationCount = 0;
-  isAdmin = true;
+  isAdmin = false;
   alertShowing = false;
+  loadingFinished = false;
   constructor(public navCtrl: NavController,
     private actionSheetCtrl: ActionSheetController,
     private apiProvider: RestProvider,
@@ -59,8 +60,12 @@ export class ManageAppointmentPage implements OnInit {
           var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
           if(qrInfo && JSON.parse(qrInfo) && JSON.parse(qrInfo).MAppId){
             this.QRObj = JSON.parse(qrInfo);
-            if (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY){
-              this.isAdmin = false;
+            if (this.QRObj.MAppId.split(",").length > 1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+              this.showMenu = false;
+            }
+            this.isAdmin = this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1|| this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1;
+            if (this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+              this.showNotification = true;
             }
           }
         }catch(e){
@@ -77,10 +82,10 @@ export class ManageAppointmentPage implements OnInit {
     });
     this.showNotificationCount();
     if(this.QRObj){
-      if(this.QRObj.MAppId == AppSettings.LOGINTYPES.FACILITY){
-        this.getAppointmentFacilityHistory();
-      }else{
+      if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
         this.getAppointmentHistory();
+      }else{
+        this.getAppointmentFacilityHistory();
       }
 
     }
@@ -105,6 +110,11 @@ export class ManageAppointmentPage implements OnInit {
   gotoAdminPage(){
     this.router.navigateByUrl('admin-home');
 	}
+
+  gotoQRProfile() {
+    this.router.navigateByUrl('qr-profile');
+  }
+
   openTooltip(event, message) {
     this.apiProvider.presentPopover(event, message);
   }
@@ -135,7 +145,7 @@ export class ManageAppointmentPage implements OnInit {
   }
 
   getAppointmentFacilityHistory(){
-
+    this.loadingFinished = false;
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
       var hostId = JSON.parse(hostData).HOSTIC;
@@ -153,6 +163,7 @@ export class ManageAppointmentPage implements OnInit {
       }
 			this.apiProvider.VimsAppGetHostFacilityBookingList(params, showLoading).then(
 				(val) => {
+          this.loadingFinished = true;
 					var aList = JSON.parse(val.toString());
           for(var i = 0 ; i < aList.length ; i++){
             var item = {
@@ -176,6 +187,7 @@ export class ManageAppointmentPage implements OnInit {
           this.loadEvents();
 				},
 				async (err) => {
+          this.loadingFinished = true;
 				  if(err && err.message == "No Internet"){
 						return;
 					}
@@ -201,6 +213,7 @@ export class ManageAppointmentPage implements OnInit {
 	  }
 
   getAppointmentHistory(){
+    this.loadingFinished = false;
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
       var hostId = JSON.parse(hostData).HOSTIC?JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
@@ -212,40 +225,42 @@ export class ManageAppointmentPage implements OnInit {
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.syncAppointment(params, false, true ).then(
 				(val) => {
+          this.loadingFinished = true;
 					this.aList = JSON.parse(val.toString());
 
           this.appointments = this.groupBy.transform(this.aList, 'appointment_group_id');
           this.loadEvents();
-          if(this.QRObj.MAppId != AppSettings.LOGINTYPES.HOSTAPPT){
+          if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
             this.getAppointmentFacilityHistory();
           }
 
 				},
 				async (err) => {
-				if(err && err.message == "No Internet"){
-						return;
-					}
-          var message = "";
-          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
-            message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-          } else if(err && JSON.parse(err) && JSON.parse(err).message){
-            message =JSON.parse(err).message;
+          this.loadingFinished = true;
+          if(err && err.message == "No Internet"){
+              return;
+            }
+            var message = "";
+            if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+              message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+            } else if(err && JSON.parse(err) && JSON.parse(err).message){
+              message =JSON.parse(err).message;
+            }
+            if(message){
+              // message = " Unknown"
+              let alert = await this.alertCtrl.create({
+                header: 'Error !',
+                message: message,
+                cssClass: '',
+                buttons: ['Okay']
+              });
+                alert.present();
+            }
           }
-          if(message){
-            // message = " Unknown"
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass: '',
-              buttons: ['Okay']
-            });
-              alert.present();
-          }
-				}
 			);
 		}
   }
-  loadEvents() {
+    loadEvents() {
     //this.eventSource = this.createRandomEvents();
     this.eventSource = [];
     for(var i = 0 ; i < this.appointments.length ; i++){
@@ -653,7 +668,7 @@ export class ManageAppointmentPage implements OnInit {
     var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (qrData) {
       const QRObj = JSON.parse(qrData);
-      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+      if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
         this.router.navigateByUrl('home-tams');
       }
     }

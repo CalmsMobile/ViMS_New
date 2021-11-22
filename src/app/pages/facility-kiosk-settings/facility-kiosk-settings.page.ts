@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Device } from '@ionic-native/device/ngx';
 import { NavController, MenuController, AlertController } from '@ionic/angular';
@@ -19,34 +19,42 @@ export class FacilityKioskSettingsPage implements OnInit {
   };
   AVAIL_FACILITIES:any = [];
   SELECTED_FACILITIE:any = {};
+  FacilityCode= 0;
   deviceId=AppSettings.TEST_DATA.SAMPLE_DEVICE_ID;
   constructor(
     public navCtrl: NavController,
     private menuCtrl: MenuController,
     private router: Router,
     private device: Device,
+    private ngZone: NgZone,
     private toastCtrl : ToastService,
     private alertCtrl : AlertController,
     private translate:TranslateService,
     private apiProvider : RestProvider) {
     this.menuCtrl.enable(false, 'myLeftMenu');
     this._getRoomDetails();
-    var sFacilityList = localStorage.getItem(AppSettings.LOCAL_STORAGE.SEL_FASILITY_DISPLAY_KIOSK_FACILITY);
-    if( sFacilityList != undefined && sFacilityList  != ""){
-      this.SELECTED_FACILITIE = JSON.parse(sFacilityList);
-    }
     if(this.device.uuid){
       this.deviceId = this.device.uuid;
     }
   }
 
   ionViewDidEnter() {
+    const cclass = this;
+    var sFacilityList = localStorage.getItem(AppSettings.LOCAL_STORAGE.SEL_FASILITY_DISPLAY_KIOSK_FACILITY);
+    if(sFacilityList != undefined && sFacilityList  != ""){
+      this.ngZone.run(() => {
+        cclass.SELECTED_FACILITIE = JSON.parse(sFacilityList);
+        cclass.FacilityCode = cclass.SELECTED_FACILITIE.FacilityCode;
+      });
+    }
   }
   _getRoomDetails(){
     var flag = true;
     if (flag) {
       this.apiProvider.DisplayApp_FacilityMasterList({}).then((data : any) => {
-        this.AVAIL_FACILITIES = JSON.parse(data);
+        this.ngZone.run(() => {
+          this.AVAIL_FACILITIES = JSON.parse(data);
+        });
         console.log(data);
       }, (err) => {
         console.log(""+ err);
@@ -54,8 +62,13 @@ export class FacilityKioskSettingsPage implements OnInit {
 
     }
   }
-  onChangeFacility(){
-    let sel_facility_item = this.AVAIL_FACILITIES.find(item => item['FacilityCode'] === this.SELECTED_FACILITIE['FacilityCode']);
+  onChangeFacility(event: any){
+
+    const FacilityCode = event?event.detail.value: '';
+    console.log(""+ FacilityCode);
+    this.FacilityCode = FacilityCode;
+
+    let sel_facility_item = this.AVAIL_FACILITIES.find(item => item['FacilityCode'] === FacilityCode);
     localStorage.setItem(AppSettings.LOCAL_STORAGE.SEL_FASILITY_DISPLAY_KIOSK_FACILITY, JSON.stringify(sel_facility_item))
   }
 

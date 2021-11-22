@@ -1,13 +1,13 @@
 <ion-header>
-  <ion-toolbar color="primary" *ngIf="!qrCodeInfo || qrCodeInfo.MAppId !== NOTIFICATION_ALONE">
+  <ion-toolbar color="primary" *ngIf="!showProfileHeader">
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{'NOTIFICATION.TITLE' | translate}}</ion-title>
   </ion-toolbar>
 
-  <ion-toolbar lines="none" class="ion-no-border" color="primary" *ngIf="qrCodeInfo && qrCodeInfo.MAppId === NOTIFICATION_ALONE">
+  <ion-toolbar lines="none" class="ion-no-border" color="primary" *ngIf="showProfileHeader">
     <ion-item lines="none" class="no-border" style="--padding-start: 0px;">
-      <img src="{{hostObj.hostImage}}" onError="this.src='../../../assets/images/user.png'" slot="start" class="ion-text-left"  style="width: 52px;
-      height: 52px;
+      <img src="{{hostObj.hostImage}}" onError="this.src='../../../assets/images/user.png'" slot="start" class="ion-text-left"  style="width: 62px;
+      height: 62px;
       margin-right: 5px;
       padding: 8px;
       border-radius: 50%;
@@ -25,7 +25,7 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-toolbar color="primary" mode="ios" *ngIf="!isSecurityApp && (loadingFinished && selectedTap == 'general'&& VM.searchGeneralNotificationList.length > 0)" style="margin-top: -10px;">
+  <ion-toolbar color="primary" mode="ios" *ngIf="!isSecurityApp && (loadingFinished && selectedTap == 'general'&& VM.notificationList.length > 0)" style="margin-top: -10px;">
     <!-- <ion-segment [(ngModel)]="selectedTap" mode="ios" >
       <ion-segment-button value="general" (click)="showNotification('general')">
         General
@@ -54,19 +54,21 @@
   <!-- <ion-card no-margin mode="ios" style="width:100%;margin-top:14px !important; ">  -->
   <ion-list *ngIf="(selectedTap == 'general')">
     <ion-item-sliding #slideDOM *ngFor="let notification of VM.searchGeneralNotificationList"
-        (ionDrag)="ondrag($event, slideDOM, notification)">
-        <ion-item lines="none"
-          [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}"
+        (ionDrag)="ondrag($event, slideDOM, notification)"
+        [ngClass]="{'unread-notify': (notification.IsRead === true || notification.IsRead === 'true'), 'read-notify':(notification.IsRead === false || notification.IsRead === 'false')}">
+        <ion-item lines="none" class="itemClass"
           (click)="viewNotification(notification)">
-          <ion-icon style="border: 1px solid #383a3e;padding: 5px;border-radius: 5px;" name="{{(notification.IsRead === true || notification.IsRead === 'true') ? 'mail-open-outline': 'mail-unread-outline'}}" slot="start"></ion-icon>
-          <ion-label text-wrap [innerHTML]="notification.HtmlContent.trim()">
+          <ion-icon style="border: 1px solid #383a3e;" name="{{(notification.IsRead === true || notification.IsRead === 'true') ? 'mail-open-outline': 'mail-unread-outline'}}" slot="start"></ion-icon>
 
-            <p class="text-muted">{{(notification.CreatedOn| date : 'MMM dd') + ' at ' +
-              (notification.CreatedOn| date : 'hh:mm a')}} April 28 at 3:23 PM</p>
-          </ion-label>
-          <img src="../../../assets/images/visitor.jpg" style="width: 40px; height: 40px;" *ngIf="notification.NotificationType == '20'"/>
+          <div >
+            <div class="myTxt" [innerHTML]="notification.HtmlContent.trim()"></div>
+
+          </div>
+          <img slot="end" src="../../../assets/images/visitor.jpg" style="width: 40px; height: 40px; border-radius: 50%;" *ngIf="notification.NotificationType == '20'"/>
           <!-- <ion-icon *ngIf="notification.NotificationType == '20'" style="padding: 5px ;box-shadow: none;" color="primary" name="person-circle-outline" slot="end"></ion-icon> -->
         </ion-item>
+        <p class="date">{{(notification.CreatedOn| date : 'MMM dd') + ' at ' +
+          (notification.CreatedOn| date : 'hh:mm a')}}</p>
         <ion-item-options no-border no-lines side="end">
         </ion-item-options>
       </ion-item-sliding>
@@ -94,40 +96,16 @@
       </ion-item-sliding>
     </ion-card>
   </ion-list>
-  <!-- <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"
-    *ngIf="loadingFinished && (selectedTap == 'general' && VM.searchGeneralNotificationList.length == 0) || (selectedTap == 'in' && VM.searchInNotificationList.length == 0)">
-    <ion-col size="12" size-sm size-md>
-      <img app-logo-img class="animated fadeInDown delay-1s" style="
-                  display: block;
-                  margin: 0 auto;
-                  margin-top: 10px;
-                  margin-bottom: 10px;
-                  width: 200px;
-                  height: 200px;
-              " src="assets/images/notification_empty.jpeg">
-    </ion-col>
-  </ion-row> -->
-  <ion-grid class="ion-text-center" *ngIf="loadingFinished && (selectedTap == 'general' && VM.searchGeneralNotificationList.length == 0) || (selectedTap == 'in' && VM.searchInNotificationList.length == 0)">
+
+  <ion-grid class="ion-text-center" *ngIf="loadingFinished && (selectedTap == 'general' && VM.searchGeneralNotificationList.length == 0)">
     <ion-row>
       <ion-col size="12">
-        <img app-logo-img class="animated fadeInDown delay-1s" style="
-        display: block;
-        margin: 0 auto;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        width: 200px;
-        height: 200px;
-    " src="assets/images/notification_empty.jpeg">
-    <div style="display: grid;">
-      <ion-label style="    color: #585663;
-    font-size: 22px;
-    letter-spacing: 2px;
-    font-weight: 500;">{{'NOTIFICATION.NO_NOTIFICATION' | translate}}</ion-label>
+        <img app-logo-img class="animated fadeInDown delay-1s empty_image" src="../../../assets/images/icon_nonotification.png">
+    <div style="display: grid;text-align: center;">
+      <ion-label class="empty_title">{{'EMPTY.NO_NOTIFICATION_TITLE' | translate}}</ion-label>
 
-    <div style="color: #173444; font-weight: bold;">________</div>
-      <ion-text style="    color: #585663;
-      font-size: 16px; margin-top: 25px;
-      font-weight: 500;">{{'NOTIFICATION.NO_NOTIFICATION_SUB_TEXT' | translate}}</ion-text>
+    <div class="empty_line">________</div>
+      <ion-text class="empty_desc">{{'EMPTY.NO_NOTIFICATION' | translate}}</ion-text>
     </div>
       </ion-col>
     </ion-row>

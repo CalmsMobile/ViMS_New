@@ -1,5 +1,5 @@
 export const AppSettings = Object.freeze({
-    STATUS_BAR_COLOR : '#cf3c4f',
+    STATUS_BAR_COLOR : '#e6edf5',
     AVAILABLE_APP_RUN_AT:[
         {"id":"ViMS_WINDOWS_001","title":"ViMS Windows Base"},
         {"id":"ViMS_WEB_001","title":"ViMS WEB Base 1"},
@@ -169,12 +169,11 @@ export const AppSettings = Object.freeze({
     LOGINTYPES : {
         "HOSTAPPT": "HOSTAPPT",
         "FACILITY": "FB",
-        "TAMS": "TAMS",
-        "NOTIFICATIONS": "NOTIFICATIONS",
-        "QR_ACCESS_NOTIFICATIONS": "QR_ACCESS,NOTIFICATIONS",
-        "QR_ACCESS": "QR_ACCESS",
-        "HOSTAPPTWITHTAMS": "HOSTAPPT,TAMSAPP",
-        "HOSTAPPT_FACILITYAPP": "HOSTWITHFB",
+        "HOSTWITHFB": "HOSTWITHFB",
+        "TAMS": "TAMSAPP",
+        "NOTIFICATIONS": "NOTIFI",
+        "QR_ACCESS": "QRACCS",
+
         "ACKAPPT": "ACKMT",
         "DISPLAYAPP": "FBDISPLAY",
         "SECURITYAPP": "SECAPP",
@@ -233,6 +232,7 @@ export const AppSettings = Object.freeze({
     LOCAL_STORAGE: {
         "MASTER_DETAILS": "MasterDetails",
         "HOST_DETAILS": "HostDetails",
+        "HOST_PROFILE_DETAILS": "CALMS_HostProfileDetails",
         "COMPANY_DETAILS": "CompanyDetails",
         "ACK_DETAILS": "AckDetails",
         "FASILITY_DISPLAY_KIOSK_SETUP": "FASILITY_DISPLAY_KIOSK_SETUP",
@@ -260,7 +260,8 @@ export const AppSettings = Object.freeze({
         "TAMS_LATITUDE": "TAMS_LATITUDE",
         "TAMS_LONGITUDE": "TAMS_LONGITUDE",
         "TAMS_SETTINGS": "TAMS_SETTINGS",
-        "TAMS_WHITELISTED_LOCATION": "TAMS_WHITELISTED_LOCATION"
+        "TAMS_WHITELISTED_LOCATION": "TAMS_WHITELISTED_LOCATION",
+        "QR_ACCESS_LAST_GEN_ON":"QR_ACCESS_LAST_GEN_ON",
     },
 
     QUICKPASS_TYPES : {

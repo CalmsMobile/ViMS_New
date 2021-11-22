@@ -8,8 +8,12 @@
       <ion-title>{{"SETTINGS.TITLE" | translate}}
       </ion-title>
       <ion-buttons slot="end" *ngIf="showAdmin">
-        <ion-button *ngIf= "isAdmin" slot="icon-only" (click)="gotoAdminPage()">
-            <ion-icon name="customicon"></ion-icon>
+        <ion-button slot="icon-only" (click)="gotoQRProfile()" *ngIf="isAdmin">
+          <ion-icon name="qr-code-outline"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="isAdmin" slot="icon-only" (click)="gotoAdminPage()">
+          <!-- <ion-icon name="customicon"></ion-icon> -->
+          <ion-icon name="thumbs-up-outline"></ion-icon>
         </ion-button>
         <ion-button slot="icon-only"  *ngIf="showNotification" (click)="gotoNotification()" >
           <ion-icon name="notifications-outline" style="position:relative">

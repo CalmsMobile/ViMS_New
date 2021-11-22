@@ -35,14 +35,14 @@ export class NotificationsPage implements OnInit {
 	isFetching = false;
 	T_SVC:any;
 	imageURLType = '01&RefType=VP&Refresh='+ new Date().getTime();
-	loadingFinished = true;
+	loadingFinished = false;
 	showDelete = false;
   qrCodeInfo: any = {};
   isSecurityApp = false;
   hostObj: any = {
 
   };
-  NOTIFICATION_ALONE = AppSettings.LOGINTYPES.NOTIFICATIONS;
+  showProfileHeader = false;
   constructor(public navCtrl: NavController,
     private alertCtrl: AlertController,
     private toastCtrl:ToastController,
@@ -64,6 +64,7 @@ export class NotificationsPage implements OnInit {
     if (qrinfo) {
       this.qrCodeInfo = JSON.parse(qrinfo);
       this.isSecurityApp = (this.qrCodeInfo.MAppId === AppSettings.LOGINTYPES.SECURITYAPP);
+      this.showProfileHeader = this.qrCodeInfo.MAppId === AppSettings.LOGINTYPES.NOTIFICATIONS;
     }
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -95,33 +96,34 @@ export class NotificationsPage implements OnInit {
 				db.executeSql(createTable, [])
 				.then(res => {
 					console.log('Executed SQL');
-					var sQuery1 = "SELECT * FROM "+AppSettings.DATABASE.TABLE.Notification;
-					db.executeSql(sQuery1, []).then((data) => {
-						this.VM.notificationList = [];
-							if(data.rows.length > 0) {
-								for(var i = 0; i < data.rows.length; i++) {
-									this.VM.notificationList.push(data.rows.item(i));
-								}
+          this.getAppointmentHistory(null, false);
+					// var sQuery1 = "SELECT * FROM "+AppSettings.DATABASE.TABLE.Notification;
+					// db.executeSql(sQuery1, []).then((data) => {
+					// 	this.VM.notificationList = [];
+					// 		if(data.rows.length > 0) {
+					// 			for(var i = 0; i < data.rows.length; i++) {
+					// 				this.VM.notificationList.push(data.rows.item(i));
+					// 			}
 
-								this.VM.notificationList.sort((a, b) => (
-									a.CreatedOn <= b.CreatedOn ? -1 : 1
-								)
-								);
+					// 			this.VM.notificationList.sort((a, b) => (
+					// 				a.CreatedOn <= b.CreatedOn ? -1 : 1
+					// 			)
+					// 			);
 
-								this.VM.notificationList.reverse();
-								this.OffSet = this.OffSet + this.VM.notificationList.length;
-								this.showNotification(this.selectedTap);
-								setTimeout(() => {
-									this.doRefresh(null);
-								}, 2000)
+					// 			this.VM.notificationList.reverse();
+					// 			this.OffSet = this.OffSet + this.VM.notificationList.length;
+					// 			this.showNotification(this.selectedTap);
+					// 			setTimeout(() => {
+					// 				this.doRefresh(null);
+					// 			}, 2000)
 
-							}else{
-								this.getAppointmentHistory(null, false);
-							}
+					// 		}else{
+					// 			this.getAppointmentHistory(null, false);
+					// 		}
 
-					}, (e) => {
-							console.log("Errot: " + JSON.stringify(e));
-					});
+					// }, (e) => {
+					// 		console.log("Errot: " + JSON.stringify(e));
+					// });
 				}).catch(e => {
 					console.log(e);
 				});
@@ -257,8 +259,8 @@ export class NotificationsPage implements OnInit {
 
 	doRefresh(refresher) {
 		this.OffSet = 0;
-    	this.getAppointmentHistory(refresher, false);
-  	}
+    this.getAppointmentHistory(refresher, false);
+  }
 
   getAppointmentHistory(refresher, add){
     let hostID = '';
@@ -284,57 +286,63 @@ export class NotificationsPage implements OnInit {
       // this.VM.host_search_id = "adam";
       this.apiProvider.getHostNotification(params, this.isSecurityApp? 'WEB': '').then(
         (val) => {
-          this.loadingFinished = true
-          if(refresher){
-            refresher.target.complete();
-          }
-          var aList = JSON.parse(val.toString());
-          // aList = aList.reverse();
-          this.isFetching = false;
-          if(!this.platform.is('cordova')) {
-            if(add){
-              this.VM.notificationList = aList.concat(this.VM.notificationList);
-            }else{
-              this.VM.notificationList = aList;
+          try {
+            if(refresher){
+              refresher.target.complete();
             }
-            this.VM.notificationList.sort((a, b) => (
-              a.CreatedOn <= b.CreatedOn ? -1 : 1
-            ));
-
-            this.VM.notificationList.reverse();
-            this.OffSet = this.OffSet + aList.length;
-            this.showNotification(this.selectedTap);
-          }else{
-            this.VM.notificationList = [];
-            var currentClass = this;
-            var show = false;
-            if(!aList || aList.length == 0){
-              show = true;
-            }
-            if(this.OffSet == 0){
-              this.db.executeSql('DELETE FROM ' + AppSettings.DATABASE.TABLE.Notification, [])
-              .then(res => {
-                console.log("DELETE FROM:" + res);
-                this.goAsyncFunction(currentClass, aList);
-              }).catch(e => console.log(e));
-
-            }else{
-              if(show){
-                currentClass.getDataFromLocalDatabase(currentClass);
+            var aList = JSON.parse(val.toString());
+            // aList = aList.reverse();
+            this.isFetching = false;
+            if(!this.platform.is('cordova')) {
+              if(add){
+                this.VM.notificationList = aList.concat(this.VM.notificationList);
               }else{
-                this.goAsyncFunction(currentClass, aList);
+                this.VM.notificationList = aList;
+              }
+              this.VM.notificationList.sort((a, b) => (
+                a.CreatedOn <= b.CreatedOn ? -1 : 1
+              ));
+
+              this.VM.notificationList.reverse();
+              this.OffSet = this.OffSet + aList.length;
+              this.showNotification(this.selectedTap);
+            }else{
+              this.VM.notificationList = [];
+              var currentClass = this;
+              var show = false;
+              if(!aList || aList.length == 0){
+                show = true;
+                this.loadingFinished = true;
+              }
+              if(this.OffSet == 0){
+                this.db.executeSql('DELETE FROM ' + AppSettings.DATABASE.TABLE.Notification, [])
+                .then(res => {
+                  console.log("DELETE FROM:" + res);
+                  this.goAsyncFunction(currentClass, aList);
+                }).catch(e => console.log(e));
+
+              }else{
+                if(show){
+                  currentClass.getDataFromLocalDatabase(currentClass);
+                }else{
+                  this.goAsyncFunction(currentClass, aList);
+                }
               }
             }
+          } catch (error) {
+
           }
         },
-        async (err) => {
-          this.loadingFinished = true
+        (err) => {
           if(refresher){
             refresher.target.complete();
           }
           if(err && err.message == "No Internet"){
             return;
           }
+          this.getDataFromLocalDatabase(this);
+          this.loadingFinished = true;
+          this.apiProvider.dismissLoading();
           var message = "";
           if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
             message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
@@ -343,13 +351,7 @@ export class NotificationsPage implements OnInit {
           }
           if(message){
             // message = " Unknown"
-            let alert = this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass:'',
-              buttons: ['Okay']
-              });
-              (await alert).present();
+            this.apiProvider.showAlert(message);
             }
           }
         );
@@ -361,16 +363,22 @@ export class NotificationsPage implements OnInit {
     var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (qrData) {
       const QRObj = JSON.parse(qrData);
-      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
-        this.router.navigateByUrl('home-tams');
-      } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS) {
+      if (QRObj.MAppId.split(",").length === 2 && QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.QR_ACCESS) > -1 && QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
         this.router.navigateByUrl('qraccess');
+      } else if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+        this.router.navigateByUrl('home-tams');
       } else {
-        if (this.isSecurityApp) {
+        if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+          this.router.navigateByUrl('tamshome');
+        } else if (QRObj.MAppId === AppSettings.LOGINTYPES.QR_ACCESS) {
+          this.router.navigateByUrl('qraccess');
+        } else if (QRObj.MAppId === AppSettings.LOGINTYPES.NOTIFICATIONS) {
+          this.router.navigateByUrl('notifications');
+        } else if (this.isSecurityApp) {
           this.router.navigateByUrl('security-dash-board-page');
         } else {
           this.router.navigateByUrl('home-view');
-        }
+      }
       }
     } else {
       this.navCtrl.pop();
@@ -378,9 +386,9 @@ export class NotificationsPage implements OnInit {
     console.log('goBack ');
    }
 
-	async goAsyncFunction(currentClass, aList){
+	goAsyncFunction(currentClass, aList){
 		try{
-			await this.insertNotification(currentClass, aList);
+			this.insertNotification(currentClass, aList);
 		}catch(e){
 
 		}
@@ -434,6 +442,8 @@ export class NotificationsPage implements OnInit {
 				currentClass.VM.notificationList.reverse();
 				currentClass.OffSet = currentClass.OffSet + currentClass.VM.notificationList.length;
 				currentClass.showNotification(currentClass.selectedTap);
+        currentClass.loadingFinished = true;
+        this.apiProvider.dismissLoading();
 		}, (e) => {
 				console.log("Errot: " + JSON.stringify(e));
 		});

@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera } from '@ionic-native/camera/ngx';
 import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser/ngx';
-import { Platform } from '@ionic/angular';
+import { NativeGeocoder, NativeGeocoderOptions, NativeGeocoderResult } from '@ionic-native/native-geocoder/ngx';
+import { AlertController, Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
+declare var google;
 
 @Component({
   selector: 'app-tamsregisterattendance',
@@ -15,6 +17,10 @@ import { EventsService } from 'src/app/services/EventsService';
   styleUrls: ['./tamsregisterattendance.page.scss'],
 })
 export class TamsregisterattendancePage implements OnInit {
+
+  @ViewChild('map', { static: false }) mapElement: ElementRef;
+  map: any;
+  address = '';
   INTERVAL: any;
   T_SVC: any;
   loadingDismissedAlready = false;
@@ -33,6 +39,8 @@ export class TamsregisterattendancePage implements OnInit {
     private iab: InAppBrowser,
     private translate:TranslateService,
     private events: EventsService,
+    private nativeGeocoder: NativeGeocoder,
+    private alertCtrl: AlertController,
     private camera: Camera,
     private router: Router) {
       this.translate.get([ 'ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS', 'ALERT_TEXT.CONFIRMATION', 'ALERT_TEXT.CAMEARA_IMAGE_SELECT_ERROR',
@@ -44,7 +52,6 @@ export class TamsregisterattendancePage implements OnInit {
   ngOnInit() {
     const mySchedule = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_SCHEDULE);
     const settings = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS);
-    const location = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_WHITELISTED_LOCATION);
 
     if (settings) {
       this.tamsSettings = JSON.parse(settings);
@@ -59,34 +66,7 @@ export class TamsregisterattendancePage implements OnInit {
       const myScheduleObj = JSON.parse(mySchedule);
       this.myTodaySchedule = myScheduleObj.find(item => item.scheduleDate === today);
     }
-    this.apiProvider.presentLoadingWithText('Please wait fetching location...');
-    localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_LATITUDE, '');
-    localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_LONGITUDE, '');
-    if (this.CheckInFlag === 'out') {
-      this.toogleModel = true;
-    }else {
-      this.toogleModel = false;
-    }
-    if (location) {
-      const locationObj = JSON.parse(location);
-      const locationUpdatedDate = this.dateformat.transform(new Date()+"", 'yyyy-MM-dd');
-      if (locationObj && locationObj.length >0 && locationObj[0].locationUpdatedDate  !== locationUpdatedDate) {
-        this.getMyAttendanceWhitelistedLocations();
-      } else {
-        this.callSetInterval();
-      }
-    } else {
-      this.callSetInterval();
-    }
 
-
-    this.events.observeDataCompany().subscribe(async (data: any) => {
-      if (data.title === "hideLoading") {
-        this.apiProvider.dismissLoading();
-      } else if (data.title === "showLoading") {
-        this.apiProvider.presentLoadingWithText('Please wait fetching location...');
-      }
-    })
   }
 
   callSetInterval() {
@@ -98,6 +78,7 @@ export class TamsregisterattendancePage implements OnInit {
       const long = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_LONGITUDE);
       if (!this.loadingDismissedAlready && lat && long) {
         this.loadingDismissedAlready = true;
+        // this.loadMap(lat, long);
         this.apiProvider.dismissLoading();
         let allowToProceed = false;
         if (this.tamsSettings.AllowedRadius) {
@@ -120,7 +101,7 @@ export class TamsregisterattendancePage implements OnInit {
           allowToProceed = true;
         }
         if (!allowToProceed) {
-          this.apiProvider.showAlertForLocation(" You are not authorized in location to register attendance.");
+          this.showAlertForLocation(" You are not authorized in location to register attendance.");
           return;
         }
       }
@@ -172,6 +153,70 @@ export class TamsregisterattendancePage implements OnInit {
     });
   }
 
+  loadMap(lat, long) {
+
+      let latLng = new google.maps.LatLng(lat, long);
+      let mapOptions = {
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+
+      this.getAddressFromCoords(lat, long);
+
+      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+  }
+
+
+  getAddressFromCoords(lattitude, longitude) {
+    console.log("getAddressFromCoords " + lattitude + " " + longitude);
+    let options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+    };
+
+    this.nativeGeocoder.reverseGeocode(lattitude, longitude, options)
+      .then((result: NativeGeocoderResult[]) => {
+        this.address = "";
+        let responseAddress = [];
+        for (let [key, value] of Object.entries(result[0])) {
+          if (value.length > 0)
+            responseAddress.push(value);
+
+        }
+        responseAddress.reverse();
+        for (let value of responseAddress) {
+          this.address += value + ", ";
+        }
+        this.address = this.address.slice(0, -2);
+      })
+      .catch((error: any) => {
+        this.address = "Address Not Available!";
+      });
+
+  }
+
+
+
+  async showAlertForLocation(errorMsg) {
+    let alert = this.alertCtrl.create({
+      header: 'Notification',
+      message: errorMsg,
+      mode:'ios',
+      buttons: [{
+          text: 'Okay',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }]
+      });
+      (await alert).present();
+      (await alert).onDidDismiss().then(() => {
+        this.goBack();
+      });
+
+  }
+
   getMyAttendanceWhitelistedLocations(){
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
@@ -210,6 +255,43 @@ export class TamsregisterattendancePage implements OnInit {
     if(this.INTERVAL){
       clearInterval(this.INTERVAL);
     }
+  }
+
+  ionViewDidEnter() {
+    if (!this.myTodaySchedule) {
+      this.showAlertForLocation(" You dont have schedule for today. please contact your administrator");
+      return;
+    }
+    this.apiProvider.presentLoadingWithText('Please wait fetching location...');
+    localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_LATITUDE, '');
+    localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_LONGITUDE, '');
+    if (this.CheckInFlag === 'out') {
+      this.toogleModel = true;
+    }else {
+      this.toogleModel = false;
+    }
+
+    const location = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_WHITELISTED_LOCATION);
+    if (location) {
+      const locationObj = JSON.parse(location);
+      const locationUpdatedDate = this.dateformat.transform(new Date()+"", 'yyyy-MM-dd');
+      if (locationObj && locationObj.length >0 && locationObj[0].locationUpdatedDate  !== locationUpdatedDate) {
+        this.getMyAttendanceWhitelistedLocations();
+      } else {
+        this.callSetInterval();
+      }
+    } else {
+      this.callSetInterval();
+    }
+
+
+    this.events.observeDataCompany().subscribe(async (data: any) => {
+      if (data.title === "hideLoading") {
+        this.apiProvider.dismissLoading();
+      } else if (data.title === "showLoading") {
+        this.apiProvider.presentLoadingWithText('Please wait fetching location...');
+      }
+    })
   }
 
   toggleChange() {
@@ -348,6 +430,14 @@ export class TamsregisterattendancePage implements OnInit {
   }
 
   goBack() {
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.router.navigateByUrl('tamshome');
+        return;
+      }
+    }
     this.router.navigateByUrl('home-tams');
     console.log('goBack ');
   }

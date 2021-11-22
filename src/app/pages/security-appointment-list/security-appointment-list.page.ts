@@ -20,9 +20,10 @@ export class SecurityAppointmentListPage implements OnInit {
   appointmentsCone = [];
   isFetching = false;
   showAlert = false;
+  isLoadingFinished = false;
   appSettings: any = {};
   visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
-  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
   constructor(private router: Router,
     public apiProvider: RestProvider,
     private commonUtil: CommonUtil,
@@ -209,6 +210,7 @@ export class SecurityAppointmentListPage implements OnInit {
 }
 
   getBranchAppointments(refresher, loadmore, hideLoading) {
+    this.isLoadingFinished = false;
     const data = {
     "START_DATE": this.expiryTime,
     "LIMIT": 20,
@@ -216,6 +218,7 @@ export class SecurityAppointmentListPage implements OnInit {
  };
     this.apiProvider.requestSecurityApi(data, '/api/SecurityApp/getBranchAppointments', hideLoading ? false: true).then(
       (val: any) => {
+        this.isLoadingFinished = true;
         const response = JSON.parse(val);
         if (response.Table && response.Table.length > 0 && response.Table[0].Code === 10) {
           if(refresher){
@@ -254,6 +257,7 @@ export class SecurityAppointmentListPage implements OnInit {
         this.isFetching = false;
       },
       async (err) => {
+        this.isLoadingFinished = true;
         this.isFetching = false;
         if(err && err.message == "No Internet"){
           return;

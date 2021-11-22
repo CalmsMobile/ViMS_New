@@ -9,11 +9,9 @@
 
                 <ion-grid>
                   <img src="../../../assets/images/logo/2.png" class="logo">
-                  <h1>{{'APP_NAME' | translate}}</h1>
-                  <ion-label>{{'APP_TEXT' | translate}}</ion-label>
                     <h1 class="accountHead"><b>{{'COMMON.WELCOME' | translate}}</b></h1>
-                    <p class="accountPara"><b>{{'ACC_MAPPING.SELECT_TYPE_OF_LOGIN' | translate}}</b></p>
-                    <ion-row style="margin: 0 auto; text-align:center">
+                    <p class="accountPara">{{'ACC_MAPPING.SELECT_TYPE_OF_LOGIN' | translate}}</p>
+                    <ion-row style="margin: 0 auto; text-align:center;margin-top: 15px;">
                       <ion-card class="cardQR1">
                         <img src="../../../assets/images/qrcode1.png" class="qrcode"
                       (click)="takeActForScanQR()">
@@ -22,75 +20,85 @@
                         <img src="../../../assets/images/keyboard.png" class="qrcode"
                         (click)="moveToManualRegistration()">
                       </ion-card>
-                    </ion-row >
+                    </ion-row>
                   </ion-grid>
-                  <p style="font-weight: 400;color: red;padding: 0px;margin: 20px;margin-top: 0px;text-align: center !important" class="ion-text-center">{{'ACC_MAPPING.SCAN_ACCOUNT_QR' | translate}}</p>
+                  <p style="font-size: 12px !important;color: #8f9092;padding: 0px;margin: 20px;margin-top: 0px;text-align: center !important" class="ion-text-center">{{'ACC_MAPPING.SCAN_ACCOUNT_QR' | translate}}</p>
             </ion-list>
 
             <ion-list transparent *ngIf="STOPS == 'STOP2'" class="animated fadeInUp delay-1s">
 
-              <img class="logo" slot="start" [src]="companyImage" onError="this.src='../../assets/logo/2.png';">
+              <img class="logo" slot="start" [src]="companyImage" onError="this.src='../../../assets/images/logo/2.png';">
 
-              <h1 style="margin: 5px;font-size: 20px;font-weight: 700;" class="sticky">{{companyInfo.comp_name}}</h1>
-              <div style="display: grid;">
+              <h1 style="margin: 5px;font-size: 16px;font-weight: 700;color: #80858b;" class="sticky">{{companyInfo.comp_name}}</h1>
+              <div style="    font-size: 14px;
+              margin-top: 20px ; display: grid;">
                 <div style="align-items: center;
                 margin: 0 auto;
                 display: flex;">
-                  <ion-icon style="margin-top: 4px;" name="mail-outline"></ion-icon>
-                  <ion-label style="margin: 5px;">{{companyInfo.comp_email}}</ion-label>
+                  <ion-icon style="color: #659afe;" name="mail"></ion-icon>
+                  <ion-label style="margin: 5px;    color: #848484;">{{companyInfo.comp_email}}</ion-label>
                 </div>
-                <div>
-                  <ion-icon style="margin-top: 4px;" name="call-outline"></ion-icon>
-                  <ion-label style="margin: 5px;">{{companyInfo.comp_office_no? companyInfo.comp_office_no: '--'}}</ion-label>
+                <div style="display: flex;align-items: center;margin: 0 auto;">
+                  <ion-icon style="color:#e4cb0f" name="phone-portrait"></ion-icon>
+                  <ion-label style="margin: 5px;    color: #848484;">{{companyInfo.comp_office_no? companyInfo.comp_office_no: '--'}}</ion-label>
                 </div>
-                <div>
-                  <ion-icon style="margin-top: 4px;" name="location-outline"></ion-icon>
-                  <ion-label style="margin: 5px;">{{companyInfo.comp_address_1}}</ion-label>
+                <div style="display: flex;align-items: center;margin: 0 auto;">
+                  <ion-icon style="color: #659afe;" name="location"></ion-icon>
+                  <ion-label style="margin: 5px;    color: #848484;">{{companyInfo.comp_address_1}}</ion-label>
                 </div>
                </div>
 
-               <ion-item class="hostProfile" *ngIf="hostInfo && hostInfo.HOSTNAME">
-                <img slot="start" style="width: 52px; height: 52px;border-radius: 50%;    margin-left: 10px; object-fit: cover; margin-bottom: 10px;" [src]="hostImage" onError="this.src='../../../assets/images/user.png';">
-                <div>
-                  <ion-label class="sticky" style="    font-weight: 600;">{{hostInfo.HOSTNAME}}</ion-label>
-                  <ion-item style="text-align: center;
-                  --padding-start: 0px;
-                  font-size: 14px;
-                  height: 32 px;
-                  --padding-top: 0px;
-                  margin-top: -8px;" lines="none">
-                    <ion-icon style="margin-top: 4px;" name="mail-outline"></ion-icon>
-                    <ion-label style="margin: 5px;">{{hostInfo.HOST_EMAIL}}</ion-label>
-                  </ion-item>
-                </div>
-              </ion-item>
-             <div *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device">
-                <ion-label italic padding-horizontal margin-vertical>{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}} {{' '+ VM.DevicePlatform + ' ' + VM.DeviceDetails['model'] + '. '}} {{'ACC_MAPPING.ACC_ALREADY_MAPPED1' | translate}}</ion-label>
+               <ion-row *ngIf="hostInfo && hostInfo.HOSTNAME" style="    display: inline-table;
+               width: -webkit-fill-available;">
+                <img style="margin: 0 auto;
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                display: block;
+                object-fit: cover;
+                margin-bottom: 10px;" [src]="hostImage" onError="this.src='../../../assets/images/user.png';">
+
+                <div style=" display: grid;    font-size: 14px;
+                margin-bottom: 20px;">
+                  <div style="align-items: center;
+                  margin: 0 auto;
+                  display: flex;">
+                    <ion-icon style="color: #659afe;" name="person-outline"></ion-icon>
+                    <ion-label style="margin: 5px;    color: #848484;">{{hostInfo.HOSTNAME}}</ion-label>
+                  </div>
+                  <div style="display: flex;align-items: center;margin: 0 auto;">
+                    <ion-icon style="color:#e4cb0f" name="mail-outline"></ion-icon>
+                    <ion-label style="margin: 5px;    color: #848484;">{{hostInfo.HOST_EMAIL? hostInfo.HOST_EMAIL: '--'}}</ion-label>
+                  </div>
+                 </div>
+              </ion-row>
+             <div *ngIf="VM.if_already_mapped && !VM.if_already_registered_same_device" style="margin-bottom: 20px;">
+                <ion-label italic padding-horizontal margin-vertical style="color: #848484;font-size: 12px;">{{'ACC_MAPPING.ACC_ALREADY_MAPPED' | translate}} {{' '+ VM.DevicePlatform + ' ' + VM.DeviceDetails['model'] + '. '}} {{'ACC_MAPPING.ACC_ALREADY_MAPPED1' | translate}}</ion-label>
               </div>
-              <ion-label italic padding-horizontal margin-vertical>{{'ACC_MAPPING.DO_NT_PROCEED_NOT_U' | translate}}</ion-label>
+              <ion-label italic padding-horizontal margin-vertical style="color: #848484;font-size: 12px;">{{'ACC_MAPPING.DO_NT_PROCEED_NOT_U' | translate}}</ion-label>
               <ion-item lines="none" transparent>
-                <ion-label text-wrap	>{{'ACC_MAPPING.YES_THIS_IS_MY' | translate}}</ion-label>
-                <ion-checkbox slot="start" color="btnthm" checked="VM.user_yes_chk_box" [(ngModel)]="VM.user_yes_chk_box"></ion-checkbox>
+                <ion-label text-wrap style="color: #3a3939;">{{'ACC_MAPPING.YES_THIS_IS_MY' | translate}}</ion-label>
+                <ion-checkbox style="--ion-color-base: #076bcd;" slot="start" color="btnthm" checked="VM.user_yes_chk_box" [(ngModel)]="VM.user_yes_chk_box"></ion-checkbox>
               </ion-item>
 
                 <div style="padding: 15px 7px;
                 width: -webkit-fill-available;">
                     <ion-row>
-                      <ion-col size="6">
-                        <ion-button icon-left float-left shape="round" fill="outline" color="btnthm"
-                     (click)="takeActionForGoBack('STOP1')">
-                        <ion-icon color="btnthm" class="icon siva-icon-left-open"></ion-icon>
-                        <span color="btnthm">{{'ACC_MAPPING.GO_BACK' | translate}}</span>
-                      </ion-button>
-                      </ion-col>
-                      <ion-col size="6">
-                        <ion-button icon-right float-right shape="round" color="btnthm"
+                      <ion-col size="12">
+                        <ion-button icon-right float-right shape="round" style="background: linear-gradient(
+                          90deg, #034587 0%, #034587 15%, #076bcd 100%); border-radius: 10px;display: block;    color: white;"
                       [disabled]="!VM.user_yes_chk_box"
-                      (click)="takeActionForProceed('FINISH')" >
+                      (click)="takeActionForProceed('FINISH')" color="transparent">
                           {{'ACC_MAPPING.PROCEED' | translate}}
-                        <ion-icon class="icon siva-icon-right-open"></ion-icon>
                       </ion-button>
                       </ion-col>
+                      <ion-col size="12">
+                        <ion-button icon-left float-left color="transparent"
+                     (click)="takeActionForGoBack('STOP1')">
+                        <span style="color: #076bcd;">{{'ACC_MAPPING.GO_BACK' | translate}}</span>
+                      </ion-button>
+                      </ion-col>
+
                     </ion-row>
                 </div>
             </ion-list>
@@ -112,29 +120,31 @@
 
                   </ion-card>
                 </div>
-                <ion-label italic padding-horizontal margin-vertical>{{'ACC_MAPPING.DO_NT_PROCEED_NOT_U' | translate}}</ion-label>
-                <ion-item lines="none" transparent>
+                <ion-label italic padding-horizontal margin-vertical style="color: #848484;">{{'ACC_MAPPING.DO_NT_PROCEED_NOT_U' | translate}}</ion-label>
+                <ion-item lines="none" transparent style="margin-top: 20px;">
                   <ion-label text-wrap	>{{'ACC_MAPPING.YES_THIS_IS_MY' | translate}}</ion-label>
-                  <ion-checkbox slot="start" color="btnthm" checked="VM.user_yes_chk_box" [(ngModel)]="VM.user_yes_chk_box"></ion-checkbox>
+                  <ion-checkbox slot="start" style="--ion-color-base: #076bcd;"  color="btnthm" checked="VM.user_yes_chk_box" [(ngModel)]="VM.user_yes_chk_box"></ion-checkbox>
                 </ion-item>
 
-                  <div margin-vertical style="    margin-top: 40px;">
-                    <div style="margin-top: 20px;">
-
-                        <ion-button color="btnthm" shape="round" fill="outline"
-                         (click)="takeActionForGoBack('STOP1')">
-                            <ion-icon color="btnthm" class="icon siva-icon-left-open"></ion-icon>
-                            <span color="btnthm">{{'ACC_MAPPING.GO_BACK' | translate}}</span>
-                          </ion-button>
-                          <ion-button slot="end" float-right shape="round" color="btnthm" style="    margin-left: 20px;"
-
-                          [disabled]="!VM.user_yes_chk_box"
-                          (click)="takeActionForack()" >
-                              {{'ACC_MAPPING.PROCEED' | translate}}
-                            <ion-icon class="icon siva-icon-right-open"></ion-icon>
-                          </ion-button>
-                    </div>
-                  </div>
+                  <div style="padding: 15px 7px;
+                      width: -webkit-fill-available;">
+                          <ion-row>
+                            <ion-col size="12">
+                              <ion-button float-right shape="round" style="    margin-left: 20px;"
+                              [disabled]="!VM.user_yes_chk_box"
+                              (click)="takeActionForack()" style="background: linear-gradient(
+                                90deg, #034587 0%, #034587 15%, #076bcd 100%); border-radius: 10px;display: block;    color: white;" color="transparent">
+                                  {{'ACC_MAPPING.PROCEED' | translate}}
+                              </ion-button>
+                              </ion-col>
+                              <ion-col size="12">
+                                <ion-button color="transparent"
+                                (click)="takeActionForGoBack('STOP1')" style="color: #076bcd;">
+                                   <span >{{'ACC_MAPPING.GO_BACK' | translate}}</span>
+                                 </ion-button>
+                              </ion-col>
+                        </ion-row>
+                        </div>
             </ion-list>
 
           </ion-grid>

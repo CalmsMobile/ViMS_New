@@ -67,6 +67,14 @@ input {
   border: solid 1px rgba(70, 66, 66, 0.356);
 }
 
+.box {
+  width: -webkit-fill-available;
+  --padding-end: 0px;
+  --padding-start: 0px;
+  align-items: center;
+  border: solid 1px rgba(70, 66, 66, 0.356);
+}
+
 .inputCountry {
   height: 6vh;
   width: 100%;

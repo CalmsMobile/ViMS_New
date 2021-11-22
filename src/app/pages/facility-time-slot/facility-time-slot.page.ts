@@ -78,11 +78,11 @@ export class FacilityTimeSlotPage implements OnInit {
       try{
         if(qrInfo && JSON.parse(qrInfo) && JSON.parse(qrInfo).MAppId){
           var QRObj = JSON.parse(qrInfo);
-          if(QRObj.MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-            if(JSON.parse(settings).Table1 && JSON.parse(settings).Table1.length > 0){
-              this.hostSettings = JSON.parse(settings).Table1[0];
-            } else if(JSON.parse(settings).Table2 && JSON.parse(settings).Table2.length > 0){
+          if(QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
+            if(JSON.parse(settings).Table2 && JSON.parse(settings).Table2.length > 0){
               this.hostSettings = JSON.parse(settings).Table2[0];
+            } else if(JSON.parse(settings).Table1 && JSON.parse(settings).Table1.length > 0){
+              this.hostSettings = JSON.parse(settings).Table1[0];
             } else{
               let toast = await this.toastCtrl.create({
                 message: this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND'],

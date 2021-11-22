@@ -722,17 +722,22 @@ ionViewDidEnter() {
       this.visitorInfoModal.vehicle_no = "";
     }
 
-    if(this.visitor){
-      this.UpdateVisitor();
-      return;
-    }
     let dublicate = false;
 
     if(this.VM.visitors) {
       this.VM.visitors.forEach(element => {
         if (((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
-        (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) ||
+        (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) &&
         (element.EMAIL && element.EMAIL.toLowerCase() === this.visitorInfoModal.visitor_email.toLowerCase())) {
+          dublicate = true;
+          return;
+        } else  if (((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
+        (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) &&
+        (element.visitor_name && element.visitor_name.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase())) {
+          dublicate = true;
+          return;
+        }  else  if ((element.EMAIL && element.EMAIL.toLowerCase() === this.visitorInfoModal.visitor_email.toLowerCase()) &&
+        (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase())) {
           dublicate = true;
           return;
         }
@@ -743,6 +748,12 @@ ionViewDidEnter() {
       this.apiProvider.showAlert("Visitor already added.");
       return;
     }
+
+    if(this.visitor){
+      this.UpdateVisitor();
+      return;
+    }
+
 
     try {
       this.visitorInfoModal.visitor_ctg_id = this.VM.aData['visitor_ctg'].visitor_ctg_id;

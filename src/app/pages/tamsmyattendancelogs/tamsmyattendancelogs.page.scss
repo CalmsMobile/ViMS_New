@@ -26,6 +26,7 @@
   font-size: 10px;
   font-weight: bold;
   color: #586f7b;
+  margin-left: 7px;
 }
 
 .apt-text-icons {
@@ -102,4 +103,13 @@
   border-radius: 50%;
   color: white;
   font-size: 12px;
+}
+ion-grid {
+  height: 100%;
+}
+ion-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }

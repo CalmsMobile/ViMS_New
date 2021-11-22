@@ -29,7 +29,7 @@
   font-size: 25px;
   background: #4c4c4c;
   border-radius: 50%;
-  margin-top: -20px;
+  margin-top: 10px;
   color: white;
   padding: 5px;
   margin-right: -90px;
@@ -68,6 +68,7 @@
   font-weight: 600;
   box-shadow: none;
   background: transparent;
+  margin-top: -10px;
 }
 
 .shiftToggleCard {
@@ -96,7 +97,7 @@
 // }
 
 ion-toggle {
-  width: 115px;
+  width: 120px;
   margin-bottom: 6px;
   position: relative;
   color: White;
@@ -148,4 +149,35 @@ ion-toggle[aria-checked="true"] {
   font-size: 12px;
   align-items: center;
   align-self: center;
+}
+#map_canvas {
+  width: 90%;
+  height: 80%;
+  border: 1px solid red;
+}
+
+#address {
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#map {
+  width: 100%;
+  height: 30vh;
+}
+
+.map-wrapper {
+  position: relative;
+
+  #map_center {
+    position: absolute;
+    z-index: 99;
+    height: 40px;
+    width: 40px;
+    top: 50%;
+    left: 50%;
+    margin-left: -21px;
+    margin-top: -41px;
+  }
 }

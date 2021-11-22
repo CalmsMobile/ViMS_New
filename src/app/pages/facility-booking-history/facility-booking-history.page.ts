@@ -18,6 +18,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 	films: any;
 	OffSet = 0;
 	notificationCount = 0;
+  showNotification = false;
 	appointments:any = [];
 	T_SVC:any;
 	loadingFinished = true;
@@ -53,14 +54,16 @@ export class FacilityBookingHistoryPage implements OnInit {
       this.notificationCount = parseInt(count);
     }
 		var MAppId = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
-		if(MAppId == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
+		if(MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
 			this.events.publishDataCompany({
         action: "page",
         title: "facility-booking-history",
         message: ''
       });
 		}
-
+    if (MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+      this.showNotification = true;
+    }
 	}
 
   goBack() {

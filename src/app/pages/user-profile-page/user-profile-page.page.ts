@@ -22,6 +22,7 @@ export class UserProfilePagePage implements OnInit {
     "profile": {},
     "AVAIL_FLOOR": []
   };
+  base64Image: any = "";
   RefType = '&ScreenType=30&Refresh=' + new Date().getTime();
   userUpdateModal = new HostInfoModel();
   public error: string;
@@ -32,7 +33,6 @@ export class UserProfilePagePage implements OnInit {
     newPassword: ""
   }
   translation: any = {};
-  base64Image: any = "";
   T_SVC: any;
   constructor(public navCtrl: NavController,
 
@@ -123,7 +123,7 @@ export class UserProfilePagePage implements OnInit {
   }
 
 
-  public async presentActionSheet() {
+  async presentActionSheet() {
     let actionSheet = await this.actionSheetCtrl.create({
       header: 'Select Image Source',
       cssClass: '',
@@ -292,20 +292,22 @@ export class UserProfilePagePage implements OnInit {
         if (err && err.message == "No Internet") {
           return;
         }
-        var message = "";
+        var message1 = "";
         if (err && err.message == "Http failure response for (unknown url): 0 Unknown Error") {
-          message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+          message1 = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else {
           var result = JSON.parse(err.toString());
           if (result && result["Table2"] != undefined) {
-            message = result["Table2"][0].Status ? result["Table2"][0].Status : result["Table2"][0].Description;
+            message1 = result["Table2"][0].Status ? result["Table2"][0].Status : result["Table2"][0].Description;
           } else if (result && result["Table1"] != undefined) {
-            message = result["Table1"][0].Status ? result["Table1"][0].Status : result["Table1"][0].Description;
+            message1 = result["Table1"][0].Status ? result["Table1"][0].Status : result["Table1"][0].Description;
+          } else if (result.message){
+            message1 = result.message;
           }
         }
         let alert = await this.alertCtrl.create({
           header: 'Error !',
-          message: message,
+          message: message1,
           cssClass: '',
           buttons: ['Okay']
         });

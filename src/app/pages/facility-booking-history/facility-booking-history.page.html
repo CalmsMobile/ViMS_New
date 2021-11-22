@@ -11,7 +11,7 @@
         </ion-button>
       </ion-buttons>
       <ion-buttons slot="end">
-            <ion-button slot="icon-only" (click)="gotoNotification()">
+            <ion-button slot="icon-only" (click)="gotoNotification()" *ngIf="showNotification">
             <ion-icon name="notifications-outline" style="position:relative">
                     <span *ngIf= "notificationCount > 0" style="position: absolute;
                     font-size: 16px;
@@ -29,14 +29,12 @@
 
   <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="loadingFinished && (appointments && appointments.length == 0)">
         <ion-col size="12" size-sm size-md>
-                <img app-logo-img class="animated fadeInDown delay-1s" style="
-                display: block;
-                margin: 0 auto;
-                margin-top: 10px;
-                margin-bottom: 10px;
-                width: 200px;
-            " src="assets/images/box.png">
-                <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'FACILITY_HISTORY.NO_LIST' | translate}}</h5> -->
+                <img app-logo-img class="animated fadeInDown delay-1s empty_image" src="../../../assets/images/icon_nobooking_nofacilitiesbooking.png">
+                <div style="display: grid;text-align: center;">
+                  <ion-label class="empty_title">{{'EMPTY.NO_BOOKING_TITLE' | translate}}</ion-label>
+                  <div class="empty_line">________</div>
+                  <ion-text class="empty_desc">{{'EMPTY.NO_BOOKING' | translate}}</ion-text>
+                </div>
         </ion-col>
   </ion-row>
 

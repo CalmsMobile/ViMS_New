@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { QRAccessPageRoutingModule } from './qraccess-routing.module';
 
 import { QRAccessPage } from './qraccess.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    QRAccessPageRoutingModule
+    QRAccessPageRoutingModule,
+    TranslateModule.forChild()
   ],
   declarations: [QRAccessPage]
 })

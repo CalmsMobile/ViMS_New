@@ -91,7 +91,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     }
 
 
-    if(this.QRObj && (this.QRObj.MAppId === AppSettings.LOGINTYPES.FACILITY || this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP)){
+    if(this.QRObj && this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
       this.showFacility = true;
     }
 
@@ -614,15 +614,13 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     var type = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).MAppId;
     var allow = true;
 
-    if(type == AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
+    if(type.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
       if(this.hostSettings && this.hostSettings.available){
         allow = true;
       }else{
         allow = false;
       }
-    } else if(type == AppSettings.LOGINTYPES.FACILITY){
-      allow = true;
-    }else if(this.hostSettings && !this.hostSettings.PurposeEnabled && !this.hostSettings.FloorEnabled && !this.hostSettings.VehicleNumberEnabled && !this.hostSettings.RemarksEnabled && !this.hostSettings.RoomEnabled){
+    } else if(this.hostSettings && !this.hostSettings.PurposeEnabled && !this.hostSettings.FloorEnabled && !this.hostSettings.VehicleNumberEnabled && !this.hostSettings.RemarksEnabled && !this.hostSettings.RoomEnabled){
       allow = false;
     }
 
@@ -802,7 +800,18 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
             this.showAlert(this.T_SVC['ALERT_TEXT.UPDATE_APPOINTMENT_SUCCESS']);
             this.apiProvider.dismissLoading();
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
-            this.navCtrl.navigateRoot('');
+
+            var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+              if (qrData) {
+                const QRObj = JSON.parse(qrData);
+                if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+                  this.router.navigateByUrl('home-tams');
+                } else {
+                  this.navCtrl.navigateRoot('');
+                }
+              } else {
+                this.navCtrl.pop();
+              }
             return;
         }
         let alert = await this.alertCtrl.create({
@@ -869,11 +878,22 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPOINTMENT_VISITOR_DATA, "");
           this.navCtrl.navigateRoot('').then((data)=>{
             setTimeout(() => {
-              this.events.publishDataCompany({
-                action:'RefreshUpcoming',
-                title: 'RefreshUpcoming',
-                message: 0
-              });
+              var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+              if (qrData) {
+                const QRObj = JSON.parse(qrData);
+                if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
+                  this.router.navigateByUrl('home-tams');
+                } else {
+                  this.events.publishDataCompany({
+                    action:'RefreshUpcoming',
+                    title: 'RefreshUpcoming',
+                    message: 0
+                  });
+                }
+              } else {
+                this.navCtrl.pop();
+              }
+
             }, 1000);
             this.apiProvider.dismissLoading();
           });
@@ -1012,7 +1032,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
     if (qrData) {
       const QRObj = JSON.parse(qrData);
-      if (QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS || QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+      if (QRObj.MAppId.split(",").length > 1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1) {
         this.router.navigateByUrl('home-tams');
       } else {
         this.router.navigateByUrl('home-view');
@@ -1137,18 +1157,22 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     if(settings && JSON.parse(settings)){
       try{
 
-        if(this.QRObj.MAppId === AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP){
-          var sett = JSON.parse(settings).Table1;
-          if(sett && sett.length > 0){
+        if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
+          let sett = JSON.parse(settings).Table1;
+          let sett2 = JSON.parse(settings).Table2;
+          if(sett2 && sett2.length > 0){
+            this.hostSettings = sett2[0];
+            this.hostSettings.available = true;
+            this.hostSettings.isFacility = true;
+          } else if(sett && sett.length > 0){
             this.hostSettings = sett[0];
             this.hostSettings.available = true;
             this.hostSettings.isFacility = true;
           } else{
             this.showToast(this.T_SVC['ALERT_TEXT.SETTINGS_NOT_FOUND']);
           }
-
         } else {
-          sett = JSON.parse(settings).Table1;
+          let sett = JSON.parse(settings).Table1;
           if(sett && sett.length > 0){
             this.hostSettings = sett[0];
             this.hostSettings.available = true;

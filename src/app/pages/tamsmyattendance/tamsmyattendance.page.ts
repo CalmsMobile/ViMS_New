@@ -21,6 +21,8 @@ export class TamsmyattendancePage implements OnInit {
   startDate = '';
   isFetching = false;
   T_SVC:any;
+  loadingFinished = false;
+  showMenu = false;
   @ViewChild(CalendarComponent) myCal: CalendarComponent;
   constructor(private router: Router,
     private apiProvider: RestProvider,
@@ -34,6 +36,13 @@ export class TamsmyattendancePage implements OnInit {
         this.T_SVC = t;
     });
     this.isFetching = false;
+    var qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+    if (qrData) {
+      const QRObj = JSON.parse(qrData);
+      if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+        this.showMenu = true;
+      }
+    }
     this.getMyAttendances(null);
   }
 
@@ -74,6 +83,7 @@ export class TamsmyattendancePage implements OnInit {
   }
 
   getMyAttendances(refresher){
+    this.loadingFinished = false;
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
       return;
@@ -87,6 +97,7 @@ export class TamsmyattendancePage implements OnInit {
     };
     this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendance', this.isFetching? false: true, false, '').then(
       (val: any) => {
+        this.loadingFinished = true;
         const response = JSON.parse(val);
         if (response.Table && response.Table.length > 0 && (response.Table[0].Code === 10 || response.Table[0].code === 10)) {
           if (this.isFetching) {
@@ -140,6 +151,7 @@ export class TamsmyattendancePage implements OnInit {
         }
       },
       async (err) => {
+        this.loadingFinished = true;
         this.isFetching = false;
         if(err && err.message == "No Internet"){
           return;

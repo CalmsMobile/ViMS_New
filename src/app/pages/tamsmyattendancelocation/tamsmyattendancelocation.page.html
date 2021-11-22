@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary" style="height:48px">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-buttons slot="start" *ngIf="showMenu">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow"  *ngIf="!showMenu" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{'ALERT_TEXT.MY_ATTENDANCE_LOCATION' | translate}}</ion-title>
   </ion-toolbar>
   <ion-toolbar color="primary">
@@ -21,4 +24,15 @@
       <ion-icon color="primary" name="location-outline" slot="end"></ion-icon>
     </ion-item>
   </ion-card>
+
+  <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="myAttendanceLocationListCone.length == 0 && loadingFinished">
+    <ion-col size="12" size-sm size-md>
+      <img app-logo-img class="animated fadeInDown delay-1s empty_image" src="../../../assets/images/icon_nogeomap.png">
+      <div style="display: grid;text-align: center;">
+        <ion-label class="empty_title">{{'EMPTY.NO_GEO_LOCATION_TITLE' | translate}}</ion-label>
+        <div class="empty_line">________</div>
+        <ion-text class="empty_desc">{{'EMPTY.NO_GEO_LOCATION' | translate}}</ion-text>
+      </div>
+  </ion-col>
+  </ion-row>
 </ion-content>

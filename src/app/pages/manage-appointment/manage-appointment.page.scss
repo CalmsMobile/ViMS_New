@@ -123,14 +123,12 @@ ion-icon {
   background-repeat: no-repeat;
   background-position: 50%;
   background-size: contain;
-  background-size: 18px;
+  background-size: 20px;
   &[ng-reflect-name="customicon"] {
     background-image: url("../../../assets/images/x-icon/admin.png");
     &[ng-reflect-is-active="true"] {
       background-image: url("../../../assets/images/x-icon/admin.png");
     }
-    width: 2.4rem;
-    height: 2.4rem;
   }
 }
 ion-toolbar {
@@ -156,11 +154,12 @@ ion-toolbar {
   position: absolute;
   background: #ffeb3b;
   border-radius: 50%;
-  right: 2px;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  padding: 0px;
+  right: 1px;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  padding: 2px;
+  padding-top: 3px;
   text-align: center;
   color: #000000;
   font-weight: bold;
@@ -180,16 +179,38 @@ ion-toolbar {
   position: absolute;
   background: #17be17;
   border-radius: 50%;
-  right: 2px;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  padding: 0px;
+  right: 1px;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  padding: 2px;
   text-align: center;
   color: #ffffff;
 }
 
 .outer-circle2 {
+  position: relative;
+  //background: #385a94;
+  border-radius: 50%;
+  border: 1px solid var(--ion-color-danger);
+  height: 25px;
+  width: 25px;
+  margin-bottom: 3px;
+}
+
+.inner-circle2 {
+  position: absolute;
+  background: var(--ion-color-danger);
+  border-radius: 50%;
+  right: 1px;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  padding: 2px;
+  text-align: center;
+  color: #ffffff;
+}
+.outer-circle3 {
   position: relative;
   //background: #385a94;
   border-radius: 50%;
@@ -199,15 +220,15 @@ ion-toolbar {
   margin-bottom: 3px;
 }
 
-.inner-circle2 {
+.inner-circle3 {
   position: absolute;
   background: var(--ion-color-primary);
   border-radius: 50%;
-  right: 2px;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  padding: 0px;
+  right: 1px;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  padding: 2px;
   text-align: center;
   color: #ffffff;
 }
@@ -263,6 +284,7 @@ ion-toolbar {
   font-size: 14px;
   font-weight: 600;
   margin-top: 3px;
+  align-self: center;
 }
 
 .apt-center-subtitle {
@@ -270,6 +292,7 @@ ion-toolbar {
   font-size: 12px;
   margin-top: 1px;
   margin-bottom: 1px;
+  align-self: center;
 }
 
 .apt-text-icons {

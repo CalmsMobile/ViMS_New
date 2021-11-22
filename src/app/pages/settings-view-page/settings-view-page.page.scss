@@ -10,18 +10,12 @@
 ion-icon {
   background-repeat: no-repeat;
   background-position: 50%;
-  background-size: contain;
   background-size: 18px;
-  padding: 5px;
-  margin: 0px;
-  margin-right: 6px;
   &[ng-reflect-name="customicon"] {
     background-image: url("../../../assets/images/x-icon/admin.png");
     &[ng-reflect-is-active="true"] {
       background-image: url("../../../assets/images/x-icon/admin.png");
     }
-    width: 2.4rem;
-    height: 2.4rem;
   }
 }
 
@@ -33,4 +27,5 @@ ion-icon {
 
 .labelClassLeft {
   font-size: 14px;
+  margin-left: 10px;
 }

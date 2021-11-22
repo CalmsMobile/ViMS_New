@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar style="    height: 48px;" color="primary">
-    <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
+    <ion-buttons slot="start" *ngIf="showMenu">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-icon slot="start" class="commonHeaderMyBackArrow" *ngIf="!showMenu" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{'ALERT_TEXT.MY_SCHEDULE' | translate}}</ion-title>
     <ion-buttons slot="end">
       <ion-label *ngIf="startDate" style="font-size: 14px;
@@ -45,10 +48,14 @@
   <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="myScheduleListCone.length === 0 && !isFetching">
+  <ion-row style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="myScheduleListCone.length === 0 && loadingFinished">
     <ion-col size="12" size-sm size-md>
-            <img app-logo-img class="animated fadeInDown delay-1s" style="display: block;margin: 0 auto;margin-top: 10px;margin-bottom: 10px;width: 200px;" src="assets/images/box.png">
-            <!-- <h5 style="display: flex;justify-content: center;margin-bottom: 30px;margin-top: 50px;">{{'SECURITY_APP.NO_LIST' | translate}}</h5> -->
+            <img app-logo-img class="animated fadeInDown delay-1s empty_image" src="../../../assets/images/icon_noappoinment_noschedule.png">
+            <div style="display: grid;text-align: center;">
+              <ion-label class="empty_title">{{'EMPTY.NO_SCHEDULE_TITLE' | translate}}</ion-label>
+              <div class="empty_line">________</div>
+              <ion-text class="empty_desc">{{'EMPTY.NO_SCHEDULE' | translate}}</ion-text>
+            </div>
     </ion-col>
 </ion-row>
 

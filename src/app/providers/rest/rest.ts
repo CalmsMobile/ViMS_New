@@ -47,7 +47,7 @@ export class RestProvider {
       this.networkProvider.initializeNetworkEvents();
 
       this.translate.get([
-        'ALERT_TEXT.NETWORK_ERROR']).subscribe(t => {
+        'ALERT_TEXT.NETWORK_ERROR', 'ALERT_TEXT.QRCODE_INVALID_BRANCH']).subscribe(t => {
           this.T_SVC = t;
       });
 
@@ -143,27 +143,6 @@ deg2rad(deg) {
     }
   }
 
-  async showAlertForLocation(errorMsg) {
-    let alert = this.alertCtrl.create({
-      header: 'Notification',
-      message: errorMsg,
-      mode:'ios',
-      buttons: [{
-          text: 'Okay',
-          handler: () => {
-            console.log('Cancel clicked');
-            this.alertShowing = false;
-          }
-        }]
-      });
-      (await alert).present();
-      (await alert).onDidDismiss().then(() => {
-        this.alertShowing = false;
-        this.router.navigateByUrl('home-tams');
-      });
-
-  }
-
   async presentLoading() {
     this.isLoading = true;
     return await this.loadingCtrl.create({
@@ -235,7 +214,7 @@ deg2rad(deg) {
     });
   }
 
-  async dismissLoading() {
+  dismissLoading() {
     setTimeout(async () => {
       try {
         this.isLoading = false;
@@ -301,8 +280,8 @@ deg2rad(deg) {
     });
   }
 
-  async GetAckAppDeviceInfo(data, ApiUrl){
-    var loading = await this.presentLoading();
+  GetAckAppDeviceInfo(data, ApiUrl){
+    this.presentLoading();
     var Api = ApiUrl + '/api/Vims/GetAckAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -340,7 +319,7 @@ deg2rad(deg) {
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
         this.dismissLoading();
@@ -349,7 +328,7 @@ deg2rad(deg) {
 
       this.http.post(Api, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
-      }).subscribe(async response => {
+      }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         this.dismissLoading();
         var output = JSON.parse(response[0].Data);
@@ -359,7 +338,7 @@ deg2rad(deg) {
           reject(JSON.stringify(output));
         }
 
-      }, async (err) => {
+      }, (err) => {
         this.dismissLoading();
         reject(err);
 
@@ -367,8 +346,8 @@ deg2rad(deg) {
     });
   }
 
-  async GetDisplayAppDeviceInfo(data, ApiUrl){
-    var loading = await this.presentLoading();
+  GetDisplayAppDeviceInfo(data, ApiUrl){
+    this.presentLoading();
     var Api = ApiUrl + '/api/Vims/GetDisplayAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -400,8 +379,8 @@ deg2rad(deg) {
     });
   }
 
-  async SaveDisplayAppDeviceInfo(data, ApiUrl){
-    var loading = await this.presentLoading();
+  SaveDisplayAppDeviceInfo(data, ApiUrl){
+    this.presentLoading();
     var Api = ApiUrl + '/api/Vims/SaveDisplayAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -514,7 +493,7 @@ deg2rad(deg) {
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
       if (this.isNotConnected()) {
         this.dismissLoading();
@@ -523,7 +502,7 @@ deg2rad(deg) {
 
       this.http.post(Api, JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
-      }).subscribe(async response => {
+      }).subscribe(response => {
         this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
@@ -537,15 +516,15 @@ deg2rad(deg) {
           reject(output);
         }
 
-      }, async (err) => {
+      }, (err) => {
         this.dismissLoading();
         reject(err);
       });
     });
   }
 
-  async SaveAckAppDeviceInfo(data, ApiUrl){
-    var loading = await this.presentLoading();
+  SaveAckAppDeviceInfo(data, ApiUrl){
+    this.presentLoading();
     var Api = ApiUrl + '/api/Vims/SaveAckAppDeviceInfo';
     console.log("API: "+ Api);
     console.log("Params: "+ JSON.stringify(data));
@@ -576,8 +555,8 @@ deg2rad(deg) {
     });
   }
 
-  async GetAppDetails(data){
-    var loading = await this.presentLoading();
+  GetAppDetails(data){
+    this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppDetails');
     console.log("Params: "+ JSON.stringify(data));
 
@@ -597,11 +576,20 @@ deg2rad(deg) {
         this.dismissLoading();
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        if(output.Table1 && output.Table1.length > 0){
-          resolve(output.Table1[0]);
-        }else{
-          reject(output);
+        if (output != null) {
+          if(output.Table1 && output.Table1.length > 0){
+            resolve(output.Table1[0]);
+          }else{
+            reject(output);
+          }
+        } else {
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
         }
+
       }, (err) => {
         this.dismissLoading();
         reject(err);
@@ -610,8 +598,8 @@ deg2rad(deg) {
     });
   }
 
-  async SavePushNotificationId(data){
-    var loading = await this.presentLoading();
+  SavePushNotificationId(data){
+    this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SavePushNotificationId');
     console.log("Params: "+ JSON.stringify(data));
 
@@ -633,7 +621,7 @@ deg2rad(deg) {
           resolve(output.Table[0]);
         }else{
           reject({
-            "message":output.Table1[0].Description
+            "message":(output.Table && output.Table.length > 0) ? output.Table[0].Description : output.Table1[0].Description
           });
         }
 
@@ -645,9 +633,9 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAdminLogin(data){
+  VimsAdminLogin(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAdminLogin');
     console.log("Params: "+ JSON.stringify(data));
 
@@ -684,7 +672,7 @@ deg2rad(deg) {
     });
   }
 
-  async GetValidateHost(data){
+  GetValidateHost(data){
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetValidateHost');
     console.log("Params: "+ JSON.stringify(data));
 
@@ -1185,9 +1173,9 @@ deg2rad(deg) {
     });
   }
 
-  async AddVisitor(data){
+  AddVisitor(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddVisitor');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
@@ -1234,9 +1222,9 @@ deg2rad(deg) {
   }
 
 
-  async UpdateVisitor(data){
+  UpdateVisitor(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateVisitor');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
@@ -1282,9 +1270,9 @@ deg2rad(deg) {
   }
 
 
-  async CreateQuickPassVisitor(data){
+  CreateQuickPassVisitor(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/CreateQuickPassVisitor';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -1328,9 +1316,9 @@ deg2rad(deg) {
     });
   }
 
-  async addVisitorCompany(data){
-    data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+  addVisitorCompany(data){
+    data  = this.setAuthorizedInfo(data, 'WEB', '');
+    this.presentLoading();
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/addVisitorCompany');
     console.log("Params: "+ JSON.stringify(data));
     return new Promise((resolve, reject) => {
@@ -1367,9 +1355,9 @@ deg2rad(deg) {
   }
 
 
-  async AddAppointment(data){
+  AddAppointment(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AddAppointment');
     console.log("Params: "+ JSON.stringify(data));
@@ -1415,9 +1403,9 @@ deg2rad(deg) {
     });
   }
 
-  async RemindAppointment(data){
+  RemindAppointment(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemindAppointment');
     console.log("Params: "+ JSON.stringify(data));
@@ -1476,7 +1464,7 @@ deg2rad(deg) {
     if(showLoading){
       loading = this.presentLoading();
     }
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
       // alert("data: "+ JSON.stringify(data));
       if (this.checkConnection()) {
@@ -1489,7 +1477,7 @@ deg2rad(deg) {
       }
       this.http.post(JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/syncAppointment', JSON.stringify(data), {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
-      }).subscribe(async response => {
+      }).subscribe(response => {
         var output = JSON.parse(response[0].Data);
         this.dismissLoading();
         if(this.validateUser(output, 'syncAppointment')){
@@ -1777,10 +1765,10 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppUpdateVisitorCheckOut(data){
+  VimsAppUpdateVisitorCheckOut(data){
     data  = this.setAuthorizedSecurityInfo(data);
     data.IsMobile = true;
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppUpdateVisitorCheckOut';
 
     console.log("API: "+ url);
@@ -1831,10 +1819,10 @@ deg2rad(deg) {
     });
   }
 
-  async DeleteQuickPassVisitor(data){
+  DeleteQuickPassVisitor(data){
     data  = this.setAuthorizedInfo(data, '', '');
     data.IsMobile = true;
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/DeleteQuickPassVisitor';
 
     console.log("API: "+ url);
@@ -1877,10 +1865,10 @@ deg2rad(deg) {
     });
   }
 
-  async GetQuickPassVisitorDetail(data){
+  GetQuickPassVisitorDetail(data){
     data  = this.setAuthorizedInfoCommon(data);
     data.IsMobile = true;
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/vims/GetQuickPassVisitorDetail';
 
     console.log("API: "+ url);
@@ -1923,10 +1911,10 @@ deg2rad(deg) {
     });
   }
 
-  async UpdateQPVisitorCheckOutTime(data){
+  UpdateQPVisitorCheckOutTime(data){
     data  = this.setAuthorizedInfoCommon(data);
     data.IsMobile = true;
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/UpdateQPVisitorCheckOutTime';
 
     console.log("API: "+ url);
@@ -1969,10 +1957,10 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppUpdateVisitorQRCheckOut(data){
+  VimsAppUpdateVisitorQRCheckOut(data){
     data  = this.setAuthorizedInfoCommon(data);
     data.IsMobile = true;
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppUpdateVisitorQRCheckOut';
 
     console.log("API: "+ url);
@@ -2015,10 +2003,10 @@ deg2rad(deg) {
     });
   }
 
-  async UpdateQPVisitorCheckInTime(data){
+  UpdateQPVisitorCheckInTime(data){
     data  = this.setAuthorizedSecurityInfo(data);
     data.IsMobile = true;
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/UpdateQPVisitorCheckInTime';
 
     console.log("API: "+ url);
@@ -2098,9 +2086,9 @@ deg2rad(deg) {
     });
   }
 
-  async AppointmentApprovalByVisitor(data) {
+  AppointmentApprovalByVisitor(data) {
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/AppointmentApprovalByVisitor';
     console.log("API: "+ URL);
@@ -2145,9 +2133,9 @@ deg2rad(deg) {
     });
   }
 
-  async ChangeAppointmentStatus(data){
+  ChangeAppointmentStatus(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     var URL = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeAppointmentStatus';
     console.log("API: "+ URL);
@@ -2192,9 +2180,9 @@ deg2rad(deg) {
     });
   }
 
-  async ChangeApppointmentApprovalSettings(data){
+  ChangeApppointmentApprovalSettings(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/ChangeApppointmentApprovalSettings');
     console.log("Params: "+ JSON.stringify(data));
@@ -2240,9 +2228,9 @@ deg2rad(deg) {
     });
   }
 
-  async getHostNotification(data, WEB){
+  getHostNotification(data, WEB){
     data  = this.setAuthorizedInfo(data, WEB, '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/getHostNotification');
     console.log("Params: "+ JSON.stringify(data));
@@ -2262,8 +2250,8 @@ deg2rad(deg) {
       }).subscribe(response => {
         console.log("Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        this.dismissLoading();
         if(this.validateUser(output, 'getHostNotification')){
+          this.dismissLoading();
           return;
         }
         if(output){
@@ -2273,6 +2261,7 @@ deg2rad(deg) {
             reject(JSON.stringify(output));
           }
         }else{
+          this.dismissLoading();
           if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
             reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
           } else {
@@ -2287,9 +2276,9 @@ deg2rad(deg) {
     });
   }
 
-  async UpdateReadNotificationStatus(data, WEB){
+  UpdateReadNotificationStatus(data, WEB){
     data  = this.setAuthorizedInfo(data, WEB, '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateReadNotificationStatus';
     console.log("API: "+ url);
@@ -2335,9 +2324,9 @@ deg2rad(deg) {
     });
   }
 
-  async DeleteNotification(data){
+  DeleteNotification(data){
     data  = this.setAuthorizedInfo(data, 'WEB', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemovePushNotification';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -2429,10 +2418,10 @@ deg2rad(deg) {
   }
 
 
-  async GetAppointmentByGroupId(data){
+  GetAppointmentByGroupId(data){
     data  = this.setAuthorizedInfo(data, '', '');
     data.IsMobile = true;
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetAppointmentByGroupId');
     console.log("Params: "+ JSON.stringify(data));
@@ -2478,11 +2467,11 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppGetAppointmentByHexCode(data, loading){
+  VimsAppGetAppointmentByHexCode(data, loading){
     data  = this.setAuthorizedSecurityInfo(data);
     data.IsMobile = true;
     if (loading) {
-      await this.presentLoading();
+      this.presentLoading();
     }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppGetAppointmentByHexCode';
 
@@ -2511,12 +2500,14 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output));
-          }else{
+          } else if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].description){
+            reject(JSON.stringify({"message": this.T_SVC['ALERT_TEXT.QRCODE_INVALID_BRANCH']}));
+          } else if(output.Table1 != undefined &&  output.Table1.length > 0 && output.Table1[0].escription){
             reject(JSON.stringify({"message":output.Table1[0].Description}));
           }
         }else{
           if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
-            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+            reject(JSON.stringify({"message": response[0].ErrorLog[0].Error}));
           } else {
             reject(JSON.stringify({"message":"Error"}));
           }
@@ -2529,9 +2520,9 @@ deg2rad(deg) {
     });
   }
 
-  async EditAppointment(data){
+  EditAppointment(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/EditAppointment');
     console.log("Params: "+ JSON.stringify(data));
@@ -2577,9 +2568,9 @@ deg2rad(deg) {
     });
   }
 
-  async UpdateHostInfo(data){
+  UpdateHostInfo(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/UpdateHostInfo');
     console.log("Params: "+ JSON.stringify(data));
@@ -2626,9 +2617,9 @@ deg2rad(deg) {
     });
   }
 
-  async RemoveAppointment(data){
+  RemoveAppointment(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/RemoveAppointment');
     console.log("Params: "+ JSON.stringify(data));
@@ -2674,9 +2665,9 @@ deg2rad(deg) {
   }
 
 
-  async FBBookingEndSession(data){
+  FBBookingEndSession(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/FBBookingEndSession';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -2724,9 +2715,9 @@ deg2rad(deg) {
     });
   }
 
-  async FBDisplayEndSession(data){
+  FBDisplayEndSession(data){
     data  = this.setAuthorizedDisplayInfo(data);
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/FBDisplayEndSession';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -2774,9 +2765,9 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppFBBookingCancel(data){
+  VimsAppFBBookingCancel(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFBBookingCancel';
     console.log("API: "+ url);
     console.log("Params: "+ JSON.stringify(data));
@@ -2824,9 +2815,9 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppUpdateFacilityBookings(data){
+  VimsAppUpdateFacilityBookings(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppUpdateFacilityBookings';
 
     console.log("API: "+ url);
@@ -2874,9 +2865,9 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppDeleteFBFacilityBooking(data){
+  VimsAppDeleteFBFacilityBooking(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
 
     console.log("API: "+ JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppDeleteFBFacilityBooking');
     console.log("Params: "+ JSON.stringify(data));
@@ -2957,10 +2948,10 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppFacilityMasterList(data, edit){
+  VimsAppFacilityMasterList(data, edit){
     data  = this.setAuthorizedInfo(data, '', '');
     if(edit){
-      var loading = await this.presentLoading();
+      this.presentLoading();
     }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityMasterList';
     console.log("API: "+ url);
@@ -3032,9 +3023,9 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppGetBookingSlot(data){
+  VimsAppGetBookingSlot(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetBookingSlot';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
@@ -3067,9 +3058,9 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppFacilityBookingSave(data){
+  VimsAppFacilityBookingSave(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppFacilityBookingSave';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
@@ -3303,9 +3294,9 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppGetFacilityBookingDetails(data){
+  VimsAppGetFacilityBookingDetails(data){
     data  = this.setAuthorizedInfo(data, '', '');
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppGetFacilityBookingDetails';
     console.log("API: "+ url);
     var params = JSON.stringify(data);
@@ -3338,7 +3329,7 @@ deg2rad(deg) {
     });
   }
 
-  async GetLocatorName(){
+  GetLocatorName(){
     var address;
     try{
       address = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
@@ -3349,7 +3340,7 @@ deg2rad(deg) {
 
     }
 
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var ApiUrl = JSON.parse(address).ApiUrl+ '/api/Vims/GetLocatorName';
     console.log("API: "+ ApiUrl);
     console.log("Params: {}");
@@ -3611,9 +3602,9 @@ deg2rad(deg) {
     });
   }
 
-  async SaveVisitorCheckinInfo(data){
+  SaveVisitorCheckinInfo(data){
     data  = this.setAuthorizedAckInfo(data);
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/SaveVisitorCheckinInfo';
     console.log("API: "+ api);
     console.log("Params: "+ JSON.stringify(data));
@@ -3663,9 +3654,9 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppSecurityCheckIn(data){
+  VimsAppSecurityCheckIn(data){
     data  = this.setAuthorizedSecurityInfo(data);
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/SecurityApp/VimsAppSecurityCheckIn';
     console.log("API: "+ api);
     console.log("Params: "+ JSON.stringify(data));
@@ -3711,9 +3702,9 @@ deg2rad(deg) {
     });
   }
 
-  async VimsAppUpdateVisitorVideoBriefStatus(data){
+  VimsAppUpdateVisitorVideoBriefStatus(data){
     data  = this.setAuthorizedAckInfo(data);
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/VimsAppUpdateVisitorVideoBriefStatus';
     console.log("API: "+ api);
     console.log("Params: "+ JSON.stringify(data));
@@ -3761,9 +3752,9 @@ deg2rad(deg) {
     });
   }
 
-  async GetSafetyBriefStatus(data){
+  GetSafetyBriefStatus(data){
     data  = this.setAuthorizedAckInfo(data);
-    var loading = await this.presentLoading();
+    this.presentLoading();
     var api = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + '/api/Vims/GetSafetyBriefStatus';
     console.log("API: "+ api);
     console.log("Params: "+ JSON.stringify(data));

@@ -214,8 +214,8 @@ ion-alert {
     }
     .alert-button:nth-child(1) {
       margin: 10px;
-      border: 2px solid var(--ion-color-primary);
-      color: var(--ion-color-primary);
+      border: 2px solid var(--ion-color-btnthm);
+      color: var(--ion-color-btnthm);
       padding-left: 20px;
       padding-right: 20px;
       padding-top: 10px;
@@ -234,7 +234,7 @@ ion-alert {
       min-width: 60%;
     }
     .alert-button:nth-child(2) {
-      background: var(--ion-color-primary);
+      background: var(--ion-color-btnthm);
       color: white;
       padding-left: 20px;
       padding-right: 20px;
@@ -242,7 +242,7 @@ ion-alert {
       padding-bottom: 10px;
       border-radius: 20px;
       min-width: 50px;
-      border: 1px solid var(--ion-color-primary) !important;
+      border: 1px solid var(--ion-color-btnthm) !important;
       /* width: 100%; */
       text-align: center;
       margin: 10px;
@@ -271,8 +271,8 @@ ion-alert {
     }
     .alert-button:nth-child(1) {
       margin: 10px;
-      border: 2px solid var(--ion-color-primary);
-      color: var(--ion-color-primary);
+      border: 2px solid var(--ion-color-btnthm);
+      color: var(--ion-color-btnthm);
       padding-left: 20px;
       padding-right: 20px;
       padding-top: 10px;
@@ -291,7 +291,7 @@ ion-alert {
       min-width: 60%;
     }
     .alert-button:nth-child(2) {
-      background: var(--ion-color-primary);
+      background: var(--ion-color-btnthm);
       color: white;
       padding-left: 20px;
       padding-right: 20px;
@@ -299,7 +299,7 @@ ion-alert {
       padding-bottom: 10px;
       border-radius: 20px;
       min-width: 50px;
-      border: 1px solid var(--ion-color-primary) !important;
+      border: 1px solid var(--ion-color-btnthm) !important;
       /* width: 100%; */
       text-align: center;
       margin: 10px;
@@ -337,8 +337,8 @@ ion-alert {
     }
     .alert-button:nth-child(1) {
       margin: 10px;
-      border: 2px solid var(--ion-color-primary);
-      color: var(--ion-color-primary);
+      border: 2px solid var(--ion-color-btnthm);
+      color: var(--ion-color-btnthm);
       padding-left: 20px;
       padding-right: 20px;
       padding-top: 10px;
@@ -357,7 +357,7 @@ ion-alert {
       min-width: 60%;
     }
     .alert-button:nth-child(2) {
-      background: var(--ion-color-primary);
+      background: var(--ion-color-btnthm);
       color: white;
       padding-left: 20px;
       padding-right: 20px;
@@ -365,7 +365,7 @@ ion-alert {
       padding-bottom: 10px;
       border-radius: 20px;
       min-width: 50px;
-      border: 1px solid var(--ion-color-primary) !important;
+      border: 1px solid var(--ion-color-btnthm) !important;
       /* width: 100%; */
       text-align: center;
       margin: 10px;
@@ -415,7 +415,7 @@ ion-alert {
       text-align: left;
     }
     .alert-button {
-      background: var(--ion-color-primary);
+      background: var(--ion-color-btnthm);
       color: white;
       padding-left: 20px;
       padding-right: 20px;
@@ -424,7 +424,7 @@ ion-alert {
       border-radius: 20px;
       min-width: 50px;
       margin: 10px;
-      border: 1px solid var(--ion-color-primary) !important;
+      border: 1px solid var(--ion-color-btnthm) !important;
       /* width: 100%; */
       text-align: -webkit-center;
       .button-inner {
@@ -457,7 +457,7 @@ ion-alert {
       // margin-bottom: 10px;
     }
     .alert-button {
-      background: var(--ion-color-primary);
+      background: var(--ion-color-btnthm);
       color: white;
       padding-left: 20px;
       padding-right: 20px;
@@ -466,7 +466,7 @@ ion-alert {
       border-radius: 20px;
       min-width: 50px;
       margin: 10px;
-      border: 1px solid var(--ion-color-primary) !important;
+      border: 1px solid var(--ion-color-btnthm) !important;
       /* width: 100%; */
       text-align: -webkit-center;
       .button-inner {
@@ -764,8 +764,35 @@ $border-radius: 8px;
   margin-right: 0px !important;
   padding: 10px !important;
   font-size: 32px !important;
-  color: white !important;
+  // color: var(--ion-color-primary) !important;
   margin-left: 0px;
+}
+
+.empty_image {
+  display: block;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 160px;
+}
+
+.empty_title {
+  color: #585663;
+  font-size: 22px;
+  letter-spacing: 2px;
+  font-weight: 800;
+}
+
+.empty_line {
+  color: #173444;
+  font-weight: bold;
+}
+
+.empty_desc {
+  color: #585663;
+  font-size: 16px;
+  margin-top: 25px;
+  font-weight: 500;
 }
 
 ion-thumbnail img {
@@ -1303,7 +1330,7 @@ ion-alert {
   }
 }
 [theme-text-color] {
-  color: var(--ion-color-primary);
+  color: var(--ion-color-btnthm);
 }
 
 [text-color-white] {
@@ -1384,6 +1411,30 @@ ion-toolbar {
 // Settings Style distance icon text
 [main-menu] .item-inner {
   margin-left: 6px !important;
+}
+
+:root[mode="ios"] .gotham,
+:root[mode="md"] .gotham {
+  --ion-font-family: "Gotham" !important;
+  font-family: "Gotham" !important;
+}
+
+:root {
+  --ion-font-family: "GothamBook";
+}
+
+@font-face {
+  font-family: "Gotham";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../src/assets/fonts/GothamMedium.ttf");
+}
+
+@font-face {
+  font-family: "GothamBook";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../src/assets/fonts/GothamBook.ttf");
 }
 
 /* latin */

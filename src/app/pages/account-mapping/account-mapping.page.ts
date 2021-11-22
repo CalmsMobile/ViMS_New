@@ -187,8 +187,7 @@ export class AccountMappingPage {
         var HostId = "VijayCalms";
         var AppId = "1";
         var qrJsonString1 = "{\"ApiUrl\":\""+ApiUrl+ "\",\"CompanyId\":\"" + CompanyId + "\",\"HostId\":\""
-        + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT+ "\"}";
-        // var qrJsonString1 = "{\"CompanyId\":\"1\",\"HostId\":\""+AppSettings.TEST_DATA.SAMPLE_HOST_IC+"\",\"AppId\":\"1\",\"ApiUrl\":\"http://124.217.235.107:2026\", \"MAppId\":\""+ AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP+ "\"}";
+        + HostId + "\", \"AppId\":\"" + AppId + "\", \"MAppId\":\""+ AppSettings.LOGINTYPES.TAMS+ "\"}";
         // ACK
         // var qrJsonString1 = "{\"MAppDevSeqId\":\""+ AppSettings.TEST_DATA.SAMPLE_DEV_ACK_SEQ_ID+"\",\"ApiUrl\":\"http://124.217.235.107:3066\", \"MAppId\":\""+ AppSettings.LOGINTYPES.ACKAPPT+ "\", \"Location\":\"ACKDemo\"}";
         // SECURITY
@@ -208,9 +207,9 @@ export class AccountMappingPage {
         });
           var qrCodeString = "" + encrypted;
           // 1001 HOST APP
-          // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohZjEU6Evg3rcMxk+/Ugdcex2hFM6P4LE2zMmCF/XoF6kbtLZRrN6d2wZtKDKw7wzf5ZU6E1Ud9RSlXHW9nXhMnyNXs3gJR/8IT4DDzEQdmP+K6TVrX4YXzUbuP+qEN6/U=';
+          // var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JTrN5T1wNAxcG5PDX5+GSbJLyFhtNAv5dUmM7ENCDLZqr62+gsaLApnqklQuzaaM7euPYA8I+EIqzWIXANJcdMcSIPqUXmSAdJmB/6k4ku4GrImiaNECHBKoJEQQhSLUD9N7GJ4EZeAnFB0xXHPiqGM0YOrZGshBmzXJ1GOEp4Vo';
           //HOSTWF 1001
-        //  var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz11bpD3vS9C507kNFD1dBAvKgRqkxon3xAxkSgo9nP57wdbYrWyfyxfFmceXZvmOjvbE9TsmvT1/Jfhh+wYrNiSyx7/be5UOBSNnqLH2GVKEAsnyIrYcUvl1SQPU1E5kRA=';
+         var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz0K3FvXOvV+lfio5Vo03XmBMYN9ZCGqyZ2pOAneteg7bAI5kI9UGacUwSK1JcRz8wSBhfRRyqG/dMSCF7phehb0kf4w9weQJw8Vs/vklOJeDpMJwp0tojEukonDqU33wxg=';
 
         //3026 FB
         // var qrCodeString = 'JAjy9LN8AB8wHRt0BMJ4MqSSSCw4WjBwUHv8LzmWM/5fagcSKXILTm615e9l5H8mIfGEW+44G7/xXLUNEbSsewgrv5c3b8dC1uXbknygWZNylFcLYacwMhQ7BQ991ssvnBTWRS8cfHbufkNpXbDi2A==';
@@ -280,8 +279,6 @@ export class AccountMappingPage {
     //var  testQr = "1CQ/V6dC0hvxVJGNkp0ST8Cmgy1 5obPUsCvDHOsTDx/QPFVmbcnFmJOnGYBpK4e4VGgKKPOtsQ5TeUdHI9MBIR6JMlXzY2DbydgZY JQVnQ1rPKC6R sbWC8Z2bkLcp"
     // var testQr = "12345KQCvWA6nnLWEx3R75yj0nKt102YtHO6R2u4GXVSc/DAlAJltSHUucrncKYz/IxdN+EilpEnfBOmSRjtTWDFgAeZHR5OmSo0cn26te710F5qbE19xBcqRW5Vka075iOWw";
     var scanData = this.decrypt(testQr);
-    // var scanData1 = this.decrypt("tj7giUScblByz+O3ODrG6g==", "qweqweqweqweqweq", "qweqweqweqweqweq");
-    // this.scannedJson.MAppId = AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS;
     console.log(scanData);
     try{
       this.scannedJson = JSON.parse(scanData);
@@ -289,7 +286,7 @@ export class AccountMappingPage {
         this.scannedJson.ApiUrl = this.scannedJson.ApiUrl.split("api")[0];
       }
     }catch(e){
-      var message  = "Invalid QR";
+      var message  = "QR code is invalid, please verify the QR code or contact system administrator for further assistance";
       this.apiProvider.showAlert(message);
       return;
     }
@@ -324,29 +321,7 @@ export class AccountMappingPage {
         this.companyInfo = val;
         window.localStorage.setItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS,JSON.stringify(this.companyInfo));
         this.companyImage = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/PortalImageHandler.ashx?RefSlno=10001&ScreenType=10&Refresh='+ new Date().getTime();
-        if(this.scannedJson.MAppId){
-          switch(this.scannedJson.MAppId){
-            case AppSettings.LOGINTYPES.HOSTAPPT:
-            case AppSettings.LOGINTYPES.QR_ACCESS:
-            case AppSettings.LOGINTYPES.NOTIFICATIONS:
-            case AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS:
-            case AppSettings.LOGINTYPES.HOSTAPPT_FACILITYAPP:
-            case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
-            case AppSettings.LOGINTYPES.FACILITY:
-            case AppSettings.LOGINTYPES.SECURITYAPP:
-              this.takeActionForProceed('STOP2');
-              break;
-            case AppSettings.LOGINTYPES.DISPLAYAPP:
-              this.navCtrl.navigateRoot('facility-kiosk-display');
-              break;
-            case AppSettings.LOGINTYPES.ACKAPPT:
-              this.navCtrl.navigateRoot('sign-pad-idle-page');
-              break;
-          }
-
-        }else{
-          this.STOPS = 'STOP2';
-        }
+        this.takeActionForProceed('STOP2');
       },
       async (err) => {
 
@@ -1150,23 +1125,28 @@ export class AccountMappingPage {
           this.menu.enable(true,"myLeftMenu");
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS,JSON.stringify(this.hostInfo));
           if(this.scannedJson.MAppId){
-            switch(this.scannedJson.MAppId){
-              case AppSettings.LOGINTYPES.SECURITYAPP:
-                this.navCtrl.navigateRoot('security-dash-board-page');
-                break;
-              case AppSettings.LOGINTYPES.HOSTAPPTWITHTAMS:
-                this.navCtrl.navigateRoot('home-tams');
-                break;
-              case AppSettings.LOGINTYPES.QR_ACCESS_NOTIFICATIONS:
-              case AppSettings.LOGINTYPES.QR_ACCESS:
-                this.navCtrl.navigateRoot('qraccess');
-                break;
-              case AppSettings.LOGINTYPES.NOTIFICATIONS:
-                this.navCtrl.navigateRoot('notifications');
-                break;
-              default:
-                this.navCtrl.navigateRoot('');
-                break;
+            if (this.scannedJson.MAppId.split(",").length === 1 && this.scannedJson.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) === -1) {
+              switch(this.scannedJson.MAppId){
+                case AppSettings.LOGINTYPES.SECURITYAPP:
+                  this.navCtrl.navigateRoot('security-dash-board-page');
+                  break;
+                case AppSettings.LOGINTYPES.QR_ACCESS:
+                  this.navCtrl.navigateRoot('qraccess');
+                  break;
+                case AppSettings.LOGINTYPES.NOTIFICATIONS:
+                  this.navCtrl.navigateRoot('notifications');
+                  break;
+                case AppSettings.LOGINTYPES.TAMS:
+                  this.navCtrl.navigateRoot('tamshome');
+                  break;
+                default:
+                  this.navCtrl.navigateRoot('');
+                  break;
+              }
+            } else if (this.scannedJson.MAppId.split(",").length === 2 && this.scannedJson.MAppId.indexOf(AppSettings.LOGINTYPES.QR_ACCESS) > -1 && this.scannedJson.MAppId.indexOf(AppSettings.LOGINTYPES.NOTIFICATIONS) > -1) {
+              this.navCtrl.navigateRoot('qraccess');
+            } else {
+              this.navCtrl.navigateRoot('home-tams');
             }
           }else{
             this.navCtrl.navigateRoot('');
@@ -1181,43 +1161,21 @@ export class AccountMappingPage {
           try {
             var result = JSON.parse(err.toString());
             if(result.message){
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: result.message,
-                cssClass: '',
-                buttons: ['Okay']
-              });
-                alert.present();
-                return;
+              this.apiProvider.showAlert(result.message);
+              return;
             }
           } catch (error) {
-
+            if (err && err.message) {
+              this.apiProvider.showAlert(err.message);
+              return;
+            }
           }
           if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
             var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass: '',
-              buttons: ['Okay']
-            });
-              alert.present();
-              return;
+            this.apiProvider.showAlert(message);
+            return;
           }
-          let invalidORGConfirm = await this.alertCtrl.create({
-            header: this.T_SVC['ACC_MAPPING.FCM_TITLE'],
-            message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_FCM_TITLE'] + '</span>',
-            cssClass: '',
-            buttons: [
-              {
-                text: this.T_SVC['COMMON.OK'],
-                role: 'cancel',
-                handler: () => {
-                }
-              }
-            ]
-          });
-          invalidORGConfirm.present();
+          this.apiProvider.showAlert(this.T_SVC['ACC_MAPPING.INVALID_FCM_TITLE']);
         }
       );
     } else{
@@ -1297,44 +1255,21 @@ export class AccountMappingPage {
           try {
             var result = JSON.parse(err.toString());
             if(result.message){
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: result.message,
-                cssClass: '',
-                buttons: ['Okay']
-              });
-                alert.present();
-                return;
+              this.apiProvider.showAlert(result.message);
+              return;
             }
           } catch (error) {
-
+            if (err && err.message) {
+              this.apiProvider.showAlert(err.message);
+              return;
+            }
           }
           if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
             var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass: '',
-              buttons: ['Okay']
-            });
-              alert.present();
-              return;
+            this.apiProvider.showAlert(message);
+            return;
           }
-
-          let invalidORGConfirm = await this.alertCtrl.create({
-            header: "Error",
-            message: "<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_HOST'] + '</span>',
-            cssClass: '',
-            buttons: [
-              {
-                text: this.T_SVC['COMMON.OK'],
-                role: 'cancel',
-                handler: () => {
-                }
-              }
-            ]
-          });
-          invalidORGConfirm.present();
+          this.apiProvider.showAlert(this.T_SVC['ACC_MAPPING.INVALID_HOST']);
         }
       );
     }

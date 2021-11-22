@@ -61,6 +61,8 @@ import { ThemeSwitcherService } from './services/ThemeSwitcherService';
 import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM';
 import { ViewImageComponent } from './components/view-image/view-image.component';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
+
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 @NgModule({
@@ -125,6 +127,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
     SocialSharing,
     NetworkProvider,
     Geolocation,
+    NativeGeocoder,
     WheelSelector,
     PreviewAnyFile,
     DatePicker,
