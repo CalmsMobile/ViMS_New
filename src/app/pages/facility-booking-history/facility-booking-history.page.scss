@@ -48,8 +48,8 @@
   //background: #385a94;
   border-radius: 50%;
   border: 1px solid #ffeb3b;
-  height: 25px;
-  width: 25px;
+  height: 28px;
+  width: 28px;
   margin-bottom: 3px;
 }
 .inner-circle {
@@ -60,11 +60,11 @@
   left: 1px;
   top: 1px;
   bottom: 1px;
-  padding: 2px;
-  padding-top: 3px;
   text-align: center;
   color: #000000;
   font-weight: bold;
+  padding: 6px;
+  padding-top: 4px;
 }
 
 .outer-circle1 {
@@ -72,8 +72,8 @@
   //background: #385a94;
   border-radius: 50%;
   border: 1px solid #17be17;
-  height: 25px;
-  width: 25px;
+  height: 28px;
+  width: 28px;
   margin-bottom: 3px;
 }
 
@@ -85,32 +85,35 @@
   left: 1px;
   top: 1px;
   bottom: 1px;
-  padding: 2px;
   text-align: center;
   color: #ffffff;
+  padding: 6px;
+  padding-top: 4px;
 }
 
 .outer-circle2 {
-  position: relative;
-  //background: #385a94;
-  border-radius: 50%;
-  border: 1px solid var(--ion-color-danger);
-  height: 25px;
-  width: 25px;
-  margin-bottom: 3px;
+  // position: relative;
+  // //background: #385a94;
+  // border-radius: 50%;
+  // border: 1px solid var(--ion-color-danger);
+  // height: 28px;
+  // width: 28px;
+  // margin-bottom: 3px;
 }
 
 .inner-circle2 {
-  position: absolute;
+  // position: absolute;
   background: var(--ion-color-danger);
   border-radius: 50%;
   right: 1px;
   left: 1px;
   top: 1px;
   bottom: 1px;
-  padding: 2px;
   text-align: center;
   color: #ffffff;
+  padding: 6px;
+  width: 27px;
+  height: 27px;
 }
 
 .colIcons {

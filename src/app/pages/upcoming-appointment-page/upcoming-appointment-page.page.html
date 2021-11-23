@@ -83,16 +83,14 @@
                       <div (click)="openTooltip($event, 'Visitors')">
                         <div class="outer-circle3">
                           <div class="inner-circle3">
-                            <span id="inside-content">{{list.value.length}}</span>
+                            {{list.value.length}}
                           </div>
                         </div>
                       </div>
                       <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" (click)="viewBooking(list.value)">
                         <div class="outer-circle2">
                           <div class="inner-circle2">
-                            <span id="inside-content">
-                              <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
-                            </span>
+                            <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
                           </div>
                         </div>
 
@@ -100,9 +98,7 @@
                       <div class="" (click)="openTooltip($event, getAppointmentStatus(list.value))">
                         <div [ngClass]="{'outer-circle': getAppointmentStatus(list.value) === 'Pending','outer-circle2':getAppointmentStatus(list.value) === 'Canceled','outer-circle1': getAppointmentStatus(list.value) === 'Approved'}">
                           <div [ngClass]="{'inner-circle':getAppointmentStatus(list.value) === 'Pending','inner-circle2':getAppointmentStatus(list.value)=== 'Canceled','inner-circle1': getAppointmentStatus(list.value) === 'Approved'}">
-                            <span id="inside-content">
-                              {{getAppointmentStatus(list.value).charAt(0)}}
-                            </span>
+                            {{getAppointmentStatus(list.value).charAt(0)}}
                           </div>
                         </div>
                       </div>
@@ -173,16 +169,14 @@
                         <!-- <ion-badge color="primary">3</ion-badge> -->
                         <div class="outer-circle3">
                           <div class="inner-circle3">
-                            <span id="inside-content">{{list.value.length}}</span>
+                            {{list.value.length}}
                           </div>
                         </div>
                       </div>
                       <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" (click)="viewBooking(list.value)">
                         <div class="outer-circle2">
                           <div class="inner-circle2">
-                            <span id="inside-content">
-                              <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
-                            </span>
+                            <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
                           </div>
                         </div>
                         <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
@@ -190,9 +184,7 @@
                       <div class="" (click)="openTooltip($event, getAppointmentStatus(list.value))">
                         <div [ngClass]="{'outer-circle': getAppointmentStatus(list.value) === 'Pending','outer-circle2':getAppointmentStatus(list.value) === 'Canceled','outer-circle1': getAppointmentStatus(list.value) === 'Approved'}">
                           <div [ngClass]="{'inner-circle':getAppointmentStatus(list.value) === 'Pending','inner-circle2':getAppointmentStatus(list.value)=== 'Canceled','inner-circle1': getAppointmentStatus(list.value) === 'Approved'}">
-                            <span id="inside-content">
-                              {{getAppointmentStatus(list.value).charAt(0)}}
-                            </span>
+                            {{getAppointmentStatus(list.value).charAt(0)}}
                           </div>
                         </div>
                       </div>
@@ -265,16 +257,14 @@
                         <!-- <ion-badge color="primary">3</ion-badge> -->
                         <div class="outer-circle3">
                           <div class="inner-circle3">
-                            <span id="inside-content">{{list.value.length}}</span>
+                            {{list.value.length}}
                           </div>
                         </div>
                       </div>
                       <div *ngIf="list.value[0].FacilityBookingID && list.value[0].FacilityBookingID !== '0'" (click)="viewBooking(list.value)">
                         <div class="outer-circle2">
                           <div class="inner-circle2">
-                            <span id="inside-content">
-                              <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
-                            </span>
+                            <ion-icon slot="icon-only" name="calendar-outline" class="apt-right-icon"></ion-icon>
                           </div>
                         </div>
                         <!-- <ion-icon slot="icon-only" name="heart-outline" style="font-size: 25px;"></ion-icon> -->
@@ -282,9 +272,7 @@
                       <div class="" (click)="openTooltip($event, getAppointmentStatus(list.value))">
                         <div [ngClass]="{'outer-circle': getAppointmentStatus(list.value) === 'Pending','outer-circle2':getAppointmentStatus(list.value) === 'Canceled','outer-circle1': getAppointmentStatus(list.value) === 'Approved'}">
                           <div [ngClass]="{'inner-circle':getAppointmentStatus(list.value) === 'Pending','inner-circle2':getAppointmentStatus(list.value)=== 'Canceled','inner-circle1': getAppointmentStatus(list.value) === 'Approved'}">
-                            <span id="inside-content">
-                              {{getAppointmentStatus(list.value).charAt(0)}}
-                            </span>
+                            {{getAppointmentStatus(list.value).charAt(0)}}
                           </div>
                         </div>
                       </div>

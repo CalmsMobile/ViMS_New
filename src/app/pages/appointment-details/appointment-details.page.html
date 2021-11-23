@@ -68,9 +68,7 @@
                 </ion-icon>
                 <div *ngIf="visitors.Approval_Status !== 'Approved'" [ngClass]="{'outer-circle':visitors.Approval_Status=='Pending','outer-circle2':(visitors.Approval_Status ==='Canceled' || visitors.Approval_Status ==='Cancelled')}">
                   <div [ngClass]="{'inner-circle':visitors.Approval_Status=='Pending','inner-circle2':(visitors.Approval_Status ==='Canceled' || visitors.Approval_Status ==='Cancelled')}">
-                    <span id="inside-content">
-                      {{visitors.Approval_Status.charAt(0)}}
-                    </span>
+                    {{visitors.Approval_Status.charAt(0)}}
                   </div>
                 </div>
             </div>

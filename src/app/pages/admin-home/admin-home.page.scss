@@ -55,8 +55,8 @@
   //background: #385a94;
   border-radius: 50%;
   border: 1px solid #ffeb3b;
-  height: 25px;
-  width: 25px;
+  height: 28px;
+  width: 28px;
   margin-bottom: 3px;
 }
 .inner-circle {
@@ -67,9 +67,8 @@
   left: 1px;
   top: 1px;
   bottom: 1px;
-  padding: 2px;
-  padding-top: 3px;
-  text-align: center;
+  padding: 6px;
+  padding-top: 4px;
   color: #000000;
   font-weight: bold;
 }
@@ -79,8 +78,8 @@
   //background: #385a94;
   border-radius: 50%;
   border: 1px solid #17be17;
-  height: 25px;
-  width: 25px;
+  height: 28px;
+  width: 28px;
   margin-bottom: 3px;
 }
 
@@ -92,9 +91,10 @@
   left: 1px;
   top: 1px;
   bottom: 1px;
-  padding: 2px;
   text-align: center;
   color: #ffffff;
+  padding: 6px;
+  padding-top: 4px;
 }
 
 .outer-circle2 {
@@ -102,8 +102,8 @@
   //background: #385a94;
   border-radius: 50%;
   border: 1px solid var(--ion-color-primary);
-  height: 25px;
-  width: 25px;
+  height: 28px;
+  width: 28px;
   margin-bottom: 3px;
 }
 

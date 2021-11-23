@@ -130,8 +130,10 @@ export class SecurityManualCheckInPage implements OnInit {
           console.log('passData : ' + JSON.stringify(this.appointmentInfo));
           if (this.appointmentInfo.VISITOR_COMPANY) {
             this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(this.appointmentInfo.VISITOR_COMPANY, true);
+            this.appointmentInfo.VISITOR_COMPANY =  this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, false);
           } else if (this.appointmentInfo.visitor_comp_code) {
             this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, true);
+            this.appointmentInfo.VISITOR_COMPANY =  this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, false);
           }
 
           if (this.appointmentInfo.VISITOR_COUNTRY) {
@@ -409,6 +411,10 @@ export class SecurityManualCheckInPage implements OnInit {
 
   }
 
+  isString(o) {
+      return typeof o == "string" || (typeof o == "object" && o.constructor === String);
+  }
+
   processCheckIn() {
 
     this.checkAllInputs();
@@ -450,6 +456,12 @@ export class SecurityManualCheckInPage implements OnInit {
     }
     if(!this.appointmentInfo.Hexcode) {
       this.appointmentInfo.Hexcode = this.appointmentInfo.HexCode;
+    }
+
+    if (this.appointmentInfo.visitor_comp_code) {
+      if(this.isString(this.appointmentInfo.visitor_comp_code)) {
+        this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, true);
+      }
     }
 
     const visitor = [{

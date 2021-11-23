@@ -88,8 +88,8 @@ ion-toolbar {
   //background: #385a94;
   border-radius: 50%;
   border: 1px solid #ffeb3b;
-  height: 25px;
-  width: 25px;
+  height: 28px;
+  width: 28px;
   margin-bottom: 3px;
 }
 .inner-circle {
@@ -100,11 +100,11 @@ ion-toolbar {
   left: 1px;
   top: 1px;
   bottom: 1px;
-  padding: 2px;
-  padding-top: 3px;
   text-align: center;
   color: #000000;
   font-weight: bold;
+  padding: 6px;
+  padding-top: 4px;
 }
 
 .outer-circle1 {
@@ -112,8 +112,8 @@ ion-toolbar {
   //background: #385a94;
   border-radius: 50%;
   border: 1px solid #17be17;
-  height: 25px;
-  width: 25px;
+  height: 28px;
+  width: 28px;
   margin-bottom: 3px;
 }
 
@@ -125,40 +125,44 @@ ion-toolbar {
   left: 1px;
   top: 1px;
   bottom: 1px;
-  padding: 2px;
   text-align: center;
   color: #ffffff;
+  padding: 6px;
+  padding-top: 4px;
 }
 
 .outer-circle3 {
-  position: relative;
-  //background: #385a94;
-  border-radius: 50%;
-  border: 1px solid var(--ion-color-primary);
-  height: 25px;
-  width: 25px;
-  margin-bottom: 3px;
+  // position: relative;
+  // //background: #385a94;
+  // border-radius: 50%;
+  // border: 1px solid var(--ion-color-primary);
+  // height: 28px;
+  // width: 28px;
+  // margin-bottom: 3px;
 }
 
 .inner-circle3 {
-  position: absolute;
+  // position: absolute;
   background: var(--ion-color-primary);
   border-radius: 50%;
   right: 1px;
   left: 1px;
   top: 1px;
   bottom: 1px;
-  padding: 2px;
   text-align: center;
   color: #ffffff;
+  padding: 8px;
+  width: 27px;
+  height: 27px;
+  text-align: center;
 }
 .outer-circle2 {
   position: relative;
   //background: #385a94;
   border-radius: 50%;
   border: 1px solid var(--ion-color-danger);
-  height: 25px;
-  width: 25px;
+  height: 28px;
+  width: 28px;
   margin-bottom: 3px;
 }
 
@@ -170,9 +174,10 @@ ion-toolbar {
   left: 1px;
   top: 1px;
   bottom: 1px;
-  padding: 2px;
   text-align: center;
   color: #ffffff;
+  padding: 6px;
+  padding-top: 4px;
 }
 
 .colIcons {
