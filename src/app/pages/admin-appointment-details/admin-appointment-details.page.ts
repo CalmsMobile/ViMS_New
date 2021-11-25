@@ -1060,7 +1060,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
         // this.facilityBooking[0].visitors = result.Table2;
         this.setNotifyTime();
 				},
-			async (err) => {
+			(err) => {
 
 				if(err && err.message == "No Internet"){
           return;
@@ -1073,13 +1073,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
 				}
 				if(message){
           // message = " Unknown"
-          let alert = this.alertCtrl.create({
-            header: 'Error !',
-            message: message,
-            cssClass:'',
-            buttons: ['Okay']
-            });
-            (await alert).present();
+          this.apiProvider.showAlert(message);
         }
 			}
 		);

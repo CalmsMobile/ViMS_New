@@ -16,6 +16,8 @@ import { CommonUtil } from 'src/app/services/util/CommonUtil';
 export class SecurityAppointmentListPage implements OnInit {
   T_SVC: any;
   expiryTime = '';
+  appointmentsTable2 = [];
+  appointmentsTable3 = [];
   appointments = [];
   appointmentsCone = [];
   isFetching = false;
@@ -223,14 +225,18 @@ export class SecurityAppointmentListPage implements OnInit {
         if (response.Table && response.Table.length > 0 && response.Table[0].Code === 10) {
           if(refresher){
             this.appointments = response.Table1;
+            this.appointmentsTable2 = response.Table2;
+            this.appointmentsTable3 = response.Table3;
             refresher.target.complete();
           } else {
             this.appointments = response.Table1.concat(this.appointments);
+            this.appointmentsTable2 = response.Table2.concat(this.appointmentsTable2);
+            this.appointmentsTable3 = response.Table3.concat(this.appointmentsTable3);
           }
         }
 
         this.appointments.forEach(element => {
-          const list =  response.Table2.filter((item) =>{
+          const list =  this.appointmentsTable2.filter((item) =>{
             return (item.visitorBookingSeqId ===  element.SEQ_ID);
           });
           element.no_of_time_utilized = 0;
@@ -238,7 +244,7 @@ export class SecurityAppointmentListPage implements OnInit {
             element.no_of_time_utilized = list[0].no_of_time_utilized;
           }
 
-          const list1 =  response.Table3.filter((item) =>{
+          const list1 =  this.appointmentsTable3.filter((item) =>{
             return (item.visitorBookingSeqId ===  element.SEQ_ID);
           });
           element.att_check_in = 0;

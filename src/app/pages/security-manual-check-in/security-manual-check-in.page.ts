@@ -136,6 +136,12 @@ export class SecurityManualCheckInPage implements OnInit {
             this.appointmentInfo.VISITOR_COMPANY =  this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, false);
           }
 
+          const comapnyCode = this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: (this.appointmentInfo.VISITOR_COMPANY? this.appointmentInfo.VISITOR_COMPANY: this.appointmentInfo.VisitorCompany);
+          const companyExist = this.commonUtil.companyExist(comapnyCode, false);
+          if (!companyExist){
+            this.getSecurityMasterdetails();
+          }
+
           if (this.appointmentInfo.VISITOR_COUNTRY) {
             this.appointmentInfo.VISITOR_COUNTRY = this.commonUtil.getCountry(this.appointmentInfo.VISITOR_COUNTRY, true);
           }
@@ -165,6 +171,25 @@ export class SecurityManualCheckInPage implements OnInit {
 
     });
 
+  }
+
+  getSecurityMasterdetails(){
+    this.apiProvider.GetSecurityMasterDetails().then(
+      (result: any) => {
+        if(result){
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+          const comapnyCode = this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: (this.appointmentInfo.VISITOR_COMPANY? this.appointmentInfo.VISITOR_COMPANY: this.appointmentInfo.VisitorCompany);
+          const companyExist = this.commonUtil.companyExist(comapnyCode, false);
+          if (companyExist){
+            this.appointmentInfo.VISITOR_COMPANY = this.commonUtil.getCompany(comapnyCode, false);
+            this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(comapnyCode, true);
+          }
+        }
+      },
+      (err) => {
+
+      }
+    );
   }
 
   onSelectChange(event, action) {
@@ -374,6 +399,11 @@ export class SecurityManualCheckInPage implements OnInit {
               this.appointmentInfo.VISITOR_ADDRESS = visitorData.visitor_address_1;
               this.appointmentInfo.VISITOR_COUNTRY = visitorData.visitor_country;
               this.appointmentInfo.PLATE_NUM = visitorData.PLATE_NUM;
+              const comapnyCode = this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: (this.appointmentInfo.VISITOR_COMPANY? this.appointmentInfo.VISITOR_COMPANY: this.appointmentInfo.VisitorCompany);
+              const companyExist = this.commonUtil.companyExist(comapnyCode, false);
+              if (!companyExist){
+                this.getSecurityMasterdetails();
+              }
             }
 
           }

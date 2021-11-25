@@ -147,7 +147,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 						this.loadingFinished = true;
 
 				},
-				async (err) => {
+				(err) => {
 					this.loadingFinished = true;
 					if(refresher){
 						refresher.target.complete();
@@ -163,13 +163,7 @@ export class FacilityBookingHistoryPage implements OnInit {
 					}
 					if(message){
 						// message = " Unknown"
-						let alert = this.alertCtrl.create({
-							header: 'Error !',
-							message: message,
-							cssClass:'',
-						    buttons: ['Okay']
-							});
-							(await alert).present();
+						this.apiProvider.showAlert(message);
 					}
 				}
 			  );

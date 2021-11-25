@@ -70,7 +70,7 @@ export class FacilityBookingPage implements OnInit {
     this.datepickerFrmDate = this.dateformat.transform(new Date(this.VM.fromDate) + '', 'yyyy-MM-dd');
     this.resetToDate();
 
-    this.translate.get(['ALERT_TEXT.REMOVE_STAFF']).subscribe(t => {
+    this.translate.get(['ALERT_TEXT.REMOVE_STAFF', 'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
       this.translation = t;
     });
     this.route.queryParams.subscribe(params => {
@@ -290,7 +290,19 @@ export class FacilityBookingPage implements OnInit {
         }
       },
       (err) => {
-
+        if(err && err.message == "No Internet"){
+          return;
+        }
+        var message = "";
+        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          message = this.translation['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        } else if(err && JSON.parse(err) && JSON.parse(err).message){
+          message =JSON.parse(err).message;
+        }
+        if(message){
+          // message = " Unknown"
+          this.apiProvider.showAlert(message);
+        }
       }
     );
   }

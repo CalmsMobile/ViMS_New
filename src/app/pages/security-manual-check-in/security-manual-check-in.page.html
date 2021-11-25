@@ -47,6 +47,7 @@
                     <ion-icon name="mail-sharp" class="bDets"></ion-icon>
                     <input maxlength="100" type="text" (input)="onInputChange($event, 'Email')" [(ngModel)]="appointmentInfo.EMAIL"
                     placeholder="{{appSettings.addVisitor.EmailLable}}"
+                    [disabled]="preAppointmentInfo.EMAIL"
                     [ngStyle]="{'border-left': appSettings.addVisitor.showEmailError? '3px solid red': ''}"/>
                   </ion-col>
                 </ion-row>
@@ -55,6 +56,7 @@
                     <ion-icon name="phone-portrait-sharp" class="bDets"></ion-icon>
                     <input maxlength="20" type="number" (input)="onInputChange($event, 'Contact')" [(ngModel)]="appointmentInfo.TELEPHONE_NO"
                     placeholder="{{appSettings.addVisitor.ContactNumberLable}}"
+                    [disabled]="preAppointmentInfo.TELEPHONE_NO"
                     [ngStyle]="{'border-left': appSettings.addVisitor.showPhoneNumberError? '3px solid red': ''}"/>
                   </ion-col>
                 </ion-row>
@@ -89,6 +91,7 @@
               (ionChange)="onSelectChange($event, 'Category')" [(ngModel)]="appointmentInfo.VisitorCategory"
               interface="action-sheet" [disabled]="false"
               placeholder="{{appSettings.addVisitor.CategoryLable}}"
+              [disabled]="preAppointmentInfo.VisitorCategory"
               [ngStyle]="{'border-left': appSettings.addVisitor.showCategoryError? '3px solid red': ''}">
               <ion-label position="stacked">{{appSettings.addVisitor.CategoryLable}}</ion-label>
               <ion-select-option text-left *ngFor="let avl_reason of CATEGORYLIST"
@@ -226,7 +229,8 @@
             <ion-col size="8" class="classCol">
               <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Host')" [(ngModel)]="appointmentInfo.Host_IC"
-              interface="action-sheet" [disabled]="false"
+              interface="action-sheet"
+              [disabled]="preAppointmentInfo.Host_IC"
               placeholder="{{'SECURITY_APP.SELECT_HOST' | translate}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showHostError? '3px solid red': ''}">
               <ion-label position="stacked">{{'SECURITY_APP.SELECT_HOST' | translate}}</ion-label>
@@ -244,7 +248,8 @@
             <ion-col size="8" class="classCol">
                <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Purpose')" [(ngModel)]="appointmentInfo.REASON"
-              interface="action-sheet" [disabled]="false"
+              interface="action-sheet"
+              [disabled]="preAppointmentInfo.REASON"
               placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showPurposeError? '3px solid red': ''}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label>
@@ -261,7 +266,8 @@
             </ion-col>
             <ion-col size="8" class="classCol">
               <ion-select mode="ios" (ionChange)="onSelectChange($event, 'Floor')" [(ngModel)]="appointmentInfo.Floor"
-              interface="action-sheet" [disabled]="false"
+              interface="action-sheet"
+              [disabled]="preAppointmentInfo.Floor"
               placeholder="{{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showFloorError? '3px solid red': ''}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}</ion-label>
@@ -279,7 +285,8 @@
             <ion-col size="8" class="classCol">
               <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Room')" [(ngModel)]="appointmentInfo.MEETING_LOCATION"
-              interface="action-sheet" [disabled]="false"
+              interface="action-sheet"
+              [disabled]="preAppointmentInfo.MEETING_LOCATION"
               placeholder="{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showRoomError? '3px solid red': ''}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}</ion-label>
@@ -296,6 +303,7 @@
             </ion-col>
             <ion-col size="8" class="classCol">
               <ion-textarea maxlength="250" (input)="onInputChange($event, 'Remarks')" placeholder="Remarks"
+              [disabled]="preAppointmentInfo.Remarks"
               [(ngModel)]="appointmentInfo.Remarks" [ngStyle]="{'border-left': appSettings.addVisitor.showRemarksError? '3px solid red': ''}"></ion-textarea>
             </ion-col>
           </ion-row>

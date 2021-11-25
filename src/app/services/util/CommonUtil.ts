@@ -186,6 +186,24 @@ export class CommonUtil{
     return result;
   }
 
+  companyExist(code, isReturnID) {
+    let result = '';
+    if (code === undefined || code === null || code === '') {
+      return '';
+    }
+    var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+    if(masterDetails){
+      const COMPANY_LIST = JSON.parse(masterDetails).Table7;
+      for (var i = 0; i < COMPANY_LIST.length; i++) {
+        if(COMPANY_LIST[i].visitor_comp_code === code || COMPANY_LIST[i].visitor_comp_name === code){
+          result = isReturnID ? COMPANY_LIST[i].visitor_comp_code : COMPANY_LIST[i].visitor_comp_name;
+          break;
+        }
+      }
+    }
+    return result;
+  }
+
   checkQRCode(START_DATE, END_DATE, dateformat: DateFormatPipe) {
     START_DATE = START_DATE.replace('-', '/');
     START_DATE = START_DATE.replace('-', '/');

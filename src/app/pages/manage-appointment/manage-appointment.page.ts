@@ -186,7 +186,7 @@ export class ManageAppointmentPage implements OnInit {
           this.appointments = this.groupBy.transform(this.aList, 'appointment_group_id');
           this.loadEvents();
 				},
-				async (err) => {
+				(err) => {
           this.loadingFinished = true;
 				  if(err && err.message == "No Internet"){
 						return;
@@ -199,13 +199,7 @@ export class ManageAppointmentPage implements OnInit {
 					}
 					if(message){
 						// message = " Unknown"
-						let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              cssClass: '',
-              message: message,
-              buttons: ['Okay']
-            });
-							alert.present();
+            this.apiProvider.showAlert(message);
 					}
 				}
 			  );

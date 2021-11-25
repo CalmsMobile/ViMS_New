@@ -971,7 +971,7 @@ export class AppointmentDetailsPage implements OnInit {
         this.setNotifyTime();
 
        },
-			async (err) => {
+			(err) => {
 
 				if(err && err.message == "No Internet"){
           return;
@@ -984,13 +984,7 @@ export class AppointmentDetailsPage implements OnInit {
 				}
 				if(message){
           // message = " Unknown"
-          let alert = this.alertCtrl.create({
-            header: 'Error !',
-            message: message,
-            cssClass:'',
-            buttons: ['Okay']
-            });
-            (await alert).present();
+          this.apiProvider.showAlert(message);
         }
 			}
 		);

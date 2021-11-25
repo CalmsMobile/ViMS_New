@@ -246,6 +246,16 @@ export class FacilityBookingPage2Page implements OnInit {
         }
       },
       (err) => {
+        var message = "";
+        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        } else if(err && JSON.parse(err) && JSON.parse(err).message){
+          message =JSON.parse(err).message;
+        }
+        if(message){
+          // message = " Unknown"
+          this.apiProvider.showAlert(message);
+        }
       }
     );
   }
@@ -309,25 +319,6 @@ export class FacilityBookingPage2Page implements OnInit {
             this.VM.FACILITYMASTERLIST = showlist;
           }else{
             this.VM.FACILITYMASTERLIST = result;
-            var doctors = [{"FacilityCode":102,
-            "FacilityName": "Dr. Pravina Patel"
-            },
-            {"FacilityCode":102,
-            "FacilityName": "Dr. Alok Bajpai"
-            },
-            {"FacilityCode":102,
-            "FacilityName": "Dr. Sanjai Rastogi"
-            },
-            {"FacilityCode":102,
-            "FacilityName": "Dr. Rakesh Chandra"
-            },
-            {"FacilityCode":102,
-            "FacilityName": "Dr. K. K. Dokania"
-            },
-            {"FacilityCode":102,
-            "FacilityName": "Dr. S. S. Singhal"
-            }];
-            // this.VM.FACILITYMASTERLIST = doctors;
           }
 
          }

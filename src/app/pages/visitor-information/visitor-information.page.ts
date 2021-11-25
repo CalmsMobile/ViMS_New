@@ -231,8 +231,32 @@ export class VisitorInformationPage implements OnInit {
     );
   }
 
+  getSecurityMasterdetails(){
+    this.apiProvider.GetSecurityMasterDetails().then(
+      (result: any) => {
+        if(result){
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
+          const comapnyCode = this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: (this.appointmentInfo.VISITOR_COMPANY? this.appointmentInfo.VISITOR_COMPANY: this.appointmentInfo.VisitorCompany);
+          const companyExist = this.commonUtil.companyExist(comapnyCode, false);
+          if (companyExist){
+            this.appointmentInfo.VisitorCompany = this.commonUtil.getCompany(comapnyCode, false);
+          }
+        }
+      },
+      (err) => {
+
+      }
+    );
+  }
+
   getNamesFromCode() {
-    this.appointmentInfo.VisitorCompany = this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: (this.appointmentInfo.VISITOR_COMPANY? this.appointmentInfo.VISITOR_COMPANY: this.appointmentInfo.VisitorCompany), false);
+    const comapnyCode = this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: (this.appointmentInfo.VISITOR_COMPANY? this.appointmentInfo.VISITOR_COMPANY: this.appointmentInfo.VisitorCompany);
+    const companyExist = this.commonUtil.companyExist(comapnyCode, false);
+    if (companyExist){
+      this.appointmentInfo.VisitorCompany = this.commonUtil.getCompany(comapnyCode, false);
+    } else {
+      this.getSecurityMasterdetails();
+    }
     this.appointmentInfo.REASON_NAME = this.commonUtil.getPurposeCode(this.appointmentInfo.REASON, false);
     this.appointmentInfo.VISITOR_GENDER_NAME = this.commonUtil.getGender(this.appointmentInfo.VISITOR_GENDER? this.appointmentInfo.VISITOR_GENDER : this.appointmentInfo.visitor_gender, false);
     this.appointmentInfo.visitor_ctg_desc = this.commonUtil.getCategory(this.appointmentInfo.VisitorCategory? this.appointmentInfo.VisitorCategory: this.appointmentInfo.att_visitor_ctg_id, false);

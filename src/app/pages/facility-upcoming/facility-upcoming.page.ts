@@ -142,7 +142,7 @@ export class FacilityUpcomingPage implements OnInit {
           }
 
         },
-        async (err) => {
+        (err) => {
           this.loadingFinished = true
           if(refresher){
             refresher.target.complete();
@@ -158,13 +158,7 @@ export class FacilityUpcomingPage implements OnInit {
           }
           if(message){
             // message = " Unknown"
-            let alert = await this.alertCtrl.create({
-              header: 'Error !',
-              message: message,
-              cssClass: '',
-              buttons: ['Okay']
-            });
-              alert.present();
+            this.apiProvider.showAlert(message);
           }
         }
         );

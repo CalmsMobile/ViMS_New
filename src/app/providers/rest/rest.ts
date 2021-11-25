@@ -579,6 +579,8 @@ deg2rad(deg) {
         if (output != null) {
           if(output.Table1 && output.Table1.length > 0){
             resolve(output.Table1[0]);
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(output);
           }
@@ -861,6 +863,8 @@ deg2rad(deg) {
             }else{
               reject(JSON.stringify(output));
             }
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1023,8 +1027,10 @@ deg2rad(deg) {
         if(this.validateUser(output, 'GetMasterDetails')){
           return;
         }
-        if(output != undefined){
+        if(output != undefined && output.Table && output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
           resolve(output);
+        }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+          reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
         }else{
           reject(output);
         }
@@ -1201,6 +1207,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1250,6 +1258,8 @@ deg2rad(deg) {
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
 
             resolve(JSON.stringify(output));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1296,6 +1306,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1385,6 +1397,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1433,6 +1447,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1491,6 +1507,8 @@ deg2rad(deg) {
               resolve(JSON.stringify(output.Table3));
             }
 
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1540,6 +1558,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && (!output.Table[0].Code || output.Table[0].Code === 10)){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             try {
               reject(JSON.stringify({message: output.Table[0].descripion}));
@@ -1644,6 +1664,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table2));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1697,6 +1719,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table2));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1747,6 +1771,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1801,6 +1827,8 @@ deg2rad(deg) {
               reject(JSON.stringify({message: output.Table[0].description}));
             }
 
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1848,6 +1876,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1894,6 +1924,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table1[0]));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -1940,6 +1972,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
             resolve(JSON.stringify(output.Table));
+          } else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify({"message":output.Table[0].description}));
           }
@@ -1986,6 +2020,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify({"message":output.Table[0].description}));
           }
@@ -2032,6 +2068,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2070,6 +2108,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2114,7 +2154,9 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
               resolve(JSON.stringify(output.Table));
-          }else{
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
+          } else{
             reject(JSON.stringify({
               "message": (output.Table1 && output.Table1.length > 0) ? output.Table1[0].Description: output.Table2[0].description
             }));
@@ -2161,6 +2203,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
               resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify({
               "message": (output.Table1 && output.Table1.length > 0) ? output.Table1[0].Description: output.Table2[0].description
@@ -2209,6 +2253,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
               resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify({
               "message": output.Table1[0].Description
@@ -2257,6 +2303,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
               resolve(JSON.stringify(output.Table2));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2306,6 +2354,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
               resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2351,6 +2401,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
               resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify({
               "message": output.Table1[0].Description
@@ -2399,6 +2451,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table1));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify({"message":output.Table1[0].Description}));
           }
@@ -2449,6 +2503,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table1));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify({"message":output.Table1[0].Description}));
           }
@@ -2504,6 +2560,8 @@ deg2rad(deg) {
             reject(JSON.stringify({"message": this.T_SVC['ALERT_TEXT.QRCODE_INVALID_BRANCH']}));
           } else if(output.Table1 != undefined &&  output.Table1.length > 0 && output.Table1[0].escription){
             reject(JSON.stringify({"message":output.Table1[0].Description}));
+          } else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }
         }else{
           if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
@@ -2550,6 +2608,8 @@ deg2rad(deg) {
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2598,6 +2658,8 @@ deg2rad(deg) {
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2644,6 +2706,8 @@ deg2rad(deg) {
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2695,6 +2759,8 @@ deg2rad(deg) {
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0]){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2745,6 +2811,8 @@ deg2rad(deg) {
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0]){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2795,6 +2863,8 @@ deg2rad(deg) {
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0]){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2846,6 +2916,8 @@ deg2rad(deg) {
         if(output ){ // 0 - No record  2- Expired
           if(output.Table != undefined &&  output.Table.length > 0){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2895,6 +2967,8 @@ deg2rad(deg) {
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].code == "S"){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -2975,10 +3049,22 @@ deg2rad(deg) {
         if(this.validateUser(output, url)){
           return;
         }
-        if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
-          resolve(output.Table1);
+        if(output){ //output.Table[0].Code
+          if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
+            resolve(output.Table1);
+          }else if(output.Table && output.Table.length > 0 && output.Table[0].Code > 10){
+            reject(JSON.stringify({"message":output.Table[0].Description}));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
+          }else{
+            reject(JSON.stringify(output));
+          }
         }else{
-          reject(output);
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
         }
 
       }, (err) => {
@@ -3010,10 +3096,23 @@ deg2rad(deg) {
         if(this.validateUser(output, url)){
           return;
         }
-        if(output != undefined && output.Table && output.Table[0] && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
-          resolve(output.Table1);
+
+        if(output){ //output.Table[0].Code
+          if(output.Table && output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+            resolve(output.Table1);
+          }else if(output.Table && output.Table.length > 0 && (output.Table[0].code > 10 || output.Table[0].Code > 10)){
+            reject(JSON.stringify({"message":output.Table[0].Description}));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
+          }else{
+            reject(JSON.stringify(output));
+          }
         }else{
-          reject(output);
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
         }
         //this.dismissLoading();
       }, (err) => {
@@ -3120,10 +3219,22 @@ deg2rad(deg) {
         if(this.validateUser(output, url)){
           return;
         }
-        if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
-          resolve(JSON.stringify(output.Table2));
+        if(output){ //output.Table[0].Code
+          if(output.Table && output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+            resolve(JSON.stringify(output.Table2));
+          }else if(output.Table && output.Table.length > 0 && (output.Table[0].code > 10 || output.Table[0].Code > 10)){
+            reject(JSON.stringify({"message":output.Table[0].Description? output.Table[0].Description: output.Table[0].description}));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
+          }else{
+            reject(JSON.stringify(output));
+          }
         }else{
-          reject(JSON.stringify(output));
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
         }
         if(showLoaading){
           this.dismissLoading();
@@ -3275,6 +3386,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table){
             resolve(JSON.stringify(output));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -3315,10 +3428,25 @@ deg2rad(deg) {
         if(this.validateUser(output, url)){
           return;
         }
-        if(output != undefined && output.Table && output.Table[0] && output.Table[0].Code == 10){
-          resolve(JSON.stringify(output));
+
+        if(output){ //output.Table[0].Code
+          if(output.Table && output.Table.length > 0 && (output.Table[0].code == 10 || output.Table[0].Code == 10)){
+            resolve(JSON.stringify(output));
+          }else if(output.Table && output.Table.length > 0 && (output.Table[0].code > 10 || output.Table[0].Code > 10)){
+            reject(JSON.stringify({"message":output.Table[0].Description? output.Table[0].Description: output.Table[0].description}));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
+          }else{
+            reject(JSON.stringify(output));
+          }
         }else{
-          reject(JSON.stringify(output));
+          if(response[0] && response[0].ErrorLog && response[0].ErrorLog[0] && response[0].ErrorLog[0].Error) {
+            reject(JSON.stringify({"message":response[0].ErrorLog[0].Error}));
+          } else {
+            reject(JSON.stringify({"message":"Error"}));
+          }
         }
 
       }, (err) => {
@@ -3364,6 +3492,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table1));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -3420,7 +3550,9 @@ deg2rad(deg) {
             }else{
               reject(JSON.stringify(output.Table));
             }
-          }else{
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
+          } else{
             reject(JSON.stringify(output));
           }
         }else{
@@ -3477,6 +3609,8 @@ deg2rad(deg) {
             }else{
               reject(JSON.stringify(output));
             }
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -3532,6 +3666,8 @@ deg2rad(deg) {
             }else{
               reject(JSON.stringify(output));
             }
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -3584,6 +3720,8 @@ deg2rad(deg) {
         if(output){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table1));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -3631,6 +3769,8 @@ deg2rad(deg) {
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -3683,6 +3823,8 @@ deg2rad(deg) {
         if(output ){
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output.Table));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -3731,8 +3873,10 @@ deg2rad(deg) {
         if(output ){ //output.Table[0].Code
           if(output.Table && output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output));
-          }if(output.Table && output.Table.length > 0 && output.Table[0].Code == 20){
+          }else if(output.Table && output.Table.length > 0 && output.Table[0].Code == 20){
             reject({"message":output.Table[0].description});
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
@@ -3781,6 +3925,8 @@ deg2rad(deg) {
         if(output ){
           if(output.length > 0 && (output[0].code == 10 || output[0].Code == 10)){
             resolve(JSON.stringify(output));
+          }else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){
+            reject(JSON.stringify({"message":output[0].Description? output[0].Description: output[0].description}));
           }else{
             reject(JSON.stringify(output));
           }
