@@ -607,7 +607,7 @@ export class AppointmentDetailsPage implements OnInit {
                   return;
                 }
                 var message = "";
-                if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                if(err && err.message == "Http failure response for"){
                   message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
                 } else if(err && JSON.parse(err) && JSON.parse(err).message){
                   message =JSON.parse(err).message;
@@ -801,7 +801,7 @@ export class AppointmentDetailsPage implements OnInit {
                     return;
                   }
                   var message = "";
-                  if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                  if(err && err.message == "Http failure response for"){
                     message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
                   } else if(err && JSON.parse(err) && JSON.parse(err).message){
                     message =JSON.parse(err).message;
@@ -863,7 +863,7 @@ export class AppointmentDetailsPage implements OnInit {
                     return;
                   }
                   var message = "";
-                  if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                  if(err && err.message == "Http failure response for"){
                     message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
                   } else if(err && JSON.parse(err) && JSON.parse(err).message){
                     message =JSON.parse(err).message;
@@ -977,7 +977,7 @@ export class AppointmentDetailsPage implements OnInit {
           return;
 				}
         var message = "";
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+        if(err && err.message == "Http failure response for"){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else if(err && JSON.parse(err) && JSON.parse(err).message){
           message =JSON.parse(err).message;
@@ -1297,7 +1297,7 @@ cancelSlot(slot, startDate, endDate, StaffSeqId){
         return;
       }
       var message = "";
-      if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+      if(err && err.message == "Http failure response for"){
         message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
       } else if(err && JSON.parse(err) && JSON.parse(err).message){
         message =JSON.parse(err).message;
@@ -1368,7 +1368,7 @@ FBBookingEndSession(slot, PinNumber , StaffSeqId){
         return;
       }
       var message = "";
-      if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+      if(err && err.message == "Http failure response for"){
         message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
       } else if(err && JSON.parse(err) && JSON.parse(err).message){
         message =JSON.parse(err).message;
@@ -1474,7 +1474,7 @@ this.apiProvider.requestApi(params, api, true, '', '').then(
     var message = "";
     if (err.status) {
       message = 'Api Not Found';
-    } else if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+    } else if(err && err.message == "Http failure response for"){
       message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
     } else if(err && JSON.parse(err) && JSON.parse(err).message){
       message =JSON.parse(err).message;

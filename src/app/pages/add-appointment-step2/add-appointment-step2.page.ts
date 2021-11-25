@@ -547,7 +547,7 @@ export class AddAppointmentStep2Page implements OnInit {
           return;
         }
         var message = "";
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+        if(err && err.message == "Http failure response for"){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else {
             var result = JSON.parse(err.toString());
@@ -764,7 +764,7 @@ export class AddAppointmentStep2Page implements OnInit {
           return;
         }
         var message = "";
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+        if(err && err.message == "Http failure response for"){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else {
             var result = JSON.parse(err.toString());

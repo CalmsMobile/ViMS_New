@@ -119,6 +119,11 @@ export class SecurityManualCheckInPage implements OnInit {
           if (this.appointmentInfo.STAFF_IC){
             this.preAppointmentInfo.Host_IC = this.appointmentInfo.STAFF_IC;
             this.appointmentInfo.Host_IC = this.appointmentInfo.STAFF_IC;
+            const host = this.HOSTLIST.find(item => item.HOSTIC === this.appointmentInfo.Host_IC);
+            if (host) {
+              this.appointmentInfo.HOSTNAME = host.HOSTNAME;
+            }
+
           }
 
           if (this.appointmentInfo.SettingDetail) {
@@ -167,6 +172,10 @@ export class SecurityManualCheckInPage implements OnInit {
         this.appointmentInfo.visitor_comp_name = cData.visitor_comp_name;
         this.appointmentInfo.visitor_comp_code = cData.visitor_comp_code;
         this.appointmentInfo.VISITOR_COMPANY_ID = cData.visitor_comp_code;
+      } else if(data.action === 'user:created' && user == "StaffSelection"){
+        var cData= JSON.parse(time);
+        this.appointmentInfo.HOSTNAME = cData.HOSTNAME;
+        this.appointmentInfo.Host_IC = cData.HOSTIC;
       }
 
     });
@@ -220,6 +229,18 @@ export class SecurityManualCheckInPage implements OnInit {
       }
     };
     this.router.navigate(['visitor-company-page'], navigationExtras);
+  }
+
+
+  openStaffSelection(){
+    const navigationExtras: NavigationExtras = {
+      state: {
+        passData: {
+          data: this.appointmentInfo.Host_IC
+        }
+      }
+    };
+    this.router.navigate(['select-staff'], navigationExtras);
   }
 
    async presentPopover(ev: any, type) {
@@ -296,7 +317,7 @@ export class SecurityManualCheckInPage implements OnInit {
       var message = "";
       if (err.status) {
         message = 'Api Not Found';
-      } else if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+      } else if(err && err.message == "Http failure response for"){
         message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
       } else if(err && JSON.parse(err) && JSON.parse(err).message){
         message =JSON.parse(err).message;
@@ -556,7 +577,7 @@ export class SecurityManualCheckInPage implements OnInit {
           return;
         }
         var message = "Error in server";
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+        if(err && err.message == "Http failure response for"){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else {
           var result = JSON.parse(err.toString());

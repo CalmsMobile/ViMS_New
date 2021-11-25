@@ -374,7 +374,7 @@ export class TamsregisterattendancePage implements OnInit {
 
           }
 
-          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          if(err && err.message == "Http failure response for"){
             var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
             this.apiProvider.showAlert(message);
             return;

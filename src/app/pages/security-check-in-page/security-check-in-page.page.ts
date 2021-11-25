@@ -368,7 +368,7 @@ export class SecurityCheckInPagePage implements OnInit {
               return;
           }
 
-          if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+          if(err && err.message == "Http failure response for"){
             message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
             let alert = await this.alertCtrl.create({
               header: 'Error !',
@@ -542,7 +542,7 @@ export class SecurityCheckInPagePage implements OnInit {
                     return;
                 }
 
-                if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+                if(err && err.message == "Http failure response for"){
                   message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
                   let alert = await this.alertCtrl.create({
                     header: 'Error !',
@@ -935,7 +935,7 @@ ionViewDidEnter() {
             var companyList = [];
 
             var message = "";
-            if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+            if(err && err.message == "Http failure response for"){
               message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
             } else if(err && JSON.parse(err) && JSON.parse(err).message){
               message =JSON.parse(err).message;
@@ -1000,7 +1000,7 @@ ionViewDidEnter() {
           return;
         }
         var message = "";
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+        if(err && err.message == "Http failure response for"){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else {
           var result = JSON.parse(err.toString());

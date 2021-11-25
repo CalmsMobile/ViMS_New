@@ -290,7 +290,7 @@ export class ManageVisitorsPage implements OnInit, OnDestroy {
         }
 
         var message;
-        if(err && err.message == "Http failure response for (unknown url): 0 Unknown Error"){
+        if(err && err.message == "Http failure response for"){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else if(err && JSON.parse(err) && JSON.parse(err).message){
           message =JSON.parse(err).message;

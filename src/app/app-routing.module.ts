@@ -233,6 +233,10 @@ const routes: Routes = [
   {
     path: 'qr-profile',
     loadChildren: () => import('./pages/qr-profile/qr-profile.module').then( m => m.QrProfilePageModule)
+  },
+  {
+    path: 'select-staff',
+    loadChildren: () => import('./pages/select-staff/select-staff.module').then( m => m.SelectStaffPageModule)
   }
 
 

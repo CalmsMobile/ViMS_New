@@ -227,7 +227,7 @@
               <ion-text>Host Name</ion-text>
             </ion-col>
             <ion-col size="8" class="classCol">
-              <ion-select mode="ios"
+              <!-- <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Host')" [(ngModel)]="appointmentInfo.Host_IC"
               interface="action-sheet"
               [disabled]="preAppointmentInfo.Host_IC"
@@ -238,7 +238,22 @@
                 [value]="host.HOSTIC">
                 {{host.HOSTNAME}}
               </ion-select-option>
-            </ion-select>
+            </ion-select> -->
+
+            <ion-item lines="none" class="ion-no-padding box"
+              [ngStyle]="{'border-left': appSettings.addVisitor.showHostError? '3px solid red': ''}" no-padding
+                  transparent (click)="openStaffSelection()"
+                  [disabled]="preAppointmentInfo.Host_IC">
+                  <div>
+                    <ion-label *ngIf="!appointmentInfo.HOSTNAME"
+                      style="font-size:14px;margin:0px; color: #8e8e93 !important;margin-left: 3px !important;    padding: 5px;margin-bottom: 0px !important;">
+                      {{'SECURITY_APP.SELECT_HOST' | translate}}</ion-label>
+                    <ion-label *ngIf="appointmentInfo.HOSTNAME" [ngStyle]="{'padding-bottom': appointmentInfo.HOSTNAME ? '0px': '8px'}"
+                      style="font-size:14px;margin-left: 5px;color: #000000 !important;margin-bottom: 0px !important">
+                      {{appointmentInfo.HOSTNAME}} </ion-label>
+                  </div>
+                  <ion-icon name="arrow-forward" slot="end"></ion-icon>
+                </ion-item>
            </ion-col>
           </ion-row>
           <ion-row *ngIf="appSettings.General.ShowPurpose">

@@ -235,7 +235,9 @@
 	},
 	"VISITORS_COMPANY": {
 		"TITLE": "Visitor Company",
+		"STAFF_TITLE": "Select Staff",
 		"SEARCH_COMPANY": "Search Company",
+		"SEARCH_HOST": "Search Staff",
 		"DONE": "Done",
 		"NO_COMPANY_AVAILABLE": "No Record"
 	},
