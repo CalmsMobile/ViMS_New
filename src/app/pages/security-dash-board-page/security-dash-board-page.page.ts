@@ -215,6 +215,19 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
         }
       },
       (err) => {
+        if(err && err.message == "No Internet"){
+          return;
+        }
+        var message = "";
+        if(err && err.message == "Http failure response for"){
+          message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        } else if(err && JSON.parse(err) && JSON.parse(err).message){
+          message =JSON.parse(err).message;
+        }
+        if(message){
+          // message = " Unknown"
+          this.apiProvider.showAlert(message);
+        }
       }
     );
   }

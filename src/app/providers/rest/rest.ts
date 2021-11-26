@@ -728,16 +728,25 @@ deg2rad(deg) {
 }
 
   setAuthorizedSecurityInfo(data){
-    var MAppDevSeqId = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+    var secDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+    var secUsrDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_USER_DETAILS);
+    let MAppDevSeqId = secDetails ? JSON.parse(secDetails).MAppDevSeqId: '';
+    if (!MAppDevSeqId){
+      MAppDevSeqId = secUsrDetails ? JSON.parse(secUsrDetails).MAppDevSeqId: '';
+    }
+
 
     data.Authorize = {
-      "userID": MAppDevSeqId ? JSON.parse(MAppDevSeqId).userID: '',
+      "userID": secDetails ? JSON.parse(secDetails).userID: '',
       "AuDeviceUID": (this.device && this.device.uuid) ? this.device.uuid: AppSettings.TEST_DATA.SAMPLE_DEVICE_ID,
-      "AuMAppDevSeqId": MAppDevSeqId ? JSON.parse(MAppDevSeqId).MAppDevSeqId: ''
+      "AuMAppDevSeqId":MAppDevSeqId
     }
-    let branchID = MAppDevSeqId ? JSON.parse(MAppDevSeqId).RefBranchSeqid: '';
+    let branchID = secDetails ? JSON.parse(secDetails).RefBranchSeqid: '';
     if (!branchID) {
-      branchID = MAppDevSeqId ? JSON.parse(MAppDevSeqId).RefBranchSeqId: '';
+      branchID = secDetails ? JSON.parse(secDetails).RefBranchSeqId: '';
+    }
+    if (!branchID) {
+      branchID = secUsrDetails ? JSON.parse(secUsrDetails).RefBranchSeqId: '';
     }
     data.Branch = branchID;
     data.RefBranchSeqId = branchID;
