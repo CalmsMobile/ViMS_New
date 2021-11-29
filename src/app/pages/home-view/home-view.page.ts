@@ -1,10 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { NavController, Platform, MenuController, IonTabs, ModalController } from '@ionic/angular';
+import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { HostAccessComponent } from 'src/app/components/host-access/host-access.component';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
@@ -242,20 +242,31 @@ initializeFirebaseAndroid() {
     this.subscribeToPushNotifications();
 }
 initializeFirebaseIOS() {
-  this.fcm.hasPermission().then(hasPermission => {
-    if (hasPermission) {
-      console.log("Has permission!");
-      this.fcm.getToken().then(token => {
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-        console.log("Token:" + token);
-      });
-      this.fcm.onTokenRefresh().subscribe(token => {
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-        console.log("Token:" + token);
-      });
-      this.subscribeToPushNotifications();
-    }
-  })
+  try{
+    this.fcm.hasPermission().then(hasPermission => {
+      if (hasPermission) {
+        console.log("Has permission!");
+        this.fcm.getToken().then(token => {
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+          console.log("Token:" + token);
+        });
+        this.fcm.onTokenRefresh().subscribe(token => {
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+          console.log("Token:" + token);
+        });
+      }
+    });
+    this.fcm.getToken().then(token => {
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+      console.log("Token:" + token);
+    });
+    this.fcm.onTokenRefresh().subscribe(token => {
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+      console.log("Token:" + token);
+    });
+  }catch(e){
+    console.log('FCM error:' + e);
+  }
 
   }
   subscribeToPushNotifications() {
