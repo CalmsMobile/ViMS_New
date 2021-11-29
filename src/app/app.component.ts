@@ -14,7 +14,7 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ThemeSwitcherService } from './services/ThemeSwitcherService';
-import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM';
+import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -561,19 +561,31 @@ export class AppComponent {
     })
   }
   initializeFirebaseIOS() {
-    this.fcm.hasPermission().then(hasPermission => {
-      if (hasPermission) {
-        console.log("Has permission!");
-        this.fcm.getToken().then(token => {
-          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-          console.log("Token:" + token);
-        });
-        this.fcm.onTokenRefresh().subscribe(token => {
-          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-          console.log("Token:" + token);
-        });
-      }
-    })
+    try{
+      this.fcm.hasPermission().then(hasPermission => {
+        if (hasPermission) {
+          console.log("Has permission!");
+          this.fcm.getToken().then(token => {
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+            console.log("Token:" + token);
+          });
+          this.fcm.onTokenRefresh().subscribe(token => {
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+            console.log("Token:" + token);
+          });
+        }
+      });
+      this.fcm.getToken().then(token => {
+        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+        console.log("Token:" + token);
+      });
+      this.fcm.onTokenRefresh().subscribe(token => {
+        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+        console.log("Token:" + token);
+      });
+    }catch(e){
+      console.log('FCM error:' + e);
+    }
 
   }
 

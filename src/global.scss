@@ -1413,28 +1413,18 @@ ion-toolbar {
   margin-left: 6px !important;
 }
 
-:root[mode="ios"] .gotham,
-:root[mode="md"] .gotham {
-  --ion-font-family: "Gotham" !important;
-  font-family: "Gotham" !important;
-}
 
-:root {
-  --ion-font-family: "GothamBook";
-}
-
-@font-face {
-  font-family: "Gotham";
-  font-style: normal;
-  font-weight: normal;
-  src: url("../src/assets/fonts/GothamMedium.ttf");
+:root[mode=ios],
+:root[mode=md]{
+  --ion-font-family:  'GothamBook'!important;
+  font-family:  'GothamBook' !important;
 }
 
 @font-face {
   font-family: "GothamBook";
   font-style: normal;
   font-weight: normal;
-  src: url("../src/assets/fonts/GothamBook.ttf");
+  src: url("../src/assets/fonts/Gotham/GothamBook.woff2");
 }
 
 /* latin */

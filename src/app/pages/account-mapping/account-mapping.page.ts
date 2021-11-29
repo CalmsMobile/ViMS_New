@@ -11,7 +11,7 @@ import { RestProvider } from 'src/app/providers/rest/rest';
 import * as CryptoJS from 'crypto-js';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { NavigationExtras, Router } from '@angular/router';
-import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM';
+import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 
 @Component({
   selector: 'app-account-mapping',
@@ -122,7 +122,10 @@ export class AccountMappingPage {
 
   ionViewDidEnter() {
     this.menu.enable(false,"myLeftMenu");
-    this.initializeFirebase();
+    setTimeout(() => {
+      this.initializeFirebase();
+    }, 1000);
+    
   }
 
   ionViewWillLeave() {
@@ -145,19 +148,31 @@ export class AccountMappingPage {
     })
   }
   initializeFirebaseIOS() {
-    this.fcm.hasPermission().then(hasPermission => {
-      if (hasPermission) {
-        console.log("Has permission!");
-        this.fcm.getToken().then(token => {
-          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-          console.log("Token:" + token);
-        });
-        this.fcm.onTokenRefresh().subscribe(token => {
-          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-          console.log("Token:" + token);
-        });
-      }
-    })
+    try {
+        this.fcm.hasPermission().then(hasPermission => {
+        if (hasPermission) {
+          console.log("Has permission!");
+          this.fcm.getToken().then(token => {
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+            console.log("Token:" + token);
+          });
+          this.fcm.onTokenRefresh().subscribe(token => {
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+            console.log("Token:" + token);
+          });
+        }
+      });
+      this.fcm.getToken().then(token => {
+        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+        console.log("Token:" + token);
+      });
+      this.fcm.onTokenRefresh().subscribe(token => {
+        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
+        console.log("Token:" + token);
+      });
+    } catch (error) {
+      console.log('FCM error'+ error);
+    }
   }
 
 
@@ -1303,6 +1318,8 @@ export class AccountMappingPage {
           handler: data => {
             if (data.RegKey) {
               // logged in!
+              // data.RegKey = '1Bdg9IWu49KLrfhL8hU6JeAsWw3zP5GIdzCWAnFPnz0K3FvXOvV+lfio5Vo03XmBMYN9ZCGqyZ2pOAneteg7bAI5kI9UGacUwSK1JcRz8wSBhfRRyqG/dMSCF7phehb0kf4w9weQJw8Vs/vklOJeDpMJwp0tojEukonDqU33wxg=';
+
               this.processJson(data.RegKey);
             } else {
               // invalid login
