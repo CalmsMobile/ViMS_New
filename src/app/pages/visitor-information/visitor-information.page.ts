@@ -112,7 +112,41 @@ export class VisitorInformationPage implements OnInit {
           const PLATE_NUM = this.appointmentInfo.att_car_no ? this.appointmentInfo.att_car_no: this.appointmentInfo.PLATE_NUM;
           const att_remark = this.appointmentInfo.att_remark ? this.appointmentInfo.att_remark: this.appointmentInfo.Remarks;
           const WorkPermitExpiry = this.appointmentInfo.WorkPermitExpiry;
+          const visitor_name = this.appointmentInfo.visitor_name;
+          const visitor_gender = this.appointmentInfo.visitor_gender;
+          const visitor_country = this.appointmentInfo.visitor_country;
+          const visitor_email = this.appointmentInfo.visitor_email;
+          const visitor_tel_no = this.appointmentInfo.visitor_tel_no;
+          const visitor_address_1 = this.appointmentInfo.visitor_address_1;
+          const att_visitor_company_id =  this.appointmentInfo.att_visitor_company_id;
+          const VisitorCompany = this.appointmentInfo.VisitorCompany;
+
           this.appointmentInfo = vOb;
+          if (visitor_name){
+            this.appointmentInfo.VISITOR_NAME = visitor_name;
+          }
+          if (visitor_gender){
+            this.appointmentInfo.VISITOR_GENDER = visitor_gender;
+          }
+          if (visitor_country){
+            this.appointmentInfo.visitor_country = visitor_country;
+          }
+          if (visitor_email){
+            this.appointmentInfo.visitor_email = visitor_email;
+          }
+          if (visitor_tel_no){
+            this.appointmentInfo.TELEPHONE_NO = visitor_tel_no;
+          }
+          if (visitor_address_1){
+            this.appointmentInfo.visitor_address_1 = visitor_address_1;
+          }
+          if (att_visitor_company_id){
+            this.appointmentInfo.visitor_comp_code = att_visitor_company_id;
+          }
+          if (VisitorCompany){
+            this.appointmentInfo.VisitorCompany = VisitorCompany;
+          }
+
           this.appointmentInfo.att_check_in_time = att_check_in_time;
           this.appointmentInfo.att_check_out_time = att_check_out_time;
           this.appointmentInfo.Address = this.appointmentInfo.VISITOR_ADDRESS;

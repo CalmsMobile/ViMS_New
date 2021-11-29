@@ -116,6 +116,9 @@ export class SecurityManualCheckInPage implements OnInit {
         if (passData && passData.PreAppointment) {
           this.preAppointmentInfo = passData.PreAppointment;
           this.appointmentInfo = passData.PreAppointment;
+          if (this.appointmentInfo.Host_IC){
+            this.appointmentInfo.STAFF_IC = this.appointmentInfo.Host_IC;
+          }
           if (this.appointmentInfo.STAFF_IC){
             this.preAppointmentInfo.Host_IC = this.appointmentInfo.STAFF_IC;
             this.appointmentInfo.Host_IC = this.appointmentInfo.STAFF_IC;
@@ -124,6 +127,14 @@ export class SecurityManualCheckInPage implements OnInit {
               this.appointmentInfo.HOSTNAME = host.HOSTNAME;
             }
 
+          }
+
+          if (this.appointmentInfo.Address){
+            this.appointmentInfo.VISITOR_ADDRESS = this.appointmentInfo.Address;
+          }
+
+          if(this.appointmentInfo.visitor_country){
+            this.appointmentInfo.VISITOR_COUNTRY = this.appointmentInfo.visitor_country;
           }
 
           if (this.appointmentInfo.SettingDetail) {
