@@ -74,6 +74,7 @@
     "cordova-plugin-contacts": "^3.0.1",
     "cordova-plugin-datepicker": "^0.9.3",
     "cordova-plugin-device": "^2.0.3",
+    "cordova-plugin-fcm-with-dependecy-updated": "^7.8.0",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-file-opener2": "^3.0.5",
     "cordova-plugin-file-transfer": "^1.7.1",
@@ -122,7 +123,6 @@
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
     "cordova-ios": "^5.1.1",
-    "cordova-plugin-fcm-with-dependecy-updated": "^7.5.0",
     "cordova.plugins.myKadReader": "file:plugins_src/MyKadReader",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
@@ -184,7 +184,13 @@
       "cordova-plugin-request-location-accuracy": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-nativegeocoder": {},
-      "cordova-plugin-fcm-with-dependecy-updated": {}
+      "cordova-plugin-fcm-with-dependecy-updated": {
+        "ANDROID_DEFAULT_NOTIFICATION_ICON": "@mipmap/ic_launcher",
+        "ANDROID_FCM_VERSION": "21.0.0",
+        "ANDROID_FIREBASE_BOM_VERSION": "26.0.0",
+        "ANDROID_GOOGLE_SERVICES_VERSION": "4.3.4",
+        "ANDROID_GRADLE_TOOLS_VERSION": "4.1.0"
+      }
     },
     "platforms": [
       "ios"

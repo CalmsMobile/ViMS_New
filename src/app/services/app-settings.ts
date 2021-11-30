@@ -210,7 +210,7 @@ export const AppSettings = Object.freeze({
     IdleListenBufferTime : 60000,
     // API_DATABASE_NAME : "SEpurse",
     // LOCAL_DB : "VimsHost_Demo.db",
-    API_DATABASE_NAME : "SEpurseLocal",
+    API_DATABASE_NAME : "",
     LOCAL_DB : "VimsHost_Dev.db",
     DATABASE : {
         TABLE: {

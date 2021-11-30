@@ -78,7 +78,6 @@ export class FacilityBookingPage2Page implements OnInit {
       if(settings && JSON.parse(settings)){
         try{
           if(this.QRObj && this.QRObj.MAppId){
-
             if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
               if(JSON.parse(settings).Table2 && JSON.parse(settings).Table2.length > 0){
                 this.hostSettings = JSON.parse(settings).Table2[0];
@@ -212,7 +211,7 @@ export class FacilityBookingPage2Page implements OnInit {
            if(result){
             console.log(JSON.stringify(val));
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS,JSON.stringify(val));
-            this.hostSettings = result.Table1[0];
+            this.hostSettings = result.Table2[0];
             this.hostSettings.isFacility = true;
           }
          }catch(e){

@@ -111,13 +111,19 @@ export class HomeViewPage implements OnInit {
       this.showQP = JSON.parse(hostSettings.QuickPassSettings).QPVisitorEnabled;
 
 
-      const appTheme = hostSettings.AppTheme;
-      if (appTheme) {
-        const appThemeObj = JSON.parse(appTheme);
-        if (appThemeObj.primThemeColor) {
-          this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
-          this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+      try {
+        if (settings && JSON.parse(settings) && JSON.parse(settings).Table3  && JSON.parse(settings).Table3.length > 0){
+          const appTheme = JSON.parse(settings).Table3[0].AppTheme;
+          if (appTheme) {
+            const appThemeObj = JSON.parse(appTheme);
+            if (appThemeObj.primThemeColor) {
+              this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+              this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+            }
+          }
         }
+      } catch (error) {
+
       }
     }catch(e){
     }
@@ -133,7 +139,7 @@ export class HomeViewPage implements OnInit {
 
   GetHostAppSettings(MAppId) {
     var params = {
-      "MAppId": MAppId.split(",")[0].replace(" ", ""),
+      "MAppId": MAppId,
       "HostIc": ""
     }
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -149,13 +155,19 @@ export class HomeViewPage implements OnInit {
             window.localStorage.setItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS, JSON.stringify(val));
           }
 
-          const appTheme = result.Table1[0].AppTheme;
-          if (appTheme) {
-            const appThemeObj = JSON.parse(appTheme);
-            if (appThemeObj.primThemeColor) {
-              this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
-              this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+          try {
+            if (result && result.Table3  && result.Table3.length > 0){
+              const appTheme = result.Table3[0].AppTheme;
+              if (appTheme) {
+                const appThemeObj = JSON.parse(appTheme);
+                if (appThemeObj.primThemeColor) {
+                  this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+                  this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+                }
+              }
             }
+          } catch (error) {
+
           }
 
         } catch (e) {

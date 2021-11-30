@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.vims.host" version="2.4.38" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.vims.host" version="2.4.39" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>CALMS Host</name>
     <description>CALMS Host App for Booking Appointment.</description>
     <author email="vijay@calms.com.my" href="https://www.calms.com.my">Vijay Velusamy</author>
@@ -202,4 +202,12 @@
     <plugin name="cordova-plugin-request-location-accuracy" spec="^2.3.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="^4.1.0" />
     <plugin name="cordova-plugin-nativegeocoder" spec="^3.4.1" />
+    <engine name="ios" />
+    <plugin name="cordova-plugin-fcm-with-dependecy-updated" spec="^7.8.0">
+        <variable name="ANDROID_DEFAULT_NOTIFICATION_ICON" value="@mipmap/ic_launcher" />
+        <variable name="ANDROID_FCM_VERSION" value="21.0.0" />
+        <variable name="ANDROID_FIREBASE_BOM_VERSION" value="26.0.0" />
+        <variable name="ANDROID_GOOGLE_SERVICES_VERSION" value="4.3.4" />
+        <variable name="ANDROID_GRADLE_TOOLS_VERSION" value="4.1.0" />
+    </plugin>
 </widget>

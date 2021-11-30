@@ -90,7 +90,7 @@ export class AddAppointmentStep2Page implements OnInit {
           if(this.QRObj && this.QRObj.MAppId){
             if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1){
               let sett1 = JSON.parse(settings).Table1;
-              let sett2 = JSON.parse(settings).Table1;
+              let sett2 = JSON.parse(settings).Table2;
               if(sett2 && sett2.length > 0){
                 this.hostSettings = sett2[0];
                 this.hostSettings.available = true;

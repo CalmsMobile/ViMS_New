@@ -436,7 +436,7 @@ export class SettingsViewPagePage implements OnInit {
           return;
         }
         var params1  = {
-          "MAppId": QRObj.MAppId.split(",")[0].replace(" ", ""),
+          "MAppId": QRObj.MAppId,
           "HostIc":""
         }
         params1.HostIc = JSON.parse(hostData).HOSTIC;
@@ -452,13 +452,19 @@ export class SettingsViewPagePage implements OnInit {
                   title: "ReloadMenu",
                   message: "ReloadMenu"
                 });
-                const appTheme = result.Table1[0].AppTheme;
-                if (appTheme) {
-                  const appThemeObj = JSON.parse(appTheme);
-                  if (appThemeObj.primThemeColor) {
-                    this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
-                    this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+                try {
+                  if (result && result.Table3  && result.Table3.length > 0){
+                    const appTheme = result.Table3[0].AppTheme;
+                    if (appTheme) {
+                      const appThemeObj = JSON.parse(appTheme);
+                      if (appThemeObj.primThemeColor) {
+                        this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+                        this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+                      }
+                    }
                   }
+                } catch (error) {
+
                 }
 
                 if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.TAMS) > -1) {
@@ -471,12 +477,14 @@ export class SettingsViewPagePage implements OnInit {
                   this.getMasterdetails();
                 }
 
-                const cMAppId = result.Table1[0].MAppId;
+                if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
+                  this.getUserProfile();
+                }
                 let showAlert = true;
-                if (cMAppId) {
-                  if (cMAppId !== QRObj.MAppId) {
+                if (result && result.Table3 && result.Table3.length > 0 && result.Table3[0].MAppId) {
+                  if (result.Table3[0].MAppId !== QRObj.MAppId) {
                     showAlert = false;
-                    this.showAlertForReload(cMAppId);
+                    this.showAlertForReload(result.Table3[0].MAppId);
                   }
                 }
 

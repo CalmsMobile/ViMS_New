@@ -118,7 +118,7 @@ export class HomeTAMSPage implements OnInit {
     }
     if (!settings && qrInfo) {
       var params = {
-        "MAppId": this.QRObj1.MAppId.split(",")[0].replace(" ", ""),
+        "MAppId": this.QRObj1.MAppId,
         "HostIc": ""
       }
       var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -138,13 +138,19 @@ export class HomeTAMSPage implements OnInit {
                 message: "ReloadMenu"
               });
 
-              const appTheme = result.Table1[0].AppTheme;
-              if (appTheme) {
-                const appThemeObj = JSON.parse(appTheme);
-                if (appThemeObj.primThemeColor) {
-                  this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
-                  this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+              try {
+                if (settings && JSON.parse(settings) && JSON.parse(settings).Table3  && JSON.parse(settings).Table3.length > 0){
+                  const appTheme = JSON.parse(settings).Table3[0].AppTheme;
+                  if (appTheme) {
+                    const appThemeObj = JSON.parse(appTheme);
+                    if (appThemeObj.primThemeColor) {
+                      this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+                      this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+                    }
+                  }
                 }
+              } catch (error) {
+
               }
             }
           } catch (e) {

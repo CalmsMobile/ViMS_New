@@ -627,8 +627,8 @@ export class AppComponent {
 
   try {
     const sett = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
-    if (sett){
-      const appTheme = JSON.parse(sett).Table1[0].AppTheme;
+    if (sett && JSON.parse(sett) && JSON.parse(sett).Table3  && JSON.parse(sett).Table3.length > 0){
+      const appTheme = JSON.parse(sett).Table3[0].AppTheme;
       if (appTheme) {
         const appThemeObj = JSON.parse(appTheme);
         if (appThemeObj.primThemeColor) {

@@ -20,6 +20,8 @@ export class HostAccessComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    console.log('QR access');
+
   }
 
   resetValues() {

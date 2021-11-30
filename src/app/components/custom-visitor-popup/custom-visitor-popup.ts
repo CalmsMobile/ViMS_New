@@ -21,7 +21,7 @@ import { CommonUtil } from 'src/app/services/util/CommonUtil';
   selector: 'custom-visitor-popup',
   templateUrl: 'custom-visitor-popup.html'
 })
-export class CustomVisitorPopupComponent{
+export class CustomVisitorPopupComponent implements OnInit{
 
   text: string;
   visitor: any = {};
@@ -75,6 +75,10 @@ export class CustomVisitorPopupComponent{
       });
       this.getDynamicQRCode();
       console.log(this.qrCodePath);
+  }
+  ngOnInit(): void {
+
+    console.log('Host access');
   }
 
   getDynamicQRCode() {

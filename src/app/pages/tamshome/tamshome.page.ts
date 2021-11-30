@@ -87,7 +87,7 @@ export class TAMSHomePage implements OnInit {
     if (!settings && qrInfo) {
       const QRObj1 = JSON.parse(qrInfo);
       var params = {
-        "MAppId": QRObj1.MAppId.split(",")[0].replace(" ", ""),
+        "MAppId": QRObj1.MAppId,
         "HostIc": ""
       }
       var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
@@ -107,13 +107,19 @@ export class TAMSHomePage implements OnInit {
                 message: "ReloadMenu"
               });
 
-              const appTheme = result.Table1[0].AppTheme;
-              if (appTheme) {
-                const appThemeObj = JSON.parse(appTheme);
-                if (appThemeObj.primThemeColor) {
-                  this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
-                  this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+              try {
+                if (result && result.Table3  && result.Table3.length > 0){
+                  const appTheme = result.Table3[0].AppTheme;
+                  if (appTheme) {
+                    const appThemeObj = JSON.parse(appTheme);
+                    if (appThemeObj.primThemeColor) {
+                      this.statusBar.backgroundColorByHexString(appThemeObj.primThemeColor);
+                      this.themeSwitcher.setThemeNew(appThemeObj.primThemeColor, appThemeObj.primThemeTextColor, appThemeObj.btnBGColor, appThemeObj.btnTextColor);
+                    }
+                  }
                 }
+              } catch (error) {
+
               }
             }
           } catch (e) {
