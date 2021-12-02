@@ -201,12 +201,42 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
           const aData = data1.message;
 
           this.contactsarray = [];
+          let addVisitorSettings;
           if (data) {
-            data.forEach(element => {
-              const visi = this.contactsarray.find(item => (item.EMAIL === element.EMAIL && item.visitor_id === element.visitor_id));
-              if (!visi) {
-                this.contactsarray.push(element);
+            if(this.VM.addVisitorSettings){
+              try {
+                addVisitorSettings = JSON.parse(JSON.parse(this.VM.addVisitorSettings).addVisitorSettings);
+              } catch (error) {
+                addVisitorSettings = JSON.parse(this.VM.addVisitorSettings);
               }
+            }
+
+
+            data.forEach(element => {
+              if (addVisitorSettings){
+                if (!addVisitorSettings.EmailEnabled && !addVisitorSettings.IdProofEnabled){
+                  const visi = this.contactsarray.find(item => (item.VISITOR_NAME === element.VISITOR_NAME));
+                  if (!visi) {
+                    this.contactsarray.push(element);
+                  }
+                } else if (addVisitorSettings.EmailEnabled && addVisitorSettings.IdProofEnabled){
+                  const visi = this.contactsarray.find(item => (item.EMAIL === element.EMAIL && item.VISITOR_NAME === element.VISITOR_NAME && item.visitor_id === element.visitor_id));
+                  if (!visi) {
+                    this.contactsarray.push(element);
+                  }
+                } else if (addVisitorSettings.EmailEnabled){
+                  const visi = this.contactsarray.find(item => (item.EMAIL === element.EMAIL && item.VISITOR_NAME === element.VISITOR_NAME));
+                  if (!visi) {
+                    this.contactsarray.push(element);
+                  }
+                } else if (addVisitorSettings.IdProofEnabled){
+                  const visi = this.contactsarray.find(item => (item.VISITOR_NAME === element.VISITOR_NAME && item.visitor_id === element.visitor_id));
+                  if (!visi) {
+                    this.contactsarray.push(element);
+                  }
+                }
+              }
+
 
             });
           }
@@ -295,7 +325,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
                 var visitorCats = this.VM.visitors[i];
                 // for(let visitors in visitorCats){
                   // var visitor1 = visitorCats[visitors];
-                  if(visitorCats.EMAIL == visitor.EMAIL || visitorCats.VISITOR_NAME == visitor.VISITOR_NAME || (visitorCats.SEQ_ID && visitorCats.SEQ_ID == visitor.SEQ_ID)){
+                  if(visitorCats.VISITOR_IC == visitor.VISITOR_IC){
                     //alert("Changed");
                     visitorCats.VISITOR_IC =visitor.VISITOR_IC;
                     visitorCats.VISITOR_NAME=visitor.VISITOR_NAME;
@@ -829,7 +859,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
             return;
           }
           var message = "";
-          if(err && err.message == "Http failure response for"){
+          if(err && err.message.indexOf("Http failure response for") > -1){
             message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
           } else {
               var result = JSON.parse(err.toString());
@@ -915,7 +945,7 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
           return;
         }
         var message = "";
-        if(err && err.message == "Http failure response for"){
+        if(err && err.message.indexOf("Http failure response for") > -1){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else {
             var result = JSON.parse(err.toString());

@@ -318,7 +318,6 @@
             </ion-col>
             <ion-col size="8" class="classCol">
               <ion-textarea maxlength="250" (input)="onInputChange($event, 'Remarks')" placeholder="Remarks"
-              [disabled]="preAppointmentInfo.Remarks"
               [(ngModel)]="appointmentInfo.Remarks" [ngStyle]="{'border-left': appSettings.addVisitor.showRemarksError? '3px solid red': ''}"></ion-textarea>
             </ion-col>
           </ion-row>

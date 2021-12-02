@@ -293,7 +293,7 @@ export class UserProfilePagePage implements OnInit {
           return;
         }
         var message1 = "";
-        if (err && err.message == "Http failure response for") {
+        if (err && err.message.indexOf("Http failure response for") > -1) {
           message1 = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else {
           var result = JSON.parse(err.toString());

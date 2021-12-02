@@ -726,20 +726,33 @@ ionViewDidEnter() {
 
     if(this.VM.visitors) {
       this.VM.visitors.forEach(element => {
-        if (((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
-        (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) &&
-        (element.EMAIL && element.EMAIL.toLowerCase() === this.visitorInfoModal.visitor_email.toLowerCase())) {
-          dublicate = true;
-          return;
-        } else  if (((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
-        (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) &&
-        (element.visitor_name && element.visitor_name.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase())) {
-          dublicate = true;
-          return;
-        }  else  if ((element.EMAIL && element.EMAIL.toLowerCase() === this.visitorInfoModal.visitor_email.toLowerCase()) &&
-        (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase())) {
-          dublicate = true;
-          return;
+
+        if (!this.hostSettings.EmailEnabled && !this.hostSettings.IdProofEnabled){
+          if(element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase()){
+            dublicate = true;
+            return;
+          }
+        } else if (this.hostSettings.EmailEnabled && this.hostSettings.IdProofEnabled){
+          if (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase() &&
+            ((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
+            (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) &&
+            (element.EMAIL && element.EMAIL.toLowerCase() === this.visitorInfoModal.visitor_email.toLowerCase())) {
+              dublicate = true;
+              return;
+            }
+        } else if (this.hostSettings.EmailEnabled){
+          if (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase() &&
+          (element.EMAIL && element.EMAIL.toLowerCase() === this.visitorInfoModal.visitor_email.toLowerCase())) {
+            dublicate = true;
+            return;
+          }
+        } else if (this.hostSettings.IdProofEnabled){
+          if (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase() &&
+          (((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
+          (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())))) {
+            dublicate = true;
+            return;
+          }
         }
       });
     }
@@ -791,6 +804,7 @@ ionViewDidEnter() {
     if(!this.changeMaster){
       var visitorObj = {
         VISITOR_IC :params.visitor_ic,
+        visitor_id: params.visitor_ic,
         VISITOR_NAME:params.visitor_name,
         VISITOR_COMPANY:params.visitor_comp_id,
         VISITOR_COMPANY_ID:params.visitor_comp_id,
@@ -864,7 +878,7 @@ ionViewDidEnter() {
           return;
         }
         var message = "";
-        if(err && err.message == "Http failure response for"){
+        if(err && err.message.indexOf("Http failure response for") > -1){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else{
           var result = JSON.parse(err.toString());
@@ -957,7 +971,7 @@ ionViewDidEnter() {
           return;
         }
         var message = "";
-        if(err && err.message == "Http failure response for"){
+        if(err && err.message.indexOf("Http failure response for") > -1){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else {
           var result = JSON.parse(err.toString());

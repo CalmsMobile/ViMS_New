@@ -135,7 +135,8 @@ export class NotificationsPage implements OnInit {
 			});
 		}
 		events.observeDataCompany().subscribe((data1:any) => {
-      if (data1.action === 'NotificationReceived') {
+      if (data1.action === 'NotificationReceived' && !this.isFetching) {
+        this.isFetching = true;
         console.log("Notification Received: " + data1.title);
         this.OffSet = 0;
         window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "0");
@@ -264,6 +265,7 @@ export class NotificationsPage implements OnInit {
 
   getAppointmentHistory(refresher, add){
     let hostID = '';
+    this.isFetching = true;
     if (this.isSecurityApp) {
       var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
       if(hostData){
@@ -290,9 +292,9 @@ export class NotificationsPage implements OnInit {
             if(refresher){
               refresher.target.complete();
             }
+            this.isFetching = false;
             var aList = JSON.parse(val.toString());
             // aList = aList.reverse();
-            this.isFetching = false;
             if(!this.platform.is('cordova')) {
               if(add){
                 this.VM.notificationList = aList.concat(this.VM.notificationList);
@@ -306,6 +308,7 @@ export class NotificationsPage implements OnInit {
               this.VM.notificationList.reverse();
               this.OffSet = this.OffSet + aList.length;
               this.showNotification(this.selectedTap);
+              this.loadingFinished = true;
             }else{
               this.VM.notificationList = [];
               var currentClass = this;
@@ -329,6 +332,8 @@ export class NotificationsPage implements OnInit {
                 }
               }
             }
+
+            this.apiProvider.dismissLoading();
           } catch (error) {
 
           }
@@ -337,6 +342,7 @@ export class NotificationsPage implements OnInit {
           if(refresher){
             refresher.target.complete();
           }
+          this.isFetching = false;
           if(err && err.message == "No Internet"){
             return;
           }
@@ -344,7 +350,7 @@ export class NotificationsPage implements OnInit {
           this.loadingFinished = true;
           this.apiProvider.dismissLoading();
           var message = "";
-          if(err && err.message == "Http failure response for"){
+          if(err && err.message.indexOf("Http failure response for") > -1){
             message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
           } else if(err && JSON.parse(err) && JSON.parse(err).message){
             message =JSON.parse(err).message;
@@ -530,7 +536,7 @@ export class NotificationsPage implements OnInit {
 								return;
 							}
 							var message = "";
-							if(err && err.message == "Http failure response for"){
+							if(err && err.message.indexOf("Http failure response for") > -1){
 								message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
 							} else if(err && JSON.parse(err) && JSON.parse(err).message){
 								message =JSON.parse(err).message;
