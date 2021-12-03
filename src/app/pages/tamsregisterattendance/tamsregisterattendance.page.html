@@ -24,7 +24,7 @@
       <ion-item-divider class="divider"></ion-item-divider>
     </ion-card>
 
-    <div (click)="presentActionSheet()" *ngIf="tamsSettings.EnableImage">
+    <div (click)="presentActionSheet()" *ngIf="tamsSettings && tamsSettings.EnableImage">
       <ion-icon class="camera-icon" name="camera-outline"></ion-icon>
       <img class="img" src="{{base64Image? ('data:image/jpeg;base64,' +base64Image): '../../../assets/images/user.png'}}"/>
 
@@ -32,8 +32,8 @@
 
     <ion-card class="shiftTimeCard">
       <div>
-        <ion-icon class="shit_icon1" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings.EnableImage? '35px': '53px'}" slot="start" name="stopwatch-outline"></ion-icon>
-        <ion-label style="vertical-align: middle;" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings.EnableImage? '30px': '48px'}">{{(currentTime | date: 'hh:mm a')}}</ion-label>
+        <ion-icon class="shit_icon1" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? '35px': '53px'}" name="stopwatch-outline"></ion-icon>
+        <ion-label style="vertical-align: middle;" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? '30px': '48px'}">{{currentTime ? (currentTime | date: 'hh:mm a'): ''}}</ion-label>
       </div>
     </ion-card>
 
@@ -56,13 +56,9 @@
     </ion-card>
 
 
-
-
-
-
-   <ion-card class="shiftToggleCard">
-    <ion-toggle (ionChange)="toggleChange()" [(ngModel)]="toogleModel"  mode="ios" [checked]="CheckInFlag === 'out'?'false': 'true'"></ion-toggle>
-   </ion-card>
+    <ion-card class="shiftToggleCard">
+      <ion-toggle (ionChange)="toggleChange()" [(ngModel)]="toogleModel"  mode="ios" [checked]="CheckInFlag === 'out'?'false': 'true'"></ion-toggle>
+     </ion-card>
 
    <ion-card class="shiftToggleCard" style="margin-top: 14px;">
     <ion-button style="--background: linear-gradient(to right, var(--ion-color-btnthm) 0%, var(--ion-color-btnthm) 51%, var(--ion-color-btnthm) 100%)"  shape="round" mode="ios"  (click)="registerMyAttendance()">

@@ -214,23 +214,13 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
 
             data.forEach(element => {
               if (addVisitorSettings){
-                if (!addVisitorSettings.EmailEnabled && !addVisitorSettings.IdProofEnabled){
-                  const visi = this.contactsarray.find(item => (item.VISITOR_NAME === element.VISITOR_NAME));
+                if (addVisitorSettings.IdProofEnabled){
+                  const visi = this.contactsarray.find(item => (item.visitor_id === element.visitor_id));
                   if (!visi) {
                     this.contactsarray.push(element);
                   }
-                } else if (addVisitorSettings.EmailEnabled && addVisitorSettings.IdProofEnabled){
-                  const visi = this.contactsarray.find(item => (item.EMAIL === element.EMAIL && item.VISITOR_NAME === element.VISITOR_NAME && item.visitor_id === element.visitor_id));
-                  if (!visi) {
-                    this.contactsarray.push(element);
-                  }
-                } else if (addVisitorSettings.EmailEnabled){
+                }  else if (addVisitorSettings.EmailEnabled){
                   const visi = this.contactsarray.find(item => (item.EMAIL === element.EMAIL && item.VISITOR_NAME === element.VISITOR_NAME));
-                  if (!visi) {
-                    this.contactsarray.push(element);
-                  }
-                } else if (addVisitorSettings.IdProofEnabled){
-                  const visi = this.contactsarray.find(item => (item.VISITOR_NAME === element.VISITOR_NAME && item.visitor_id === element.visitor_id));
                   if (!visi) {
                     this.contactsarray.push(element);
                   }

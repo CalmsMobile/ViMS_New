@@ -727,31 +727,19 @@ ionViewDidEnter() {
     if(this.VM.visitors) {
       this.VM.visitors.forEach(element => {
 
-        if (!this.hostSettings.EmailEnabled && !this.hostSettings.IdProofEnabled){
-          if(element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase()){
+        if (this.hostSettings.IdProofEnabled){
+          if ((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
+          (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) {
             dublicate = true;
             return;
           }
-        } else if (this.hostSettings.EmailEnabled && this.hostSettings.IdProofEnabled){
-          if (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase() &&
-            ((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
-            (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())) &&
+        }else {
+          if (this.hostSettings.EmailEnabled){
+            if (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase() &&
             (element.EMAIL && element.EMAIL.toLowerCase() === this.visitorInfoModal.visitor_email.toLowerCase())) {
               dublicate = true;
               return;
             }
-        } else if (this.hostSettings.EmailEnabled){
-          if (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase() &&
-          (element.EMAIL && element.EMAIL.toLowerCase() === this.visitorInfoModal.visitor_email.toLowerCase())) {
-            dublicate = true;
-            return;
-          }
-        } else if (this.hostSettings.IdProofEnabled){
-          if (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase() &&
-          (((element.VISITOR_IC && element.VISITOR_IC.toLowerCase() === this.visitorInfoModal.visitor_ic.toLowerCase()) ||
-          (element.visitor_id && element.visitor_id.toLowerCase() === this.visitorInfoModal.visitor_id.toLowerCase())))) {
-            dublicate = true;
-            return;
           }
         }
       });

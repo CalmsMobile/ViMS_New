@@ -276,36 +276,10 @@ export class HomeTAMSPage implements OnInit {
             element.toTime1 = this.dateformat.transform(element.toTime + "", "HH:mm");
             element.toTime = this.dateformat.transform(element.toTime + "", "HH:mm a");
           }
-          // if (element.fromTime) {
-          //   if (element.fromTime.split(":")[0] > 11) {
-          //     let hours: any = (element.fromTime.split(":")[0] % 12);
-          //     if (element.fromTime.split(":")[0] === '12') {
-          //       hours = 12;
-          //     } else if (hours < 10) {
-          //       hours = '0' + hours;
-          //     }
-          //     element.fromTime = hours + ':' + element.fromTime.split(":")[1] + 'pm ';
-          //   } else {
-          //     element.fromTime = element.fromTime + 'am';
-          //   }
-          // }
-          // if (element.toTime) {
-          //   if (element.toTime.split(":")[0] > 11) {
-          //     let hours: any = (element.toTime.split(":")[0] % 12);
-          //     if (element.toTime.split(":")[0] === '12') {
-          //       hours = 12;
-          //     } else if (hours < 10) {
-          //       hours = '0' + hours;
-          //     }
-          //     element.toTime = hours + ':' + element.toTime.split(":")[1] + 'pm ';
-          //   } else {
-          //     element.toTime = element.toTime + 'am';
-          //   }
-          // }
         });
         localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SCHEDULE, JSON.stringify(myScheduleList));
       },
-      async (err) => {
+      (err) => {
         if(err && err.message == "No Internet"){
           return;
         }

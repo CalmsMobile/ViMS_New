@@ -274,7 +274,7 @@ export class TAMSHomePage implements OnInit {
         });
         localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SCHEDULE, JSON.stringify(myScheduleList));
       },
-      async (err) => {
+      (err) => {
         if(err && err.message == "No Internet"){
           return;
         }

@@ -373,6 +373,60 @@ export class SettingsViewPagePage implements OnInit {
     );
   }
 
+  getMySchedules() {
+    const data = {
+    "MAppId": "TAMS",
+    "HostIc": "",
+    };
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).SEQID) {
+      return;
+    }
+    data.HostIc = JSON.parse(hostData).HOSTIC;
+    this.apiProvider.requestApi(data, '/api/TAMS/getMySchedule', false, false, '').then(
+      (val: any) => {
+        let myScheduleList = [];
+        const response = JSON.parse(val);
+        if (response.Table && response.Table.length > 0 && (response.Table[0].Code === 10 || response.Table[0].code === 10)) {
+          myScheduleList = response.Table1
+        }
+        myScheduleList.forEach(element => {
+          const currentDate = this.datePipe.transform(new Date() + "", "yyyy-MM-dd");
+          element.scheduleDate = this.datePipe.transform(element.scheduleDate + "", "yyyy-MM-dd");
+          if (new Date(currentDate) > new Date(element.scheduleDate)) {
+            element.isAvailable = false;
+          } else {
+            element.isAvailable = true;
+          }
+          if (element.fromTime && element.fromTime != null){
+            element.fromTime1 = this.datePipe.transform(element.fromTime + "", "HH:mm");
+            element.fromTime = this.datePipe.transform(element.fromTime + "", "HH:mm a");
+          }
+          element.shiftName = element.shiftName.trim();
+          if (element.toTime && element.fromTime != null){
+            element.toTime1 = this.datePipe.transform(element.toTime + "", "HH:mm");
+            element.toTime = this.datePipe.transform(element.toTime + "", "HH:mm a");
+          }
+        });
+        localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SCHEDULE, JSON.stringify(myScheduleList));
+      },
+      (err) => {
+        if(err && err.message == "No Internet"){
+          return;
+        }
+        try {
+          var result = JSON.parse(err.toString());
+          if(result.message){
+            this.apiProvider.showAlert(result.message);
+            return;
+          }
+        } catch (error) {
+
+        }
+      }
+    );
+  }
+
   getMyAttendanceWhitelistedLocations(){
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {

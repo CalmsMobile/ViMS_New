@@ -31,7 +31,7 @@ export class TamsregisterattendancePage implements OnInit {
   tamsSettings: any = {};
   timeExpired = false;
   clockDateObj: any = {};
-  currentTime = this.dateformat.transform(new Date() + '', "yyyy-MM-dd HH:mm:ss");
+  currentTime = this.dateformat.transform(new Date() + '', "yyyy/MM/dd HH:mm:ss");
   constructor(
     private dateformat : DateFormatPipe,
     private apiProvider: RestProvider,
@@ -73,7 +73,7 @@ export class TamsregisterattendancePage implements OnInit {
     const alreadyClockData = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_CLOCK_IN_ALREADY);
     this.INTERVAL = setInterval(()=> {
       console.log("time");
-      this.currentTime = this.dateformat.transform(new Date() + '', "yyyy-MM-dd HH:mm:ss");
+      this.currentTime = this.dateformat.transform(new Date() + '', "yyyy/MM/dd HH:mm:ss");
       const lat = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_LATITUDE);
       const long = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_LONGITUDE);
       if (!this.loadingDismissedAlready && lat && long) {
@@ -110,14 +110,20 @@ export class TamsregisterattendancePage implements OnInit {
           let alreadyClockout = false;
           if (alreadyClockData) {
             this.clockDateObj = JSON.parse(alreadyClockData);
-            const clockDate = this.dateformat.transform(this.clockDateObj.Date, "yyyy-MM-dd");
-            const currentDate = this.dateformat.transform(new Date() + '', "yyyy-MM-dd");
+            this.clockDateObj.Date = this.clockDateObj.Date.replace('-','/');
+            this.clockDateObj.Date = this.clockDateObj.Date.replace('-','/');
+            this.clockDateObj.Date = this.clockDateObj.Date.replace('T',' ');
+            const clockDate = this.dateformat.transform(this.clockDateObj.Date, "yyyy/MM/dd");
+            const currentDate = this.dateformat.transform(new Date() + '', "yyyy/MM/dd");
             if (clockDate == currentDate && this.clockDateObj.OutClockType === 'out') {
               alreadyClockout = true;
             }
           }
-          if (this.myTodaySchedule.toTime) {
-            const outTime = this.dateformat.transform(this.myTodaySchedule.scheduleDate + " "+ this.myTodaySchedule.toTime1, "yyyy-MM-dd HH:mm a");
+          if (this.myTodaySchedule.toTime1) {
+            this.myTodaySchedule.scheduleDate = this.myTodaySchedule.scheduleDate.replace('-','/');
+            this.myTodaySchedule.scheduleDate = this.myTodaySchedule.scheduleDate.replace('-','/');
+            this.myTodaySchedule.scheduleDate = this.myTodaySchedule.scheduleDate.replace('T',' ');
+            const outTime = this.dateformat.transform(this.myTodaySchedule.scheduleDate + " "+ this.myTodaySchedule.toTime1, "yyyy/MM/dd HH:mm a");
             if (new Date(this.currentTime) < new Date(outTime) && !alreadyClockout) {
               this.timeExpired = true;
             } else {
@@ -129,14 +135,20 @@ export class TamsregisterattendancePage implements OnInit {
           let alreadyClockin = false;
           if (alreadyClockData) {
             this.clockDateObj = JSON.parse(alreadyClockData);
-            const clockDate = this.dateformat.transform(this.clockDateObj.Date, "yyyy-MM-dd");
-            const currentDate = this.dateformat.transform(new Date() + '', "yyyy-MM-dd");
+            this.clockDateObj.Date = this.clockDateObj.Date.replace('-','/');
+            this.clockDateObj.Date = this.clockDateObj.Date.replace('-','/');
+            this.clockDateObj.Date = this.clockDateObj.Date.replace('T',' ');
+            const clockDate = this.dateformat.transform(this.clockDateObj.Date, "yyyy/MM/dd");
+            const currentDate = this.dateformat.transform(new Date() + '', "yyyy/MM/dd");
             if (clockDate == currentDate && this.clockDateObj.InClockType !== 'out') {
               alreadyClockin = true;
             }
           }
-          if (this.myTodaySchedule.fromTime) {
-            const inTime = this.dateformat.transform(this.myTodaySchedule.scheduleDate + " "+ this.myTodaySchedule.fromTime1, "yyyy-MM-dd HH:mm a");
+          if (this.myTodaySchedule.fromTime1) {
+            this.myTodaySchedule.scheduleDate = this.myTodaySchedule.scheduleDate.replace('-','/');
+            this.myTodaySchedule.scheduleDate = this.myTodaySchedule.scheduleDate.replace('-','/');
+            this.myTodaySchedule.scheduleDate = this.myTodaySchedule.scheduleDate.replace('T',' ');
+            const inTime = this.dateformat.transform(this.myTodaySchedule.scheduleDate + " "+ this.myTodaySchedule.fromTime1, "yyyy/MM/dd HH:mm a");
             if (new Date(this.currentTime) > new Date(inTime)  && !alreadyClockin) {
               this.timeExpired = true;
             } else {
