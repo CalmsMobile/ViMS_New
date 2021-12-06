@@ -572,7 +572,7 @@ export class SecurityManualCheckInPage implements OnInit {
     }
 
     this.apiProvider.VimsAppSecurityCheckIn(params).then(
-      async (val) => {
+      (val) => {
         var result = JSON.parse(val.toString());
         if(result  && result[0].Code == 10){
 
@@ -582,22 +582,27 @@ export class SecurityManualCheckInPage implements OnInit {
         }
         this.apiProvider.showAlert('Server Error');
       },
-      async (err) => {
+      (err) => {
 
         if(err && err.message == "No Internet"){
           return;
         }
-        var message = "Error in server";
-        if(err && err.message.indexOf("Http failure response for") > -1){
-          message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-        } else {
-          var result = JSON.parse(err.toString());
-          if(result  && result["Table"] != undefined){
-            message = result["Table"][0].description? result["Table"][0].description : result["Table"][0].Description;
-          }else if(result  && result["Table1"] != undefined){
-            message = result["Table1"][0].Status? result["Table1"][0].Status : result["Table1"][0].Description;
+        try {
+          var message = "Error in server";
+          if(err && err.message && err.message.indexOf("Http failure response for") > -1){
+            message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+          } else {
+            var result = JSON.parse(err);
+            if(result  && result["Table"] != undefined){
+              message = result["Table"][0].description? result["Table"][0].description : result["Table"][0].Description;
+            }else if(result  && result["Table1"] != undefined){
+              message = result["Table1"][0].Status? result["Table1"][0].Status : result["Table1"][0].Description;
+            }
           }
+        } catch (error) {
+
         }
+
         if(err.message){
           message = err.message;
         }
