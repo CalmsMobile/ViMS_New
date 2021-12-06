@@ -360,44 +360,44 @@ export class AddAppointmentStep2Page implements OnInit {
   }
 
   loadMasterData(){
-    var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
-    if(masterDetails){
-      this.VM.AVAIL_ROOMS = JSON.parse(masterDetails).Table8;
-      this.VM.AVAIL_FLOOR = JSON.parse(masterDetails).Table2;
-      var newFloors = [];
-      for (var i = 0; i <= this.VM.AVAIL_FLOOR.length - 1; i++) {
-        var duplicate = false;
-        for(var j = newFloors.length - 1; j >= 0; j--){
-            if(this.VM.AVAIL_FLOOR[i].floor_id == newFloors[j].floor_id){
-              duplicate = true;
-              break;
-            }
-        }
-        if(!duplicate){
-          newFloors.push(this.VM.AVAIL_FLOOR[i]);
-        }
+    const brchmasterDetails = localStorage.getItem(AppSettings.LOCAL_STORAGE.BRANCH_MASTER_DETAILS);
+    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
 
-      }
-      //console.log(JSON.stringify(newFloors));
-      this.VM.AVAIL_FLOOR = newFloors;
-
-      this.VM.AVAIL_REASONS = JSON.parse(masterDetails).Table3;
+    const masterDetails = localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+    if (masterDetails){
+      const reasons = JSON.parse(masterDetails).Table3;
       var neePurpose = [];
-      for (var i1 = 0; i1 <= this.VM.AVAIL_REASONS.length - 1; i1++) {
-        duplicate = false;
+      for (var i1 = 0; i1 <= reasons.length - 1; i1++) {
+        let duplicate = false;
         for(var j1 = neePurpose.length - 1; j1 >= 0; j1--){
-            if(this.VM.AVAIL_REASONS[i1].visitpurpose_id == neePurpose[j1].visitpurpose_id){
+            if(reasons[i1].visitpurpose_id == neePurpose[j1].visitpurpose_id){
               duplicate = true;
               break;
             }
         }
         if(!duplicate){
-          neePurpose.push(this.VM.AVAIL_REASONS[i1]);
+          neePurpose.push(reasons[i1]);
+        }
+      }
+      this.VM.AVAIL_REASONS = neePurpose;
+    }
+    if(brchmasterDetails){
+      let floorList = [];
+      const host = JSON.parse(brchmasterDetails).Table;
+      this.VM.AVAIL_ROOMS = JSON.parse(brchmasterDetails).Table1;
+      let floors = '';
+      host.forEach(element => {
+        if (floors.indexOf(element.HostFloor) === -1) {
+          floors = floors? floors + ',' + element.HostFloor: element.HostFloor;
+          floorList.push({
+            floor_id: element.HostFloor,
+            floor_desc: element.HostFloor
+          });
         }
 
-      }
-      // console.log(JSON.stringify(neePurpose));
-      this.VM.AVAIL_REASONS = neePurpose;
+      });
+
+      this.VM.AVAIL_FLOOR = floorList;
 
       setTimeout(() => {
         if(this.VM.appointment&& this.VM.appointment[0]){
@@ -406,6 +406,47 @@ export class AddAppointmentStep2Page implements OnInit {
           this.addAppointmentModel.Floor = this.VM.appointment[0].Floor;
         }
       }, 100);
+    } else {
+      let branchId = '';
+      if(hostData && JSON.parse(hostData)){
+        branchId = JSON.parse(hostData).BRANCH_ID;
+      }
+      const data = {
+        "SEQ_ID":branchId
+      }
+      this.apiProvider.requestApi(data, '/api/vims/GetBranchHostData', false, false, '').then(
+        (val: any) => {
+          var result = val;
+          if(result){
+            let floorList = [];
+            const host = JSON.parse(result).Table;
+            this.VM.AVAIL_ROOMS = JSON.parse(result).Table1;
+            let floors = '';
+            host.forEach(element => {
+              if (floors.indexOf(element.HostFloor) === -1) {
+                floors = floors? floors + ',' + element.HostFloor: element.HostFloor;
+                floorList.push({
+                  floor_id: element.HostFloor,
+                  floor_desc: element.HostFloor
+                });
+              }
+
+            });
+
+            this.VM.AVAIL_FLOOR = floorList;
+            window.localStorage.setItem(AppSettings.LOCAL_STORAGE.BRANCH_MASTER_DETAILS, result);
+
+
+            if(this.VM.appointment && this.VM.appointment[0]){
+              this.addAppointmentModel.Room = this.VM.appointment[0].Room;
+              this.addAppointmentModel.REASON = this.VM.appointment[0].REASON;
+              this.addAppointmentModel.Floor = this.VM.appointment[0].Floor;
+            }
+          }
+        },
+        (err) => {
+        }
+      );
     }
   }
 

@@ -231,6 +231,7 @@ export const AppSettings = Object.freeze({
     API_ViDEO_PATH : "http://124.217.235.107:1021/FS/",
     LOCAL_STORAGE: {
         "MASTER_DETAILS": "MasterDetails",
+        "BRANCH_MASTER_DETAILS": "BranchMasterDetails",
         "HOST_DETAILS": "HostDetails",
         "HOST_PROFILE_DETAILS": "CALMS_HostProfileDetails",
         "COMPANY_DETAILS": "CompanyDetails",

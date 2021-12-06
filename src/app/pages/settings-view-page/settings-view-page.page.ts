@@ -308,6 +308,27 @@ export class SettingsViewPagePage implements OnInit {
   ngOnInit() {
   }
 
+  getBranchMasterdetails(){
+    const hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    let branchId = '';
+    if(hostData && JSON.parse(hostData)){
+      branchId = JSON.parse(hostData).BRANCH_ID;
+    }
+    const data = {
+      "SEQ_ID":branchId
+    }
+    this.apiProvider.requestApi(data, '/api/vims/GetBranchHostData', false, false, '').then(
+      (val: any) => {
+        var result = val;
+        if(result){
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.BRANCH_MASTER_DETAILS, result);
+        }
+      },
+      (err) => {
+      }
+    );
+  }
+
   getMasterdetails(){
     this.apiProvider.GetMasterDetails().then(
       (result: any) => {
@@ -524,6 +545,7 @@ export class SettingsViewPagePage implements OnInit {
                 if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.TAMS) > -1) {
                   this.getMasterdetails();
                   this.getSettingsForTams();
+                  this.getMySchedules();
                   this.getMyAttendanceWhitelistedLocations();
                 } else if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
                   this.getMasterdetails();
@@ -533,6 +555,7 @@ export class SettingsViewPagePage implements OnInit {
 
                 if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
                   this.getUserProfile();
+                  this.getBranchMasterdetails();
                 }
                 let showAlert = true;
                 if (result && result.Table3 && result.Table3.length > 0 && result.Table3[0].MAppId) {
