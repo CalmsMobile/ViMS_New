@@ -19,6 +19,7 @@ export class HomeTAMSPage implements OnInit {
   hostObj: any = {
 
   };
+  lastNotification: any = '';
   QRObj1: any;
   isNotificationClicked = false;
   notificationCount = 0;
@@ -494,7 +495,8 @@ initializeFirebaseIOS() {
         //alert("Cuent Page: " + this.currentPage);
         if (crntClass.currentPage == "notifications"){
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "0");
-        }else if (crntClass.currentPage != "Admin"){
+        }else if (crntClass.currentPage != "Admin" && this.lastNotification !== response.body){
+          this.lastNotification = response.body;
           var noti = new Date();
           crntClass.localNotifications.schedule({
              id:noti.getTime(),

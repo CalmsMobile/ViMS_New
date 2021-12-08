@@ -43,7 +43,7 @@ export class HomeViewPage implements OnInit {
     {"bg":"#8E24AA","title":"Settings","root":"tab5Root" ,"icon":"siva-icon-sliders", "component":"settings-view-page"},
     {"bg":"#8E24AA","title":"Admin","root":"tab6Root" ,"icon":"siva-icon-sliders", "component":"admin-login"}
   ];
-
+  lastNotification: any = '';
   currentPage = "home-view";
   appType = '';
   showFab = true;
@@ -342,7 +342,8 @@ initializeFirebaseIOS() {
         //alert("Cuent Page: " + this.currentPage);
         if (crntClass.currentPage == "notifications"){
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "0");
-        }else if (crntClass.currentPage != "Admin"){
+        }else if (crntClass.currentPage != "Admin" && this.lastNotification !== response.body){
+          this.lastNotification = response.body;
           var noti = new Date();
           crntClass.localNotifications.schedule({
              id:noti.getTime(),

@@ -39,6 +39,7 @@ export class TAMSHomePage implements OnInit {
     {"bg":"#8E24AA","title":"Settings","root":"tab5Root" ,"icon":"siva-icon-sliders", "component":"tamsmyattendancelocation"},
     {"bg":"#8E24AA","title":"Admin","root":"tab6Root" ,"icon":"siva-icon-sliders", "component":"tamsmyattendancelogs"}
   ];
+  lastNotification:any = '';
   notificationCount = 0;
   currentPage = "tamshome";
   appType = '';
@@ -478,7 +479,8 @@ initializeFirebaseIOS() {
         //alert("Cuent Page: " + this.currentPage);
         if (crntClass.currentPage == "notifications"){
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "0");
-        }else if (crntClass.currentPage != "Admin"){
+        }else if (crntClass.currentPage != "Admin" && this.lastNotification !== response.body){
+          this.lastNotification = response.body;
           var noti = new Date();
           crntClass.localNotifications.schedule({
              id:noti.getTime(),
