@@ -233,6 +233,7 @@ export const AppSettings = Object.freeze({
         "MASTER_DETAILS": "MasterDetails",
         "BRANCH_MASTER_DETAILS": "BranchMasterDetails",
         "HOST_DETAILS": "HostDetails",
+        "SUBSCRIPE_DATA": "CALMS_HOST_SUBSCRIPE_DATA",
         "HOST_PROFILE_DETAILS": "CALMS_HostProfileDetails",
         "COMPANY_DETAILS": "CompanyDetails",
         "ACK_DETAILS": "AckDetails",

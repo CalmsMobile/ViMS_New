@@ -39,9 +39,7 @@
   <ion-card class="card_appointment" style="width: 98%;"
     no-padding no-border  *ngIf="myAttendanceListClone.length > 0" >
 
-    <ion-item lines="none" style="--inner-padding-end: 0px;margin-bottom: 7px; box-shadow: 2px 2px 0px #aaaaaa;
-    border: 1px solid #BFBFBF;
-    background-color: white;    --border-radius: 5px;" class="ion-no-padding" *ngFor="let item of myAttendanceListClone">
+    <ion-item lines="none" class="ion-no-padding cardDes" *ngFor="let item of myAttendanceListClone">
       <ion-row lines="none" no-padding full-width>
         <ion-col size="3" class="col apt-left" no-padding>
           <ion-row style="height: 100%;">
@@ -82,22 +80,22 @@
         <ion-col size="6" style="padding-bottom: 0px;">
           <div class="div-apt-center">
             <ion-icon slot="start" name="layers-outline" color="dark" class="apt-text-icons"></ion-icon>
-            <p class="apt-center-title">{{item.ShiftName? item.ShiftName: '&nbsp;&nbsp;--'}}</p>
+            <ion-label class="apt-center-title">{{item.ShiftName? item.ShiftName: '&nbsp;&nbsp;--'}}</ion-label>
           </div>
 
           <div class="div-apt-center">
             <ion-icon slot="start" name="hourglass-outline" color="dark" class="apt-text-icons"></ion-icon>
-            <p class="apt-center-subtitle">Schedule Hours ({{item.TotalRequiredHours? (item.TotalRequiredHours | number:'1.2-2'): '&nbsp;&nbsp;--'}})</p>
+            <ion-label class="apt-center-subtitle">Schedule Hours ({{item.TotalRequiredHours? (item.TotalRequiredHours | number:'1.2-2'): '&nbsp;&nbsp;--'}})</ion-label>
           </div>
 
           <div class="div-apt-center">
             <ion-icon slot="start" name="stopwatch-outline" color="dark" class="apt-text-icons"></ion-icon>
-            <p class="apt-center-subtitle">Actual Hours ({{item.TotalWorkHours ? (item.TotalWorkHours | number:'1.2-2'): '&nbsp;&nbsp;--'}})</p>
+            <ion-label class="apt-center-subtitle">Actual Hours ({{item.TotalWorkHours ? (item.TotalWorkHours | number:'1.2-2'): '&nbsp;&nbsp;--'}})</ion-label>
           </div>
 
           <div class="div-apt-center">
             <ion-icon slot="start" name="calendar-number-outline" color="dark" class="apt-text-icons"></ion-icon>
-            <p class="apt-center-subtitle">{{item.ScheduleDate ? (item.ScheduleDate | date: 'dd MMM yyyy'): '&nbsp;&nbsp;--'}}</p>
+            <ion-label class="apt-center-subtitle">{{item.ScheduleDate ? (item.ScheduleDate | date: 'dd MMM yyyy'): '&nbsp;&nbsp;--'}}</ion-label>
           </div>
         </ion-col>
 

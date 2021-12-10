@@ -740,6 +740,11 @@ ionViewDidEnter() {
               dublicate = true;
               return;
             }
+          } else {
+            if (element.VISITOR_NAME && element.VISITOR_NAME.toLowerCase() === this.visitorInfoModal.visitor_name.toLowerCase()) {
+              dublicate = true;
+              return;
+            }
           }
         }
       });

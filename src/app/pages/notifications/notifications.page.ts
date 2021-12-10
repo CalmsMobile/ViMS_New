@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite/ngx';
 import { NavController, AlertController, ToastController, Platform, IonItemSliding, IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
@@ -16,7 +17,7 @@ import { EventsService } from 'src/app/services/EventsService';
 export class NotificationsPage implements OnInit {
 
   @ViewChild(IonContent)	content:IonContent;
-
+  recentLoadedList = [];
   VM = {
     "act_segment":"all",
 		"notificationList":[],
@@ -33,6 +34,7 @@ export class NotificationsPage implements OnInit {
 	selectedTap = 'general';
 	db : SQLiteObject = null;
 	isFetching = false;
+  lastRecievedMessage = '';
 	T_SVC:any;
 	imageURLType = '01&RefType=VP&Refresh='+ new Date().getTime();
 	loadingFinished = false;
@@ -51,6 +53,8 @@ export class NotificationsPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
 		private sqlite: SQLite,
+    private ngzone: NgZone,
+    private fcm: FCM,
 		private platform : Platform,
 		private localNotifications : LocalNotifications,
     private translate:TranslateService) {
@@ -133,20 +137,48 @@ export class NotificationsPage implements OnInit {
 				// alert("Scheduling notification");
 
 			});
+      this.subscribeToPushNotifications();
 		}
-		events.observeDataCompany().subscribe((data1:any) => {
-      if (data1.action === 'NotificationReceived' && !this.isFetching) {
-        this.isFetching = true;
-        console.log("Notification Received: " + data1.title);
-        this.OffSet = 0;
-        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "0");
-        this.getAppointmentHistory(null, false);
-      }
-      //"NotificationReceived", data => {
-
-		});
 
 	}
+
+  subscribeToPushNotifications() {
+    this.fcm.onNotification().subscribe((response) => {
+      this.onMessageReceived(response);
+    });
+
+  }
+
+  onMessageReceived(response) {
+    console.log(JSON.stringify(response));
+      var typeOfNotification = "Visitor"
+      if (response.push_type != undefined && response.push_type === "10") {
+        typeOfNotification = "General"
+      }
+      var count = 0;
+      var notificationCount = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT);
+      if(notificationCount){
+        count = parseInt(notificationCount);
+      }
+      window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, ""+(count+1));
+
+      if(response.tap || response.wasTapped){
+      } else {
+        this.processNotification(this, response.body);
+      }
+  }
+
+  processNotification(cClass, message) {
+    console.log("lastRecievedMessage: " + cClass.lastRecievedMessage);
+      console.log("Notification Received: " + message);
+      if (!cClass.isFetching && cClass.lastRecievedMessage !== message) {
+        cClass.lastRecievedMessage = message;
+        cClass.isFetching = true;
+        cClass.OffSet = 0;
+        window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "0");
+        cClass.getAppointmentHistory(null, false);
+      }
+  }
 	onPageScroll(event) {
 		console.log(event.target.scrollTop);
 	}
@@ -309,7 +341,7 @@ export class NotificationsPage implements OnInit {
               this.OffSet = this.OffSet + aList.length;
               this.showNotification(this.selectedTap);
               this.loadingFinished = true;
-            }else{
+            } else {
               this.VM.notificationList = [];
               var currentClass = this;
               var show = false;
@@ -332,7 +364,6 @@ export class NotificationsPage implements OnInit {
                 }
               }
             }
-
             this.apiProvider.dismissLoading();
           } catch (error) {
 

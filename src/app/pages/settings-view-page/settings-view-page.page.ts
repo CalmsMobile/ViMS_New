@@ -254,11 +254,15 @@ export class SettingsViewPagePage implements OnInit {
                       this.navCtrl.navigateRoot('login');
                     } else {
                       this.apiProvider.showToast(t['SETTINGS.UNREGISTER_ACCOUNT_SCUSS']);
+                      const subscripeData = localStorage.getItem(AppSettings.LOCAL_STORAGE.SUBSCRIPE_DATA);
                       localStorage.clear();
+                      if (subscripeData){
+                        localStorage.setItem(AppSettings.LOCAL_STORAGE.SUBSCRIPE_DATA, subscripeData);
+                      }
                       this.navCtrl.navigateRoot('account-mapping');
                     }
                   },
-                  async (err) => {
+                  (err) => {
                     if(err && err.message == "No Internet"){
                       return;
                     }
@@ -288,7 +292,11 @@ export class SettingsViewPagePage implements OnInit {
                 );
               } else {
                 this.toastCtrl.create(t['SETTINGS.EXIT_ACCOUNT_SCUSS']);
+                const subscripeData = localStorage.getItem(AppSettings.LOCAL_STORAGE.SUBSCRIPE_DATA);
                 localStorage.clear();
+                if (subscripeData){
+                  localStorage.setItem(AppSettings.LOCAL_STORAGE.SUBSCRIPE_DATA, subscripeData);
+                }
                 this.navCtrl.navigateRoot("account-mapping");
               }
             }

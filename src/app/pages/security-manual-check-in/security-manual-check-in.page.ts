@@ -29,6 +29,13 @@ export class SecurityManualCheckInPage implements OnInit {
     "coverImage": "assets/images/profile_bg.jpg",
     "profile": ""
   };
+  disableEmail = false;
+  disableTELEPHONE_NO = false;
+  disableCategory = false;
+  disableHost_IC = false;
+  disableREASON = false;
+  disableFloor = false;
+  disableMEETING_LOCATION = false;
   visitor_RemoveImg = true;
   appSettings: any = {};
   appointmentInfo: any = {};
@@ -115,10 +122,42 @@ export class SecurityManualCheckInPage implements OnInit {
         const passData = this.router.getCurrentNavigation().extras.state.passData;
         if (passData && passData.PreAppointment) {
           this.preAppointmentInfo = passData.PreAppointment;
+          if (this.preAppointmentInfo && this.preAppointmentInfo.EMAIL && this.preAppointmentInfo.EMAIL.length > 0){
+            this.disableEmail = true;
+          }
+          if (this.preAppointmentInfo && this.preAppointmentInfo.TELEPHONE_NO){
+            this.disableTELEPHONE_NO = true;
+          }
+
+          if (this.preAppointmentInfo && this.preAppointmentInfo.VisitorCategory){
+            this.disableCategory = true;
+          }
+
+          if (this.preAppointmentInfo && this.preAppointmentInfo.Host_IC){
+            this.disableHost_IC = true;
+          }
+
+          if (this.preAppointmentInfo && this.preAppointmentInfo.REASON){
+            this.disableREASON = true;
+          }
+
+          if (this.preAppointmentInfo && this.preAppointmentInfo.Floor){
+            this.disableFloor = true;
+          }
+          if (this.preAppointmentInfo && this.preAppointmentInfo.MEETING_LOCATION){
+            this.preAppointmentInfo.MEETING_LOCATION = +this.preAppointmentInfo.MEETING_LOCATION;
+            this.disableMEETING_LOCATION = true;
+          }
+
+          if (this.preAppointmentInfo && this.preAppointmentInfo.TELEPHONE_NO){
+            this.disableTELEPHONE_NO = true;
+          }
+
           this.appointmentInfo = passData.PreAppointment;
           if (this.appointmentInfo.Host_IC){
             this.appointmentInfo.STAFF_IC = this.appointmentInfo.Host_IC;
           }
+
           if (this.appointmentInfo.STAFF_IC){
             this.preAppointmentInfo.Host_IC = this.appointmentInfo.STAFF_IC;
             this.appointmentInfo.Host_IC = this.appointmentInfo.STAFF_IC;
@@ -150,10 +189,14 @@ export class SecurityManualCheckInPage implements OnInit {
           } else if (this.appointmentInfo.visitor_comp_code) {
             this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, true);
             this.appointmentInfo.VISITOR_COMPANY =  this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, false);
+            this.appointmentInfo.visitor_comp_name = this.appointmentInfo.VISITOR_COMPANY;
+          }
+          if(this.appointmentInfo.MEETING_LOCATION){
+            this.appointmentInfo.MEETING_LOCATION = +this.appointmentInfo.MEETING_LOCATION;
           }
 
           const comapnyCode = this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: (this.appointmentInfo.VISITOR_COMPANY? this.appointmentInfo.VISITOR_COMPANY: this.appointmentInfo.VisitorCompany);
-          const companyExist = this.commonUtil.companyExist(comapnyCode, false);
+          const companyExist = this.commonUtil.companyExist(comapnyCode, true);
           if (!companyExist){
             this.getSecurityMasterdetails();
           }
@@ -199,7 +242,7 @@ export class SecurityManualCheckInPage implements OnInit {
         if(result){
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS,JSON.stringify(result));
           const comapnyCode = this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: (this.appointmentInfo.VISITOR_COMPANY? this.appointmentInfo.VISITOR_COMPANY: this.appointmentInfo.VisitorCompany);
-          const companyExist = this.commonUtil.companyExist(comapnyCode, false);
+          const companyExist = this.commonUtil.companyExist(comapnyCode, true);
           if (companyExist){
             this.appointmentInfo.VISITOR_COMPANY = this.commonUtil.getCompany(comapnyCode, false);
             this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(comapnyCode, true);
@@ -432,10 +475,13 @@ export class SecurityManualCheckInPage implements OnInit {
               this.appointmentInfo.VISITOR_COUNTRY = visitorData.visitor_country;
               this.appointmentInfo.PLATE_NUM = visitorData.PLATE_NUM;
               const comapnyCode = this.appointmentInfo.visitor_comp_code? this.appointmentInfo.visitor_comp_code: (this.appointmentInfo.VISITOR_COMPANY? this.appointmentInfo.VISITOR_COMPANY: this.appointmentInfo.VisitorCompany);
-              const companyExist = this.commonUtil.companyExist(comapnyCode, false);
-              if (!companyExist){
-                this.getSecurityMasterdetails();
+              if (comapnyCode){
+                const companyExist = this.commonUtil.companyExist(comapnyCode, true);
+                if (!companyExist){
+                  this.getSecurityMasterdetails();
+                }
               }
+
             }
 
           }

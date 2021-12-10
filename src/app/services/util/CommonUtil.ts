@@ -140,7 +140,7 @@ export class CommonUtil{
     if(masterDetails){
       const REASONS = JSON.parse(masterDetails).Table3;
       for (var i = 0; i <= REASONS.length - 1; i++) {
-        if(REASONS[i].visitpurpose_id === code || REASONS[i].visitpurpose_desc === code){
+        if((REASONS[i].visitpurpose_id+'') === (code+'') || (REASONS[i].visitpurpose_desc+'') === (code+'')){
           if (isReturnID) {
             result = REASONS[i].visitpurpose_id;
           } else {
@@ -177,7 +177,7 @@ export class CommonUtil{
     if(masterDetails){
       const COMPANY_LIST = JSON.parse(masterDetails).Table7;
       for (var i = 0; i < COMPANY_LIST.length; i++) {
-        if(COMPANY_LIST[i].visitor_comp_code === code || COMPANY_LIST[i].visitor_comp_name === code){
+        if((COMPANY_LIST[i].visitor_comp_code + '') === (code+'') || (COMPANY_LIST[i].visitor_comp_name+'') === (code+'')){
           result = isReturnID ? COMPANY_LIST[i].visitor_comp_code : COMPANY_LIST[i].visitor_comp_name;
           break;
         }
@@ -195,7 +195,7 @@ export class CommonUtil{
     if(masterDetails){
       const COMPANY_LIST = JSON.parse(masterDetails).Table7;
       for (var i = 0; i < COMPANY_LIST.length; i++) {
-        if(COMPANY_LIST[i].visitor_comp_code === code || COMPANY_LIST[i].visitor_comp_name === code){
+        if((COMPANY_LIST[i].visitor_comp_code + '') === (code+'') || (COMPANY_LIST[i].visitor_comp_name+'') === (code+'')){
           result = isReturnID ? COMPANY_LIST[i].visitor_comp_code : COMPANY_LIST[i].visitor_comp_name;
           break;
         }

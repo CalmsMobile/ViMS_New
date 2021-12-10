@@ -224,6 +224,8 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
                   if (!visi) {
                     this.contactsarray.push(element);
                   }
+                } else {
+                  this.contactsarray.push(element);
                 }
               }
 

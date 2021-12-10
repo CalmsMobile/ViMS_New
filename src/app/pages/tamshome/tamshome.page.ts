@@ -473,7 +473,7 @@ initializeFirebaseIOS() {
           crntClass.events.publishDataCompany({
             action: "NotificationReceived",
             title: typeOfNotification,
-            message: ''
+            message: response.body
           });
           // let view = this.navCtrl.getActive();
         //alert("Cuent Page: " + this.currentPage);

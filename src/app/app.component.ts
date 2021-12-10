@@ -129,7 +129,7 @@ export class AppComponent {
       this.statusBar.styleDefault();
 
       document.body.classList.toggle('dark', false);
-
+      localStorage.setItem(AppSettings.LOCAL_STORAGE.SUBSCRIPE_DATA, '');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
       // Listen for changes to the prefers-color-scheme media query

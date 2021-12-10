@@ -47,7 +47,7 @@
                     <ion-icon name="mail-sharp" class="bDets"></ion-icon>
                     <input maxlength="100" type="text" (input)="onInputChange($event, 'Email')" [(ngModel)]="appointmentInfo.EMAIL"
                     placeholder="{{appSettings.addVisitor.EmailLable}}"
-                    [disabled]="preAppointmentInfo.EMAIL"
+                    [disabled]="disableEmail"
                     [ngStyle]="{'border-left': appSettings.addVisitor.showEmailError? '3px solid red': ''}"/>
                   </ion-col>
                 </ion-row>
@@ -56,7 +56,7 @@
                     <ion-icon name="phone-portrait-sharp" class="bDets"></ion-icon>
                     <input maxlength="20" type="number" (input)="onInputChange($event, 'Contact')" [(ngModel)]="appointmentInfo.TELEPHONE_NO"
                     placeholder="{{appSettings.addVisitor.ContactNumberLable}}"
-                    [disabled]="preAppointmentInfo.TELEPHONE_NO"
+                    [disabled]="disableTELEPHONE_NO"
                     [ngStyle]="{'border-left': appSettings.addVisitor.showPhoneNumberError? '3px solid red': ''}"/>
                   </ion-col>
                 </ion-row>
@@ -89,9 +89,9 @@
             <ion-col size="8" class="classCol">
               <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Category')" [(ngModel)]="appointmentInfo.VisitorCategory"
-              interface="action-sheet" [disabled]="false"
+              interface="action-sheet"
               placeholder="{{appSettings.addVisitor.CategoryLable}}"
-              [disabled]="preAppointmentInfo.VisitorCategory"
+              [disabled]="disableCategory"
               [ngStyle]="{'border-left': appSettings.addVisitor.showCategoryError? '3px solid red': ''}">
               <ion-label position="stacked">{{appSettings.addVisitor.CategoryLable}}</ion-label>
               <ion-select-option text-left *ngFor="let avl_reason of CATEGORYLIST"
@@ -108,7 +108,7 @@
             <ion-col size="8" class="classCol">
               <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Gender')" [(ngModel)]="appointmentInfo.VISITOR_GENDER"
-              interface="action-sheet" [disabled]="false"
+              interface="action-sheet"
               placeholder="{{appSettings.addVisitor.GenderLable}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showGenderError? '3px solid red': ''}">
               <ion-label position="stacked">{{appSettings.addVisitor.GenderLable}}</ion-label>
@@ -127,7 +127,7 @@
               <!-- <input type="text" mode="ios" (ngModelChange)="onChangeInput($event, 'country')" class="inputCountry" [(ngModel)]="appointmentInfo.VISITOR_COUNTRY" placeholder="{{'ADD_VISITORS.LAB_COUNTRY' | translate}}"/> -->
               <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Country')" [(ngModel)]="appointmentInfo.VISITOR_COUNTRY"
-              interface="action-sheet" [disabled]="false"
+              interface="action-sheet"
               placeholder="{{appSettings.addVisitor.CountryLable}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showCountryError? '3px solid red': ''}">
               <ion-label position="stacked">{{appSettings.addVisitor.CountryLable}}</ion-label>
@@ -243,7 +243,7 @@
             <ion-item lines="none" class="ion-no-padding box"
               [ngStyle]="{'border-left': appSettings.addVisitor.showHostError? '3px solid red': ''}" no-padding
                   transparent (click)="openStaffSelection()"
-                  [disabled]="preAppointmentInfo.Host_IC">
+                  [disabled]="disableHost_IC">
                   <div>
                     <ion-label *ngIf="!appointmentInfo.HOSTNAME"
                       style="font-size:14px;margin:0px; color: #8e8e93 !important;margin-left: 3px !important;    padding: 5px;margin-bottom: 0px !important;">
@@ -264,7 +264,7 @@
                <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Purpose')" [(ngModel)]="appointmentInfo.REASON"
               interface="action-sheet"
-              [disabled]="preAppointmentInfo.REASON"
+              [disabled]="disableREASON"
               placeholder="{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showPurposeError? '3px solid red': ''}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_PURPOSE' | translate}}</ion-label>
@@ -282,7 +282,7 @@
             <ion-col size="8" class="classCol">
               <ion-select mode="ios" (ionChange)="onSelectChange($event, 'Floor')" [(ngModel)]="appointmentInfo.Floor"
               interface="action-sheet"
-              [disabled]="preAppointmentInfo.Floor"
+              [disabled]="disableFloor"
               placeholder="{{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showFloorError? '3px solid red': ''}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_FLOOR' | translate}}</ion-label>
@@ -301,12 +301,12 @@
               <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Room')" [(ngModel)]="appointmentInfo.MEETING_LOCATION"
               interface="action-sheet"
-              [disabled]="preAppointmentInfo.MEETING_LOCATION"
+              [disabled]="disableMEETING_LOCATION"
               placeholder="{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showRoomError? '3px solid red': ''}">
               <ion-label position="stacked">{{'ADD_APPOIN.STEP2.LAB_ROOM' | translate}}</ion-label>
               <ion-select-option text-left *ngFor="let meeting of MEETINGLIST"
-                [value]="meeting.MeetingRoomSeqId + ''">
+                [value]="meeting.MeetingRoomSeqId">
                 {{meeting.MeetingRoomDesc}}
               </ion-select-option>
             </ion-select>

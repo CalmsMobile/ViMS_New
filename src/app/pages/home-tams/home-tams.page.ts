@@ -432,7 +432,7 @@ initializeFirebaseIOS() {
   }catch(e){
     console.log('FCM error:' + e);
   }
-
+  this.subscribeToPushNotifications();
   }
   subscribeToPushNotifications() {
     this.fcm.onNotification().subscribe((response) => {
@@ -483,13 +483,13 @@ initializeFirebaseIOS() {
 
         //Received while app in background (this should be the callback when a system notification is tapped)
         //This is empty for our app since we just needed the notification to open the app
-      }else{
+      } else{
         var crntClass = this;
         this._zone.run(() => {
           crntClass.events.publishDataCompany({
             action: "NotificationReceived",
             title: typeOfNotification,
-            message: ''
+            message: response.body
           });
           // let view = this.navCtrl.getActive();
         //alert("Cuent Page: " + this.currentPage);

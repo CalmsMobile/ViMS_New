@@ -120,12 +120,21 @@ export class VisitorInformationPage implements OnInit {
           const visitor_address_1 = this.appointmentInfo.visitor_address_1;
           const att_visitor_company_id =  this.appointmentInfo.att_visitor_company_id;
           const VisitorCompany = this.appointmentInfo.VisitorCompany;
+          const purpose = this.appointmentInfo.att_reason;
+          const MEETING_LOCATION = this.appointmentInfo.MEETING_LOCATION;
 
           this.appointmentInfo = vOb;
+          if (purpose){
+            this.appointmentInfo.REASON = purpose;
+          }
+          if (MEETING_LOCATION){
+            this.appointmentInfo.MEETING_LOCATION = MEETING_LOCATION;
+            this.appointmentInfo.Room = MEETING_LOCATION;
+          }
           if (visitor_name){
             this.appointmentInfo.VISITOR_NAME = visitor_name;
           }
-          if (visitor_gender){
+          if (visitor_gender != null && visitor_gender !== ''){
             this.appointmentInfo.VISITOR_GENDER = visitor_gender;
           }
           if (visitor_country){
@@ -293,6 +302,7 @@ export class VisitorInformationPage implements OnInit {
     }
     this.appointmentInfo.REASON_NAME = this.commonUtil.getPurposeCode(this.appointmentInfo.REASON, false);
     this.appointmentInfo.VISITOR_GENDER_NAME = this.commonUtil.getGender(this.appointmentInfo.VISITOR_GENDER? this.appointmentInfo.VISITOR_GENDER : this.appointmentInfo.visitor_gender, false);
+    this.appointmentInfo.visitor_gender = this.appointmentInfo.VISITOR_GENDER_NAME;
     this.appointmentInfo.visitor_ctg_desc = this.commonUtil.getCategory(this.appointmentInfo.VisitorCategory? this.appointmentInfo.VisitorCategory: this.appointmentInfo.att_visitor_ctg_id, false);
     this.appointmentInfo.FloorName = this.commonUtil.getFloor(this.appointmentInfo.Floor?this.appointmentInfo.Floor: this.appointmentInfo.att_floor_no, false);
     this.appointmentInfo.RoomName = this.commonUtil.getRoomName(this.appointmentInfo.Room?this.appointmentInfo.Room: this.appointmentInfo.MEETING_LOCATION, false);
