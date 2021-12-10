@@ -10,6 +10,7 @@ import { EventsService } from 'src/app/services/EventsService';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { ThemeSwitcherService } from 'src/app/services/ThemeSwitcherService';
 import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
+import { EventsServiceNotification } from 'src/app/services/EventsServiceNotification';
 @Component({
   selector: 'app-home-tams',
   templateUrl: './home-tams.page.html',
@@ -34,6 +35,7 @@ export class HomeTAMSPage implements OnInit {
   isAdmin = false;
   constructor(public navCtrl: NavController,
     private events : EventsService,
+    private eventsNotification : EventsServiceNotification,
     private router: Router,
     public menu: MenuController,
     private platform : Platform,
@@ -491,6 +493,12 @@ initializeFirebaseIOS() {
             title: typeOfNotification,
             message: response.body
           });
+          crntClass.eventsNotification.publishDataCompany({
+            action: "NotificationReceivedNew",
+            title: typeOfNotification,
+            message: response.body
+          });
+
           // let view = this.navCtrl.getActive();
         //alert("Cuent Page: " + this.currentPage);
         if (crntClass.currentPage == "notifications"){

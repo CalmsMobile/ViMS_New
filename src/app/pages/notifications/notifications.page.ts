@@ -8,6 +8,7 @@ import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
+import { EventsServiceNotification } from 'src/app/services/EventsServiceNotification';
 
 @Component({
   selector: 'app-notifications',
@@ -50,6 +51,7 @@ export class NotificationsPage implements OnInit {
     private toastCtrl:ToastController,
 		public apiProvider: RestProvider,
 		private events : EventsService,
+    private eventsNotification: EventsServiceNotification,
     private router: Router,
     private route: ActivatedRoute,
 		private sqlite: SQLite,
@@ -137,7 +139,17 @@ export class NotificationsPage implements OnInit {
 				// alert("Scheduling notification");
 
 			});
-      this.subscribeToPushNotifications();
+      eventsNotification.observeDataCompany().subscribe((data1:any) => {
+        if (data1.action === 'NotificationReceivedNew' && !this.isFetching) {
+          this.isFetching = true;
+          console.log("Notification Received: " + data1.title);
+          this.OffSet = 0;
+          window.localStorage.setItem(AppSettings.LOCAL_STORAGE.NOTIFICATION_COUNT, "0");
+          this.getAppointmentHistory(null, false);
+        }
+        //"NotificationReceived", data => {
+
+      });
 		}
 
 	}
@@ -606,12 +618,13 @@ export class NotificationsPage implements OnInit {
 	}
 
 	ionViewWillLeave(){
-    	this.events.publishDataCompany({
-        action: "page",
-        title: "home-view",
-        message: ''
-      });
-  	}
+    this.eventsNotification.clearObserve();
+    this.events.publishDataCompany({
+      action: "page",
+      title: "home-view",
+      message: ''
+    });
+  }
 
   ngOnInit() {
     const hostData = localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);

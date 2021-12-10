@@ -65,6 +65,7 @@ import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@io
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
+import { EventsServiceNotification } from './services/EventsServiceNotification';
 
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent, ToolTipComponent,
@@ -113,6 +114,7 @@ import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx
     SpinnerDialog,
     HTTP,
     EventsService,
+    EventsServiceNotification,
     DecimalPipe,
     Device,
     InAppBrowser,

@@ -9,6 +9,7 @@ import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
+import { EventsServiceNotification } from 'src/app/services/EventsServiceNotification';
 import { ThemeSwitcherService } from 'src/app/services/ThemeSwitcherService';
 
 @Component({
@@ -58,7 +59,9 @@ export class TAMSHomePage implements OnInit {
     private statusBar: StatusBar,
     private dateformat: DateFormatPipe,
     private themeSwitcher: ThemeSwitcherService,
-    public events: EventsService, public apiProvider: RestProvider) {
+    public events: EventsService,
+    private eventsNotification: EventsServiceNotification,
+    public apiProvider: RestProvider) {
     }
 
   ngOnInit() {
@@ -472,6 +475,11 @@ initializeFirebaseIOS() {
         this._zone.run(() => {
           crntClass.events.publishDataCompany({
             action: "NotificationReceived",
+            title: typeOfNotification,
+            message: response.body
+          });
+          crntClass.eventsNotification.publishDataCompany({
+            action: "NotificationReceivedNew",
             title: typeOfNotification,
             message: response.body
           });

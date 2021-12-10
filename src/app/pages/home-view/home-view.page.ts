@@ -9,6 +9,7 @@ import { HostAccessComponent } from 'src/app/components/host-access/host-access.
 import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 import { EventsService } from 'src/app/services/EventsService';
+import { EventsServiceNotification } from 'src/app/services/EventsServiceNotification';
 import { ThemeSwitcherService } from 'src/app/services/ThemeSwitcherService';
 
 @Component({
@@ -64,7 +65,9 @@ export class HomeViewPage implements OnInit {
     private datePipe: DatePipe,
     private statusBar: StatusBar,
     private themeSwitcher: ThemeSwitcherService,
-    public events: EventsService, public apiProvider: RestProvider) {
+    public events: EventsService,
+    private eventsNotification: EventsServiceNotification,
+    public apiProvider: RestProvider) {
   }
 
   updateSettings(){
@@ -335,6 +338,11 @@ initializeFirebaseIOS() {
         this._zone.run(() => {
           crntClass.events.publishDataCompany({
             action: "NotificationReceived",
+            title: typeOfNotification,
+            message: response.body
+          });
+          crntClass.eventsNotification.publishDataCompany({
+            action: "NotificationReceivedNew",
             title: typeOfNotification,
             message: response.body
           });
