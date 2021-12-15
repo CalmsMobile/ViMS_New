@@ -357,6 +357,18 @@ export class SecurityCheckOutPagePage implements OnInit {
               }
               let currentDate;
 
+              if (element.att_check_out_date && element.att_check_out_time) {
+                if (element.att_check_out_date.indexOf('T') > -1){
+                  element.att_check_out_date = element.att_check_out_date.split('T')[0];
+
+                } else if (element.att_check_out_date.indexOf(' ') > -1){
+                  element.att_check_out_date = element.att_check_out_date.split(' ')[0];
+                }
+                element.att_check_out_date = element.att_check_out_date.replace('-', '/');
+                element.att_check_out_date = element.att_check_out_date.replace('-', '/');
+                element.att_check_out_time = element.att_check_out_date + ' ' + (element.att_check_out_time.indexOf('T') > -1 ? element.att_check_out_time.split('T')[1]: element.att_check_out_time.split(' ')[1]);
+              }
+
               if (element.att_check_out_time) {
                 try {
                   element.att_check_out_time = element.att_check_out_time.replace('-', '/');

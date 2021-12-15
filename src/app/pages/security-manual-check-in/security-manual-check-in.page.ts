@@ -582,7 +582,7 @@ export class SecurityManualCheckInPage implements OnInit {
       VISITOR_ADDRESS:this.appointmentInfo.VISITOR_ADDRESS? this.appointmentInfo.VISITOR_ADDRESS: '',
       VisitorCategory:this.appointmentInfo.VisitorCategory? this.appointmentInfo.VisitorCategory: '',
       VisitorCategory_ID: this.appointmentInfo.VisitorCategory? this.appointmentInfo.VisitorCategory: '',
-      VISITOR_GENDER: (this.appointmentInfo.VISITOR_GENDER != null && this.appointmentInfo.VISITOR_GENDER != '')? this.appointmentInfo.VISITOR_GENDER: 0,
+      VISITOR_GENDER: (this.appointmentInfo.VISITOR_GENDER !== null && this.appointmentInfo.VISITOR_GENDER !== '')? this.appointmentInfo.VISITOR_GENDER: '',
       VISITOR_COUNTRY: this.appointmentInfo.VISITOR_COUNTRY? this.appointmentInfo.VISITOR_COUNTRY: '',
       VisitorDesignation: "",
       VISITOR_TEMPERATURE: this.appointmentInfo.att_bodytemperature? this.appointmentInfo.att_bodytemperature: '',
@@ -616,6 +616,8 @@ export class SecurityManualCheckInPage implements OnInit {
       AdditionalDocs: additionDocs,
       Declaration: this.appointmentInfo.declarationList ? JSON.stringify(this.appointmentInfo.declarationList): ''
     }
+
+    console.log('checkin data ->', JSON.stringify(params));
 
     this.apiProvider.VimsAppSecurityCheckIn(params).then(
       (val) => {

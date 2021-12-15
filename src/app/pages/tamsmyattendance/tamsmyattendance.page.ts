@@ -111,12 +111,12 @@ export class TamsmyattendancePage implements OnInit {
         }
         this.isFetching = false;
         this.myAttendanceList.forEach(item => {
-          if (item.TotalRequiredHours < 10) {
-            item.TotalRequiredHours = '0'+ item.TotalRequiredHours;
-          }
-          if (item.TotalWorkHours < 10) {
-            item.TotalRequiredHours = '0'+ item.TotalWorkHours;
-          }
+          // if (item.TotalRequiredHours < 10) {
+          //   item.TotalRequiredHours = '0'+ item.TotalRequiredHours;
+          // }
+          // if (item.TotalWorkHours < 10) {
+          //   item.TotalRequiredHours = '0'+ item.TotalWorkHours;
+          // }
           const schduleDate = this.dateformat.transform(item.ScheduleDate, "yyyy-MM-dd");
           if (item.actualClockinTime && item.fromTime) {
             const fromTime = this.dateformat.transform(item.fromTime+ '', "yyyy-MM-dd HH:mm");
