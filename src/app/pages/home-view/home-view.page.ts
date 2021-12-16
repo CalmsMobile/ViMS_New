@@ -263,21 +263,21 @@ initializeFirebaseIOS() {
         console.log("Has permission!");
         this.fcm.getToken().then(token => {
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-          console.log("Token:" + token);
+          console.log("Token New:" + token);
         });
         this.fcm.onTokenRefresh().subscribe(token => {
           window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-          console.log("Token:" + token);
+          console.log("Token New:" + token);
         });
       }
     });
     this.fcm.getToken().then(token => {
       window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-      console.log("Token:" + token);
+      console.log("Token New:" + token);
     });
     this.fcm.onTokenRefresh().subscribe(token => {
       window.localStorage.setItem(AppSettings.LOCAL_STORAGE.FCM_ID, "" + token);
-      console.log("Token:" + token);
+      console.log("Token New:" + token);
     });
   }catch(e){
     console.log('FCM error:' + e);
