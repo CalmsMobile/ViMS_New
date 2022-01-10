@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova.plugins.vcardtemp" version="0.0.1">
+   <name>VCardTemp</name>
+   <js-module name="VCardTemp" src="www/VCardTemp.js">
+      <clobbers target="cordova.plugins.VCardTemp" />
+   </js-module>
+   <platform name="android">
+      <config-file parent="/*" target="res/xml/config.xml">
+         <feature name="VCardTemp">
+            <param name="android-package" value="cordova.plugins.vcardtemp.VCardTemp" />
+         </feature>
+      </config-file>
+      <config-file parent="/*" target="AndroidManifest.xml" />
+      <source-file src="src/android/CustomProber.java" target-dir="src/cordova/plugins/vcardtemp" />
+      <source-file src="src/android/FsdkCallback.java" target-dir="src/cordova/plugins/vcardtemp" />
+      <source-file src="src/android/FsdkCmd.java" target-dir="src/cordova/plugins/vcardtemp" />
+      <source-file src="src/android/FsdkDefine.java" target-dir="src/cordova/plugins/vcardtemp" />
+      <source-file src="src/android/FsdkHandle.java" target-dir="src/cordova/plugins/vcardtemp" />
+      <source-file src="src/android/FsdkV2.java" target-dir="src/cordova/plugins/vcardtemp" />
+      <source-file src="src/android/VCardTemp.java" target-dir="src/cordova/plugins/vcardtemp" />
+      <lib-file src="src/android/fsdktempv2.aar" />
+   </platform>
+   <platform name="ios">
+      <config-file parent="/*" target="config.xml">
+         <feature name="VCardTemp">
+            <param name="ios-package" value="VCardTemp" />
+         </feature>
+      </config-file>
+      <source-file src="src/ios/VCardTemp.m" />
+   </platform>
+</plugin>

@@ -316,6 +316,6 @@
       </div>
     </div>
     <ion-button color="transparent" *ngIf="appSettings.customStyle && validQRCode" class="btn-grad" [ngStyle]="{'font-size': appSettings.customStyle.buttonStyle.btnTextSize + 'px', 'border-radius': appSettings.customStyle.buttonStyle.btnBorderRadius + 'px', 'color': appSettings.customStyle.buttonStyle.btnTextColor, 'background': 'linear-gradient(to right, ' + this.appSettings.customStyle.buttonStyle.btnColor1
-    +' 0%,'+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%)'}" expand="block" (click)="checkInOutProcess()">{{((this.appointmentInfo.att_check_in === null || this.appointmentInfo.att_check_in === 0) || (this.appointmentInfo.att_check_in === 1 && this.appointmentInfo.att_check_out === 1))? 'Check-In': 'Check-Out'}}</ion-button>
+    +' 0%,'+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%)'}" expand="block" (click)="checkInOutProcess()">{{((this.appointmentInfo.att_check_in === null || this.appointmentInfo.att_check_in === 0) || (this.appointmentInfo.att_check_in === 1 && this.appointmentInfo.att_check_out === 1))? 'Check-In': 'Check-Out'}}<ion-ripple-effect></ion-ripple-effect></ion-button>
   </div>
 </ion-content>

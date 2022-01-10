@@ -1,0 +1,19 @@
+{
+  "name": "cordova.plugins.vcardtemp",
+  "version": "0.0.1",
+  "description": "",
+  "cordova": {
+    "id": "cordova.plugins.vcardtemp",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Vijay",
+  "license": "ISC"
+}

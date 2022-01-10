@@ -15,12 +15,12 @@
 
 <ion-footer transparent style="padding: 7px">
   <ion-row class="yesNoRow">
-    <ion-button shape="round" fill="outline" color="btnthm" class="noBtn" (click)= "pressAnswerBtn(currentQuestionPos, false)">No</ion-button>
-    <ion-button shape="round" color="btnthm" class="yesBtn" (click)= "pressAnswerBtn(currentQuestionPos, true)">Yes</ion-button>
+    <ion-button shape="round" fill="outline" color="btnthm" class="noBtn" (click)= "pressAnswerBtn(currentQuestionPos, false)">No<ion-ripple-effect></ion-ripple-effect></ion-button>
+    <ion-button shape="round" color="btnthm" class="yesBtn" (click)= "pressAnswerBtn(currentQuestionPos, true)">Yes<ion-ripple-effect></ion-ripple-effect></ion-button>
   </ion-row>
   <ion-button shape="round" color="btnthm" (click)="proceedToBackStep()" class="backBtn">
     <ion-icon class="icon siva-icon-left-open"></ion-icon>
     {{'ACC_MAPPING.GO_BACK' | translate}}
-  </ion-button>
+  <ion-ripple-effect></ion-ripple-effect></ion-button>
 
 </ion-footer>

@@ -1,7 +1,7 @@
 
 
   <ion-content class = "icontent">
-    <!-- <ion-button transparent ion-long-press [interval]="1000" style="width:100%;height:90px;background:transparent" (onPressStart)="pressed()" (onPressing)="active()" (onPressEnd)="released()"></ion-button> -->
+    <!-- <ion-button transparent ion-long-press [interval]="1000" style="width:100%;height:90px;background:transparent" (onPressStart)="pressed()" (onPressing)="active()" (onPressEnd)="released()"><ion-ripple-effect></ion-ripple-effect></ion-button> -->
     <button ion-button ion-long-press transparent interval="400"  style="width:100%;height:90px;background:transparent" (pressed)="pressed()" (longPressed)="active()" (pressEnded)="released()"></button>
     <div style="height: 100%; width: 100%; margin-top:-100px; display: flex; justify-content: center; align-items: center;" [ngStyle]="{'background': 'linear-gradient(' + customStyle.WelcomePage.backgroundcolor1 + ', ' + customStyle.WelcomePage.backgroundcolor2 + ') no-repeat center'}">
         <div class="centerColor">
@@ -26,7 +26,7 @@
                   <ion-button scan-qr-code color='light' outline
                   class="myQRCodeImage"
                   (click)="takeActForScanQR()">
-                  </ion-button>
+                  <ion-ripple-effect></ion-ripple-effect></ion-button>
                 </ion-card>
               </ion-col>
               <ion-col size="2" class="OrCol">
@@ -37,7 +37,7 @@
                   <ion-button scan-qr-code color='light' outline
                   class="myHandImage"
                   (click)="takeActForManualEntry()">
-                  </ion-button>
+                  <ion-ripple-effect></ion-ripple-effect></ion-button>
                 </ion-card>
               </ion-col>
           </ion-row>

@@ -88,12 +88,12 @@
             style="margin-left: auto;margin-top:25px; display: block;padding-left: 15px;"
             [disabled]="facilityBooking.invalid">
             {{'ACC_MAPPING.PROCEED' | translate}}
-          </ion-button>
+          <ion-ripple-effect></ion-ripple-effect></ion-button>
           <ion-button (click)="proceedToNextStep()" *ngIf="edit" icon-right shape="round" fill="solid" color="btnthm"
             style="margin-left: auto;margin-top:25px; display: block;padding-left: 15px;"
             [disabled]="facilityBooking.invalid">
             {{'ACC_MAPPING.UPDATE' | translate}}
-          </ion-button>
+          <ion-ripple-effect></ion-ripple-effect></ion-button>
           <!-- </div> -->
         </ion-col>
       </form>

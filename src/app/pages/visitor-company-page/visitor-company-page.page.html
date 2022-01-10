@@ -12,7 +12,7 @@
       <ion-buttons *ngIf= "false" end>
           <ion-button slot="icon-only"  color="btnthm" (click)="goToAddVisitorCompany()">
             <ion-icon name="add"></ion-icon>
-          </ion-button>
+          <ion-ripple-effect></ion-ripple-effect></ion-button>
       </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="primary">
@@ -28,7 +28,7 @@
       <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
           <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
-      <ion-button *ngIf="(VM.companyList.length == 0 && VM.queryText.length > 2)"  color="btnthm" expand="full" (click)="addVisitors()">ADD</ion-button>
+      <ion-button *ngIf="(VM.companyList.length == 0 && VM.queryText.length > 2)"  color="btnthm" expand="full" (click)="addVisitors()">ADD<ion-ripple-effect></ion-ripple-effect></ion-button>
       <ion-radio-group
       (ionChange)="selectCompany($event)" [(ngModel)]="relationship">
           <ion-item *ngFor="let company of VM.companyList">
@@ -45,7 +45,7 @@
       <ion-buttons slot="end">
           <ion-button> {{'VISITORS_COMPANY.DONE' | translate}}
             <!-- <ion-icon name="checkmark"></ion-icon> -->
-          </ion-button>
+          <ion-ripple-effect></ion-ripple-effect></ion-button>
         </ion-buttons>
     </ion-toolbar>
   </ion-footer>

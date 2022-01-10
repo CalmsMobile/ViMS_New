@@ -10,30 +10,30 @@
     <ion-buttons slot="end">
       <ion-button color="btnthm" slot="icon-only" style="font-size: 25px;" (click)="addMoreVisitor()" *ngIf="false">
           <ion-icon name="add-circle"></ion-icon>
-      </ion-button>
+      <ion-ripple-effect></ion-ripple-effect></ion-button>
       <ion-row>
         <ion-col size="6">
             <ion-button color="btnthm" fill="clear" slot="icon-only" style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="manualScan()">
                 <img class="navBtnImg" src="../../assets/images/keypad_white.png"  />
-              </ion-button>
+              <ion-ripple-effect></ion-ripple-effect></ion-button>
         </ion-col>
         <ion-col size="6">
             <ion-button color="btnthm" fill="clear" slot="icon-only" style="font-size: 30px;" *ngIf="isGroup || showConfirmScanBtns" (click)="ConfirmQrAfterBriefing1(false)">
                 <img class="navBtnImg1" src="../../assets/images/qrcodescan2.png" />
-              </ion-button>
+              <ion-ripple-effect></ion-ripple-effect></ion-button>
         </ion-col>
 
       </ion-row>
       <!-- <ion-button slot="icon-only" style="font-size: 30px;" (click)="takeActForScanQR()" *ngIf="isGroup">
         <ion-icon name="customiconScan"></ion-icon>
-      </ion-button>
+      <ion-ripple-effect></ion-ripple-effect></ion-button>
       <ion-button slot="icon-only" style="font-size: 30px;" (click)="takeActForScanQR()" *ngIf="isGroup">
         <ion-icon name="customiconManual"></ion-icon>
-      </ion-button> -->
+      <ion-ripple-effect></ion-ripple-effect></ion-button> -->
       <!-- <ion-button color='light' fill="outline" class="myQRCodeImage" (click)="takeActForScanQR()">
-      </ion-button> -->
+      <ion-ripple-effect></ion-ripple-effect></ion-button> -->
       <!-- <ion-button color='light' fill="outline" class="myHandImage" (click)="takeActForManualEntry()">
-      </ion-button> -->
+      <ion-ripple-effect></ion-ripple-effect></ion-button> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -76,10 +76,10 @@
             <ion-button color="btnthm" (click)="removeVisitor(slideDOM, item)" style="text-transform: none">
                 <ion-icon name="trash" style="font-size: 18px;"></ion-icon>
                 Remove
-              </ion-button>
+              <ion-ripple-effect></ion-ripple-effect></ion-button>
           <!-- <ion-button no-padding color="btnthm" no-border (click)="editVisitors(slideDOM, 'edit', item)">
               <ion-icon name="delete"></ion-icon>
-          </ion-button> -->
+          <ion-ripple-effect></ion-ripple-effect></ion-button> -->
         </ion-item-options>
       </ion-item-sliding>
     </ion-card>
@@ -93,7 +93,7 @@
             <ion-button>
                 {{showConfirmScanBtns ? ('SECURITY_APP.FINISH' | translate) : 'ACC_MAPPING.PROCEED' | translate}}
               <!-- <ion-icon name="checkmark"></ion-icon> -->
-            </ion-button>
+            <ion-ripple-effect></ion-ripple-effect></ion-button>
           </ion-buttons>
       </ion-toolbar>
 </ion-footer>

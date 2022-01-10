@@ -7,7 +7,7 @@
         <ion-button (click)="getPhoneBookContact()" color="btnthm">
           <!-- <ion-icon name="contact"></ion-icon> -->
           <img slot="end" style="width: 35px;height: 35px; padding: 3px;" src="../../assets/images/phone-book.png">
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-navbar>
@@ -240,11 +240,11 @@
           <ion-button *ngIf="!visitor" bottom right icon-right align-items-end shape="round" fill="solid" color="btnthm"
             style="margin-left: auto;margin-top:15px; display: block;" type="submit"
             [disabled]="visitorProfile.invalid">
-            {{'COMMON.ADD' | translate}}</ion-button>
+            {{'COMMON.ADD' | translate}}<ion-ripple-effect></ion-ripple-effect></ion-button>
           <ion-button *ngIf="visitor" bottom right icon-right align-items-end shape="round" fill="outline"
           color="btnthm" style="margin-left: auto;margin-top:15px; display: block;" type="submit"
             [disabled]="visitorProfile.invalid">
-            {{'EDIT_VISITOR.UPDATE' | translate}}</ion-button>
+            {{'EDIT_VISITOR.UPDATE' | translate}}<ion-ripple-effect></ion-ripple-effect></ion-button>
         </ion-col>
 
         <!-- <ion-col align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6> -->

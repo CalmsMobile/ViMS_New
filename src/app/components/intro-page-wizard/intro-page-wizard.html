@@ -11,11 +11,11 @@
 <div *ngIf="data != null">
   <ion-button button-clear text-capitalize fill="clear" float-left (click)="changeSlide(-1)" *ngIf="prev">
     {{data.btnPrev}}
-</ion-button>
+<ion-ripple-effect></ion-ripple-effect></ion-button>
   <ion-button button-clear text-capitalize fill="clear" float-right (click)="changeSlide(1)" *ngIf="next">
     {{data.btnNext}}
-</ion-button>
+<ion-ripple-effect></ion-ripple-effect></ion-button>
   <ion-button button-clear text-capitalize fill="clear" float-right (click)="onEvent('onFinish')" *ngIf="finish">
     {{data.btnFinish}}
-</ion-button>
+<ion-ripple-effect></ion-ripple-effect></ion-button>
 </div>

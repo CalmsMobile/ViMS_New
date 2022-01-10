@@ -97,6 +97,7 @@
     "cordova-plugin-x-socialsharing": "^6.0.3",
     "cordova-sqlite-storage": "^6.0.0",
     "cordova-wheel-selector-plugin": "^1.1.7",
+    "cordova.plugins.vcardtemp": "file:plugins_src/VCardTemp",
     "crypto-js": "^4.0.0",
     "es6-promise-plugin": "^4.2.2",
     "hammerjs": "^2.0.8",
@@ -190,7 +191,8 @@
         "ANDROID_FIREBASE_BOM_VERSION": "26.0.0",
         "ANDROID_GOOGLE_SERVICES_VERSION": "4.3.4",
         "ANDROID_GRADLE_TOOLS_VERSION": "4.1.0"
-      }
+      },
+      "cordova.plugins.vcardtemp": {}
     },
     "platforms": [
       "ios"

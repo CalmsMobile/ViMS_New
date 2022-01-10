@@ -13,7 +13,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { ItemChecklistModalComponent } from 'src/app/components/item-checklist-modal/item-checklist-modal.component';
 import { EventsService } from 'src/app/services/EventsService';
-
+declare var cordova: any;
 @Component({
   selector: 'app-security-manual-check-in',
   templateUrl: './security-manual-check-in.page.html',
@@ -90,21 +90,7 @@ export class SecurityManualCheckInPage implements OnInit {
       'ALERT_TEXT.IMAGE_SELECT_ERROR']).subscribe(t => {
         this.T_SVC = t;
     });
-      var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
-      if(masterDetails){
-        this.FLOORLIST = JSON.parse(masterDetails).Table2;
-        this.PURPOSELIST = JSON.parse(masterDetails).Table3;
-        this.CATEGORYLIST = JSON.parse(masterDetails).Table4;
-        this.HOSTLIST = JSON.parse(masterDetails).Table6;
-        this.COMPANYLIST = JSON.parse(masterDetails).Table7;
-        this.MEETINGLIST = JSON.parse(masterDetails).Table8;
-      }
-
-      const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
-      if (ackSeettings) {
-        this.appSettings = JSON.parse(ackSeettings);
-      }
-      this.checkAllInputs();
+    this.initSettings();
   }
 
   setChanged() {
@@ -116,9 +102,84 @@ export class SecurityManualCheckInPage implements OnInit {
     this.apiProvider.viewImage(base64);
   }
 
+  scanTemperature() {
+    const cClass = this;
+    try {
+      var success = function(result) {
+        // alert(JSON.stringify(result, undefined, 2));
+        const data = JSON.parse(result);
+        if (data){
+          switch (data.ACTION) {
+            case "START_CONNECTION":
+
+              break;
+            case "TEMPERATURE":
+              const temperature = data.TEMPERATURE;
+              if (temperature){
+                cClass.appointmentInfo.att_bodytemperature = temperature;
+              }
+              cClass.checkAllInputs();
+              break;
+            case "ERROR":
+              const message = data.MESSAGE;
+              cClass.apiProvider.showAlert(message);
+              break;
+
+            default:
+              break;
+          }
+        }
+      }
+      var failure = function(result) {
+        cClass.apiProvider.showAlert(result);
+      }
+      cordova.plugins.VCardTemp.scan({
+        _sMessage: "scan"
+      }, success, failure);
+    } catch (error) {
+
+    }
+  }
+
+  intSDKTemperature() {
+    const cClass = this;
+    try{
+      var success = function(result) {
+        // alert(JSON.stringify(result, undefined, 2));
+      }
+      var failure = function(result) {
+        cClass.apiProvider.showAlert(result);
+      }
+      cordova.plugins.VCardTemp.intSDK({
+        _sMessage: "intSDK"
+      }, success, failure);
+    } catch(e){
+
+    }
+  }
+
+  closeConnection() {
+    try {
+      const cClass = this;
+      var success = function(result) {
+        // alert(JSON.stringify(result, undefined, 2));
+      }
+      var failure = function(result) {
+        cClass.apiProvider.showAlert(result);
+      }
+      cordova.plugins.VCardTemp.closeConnection({
+        _sMessage: "closeConnection"
+      }, success, failure);
+    } catch (error) {
+
+    }
+  }
+
   ngOnInit() {
+    this.initSettings();
+    console.log("SecurityManualCheckInPage oninit");
     this.route.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation().extras.state) {
+      if (this.router.getCurrentNavigation() && this.router.getCurrentNavigation().extras && this.router.getCurrentNavigation().extras.state) {
         const passData = this.router.getCurrentNavigation().extras.state.passData;
         if (passData && passData.PreAppointment) {
           this.preAppointmentInfo = passData.PreAppointment;
@@ -233,8 +294,36 @@ export class SecurityManualCheckInPage implements OnInit {
       }
 
     });
-
   }
+
+  ionViewDidEnter(){
+    console.log("SecurityManualCheckInPage ionViewDidEnter");
+    this.initSettings();
+    this.intSDKTemperature();
+  }
+
+  ionViewWillLeave(){
+    console.log("SecurityManualCheckInPage ionViewWillLeave");
+    this.closeConnection();
+  }
+
+  initSettings() {
+    var masterDetails = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+    if(masterDetails){
+      this.FLOORLIST = JSON.parse(masterDetails).Table2;
+      this.PURPOSELIST = JSON.parse(masterDetails).Table3;
+      this.CATEGORYLIST = JSON.parse(masterDetails).Table4;
+      this.HOSTLIST = JSON.parse(masterDetails).Table6;
+      this.COMPANYLIST = JSON.parse(masterDetails).Table7;
+      this.MEETINGLIST = JSON.parse(masterDetails).Table8;
+    }
+    const ackSeettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_SECURITY_SETTINGS);
+    if (ackSeettings) {
+      this.appSettings = JSON.parse(ackSeettings);
+    }
+    this.checkAllInputs();
+  }
+
 
   getSecurityMasterdetails(){
     this.apiProvider.GetSecurityMasterDetails().then(
@@ -606,7 +695,7 @@ export class SecurityManualCheckInPage implements OnInit {
       DEV_SEQID: MAppDevSeqId,
       VISITOR_ARRAY: visitor,
       START_DATE: this.appointmentInfo.START_TIME? this.dateformat.transform(new Date() + '', "yyyy-MM-ddTHH:mm:ss"): '',
-      END_DATE: this.appointmentInfo.END_TIME? this.dateformat.transform(new Date() + '', "yyyy-MM-ddTHH:mm:ss"): '',
+      END_DATE: this.appointmentInfo.END_TIME? this.dateformat.transform(new Date(this.appointmentInfo.END_TIME) + '', "yyyy-MM-ddTHH:mm:ss"): '',
       Purpose: this.appointmentInfo.REASON? this.appointmentInfo.REASON: '',
       HOST_NAME: this.appointmentInfo.Host_IC? this.appointmentInfo.Host_IC: '',
       HOST_IC: this.appointmentInfo.Host_IC? this.appointmentInfo.Host_IC: '',

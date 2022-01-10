@@ -2566,7 +2566,7 @@ deg2rad(deg) {
           if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].Code == 10){
             resolve(JSON.stringify(output));
           } else if(output.Table != undefined &&  output.Table.length > 0 && output.Table[0].description){
-            reject(JSON.stringify({"message": this.T_SVC['ALERT_TEXT.QRCODE_INVALID_BRANCH']}));
+            reject({"message": this.T_SVC['ALERT_TEXT.QRCODE_INVALID_BRANCH']});
           } else if(output.Table1 != undefined &&  output.Table1.length > 0 && output.Table1[0].escription){
             reject(JSON.stringify({"message":output.Table1[0].Description}));
           } else if(output.length > 0 && (output[0].code > 10 || output[0].Code > 10)){

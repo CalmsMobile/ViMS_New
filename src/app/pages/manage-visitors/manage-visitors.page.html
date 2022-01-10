@@ -52,10 +52,10 @@
             <ion-item-options side="end">
                 <!-- <ion-button slot="icon-only" color="primary" fill="outline" no-border (click)="editVisitors(slideDOM, 'delete', item)">
                 <ion-icon color="primary" class="siva-icon-trash-empty"></ion-icon>
-              </ion-button> -->
+              <ion-ripple-effect></ion-ripple-effect></ion-button> -->
               <ion-button slot="icon-only" style="align-self: center;" no-padding color="primary" fill="clear" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                   <ion-icon color="btnthm" class="siva-icon-pencil-2"></ion-icon>
-              </ion-button>
+              <ion-ripple-effect></ion-ripple-effect></ion-button>
               </ion-item-options>
         </ion-item-sliding>
       </ion-item-group>
@@ -74,7 +74,7 @@
         <ion-button>
             {{'MANG_VISITORS.DONE' | translate}}
           <!-- <ion-icon name="checkmark"></ion-icon> -->
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
       </ion-buttons>
   </ion-toolbar>
 </ion-footer>

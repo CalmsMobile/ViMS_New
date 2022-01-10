@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
     <ion-title style="margin-left: -70px;">Additional Document</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="light" (click)="dismissModal()">Close</ion-button>
+      <ion-button color="light" (click)="dismissModal()">Close<ion-ripple-effect></ion-ripple-effect></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -101,6 +101,6 @@
     </ion-card>
 
     <ion-button style="margin-top: 20px;" *ngIf="appSettings.customStyle && !isViewOnly" color="transparent" class="btn-grad" [ngStyle]="{'font-size': appSettings.customStyle.buttonStyle.btnTextSize + 'px', 'border-radius': appSettings.customStyle.buttonStyle.btnBorderRadius + 'px', 'color': appSettings.customStyle.buttonStyle.btnTextColor, 'background': 'linear-gradient(to right, ' + this.appSettings.customStyle.buttonStyle.btnColor1
-    +' 0%,'+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%)'}" expand="block" (click)="proceed()">Proceed</ion-button>
+    +' 0%,'+ this.appSettings.customStyle.buttonStyle.btnColor2 +' 51%,'+ this.appSettings.customStyle.buttonStyle.btnColor1 +' 100%)'}" expand="block" (click)="proceed()">Proceed<ion-ripple-effect></ion-ripple-effect></ion-button>
   </div>
 </ion-content>

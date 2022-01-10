@@ -20,6 +20,7 @@ export class SecurityAppointmentListPage implements OnInit {
   appointmentsTable3 = [];
   appointments = [];
   appointmentsCone = [];
+  SearchString = '';
   isFetching = false;
   showAlert = false;
   isLoadingFinished = false;
@@ -157,14 +158,19 @@ export class SecurityAppointmentListPage implements OnInit {
               this.router.navigate(['security-manual-check-in'], navigationExtras);
               return;
             }
+            let CheckOutCounter = 'Security';
+            var secuData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+            if(secuData){
+              CheckOutCounter = JSON.parse(secuData).Name ? JSON.parse(secuData).Name.substring(0, 25): 'Security';
+            }
             var params = {
               "att_id":item.att_id,
               "remarks": (result && result.remarks)? result.remarks: '',
-              "CheckOutCounter":"admin"
+              "CheckOutCounter": CheckOutCounter
             };
             // this.VM.host_search_id = "adam";
             this.apiProvider.VimsAppUpdateVisitorCheckOut(params).then(
-              async (val) => {
+              (val) => {
                 this.appointments = [];
                 this.appointmentsCone = [];
                 this.getBranchAppointments(null, false, true);
@@ -172,7 +178,7 @@ export class SecurityAppointmentListPage implements OnInit {
                 this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
 
               },
-              async (err) => {
+              (err) => {
                 if(err && err.message == "No Internet"){
                   return;
                 }
@@ -208,6 +214,8 @@ export class SecurityAppointmentListPage implements OnInit {
     this.expiryTime = this.dateformat.transform($event.detail.value + "", "yyyy-MM-dd");
     console.log("OpenCalender:Start:"+ this.expiryTime);
     this.appointments = [];
+    this.appointmentsTable2 = [];
+    this.appointmentsTable3 = [];
     this.getBranchAppointments(null, false, false);
 }
 
@@ -215,8 +223,9 @@ export class SecurityAppointmentListPage implements OnInit {
     this.isLoadingFinished = false;
     const data = {
     "START_DATE": this.expiryTime,
-    "LIMIT": 20,
-    "START": this.appointments.length,
+    "SearchString": this.SearchString,
+    "LIMIT": this.SearchString ?  '' :20,
+    "START": this.SearchString ? '': this.appointments.length
  };
     this.apiProvider.requestSecurityApi(data, '/api/SecurityApp/getBranchAppointments', hideLoading ? false: true).then(
       (val: any) => {
@@ -225,13 +234,21 @@ export class SecurityAppointmentListPage implements OnInit {
         if (response.Table && response.Table.length > 0 && response.Table[0].Code === 10) {
           if(refresher){
             this.appointments = response.Table1;
-            this.appointmentsTable2 = response.Table2;
-            this.appointmentsTable3 = response.Table3;
+            if (response.Table2){
+              this.appointmentsTable2 = response.Table2;
+            }
+            if (response.Table3){
+              this.appointmentsTable3 = response.Table3;
+            }
             refresher.target.complete();
           } else {
             this.appointments = response.Table1.concat(this.appointments);
-            this.appointmentsTable2 = response.Table2.concat(this.appointmentsTable2);
-            this.appointmentsTable3 = response.Table3.concat(this.appointmentsTable3);
+            if (response.Table2){
+              this.appointmentsTable2 = response.Table2.concat(this.appointmentsTable2);
+            }
+            if (response.Table3){
+              this.appointmentsTable3 = response.Table3.concat(this.appointmentsTable3);
+            }
           }
         }
 
@@ -259,10 +276,11 @@ export class SecurityAppointmentListPage implements OnInit {
             element.att_id = list1[0].att_id;
           }
         });
-        this.filterTechnologies("");
+
+        this.appointmentsCone = this.appointments;
         this.isFetching = false;
       },
-      async (err) => {
+      (err) => {
         this.isLoadingFinished = true;
         this.isFetching = false;
         if(err && err.message == "No Internet"){
@@ -296,6 +314,8 @@ export class SecurityAppointmentListPage implements OnInit {
 
   doRefresh(refresher) {
     this.appointments = [];
+    this.appointmentsTable2 = [];
+    this.appointmentsTable3 = [];
     this.appointmentsCone = [];
     this.getBranchAppointments(refresher, false, true);
   }
@@ -303,14 +323,20 @@ export class SecurityAppointmentListPage implements OnInit {
   filterTechnologies(event) {
     const searchtext = event? event.target.value: "";
 		 let val : string 	= searchtext;
+     this.SearchString = val;
 		 // DON'T filter the technologies IF the supplied input is an empty string
-		 if (val){
-      this.appointmentsCone =  this.appointments.filter((item) =>{
-        return (item.VISITOR_NAME.toLowerCase().indexOf(val.toLowerCase()) > -1 || item.STAFF_NAME.toLowerCase().indexOf(val.toLowerCase()) > -1 || item.VISITOR_IC.toLowerCase().indexOf(val.toLowerCase()) > -1);
-      })
-     } else {
-      this.appointmentsCone = this.appointments;
-     }
+		//  if (val){
+      // this.appointmentsCone =  this.appointments.filter((item) =>{
+      //   return (item.VISITOR_NAME.toLowerCase().indexOf(val.toLowerCase()) > -1 || item.STAFF_NAME.toLowerCase().indexOf(val.toLowerCase()) > -1 || item.VISITOR_IC.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      // })
+    //  } else {
+    //   this.appointmentsCone = this.appointments;
+    //  }
+
+    this.appointments = [];
+    this.appointmentsTable2 = [];
+    this.appointmentsTable3 = [];
+    this.getBranchAppointments(null, false, true);
   }
 
   onCancel(){

@@ -205,11 +205,11 @@
               {{edit? ('ACC_MAPPING.UPDATE' | translate): ('ACC_MAPPING.PROCEED' | translate)}}
               <ion-icon style="    padding: 5px;
                   font-size: 24px;" class="icon siva-icon-right-open"></ion-icon>
-            </ion-button> -->
+            <ion-ripple-effect></ion-ripple-effect></ion-button> -->
 
             <ion-button bottom right icon-right align-items-end shape="round" fill="solid" color="btnthm"
               style="margin-left: auto;margin-top:0px; display: block;" type="submit" [disabled]="appointment.invalid">
-              {{edit? ('ACC_MAPPING.UPDATE' | translate): ('ACC_MAPPING.PROCEED' | translate)}}</ion-button>
+              {{edit? ('ACC_MAPPING.UPDATE' | translate): ('ACC_MAPPING.PROCEED' | translate)}}<ion-ripple-effect></ion-ripple-effect></ion-button>
           </div>
         </ion-col>
       </form>

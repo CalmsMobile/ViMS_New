@@ -90,13 +90,13 @@
                       [disabled]="!VM.user_yes_chk_box"
                       (click)="takeActionForProceed('FINISH')" color="transparent">
                           {{'ACC_MAPPING.PROCEED' | translate}}
-                      </ion-button>
+                      <ion-ripple-effect></ion-ripple-effect></ion-button>
                       </ion-col>
                       <ion-col size="12">
                         <ion-button icon-left float-left color="transparent"
                      (click)="takeActionForGoBack('STOP1')">
                         <span style="color: #076bcd;">{{'ACC_MAPPING.GO_BACK' | translate}}</span>
-                      </ion-button>
+                      <ion-ripple-effect></ion-ripple-effect></ion-button>
                       </ion-col>
 
                     </ion-row>
@@ -135,13 +135,13 @@
                               (click)="takeActionForack()" style="background: linear-gradient(
                                 90deg, #034587 0%, #034587 15%, #076bcd 100%); border-radius: 10px;display: block;    color: white;" color="transparent">
                                   {{'ACC_MAPPING.PROCEED' | translate}}
-                              </ion-button>
+                              <ion-ripple-effect></ion-ripple-effect></ion-button>
                               </ion-col>
                               <ion-col size="12">
                                 <ion-button color="transparent"
                                 (click)="takeActionForGoBack('STOP1')" style="color: #076bcd;">
                                    <span >{{'ACC_MAPPING.GO_BACK' | translate}}</span>
-                                 </ion-button>
+                                 <ion-ripple-effect></ion-ripple-effect></ion-button>
                               </ion-col>
                         </ion-row>
                         </div>

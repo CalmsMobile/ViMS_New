@@ -12,7 +12,7 @@
                   font-size: 16px;
                   margin-top: -10px;"><b>{{notificationCount}}</b></span>
           </ion-icon>
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
       </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -59,7 +59,7 @@
                       style="margin-left: auto;margin-top:10px; display: block;"
                       (click)="proceedToNextStep()" [disabled]= "!username || !password">
                           {{'ADMIN_LOGIN.LOGIN' | translate}}
-                      </ion-button>
+                      <ion-ripple-effect></ion-ripple-effect></ion-button>
                   </ion-col>
                 </ion-list>
               </ion-col>

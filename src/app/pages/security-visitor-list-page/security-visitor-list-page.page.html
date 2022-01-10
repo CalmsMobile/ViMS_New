@@ -68,16 +68,16 @@
 
                     <!-- <ion-buttons slot="end" >
                         <ion-icon name="trash" style="padding:8px" (click)="removeVisitor(item)"></ion-icon>
-                         <ion-button slot="icon-only" (click)="removeVisitor(item)" ><ion-icon name="trash"></ion-icon></ion-button>
+                         <ion-button slot="icon-only" (click)="removeVisitor(item)" ><ion-icon name="trash"></ion-icon><ion-ripple-effect></ion-ripple-effect></ion-button>
                     </ion-buttons> -->
                 </ion-item>
                 <ion-item-options side="end">
                     <!-- <ion-button slot="icon-only" color="primary" fill="outline" no-border (click)="editVisitors(slideDOM)">
                     <ion-icon color="primary" class="siva-icon-trash-empty"></ion-icon>
-                </ion-button> -->
+                <ion-ripple-effect></ion-ripple-effect></ion-button> -->
                 <ion-button slot="icon-only" style="align-self: center;" no-padding color="primary" fill="clear" no-border (click)="editVisitors(slideDOM, 'edit', item)">
                     <ion-icon color="primary" class="siva-icon-pencil-2"></ion-icon>
-                </ion-button>
+                <ion-ripple-effect></ion-ripple-effect></ion-button>
                 </ion-item-options>
             </ion-item-sliding>
         </ion-card>
@@ -170,6 +170,6 @@
 </ion-content>
 <ion-footer color="primary">
 <div style="text-align: end;">
-  <ion-button shape="round" style="color:white; margin:15px"  (click)="proceedNext()">Check-In<ion-icon style="padding-left: 10px;color:white" slot="end" name="man" ></ion-icon></ion-button>
+  <ion-button shape="round" style="color:white; margin:15px"  (click)="proceedNext()">Check-In<ion-icon style="padding-left: 10px;color:white" slot="end" name="man" ></ion-icon><ion-ripple-effect></ion-ripple-effect></ion-button>
 </div>
   </ion-footer>

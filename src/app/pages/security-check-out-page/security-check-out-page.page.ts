@@ -23,6 +23,7 @@ export class SecurityCheckOutPagePage implements OnInit {
   appointmentsClone = [];
   T_SVC:any;
   Type : any = 0;
+  SearchString = '';
   showDelete = false;
   title = "Visitor Check-Out";
   appSettings: any = {};
@@ -193,18 +194,32 @@ export class SecurityCheckOutPagePage implements OnInit {
 
   getVisitorsBySearch(event){
     const queryText = event?event.target.value: '';
-    if(queryText){
-      var showList = [];
-      for(var i= 0 ; i < this.appointments.length ; i++){
-        var item = this.appointments[i];
-        if(item.visitor_name.toLowerCase().search(queryText.toLowerCase()) >= 0){
-          showList[showList.length] = item;
+    this.SearchString = queryText;
+    switch(this.Type){
+      case "10":
+      case "20":
+      case "30":
+      case "40":
+      case "60":
+        this.appointments = [];
+        this.VimsAppGetStatesList(this.Type, null, false);
+      break;
+      default:
+        if(queryText){
+          var showList = [];
+          for(var i= 0 ; i < this.appointments.length ; i++){
+            var item = this.appointments[i];
+            if(item.visitor_name.toLowerCase().search(queryText.toLowerCase()) >= 0){
+              showList[showList.length] = item;
+            }
+          }
+          this.appointmentsClone = showList;
+        }else{
+          this.appointmentsClone = this.appointments;
         }
-      }
-      this.appointmentsClone = showList;
-    }else{
-      this.appointmentsClone = this.appointments;
+      break;
     }
+
 
   }
 
@@ -323,8 +338,9 @@ export class SecurityCheckOutPagePage implements OnInit {
 			var params = {
         "Type": Type,
         "MAppDevSeqId":MAppDevSeqId,
-        "OffSet": ""+ this.appointments.length,
-        "Rows":"12"
+        "SearchString": this.SearchString,
+        "OffSet": this.SearchString ? "" :""+ this.appointments.length,
+        "Rows":this.SearchString ? "" :"12"
       };
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.VimsAppGetSecurityStatsDetail(params, showLoading).then(
@@ -403,12 +419,10 @@ export class SecurityCheckOutPagePage implements OnInit {
             } else {
               this.appointments = this.appointments;
             }
-
           }
-
           this.appointmentsClone = this.appointments;
 				},
-				async (err) => {
+				(err) => {
           this.isLoadingFinished = true;
           this.isFetching = false;
 					if(refresher){
@@ -453,47 +467,21 @@ export class SecurityCheckOutPagePage implements OnInit {
         disableAnimations : false, // iOS
         disableSuccessBeep: false // iOS and Android
       }
-      this.barcodeScanner.scan(this.options).then(async (barcodeData) => {
+      this.barcodeScanner.scan(this.options).then((barcodeData) => {
         var data = barcodeData.text;
         console.log("barcodeScanner data: "+data);
         // console.log(scanData); D20A6A48
         if(data == ""){
-          let invalidQRConfirm = this.alertCtrl.create({
-            header: 'Error !',
-            message:"<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-            cssClass:'',
-            buttons: [
-              {
-                text: this.T_SVC['COMMON.OK'],
-                role: 'cancel',
-                handler: () => {
-                }
-              }
-            ]
-          });
-          (await invalidQRConfirm).present();
+          this.apiProvider.showAlert(this.T_SVC['ACC_MAPPING.INVALID_QR']);
         }else{
           this.checkoutVisitorByQR(data);
         }
 
 
 
-    }, async (err) => {
+    }, (err) => {
         console.log("Error occured : " + err);
-        let invalidQRConfirm = this.alertCtrl.create({
-          header: 'Error !',
-          message:"<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>',
-          cssClass:'',
-          buttons: [
-            {
-              text: this.T_SVC['COMMON.OK'],
-              role: 'cancel',
-              handler: () => {
-              }
-            }
-          ]
-        });
-        (await invalidQRConfirm).present();
+        this.apiProvider.showAlert(this.T_SVC['ACC_MAPPING.INVALID_QR']);
     });
     }
   }
@@ -522,11 +510,11 @@ export class SecurityCheckOutPagePage implements OnInit {
             // this.VM.host_search_id = "adam";
             if(this.Type == '50') {
               this.apiProvider.UpdateQPVisitorCheckOutTime(params).then(
-                async (val) => {
+                (val) => {
                   this.doRefresh(null);
                   this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
                 },
-                async (err) => {
+                (err) => {
                   if(err && err.message == "No Internet"){
                     return;
                   }
@@ -547,12 +535,12 @@ export class SecurityCheckOutPagePage implements OnInit {
                 "CheckOutCounter": "admin"
               };
               this.apiProvider.VimsAppUpdateVisitorQRCheckOut(params1).then(
-                async (val) => {
+                (val) => {
                   this.doRefresh(null);
                   this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
 
                 },
-                async (err) => {
+                (err) => {
                   if(err && err.message == "No Internet"){
                     return;
                   }
@@ -623,36 +611,26 @@ export class SecurityCheckOutPagePage implements OnInit {
           text: 'Ok',
           handler: (result) => {
             console.log('Delete clicked');
+            let CheckOutCounter = 'Security';
+            var secuData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+            if(secuData){
+              CheckOutCounter = JSON.parse(secuData).Name ? JSON.parse(secuData).Name.substring(0, 25): 'Security';
+            }
             var params = {
               "att_id":item.att_id,
               "remarks": (result && result.remarks)? result.remarks: '',
-              "CheckOutCounter":"admin"
+              "CheckOutCounter": CheckOutCounter
             };
             // this.VM.host_search_id = "adam";
             this.apiProvider.VimsAppUpdateVisitorCheckOut(params).then(
-              async (val) => {
+              (val) => {
                 this.appointments = [];
                 this.appointmentsClone = [];
-                switch(this.Type){
-                case "10":
-                case "20":
-                case "30":
-                case "40":
-                case "60":
-                  this.VimsAppGetStatesList(this.Type, null, false);
-                break;
-                case "50":
-                  this.GetQuickPassVisitorList(null, false);
-                break;
-                default:
-                  this.VimsAppGetCheckInVisitorList(null, false);
-                break;
-                }
-
+                this.updateList();
                 this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
 
               },
-              async (err) => {
+              (err) => {
                 if(err && err.message == "No Internet"){
                   return;
                 }
@@ -676,6 +654,24 @@ export class SecurityCheckOutPagePage implements OnInit {
     (await alert).onDidDismiss().then(() => {
       this.showDelete = false;
     })
+  }
+
+  updateList(){
+    switch(this.Type){
+      case "10":
+      case "20":
+      case "30":
+      case "40":
+      case "60":
+        this.VimsAppGetStatesList(this.Type, null, false);
+      break;
+      case "50":
+        this.GetQuickPassVisitorList(null, false);
+      break;
+      default:
+        this.VimsAppGetCheckInVisitorList(null, false);
+      break;
+    }
   }
 
   ngOnInit() {
@@ -704,7 +700,7 @@ export class SecurityCheckOutPagePage implements OnInit {
         disableAnimations : false, // iOS
         disableSuccessBeep: false // iOS and Android
       }
-      this.barcodeScanner.scan(this.options).then(async (barcodeData) => {
+      this.barcodeScanner.scan(this.options).then((barcodeData) => {
         var data = barcodeData.text;
         console.log("barcodeScanner data: "+data);
         if(data){
@@ -713,7 +709,7 @@ export class SecurityCheckOutPagePage implements OnInit {
         } else{
           this.apiProvider.showAlert("<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>');
         }
-    }, async (err) => {
+    }, (err) => {
         console.log("Error occured : " + err);
         this.apiProvider.showAlert("<span class='failed'>" + this.T_SVC['ACC_MAPPING.INVALID_QR'] + '</span>');
     });
@@ -722,7 +718,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 
   processQuickPassQR(params) {
     this.apiProvider.GetQuickPassVisitorDetail(params).then(
-      async (val) => {
+      (val) => {
        console.log("val : "+JSON.stringify(val));
        var visitorDetail = val+"";
        var vOb = JSON.parse(visitorDetail);
@@ -742,7 +738,7 @@ export class SecurityCheckOutPagePage implements OnInit {
 
 
       },
-      async (err) => {
+      (err) => {
         console.log("error : "+JSON.stringify(err));
         if(err && err.message == "No Internet"){
           return;

@@ -70,7 +70,7 @@ export class VisitorInformationPage implements OnInit {
     var hexData = this.appointmentInfo.HexCode;//"C4B9F365";
     var params = {"hexcode":""+ hexData};
     this.apiProvider.VimsAppGetAppointmentByHexCode(params, false).then(
-      async (val) => {
+      (val) => {
         var visitorDetail = val+"";
         var vOb1 = JSON.parse(visitorDetail);
         if(vOb1 && vOb1.Table1 && vOb1.Table1.length > 0) {
@@ -174,7 +174,7 @@ export class VisitorInformationPage implements OnInit {
           this.getAdditionalDocs();
         }
       },
-      async (err) => {
+      (err) => {
         console.log("error : "+JSON.stringify(err));
         if(err && err.message == "No Internet"){
           return;
@@ -186,10 +186,18 @@ export class VisitorInformationPage implements OnInit {
             return;
         }
 
-        if(err && err.message.indexOf("Http failure response for") > -1){
-          message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-          this.apiProvider.showAlert(message);
-          return;
+        try {
+          if(err && err.message.indexOf("Http failure response for") > -1){
+            message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+            this.apiProvider.showAlert(message);
+            return;
+          }
+          if (err.message){
+            this.apiProvider.showAlert(err.message);
+            return;
+          }
+        } catch (error) {
+
         }
         message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
 
@@ -210,7 +218,7 @@ export class VisitorInformationPage implements OnInit {
     "visitor_id":""+ this.appointmentInfo.att_visitor_id,
   };
     this.apiProvider.requestSecurityApi(params, '/api/SecurityApp/VimsAppGetCheckinDocs', false).then(
-      async (val) => {
+      (val) => {
         var visitorDetail = val+"";
         var vOb1 = JSON.parse(visitorDetail);
         if (vOb1.Table && vOb1.Table[0].Code === 10) {
@@ -246,7 +254,7 @@ export class VisitorInformationPage implements OnInit {
         }
 
       },
-      async (err) => {
+      (err) => {
         console.log("error : "+JSON.stringify(err));
         if(err && err.message == "No Internet"){
           return;
@@ -268,7 +276,9 @@ export class VisitorInformationPage implements OnInit {
         if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
           message = JSON.parse(err).Table[0].description;
         }
-        message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        if (!message){
+          message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+        }
         this.apiProvider.showAlert(message);
       }
     );
@@ -318,7 +328,7 @@ export class VisitorInformationPage implements OnInit {
     const ctgId = this.commonUtil.getCategory(this.appointmentInfo.VisitorCategory? this.appointmentInfo.VisitorCategory: this.appointmentInfo.att_visitor_ctg_id, true);
     var params = {"RefVisitorCateg": ctgId};
     this.apiProvider.requestSecurityApi(params, '/api/kiosk/getAddVisitorSettings', false).then(
-      async (val: any) => {
+      (val: any) => {
         if (JSON.parse(val).Table[0].Code == 10) {
           if (val && JSON.parse(val).Table[0].Code == 10 && JSON.parse(val).Table1[0]) {
             const settingObj = JSON.parse(JSON.parse(val).Table1[0].SettingDetail);
@@ -330,7 +340,7 @@ export class VisitorInformationPage implements OnInit {
 
         }
       },
-      async (err) => {
+      (err) => {
         console.log("error : "+JSON.stringify(err));
         if(err && err.message == "No Internet"){
           return;
@@ -465,18 +475,23 @@ export class VisitorInformationPage implements OnInit {
               this.router.navigate(['security-manual-check-in'], navigationExtras);
               return;
             }
+            let CheckOutCounter = 'Security';
+            var secuData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.SECURITY_DETAILS);
+            if(secuData){
+              CheckOutCounter = JSON.parse(secuData).Name ? JSON.parse(secuData).Name.substring(0, 25): 'Security';
+            }
             var params = {
               "att_id":this.appointmentInfo.att_id,
               "remarks": (result && result.remarks)? result.remarks: '',
-              "CheckOutCounter":"admin"
+              "CheckOutCounter": CheckOutCounter
             };
             // this.VM.host_search_id = "adam";
             this.apiProvider.VimsAppUpdateVisitorCheckOut(params).then(
-              async (val) => {
+              (val) => {
                 this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS']);
                 this.goBack();
               },
-              async (err) => {
+              (err) => {
                 if(err && err.message == "No Internet"){
                   return;
                 }
@@ -568,7 +583,7 @@ export class VisitorInformationPage implements OnInit {
         this.apiProvider.showAlert(msg);
       }
       },
-    async (err) => {
+    (err) => {
 
       if(err && err.message == "No Internet"){
         return;
@@ -583,13 +598,7 @@ export class VisitorInformationPage implements OnInit {
       }
       if(message){
         // message = " Unknown"
-        let alert = this.alertCtrl.create({
-          header: 'Error !',
-          message: message,
-          cssClass:'',
-          buttons: ['Okay']
-          });
-          (await alert).present();
+        this.apiProvider.showAlert(message);
       }
     }
   );

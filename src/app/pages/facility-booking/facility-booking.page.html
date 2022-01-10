@@ -6,12 +6,12 @@
     <ion-buttons slot="end">
       <ion-button slot="icon-only" color="btnthm" (click)="checkFacilityAvailability()">
           <img app-logo-img class="animated fadeInDown delay-1s" style="display: block; margin: 0 auto;width: 30px;height: 30px;margin-right: 10px;" src="../../assets/images/room_available.png">
-      </ion-button>
+      <ion-ripple-effect></ion-ripple-effect></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-        <!-- <ion-button (click)="openCalendar()">Open Calendar on Current Date</ion-button> -->
+        <!-- <ion-button (click)="openCalendar()">Open Calendar on Current Date<ion-ripple-effect></ion-ripple-effect></ion-button> -->
     <div app-bg>
       <div padding-top class="item item-body" style="border-bottom:1px solid rgba(0,0,0,0.05);">
         <ion-row style="padding: 8px;">
@@ -102,11 +102,11 @@
                     height: 38px;" (click)="removeVisitor(item)">
                         <ion-icon name="close-circle-outline" style="font-size: 35px;padding: 0px;
                         text-align: center;"></ion-icon>
-                    </ion-button>
+                    <ion-ripple-effect></ion-ripple-effect></ion-button>
 
                     <!-- <ion-buttons slot="end" >
                         <ion-icon name="trash" style="padding:8px" (click)="removeVisitor(item)"></ion-icon>
-                         <ion-button slot="icon-only" (click)="removeVisitor(item)" ><ion-icon name="trash"></ion-icon></ion-button>
+                         <ion-button slot="icon-only" (click)="removeVisitor(item)" ><ion-icon name="trash"></ion-icon><ion-ripple-effect></ion-ripple-effect></ion-button>
                     </ion-buttons> -->
                 </ion-item>
               </ion-item-sliding>
@@ -118,7 +118,7 @@
     (click)="proceedToNextStep()" [disabled]="(VM.visitors.length == 0)">
         {{'ACC_MAPPING.PROCEED' | translate}}
       <ion-icon class="icon siva-icon-right-open"></ion-icon>
-    </ion-button> -->
+    <ion-ripple-effect></ion-ripple-effect></ion-button> -->
 
 </ion-content>
 
@@ -131,6 +131,6 @@
         (click)="proceedToNextStep()">
             {{'ACC_MAPPING.PROCEED' | translate}}
           <!-- <ion-icon class="icon siva-icon-right-open"></ion-icon> -->
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
     </ion-toolbar>
 </ion-footer>

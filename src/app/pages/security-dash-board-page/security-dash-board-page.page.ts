@@ -475,9 +475,13 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       var failure1 = function(result) {
         alert(JSON.stringify(result, undefined, 2));
       }
-      cordova.plugins.MyKadReader.coolMethod({
+     try {
+        cordova.plugins.MyKadReader.coolMethod({
         _sMessage: "Hello World"
       }, success, failure);
+     } catch (error) {
+
+     }
     }
   }
 
@@ -502,7 +506,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       loadinWeb = false;
     }
     if (loadinWeb) {
-      var data = "0002721385" //"C4B9F365";
+      var data = "0001923592" //"C4B9F365";
       var params = {"hexcode":""+ data};
       this.getAppointmentByQR(params);
     }else{
@@ -566,7 +570,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
 
   getAppointmentByQR(params) {
     this.apiProvider.VimsAppGetAppointmentByHexCode(params, true).then(
-      async (val) => {
+      (val) => {
         var visitorDetail = val+"";
         var vOb1 = JSON.parse(visitorDetail);
         var message = this.T_SVC['ALERT_TEXT.APPOINTMENT_NOT_FOUND'];
@@ -608,7 +612,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
           this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.QR_INVALID_TODAY']);
         }
       },
-      async (err) => {
+      (err) => {
         console.log("error : "+JSON.stringify(err));
         if(err && err.message == "No Internet"){
           return;
@@ -620,14 +624,18 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
             return;
         }
 
-        if(err && err.message.indexOf("Http failure response for") > -1){
-          message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
-          this.apiProvider.showAlert(message);
-          return;
-        }
-        if (err.message){
-          this.apiProvider.showAlert(err.message);
-          return;
+        try {
+          if(err && err.message.indexOf("Http failure response for") > -1){
+            message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+            this.apiProvider.showAlert(message);
+            return;
+          }
+          if (err.message){
+            this.apiProvider.showAlert(err.message);
+            return;
+          }
+        } catch (error) {
+
         }
         message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
 

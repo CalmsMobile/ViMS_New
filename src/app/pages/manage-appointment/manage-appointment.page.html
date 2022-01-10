@@ -111,27 +111,27 @@
         <ion-button *ngIf="false" slot="icon-only" color="btnthm" (click)="syncFromGoogleCalender()">
             <ion-icon name="sync" style="position:relative">
             </ion-icon>
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
         <ion-button slot="icon-only" (click)="gotoQRProfile()" *ngIf="isAdmin">
           <ion-icon name="qr-code-outline"></ion-icon>
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
         <ion-button *ngIf="isAdmin" slot="icon-only" (click)="gotoAdminPage()">
           <!-- <ion-icon name="customicon"></ion-icon> -->
           <ion-icon name="thumbs-up-outline"></ion-icon>
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
         <ion-button slot="icon-only" (click)="gotoNotification()" *ngIf="showNotification">
             <ion-icon name="notifications-outline" style="position:relative">
                     <span *ngIf= "notificationCount > 0" style="position: absolute;
                     font-size: 16px;
                     margin-top: -10px;"><b>{{notificationCount}}</b></span>
             </ion-icon>
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="primary">
     <ion-title>{{viewTitle}}</ion-title>
     <ion-buttons slot="end">
-			<ion-button [disabled]="isToday" (click)="today()">Today</ion-button>
+			<ion-button [disabled]="isToday" (click)="today()">Today<ion-ripple-effect></ion-ripple-effect></ion-button>
 		</ion-buttons>
   </ion-toolbar>
 </ion-header>

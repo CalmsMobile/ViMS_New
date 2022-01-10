@@ -7,7 +7,7 @@
     <ion-buttons slot="end" *ngIf= "false">
         <ion-button slot="icon-only" (click)="createBooking()">
           <ion-icon name="add"></ion-icon>
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
       </ion-buttons>
       <ion-buttons slot="end">
            <ion-button slot="icon-only" (click)="gotoNotification()" *ngIf="showNotification">
@@ -16,7 +16,7 @@
                     font-size: 16px;
                     margin-top: -10px;"><b>{{notificationCount}}</b></span>
             </ion-icon>
-          </ion-button>
+          <ion-ripple-effect></ion-ripple-effect></ion-button>
         </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -99,13 +99,13 @@
                       <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="btnthm"
                       fill="clear" no-border (click)="editVisitors(slideDOM, 'delete', list.value)">
                         <ion-icon color="light" class="siva-icon-trash-empty slideIcons"></ion-icon>
-                      </ion-button>
+                      <ion-ripple-effect></ion-ripple-effect></ion-button>
                   </ion-item-options>
                   <ion-item-options side="start" slide-right-width>
                     <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="btnthm"
                     fill="clear" shape="round" no-border (click)="editVisitors(slideDOM, 'edit', list.value)">
                         <ion-icon color="light" class="siva-icon-pencil-2 slideIcons"></ion-icon>
-                    </ion-button>
+                    <ion-ripple-effect></ion-ripple-effect></ion-button>
                   </ion-item-options>
                 </ion-item-sliding>
               </ion-card>
@@ -184,13 +184,13 @@
                       <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="btnthm"
                       fill="clear" no-border (click)="editVisitors(slideDOM, 'delete', list.value)">
                         <ion-icon color="light" class="siva-icon-trash-empty slideIcons"></ion-icon>
-                      </ion-button>
+                      <ion-ripple-effect></ion-ripple-effect></ion-button>
                   </ion-item-options>
                   <ion-item-options side="start" slide-right-width>
                     <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="btnthm"
                     fill="clear" shape="round" no-border (click)="editVisitors(slideDOM, 'edit', list.value)">
                         <ion-icon color="light" class="siva-icon-pencil-2 slideIcons"></ion-icon>
-                    </ion-button>
+                    <ion-ripple-effect></ion-ripple-effect></ion-button>
                   </ion-item-options>
                 </ion-item-sliding>
               </ion-card>
@@ -269,13 +269,13 @@
                       <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="btnthm"
                       fill="clear" no-border (click)="editVisitors(slideDOM, 'delete', list.value)">
                         <ion-icon color="light" class="siva-icon-trash-empty slideIcons"></ion-icon>
-                      </ion-button>
+                      <ion-ripple-effect></ion-ripple-effect></ion-button>
                   </ion-item-options>
                   <ion-item-options side="start" slide-right-width>
                     <ion-button slot="icon-only" class="ion-align-items-center ion-align-self-center" no-padding color="btnthm"
                     fill="clear" shape="round" no-border (click)="editVisitors(slideDOM, 'edit', list.value)">
                         <ion-icon color="light" class="siva-icon-pencil-2 slideIcons"></ion-icon>
-                    </ion-button>
+                    <ion-ripple-effect></ion-ripple-effect></ion-button>
                   </ion-item-options>
                 </ion-item-sliding>
               </ion-card>

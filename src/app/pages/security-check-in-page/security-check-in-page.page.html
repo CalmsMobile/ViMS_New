@@ -6,15 +6,15 @@
         <ion-button slot="icon-only" (click)="scanPreAppointmentQR()" style="padding: 5px;">
             <ion-icon slot="end" name="qr-code-outline"></ion-icon>
             <!-- <img slot="end" style="width: 30px;height: 30px;" src="../../assets/images/qrcodescan.png"> -->
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
         <ion-button slot="icon-only" (click)="scanQrCode()" *ngIf="false" style="padding: 5px;">
             <!-- <ion-icon name="contact"></ion-icon> -->
             <img slot="end" style="width: 30px;height: 30px;" src="../../assets/images/qrcodescan.png">
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
         <ion-button slot="icon-only" (click)="scanOcr()" *ngIf="false" style="margin-left: 10px;padding: 5px;">
             <!-- <ion-icon name="contact"></ion-icon> -->
             <img slot="end" style="width: 35px;height: 35px;" src="../../assets/images/ocr.png">
-        </ion-button>
+        <ion-ripple-effect></ion-ripple-effect></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -144,11 +144,11 @@
         <ion-button *ngIf="!visitor" bottom right icon-right align-items-end shape="round" fill="outline" color="primary"
         style="margin-left: auto;margin-top:15px; display: block;"
         type="submit" [disabled]="visitorProfile.invalid">
-        <i start class="icon siva-icon-plus"> </i>{{'COMMON.ADD' | translate}}</ion-button>
+        <i start class="icon siva-icon-plus"> </i>{{'COMMON.ADD' | translate}}<ion-ripple-effect></ion-ripple-effect></ion-button>
         <ion-button *ngIf="visitor" bottom right icon-right align-items-end shape="round" fill="outline" color="primary"
         style="margin-left: auto;margin-top:15px; display: block;"
         type="submit" [disabled]="visitorProfile.invalid">
-        {{'EDIT_VISITOR.UPDATE' | translate}}</ion-button>
+        {{'EDIT_VISITOR.UPDATE' | translate}}<ion-ripple-effect></ion-ripple-effect></ion-button>
       </ion-col>
 
       <!-- <ion-col align-self-end bottom-form size="12" size-sm size-md offset-lg-3 col-lg-6 offset-xl-3 col-xl-6> -->
