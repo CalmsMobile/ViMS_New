@@ -52,8 +52,11 @@ export class QuestionDocPopupComponent implements OnInit {
     if(!path){
       path = (this.file.externalDataDirectory || this.file.dataDirectory);
     }
-    var targetPath = path + 'Pictures/' + doc.DocPath.substr(doc.DocPath.lastIndexOf('\\') + 1);;
-
+    let targetPath =  doc.DocPath.substr(doc.DocPath.lastIndexOf('\\') + 1);;
+    for(var j = 0;j < targetPath.length; j++) {
+      targetPath = targetPath.replace(" ", "%20");
+    }
+    targetPath = path + 'Pictures/' + targetPath;
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
       result =>{
         console.log('Has permission?',result.hasPermission)

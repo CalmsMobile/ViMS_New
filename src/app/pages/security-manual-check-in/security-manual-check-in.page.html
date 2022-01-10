@@ -185,15 +185,15 @@
             <ion-col size="4">
               <ion-text style="font-size: 90%;">{{appSettings.addVisitor.TemperatureLable}}</ion-text>
             </ion-col>
-            <ion-col size="5" class="classCol">
+            <ion-col size="8" class="classCol">
               <input maxlength="20" (input)="onInputChange($event, 'Temperature')" type="number" mode="ios"
               [(ngModel)]="appointmentInfo.att_bodytemperature" class="inputCountry"
               placeholder="{{appSettings.addVisitor.TemperatureLable}}"
               [ngStyle]="{'border-left': appSettings.addVisitor.showTemperatureError? '3px solid red': ''}"/>
             </ion-col>
-            <ion-col size="3">
+            <!-- <ion-col size="3">
               <ion-button (click)="scanTemperature()">SCAN<ion-ripple-effect></ion-ripple-effect></ion-button>
-            </ion-col>
+            </ion-col> -->
           </ion-row>
         </ion-grid>
       </div>

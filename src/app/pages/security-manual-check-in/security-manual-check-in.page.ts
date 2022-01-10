@@ -299,12 +299,12 @@ export class SecurityManualCheckInPage implements OnInit {
   ionViewDidEnter(){
     console.log("SecurityManualCheckInPage ionViewDidEnter");
     this.initSettings();
-    this.intSDKTemperature();
+    // this.intSDKTemperature();
   }
 
   ionViewWillLeave(){
     console.log("SecurityManualCheckInPage ionViewWillLeave");
-    this.closeConnection();
+    // this.closeConnection();
   }
 
   initSettings() {
