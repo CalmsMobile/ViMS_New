@@ -184,7 +184,9 @@
       },
       "cordova-plugin-request-location-accuracy": {},
       "cordova-plugin-inappbrowser": {},
-      "cordova-plugin-nativegeocoder": {},
+      "cordova-plugin-nativegeocoder": {
+        "LOCATION_WHEN_IN_USE_DESCRIPTION": "Use geocoder service"
+      },
       "cordova-plugin-fcm-with-dependecy-updated": {
         "ANDROID_DEFAULT_NOTIFICATION_ICON": "@mipmap/ic_launcher",
         "ANDROID_FCM_VERSION": "21.0.0",
