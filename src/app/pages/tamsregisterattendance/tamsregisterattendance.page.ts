@@ -372,7 +372,7 @@ export class TamsregisterattendancePage implements OnInit {
             }
           }
         },
-        async (err) => {
+        (err) => {
           if(err && err.message == "No Internet"){
             return;
           }
@@ -393,10 +393,9 @@ export class TamsregisterattendancePage implements OnInit {
           }
 
           if(err && err.Table && err.Table[0].Code !== 10 && err.Table1 && err.Table1[0].Description){
-
             this.apiProvider.showAlert(err.Table1[0].Description);
             return;
-            }
+          }
           this.apiProvider.showAlert("Error in response");
         }
       );
@@ -468,7 +467,7 @@ export class TamsregisterattendancePage implements OnInit {
   public takePicture(sourceType) {
     // Create options for the Camera Dialog
     var options = {
-      quality: 100,
+      quality: 80,
       sourceType: sourceType,
       saveToPhotoAlbum: false,
       correctOrientation: true,

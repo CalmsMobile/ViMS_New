@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
-import { DateFormatPipe } from './DateFormat';
 
 /**
  * Generated class for the CustomPipe pipe.
@@ -8,8 +7,8 @@ import { DateFormatPipe } from './DateFormat';
  * See https://angular.io/api/core/Pipe for more info on Angular Pipes.
  */
 
-@Pipe({name: 'groupBy'})
-export class CustomPipe implements PipeTransform {
+@Pipe({name: 'groupByRecent'})
+export class CustomReversePipe implements PipeTransform {
     transform(collection: Array<any>, property: string): Array<any> {
         // prevents the application from breaking if the array of objects doesn't exist yet
         if(!collection) {
@@ -51,7 +50,7 @@ export class CustomPipe implements PipeTransform {
             );
         }
 
-        // resultArray.reverse();
+        resultArray.reverse();
 
         // this will return an array of objects, each object containing a group of objects
         return resultArray;

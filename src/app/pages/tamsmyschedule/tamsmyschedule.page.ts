@@ -1,11 +1,8 @@
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, IonItemSliding, IonSlides } from '@ionic/angular';
+import { IonContent, IonItemSliding } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { CustomPipe } from 'src/app/pipes/custom/custom';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
-import { RestProvider } from 'src/app/providers/rest/rest';
 import { AppSettings } from 'src/app/services/app-settings';
 
 @Component({
@@ -26,9 +23,7 @@ export class TamsmyschedulePage implements OnInit {
   showMenu = false;
   constructor(private router: Router,
     private dateformat : DateFormatPipe,
-    private translate:TranslateService,
-    private groupBy : CustomPipe,
-    private apiProvider: RestProvider) {
+    private translate:TranslateService) {
       this.translate.get([ 'ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS', 'ALERT_TEXT.CONFIRMATION',
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'SETTINGS.SELECT_LANGUAGE']).subscribe(t => {
         this.T_SVC = t;

@@ -38,7 +38,7 @@
         </ion-col>
   </ion-row>
 
-  <ion-list no-padding no-margin *ngFor="let list of appointments | groupBy:'BookingID'">
+  <ion-list no-padding no-margin *ngFor="let list of appointments | groupByRecent:'BookingID'">
     <ion-card class="card_appointment" (click)="viewBooking(list.value)"
       no-padding no-border >
       <ion-item-sliding #slideDOM (ionDrag)="logDrag($event, list.value, slideDOM)">

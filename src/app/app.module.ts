@@ -66,6 +66,7 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { EventsServiceNotification } from './services/EventsServiceNotification';
+import { CustomReversePipe } from './pipes/custom/custom_reverse';
 
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent, ToolTipComponent,
@@ -138,6 +139,7 @@ import { EventsServiceNotification } from './services/EventsServiceNotification'
     VimsFacilityDisplay,
     DateFormatPipe,
     CustomPipe,
+    CustomReversePipe,
     StreamingMedia,
     Contacts,
     AndroidPermissions,
