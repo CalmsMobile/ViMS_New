@@ -80,14 +80,25 @@ export class ManageAppointmentPage implements OnInit {
       title: "home-view",
       message: ''
     });
+    this.events.observeDataCompany().subscribe((data1:any) => {
+      if (data1.action === "FBBookingCancel") {
+        console.log("Notification Received: " + data1.title);
+        if(this.QRObj){
+          if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
+            this.getAppointmentHistory(false);
+          }else{
+            this.getAppointmentFacilityHistory(false);
+          }
+        }
+      }
+    });
     this.showNotificationCount();
     if(this.QRObj){
       if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTAPPT) > -1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
-        this.getAppointmentHistory();
+        this.getAppointmentHistory(true);
       }else{
-        this.getAppointmentFacilityHistory();
+        this.getAppointmentFacilityHistory(true);
       }
-
     }
   }
 
@@ -144,7 +155,7 @@ export class ManageAppointmentPage implements OnInit {
 		return weekdays[dateObject.getDay()];
   }
 
-  getAppointmentFacilityHistory(){
+  getAppointmentFacilityHistory(showLoadingEnable){
     this.loadingFinished = false;
 		var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
@@ -158,13 +169,14 @@ export class ManageAppointmentPage implements OnInit {
       // this.VM.host_search_id = "adam";
       var showLoading = false;
       var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-      if(qrInfo && JSON.parse(qrInfo) && JSON.parse(qrInfo).MAppId == AppSettings.LOGINTYPES.FACILITY){
+      if(showLoadingEnable && qrInfo && JSON.parse(qrInfo) && JSON.parse(qrInfo).MAppId == AppSettings.LOGINTYPES.FACILITY){
         showLoading = true;
       }
 			this.apiProvider.VimsAppGetHostFacilityBookingList(params, showLoading).then(
 				(val) => {
           this.loadingFinished = true;
 					var aList = JSON.parse(val.toString());
+          this.aList = [];
           for(var i = 0 ; i < aList.length ; i++){
             var item = {
               "STAFF_NAME": aList[i].FacilityName,
@@ -181,7 +193,7 @@ export class ManageAppointmentPage implements OnInit {
               "appointment_group_id": aList[i].BookingID,
               "isFacilityAlone": true
             }
-            this.aList[this.aList.length] = item;
+            this.aList.push(item);
           }
           this.appointments = this.groupBy.transform(this.aList, 'appointment_group_id');
           this.loadEvents();
@@ -206,7 +218,7 @@ export class ManageAppointmentPage implements OnInit {
 		  }
 	  }
 
-  getAppointmentHistory(){
+  getAppointmentHistory(showLoading){
     this.loadingFinished = false;
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if(hostData){
@@ -217,7 +229,7 @@ export class ManageAppointmentPage implements OnInit {
 			"Rows":"2000"
 		};
 			// this.VM.host_search_id = "adam";
-			this.apiProvider.syncAppointment(params, false, true ).then(
+			this.apiProvider.syncAppointment(params, false, showLoading).then(
 				(val) => {
           this.loadingFinished = true;
 					this.aList = JSON.parse(val.toString());
@@ -225,11 +237,11 @@ export class ManageAppointmentPage implements OnInit {
           this.appointments = this.groupBy.transform(this.aList, 'appointment_group_id');
           this.loadEvents();
           if(this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.FACILITY) > -1 || this.QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.HOSTWITHFB) > -1){
-            this.getAppointmentFacilityHistory();
+            this.getAppointmentFacilityHistory(true);
           }
 
 				},
-				async (err) => {
+				(err) => {
           this.loadingFinished = true;
           if(err && err.message == "No Internet"){
               return;
@@ -242,13 +254,7 @@ export class ManageAppointmentPage implements OnInit {
             }
             if(message){
               // message = " Unknown"
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: message,
-                cssClass: '',
-                buttons: ['Okay']
-              });
-                alert.present();
+              this.apiProvider.showAlert(message);
             }
           }
 			);
