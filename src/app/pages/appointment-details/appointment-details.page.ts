@@ -345,23 +345,23 @@ export class AppointmentDetailsPage implements OnInit {
         console.log('Has permission?',result.hasPermission)
         if(result.hasPermission){
           this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(
-            async result =>{
+            result =>{
               this.apiProvider.presentLoading();
 
               console.log('Has permission?',result.hasPermission);
-              fileTransfer.download(url, targetPath).then(async (entry) => {
+              fileTransfer.download(url, targetPath).then((entry) => {
                 this.apiProvider.dismissLoading();
                 console.log('download complete: ' + entry.toURL());
                 var data = "Hi, I have shared the QR code for our appointment. Please use the QR code for your registration when you visit me."+
                 "\n"+" Thanks,"+"\n"+"["+hostName+"]";
-                this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(async () => {
-                }).catch(async (error) => {
+                this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(() => {
+                }).catch((error) => {
                   // Error!
                   this.apiProvider.dismissLoading();
                   console.log(""+error);
                   this.apiProvider.showToast('Error');
                 });
-              }, async (error) => {
+              }, (error) => {
                 // handle error
                 this.apiProvider.dismissLoading();
                 this.apiProvider.showToast('Download Error');
@@ -602,7 +602,7 @@ export class AppointmentDetailsPage implements OnInit {
                   (await toast).present();
                 }
               },
-              async (err) => {
+              (err) => {
                 if(err && err.message == "No Internet"){
                   return;
                 }
@@ -624,13 +624,7 @@ export class AppointmentDetailsPage implements OnInit {
                 }
                 if(message){
                   // message = " Unknown"
-                  let alert = this.alertCtrl.create({
-                    header: 'Error !',
-                    message: message,
-                    cssClass:'',
-                    buttons: ['Okay']
-                    });
-                    (await alert).present();
+                  this.apiProvider.showToast(message);
                 }
               }
             );
@@ -1258,6 +1252,11 @@ cancelSlot(slot, startDate, endDate, StaffSeqId){
       if(val){
         var message = "Success"; // 0- used 1.success 2.Expired
         if(JSON.parse(val+"")[0].Status == "1"){
+          this.events.publishDataCompany({
+            action: "FBBookingCancel",
+            title: "FBBookingCancel",
+            message: ''
+          });
           let alert = this.alertCtrl.create({
             header: 'Success',
             message: this.T_SVC['ALERT_TEXT.SLOT_REMOVED'],
@@ -1325,17 +1324,11 @@ FBBookingEndSession(slot, PinNumber , StaffSeqId){
     "UpdatedBy":StaffSeqId
   }
   this.apiProvider.FBBookingEndSession(params).then(
-    async (val) => {
+    (val) => {
       if(val){
         var message = "Success"; // 0- used 1.success 2.Expired
         if(JSON.parse(val+"")[0].code == 10){
-          let alert = this.alertCtrl.create({
-            header: 'Success',
-            message: this.T_SVC['ALERT_TEXT.SESSION_ENDED'],
-            cssClass:'',
-            buttons: ['Okay']
-          });
-          (await alert).present();
+          this.apiProvider.showAlert(this.T_SVC['ALERT_TEXT.SESSION_ENDED']);
           if(this.FACILITYSLOTLIST && this.FACILITYSLOTLIST.length > 0){
             for(var i = 0 ; i < this.FACILITYSLOTLIST.length ; i++){
               const index: number = this.FACILITYSLOTLIST[i].value.indexOf(slot);
@@ -1351,19 +1344,15 @@ FBBookingEndSession(slot, PinNumber , StaffSeqId){
             message = this.T_SVC['ALERT_TEXT.SLOT_OCCUPIED'];
           }else if(JSON.parse(val+"")[0].Status == "2"){
             message = this.T_SVC['ALERT_TEXT.SESSION_EXPIRED'];
+          } else {
+            message = JSON.parse(val+"")[0].description;
           }
-          let alert = this.alertCtrl.create({
-            header: 'Failed',
-            message: message,
-            cssClass:'',
-            buttons: ['Okay']
-          });
-          (await alert).present();
+          this.apiProvider.showAlert(message);
         }
 
       }
     },
-    async (err) => {
+    (err) => {
       if(err && err.message == "No Internet"){
         return;
       }
@@ -1375,13 +1364,7 @@ FBBookingEndSession(slot, PinNumber , StaffSeqId){
       }
       if(message){
         // message = " Unknown"
-          let alert = this.alertCtrl.create({
-          header: 'Error !',
-          message: message,
-          cssClass:'',
-          buttons: ['Okay']
-          });
-          (await alert).present();
+        this.apiProvider.showAlert(message);
       }
     }
   );
@@ -1412,7 +1395,7 @@ getRefVisitorCateg(visitor_ctg_id) {
   );
 }
 
-async openCustomDialog(action, visitor) {
+openCustomDialog(action, visitor) {
   let api = '/api/Vims/GetVisitorQuestionariesByAppointmentId';
   if (action === 'doc') {
     api = '/api/Vims/GetVisitorDocsBySeqId';
@@ -1426,26 +1409,10 @@ async openCustomDialog(action, visitor) {
 };
 // this.VM.host_search_id = "adam";
 this.apiProvider.requestApi(params, api, true, '', '').then(
-  async (val) => {
+  (val) => {
     var result = JSON.parse(val.toString());
     if (result.Table && result.Table.length > 0) {
-      const presentModel = await this.modalCtrl.create({
-        component: QuestionDocPopupComponent,
-        componentProps: {
-          data: {
-            seqId: visitor.VisitorBookingSeqId,
-            result: result.Table,
-            type: action
-          }
-        },
-        showBackdrop: true,
-        mode: 'ios',
-        cssClass: 'visitorPopupModal'
-      });
-      presentModel.onWillDismiss().then((data) => {
-      });
-      return await presentModel.present();
-
+      this.openCustomDialog1(visitor, result, action);
     } else {
       let msg = 'Visitor yet to submit the questionaries';
       if (visitor.Approval_Status === 'Approved') {
@@ -1466,7 +1433,7 @@ this.apiProvider.requestApi(params, api, true, '', '').then(
       this.apiProvider.showAlert(msg);
     }
     },
-  async (err) => {
+   (err) => {
 
     if(err && err.message == "No Internet"){
       return;
@@ -1481,16 +1448,29 @@ this.apiProvider.requestApi(params, api, true, '', '').then(
     }
     if(message){
       // message = " Unknown"
-      let alert = this.alertCtrl.create({
-        header: 'Error !',
-        message: message,
-        cssClass:'',
-        buttons: ['Okay']
-        });
-        (await alert).present();
+      this.apiProvider.showAlert(message);
     }
   }
 );
+}
+
+async openCustomDialog1(visitor, result, action){
+  const presentModel = await this.modalCtrl.create({
+    component: QuestionDocPopupComponent,
+    componentProps: {
+      data: {
+        seqId: visitor.VisitorBookingSeqId,
+        result: result.Table,
+        type: action
+      }
+    },
+    showBackdrop: true,
+    mode: 'ios',
+    cssClass: 'visitorPopupModal'
+  });
+  presentModel.onWillDismiss().then((data) => {
+  });
+  return await presentModel.present();
 }
 
   ngOnInit() {
