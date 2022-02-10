@@ -90,7 +90,7 @@ export class AdminLoginPage implements OnInit {
         }
 
         var message = "";
-        if(err && err.message.indexOf("Http failure response for") > -1){
+        if(err && err.message && err.message.indexOf("Http failure response for") > -1){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
           let alert = await this.alertCtrl.create({
             header: 'Error !',

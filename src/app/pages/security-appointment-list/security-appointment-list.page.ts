@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { AlertController, IonItemSliding } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,6 +32,8 @@ export class SecurityAppointmentListPage implements OnInit {
     private commonUtil: CommonUtil,
     private alertCtrl: AlertController,
     private dateformat: DateFormatPipe,
+    private ngZone1: NgZone,
+    private changeRef: ChangeDetectorRef,
     private translate:TranslateService,) {
     this.translate.get([ 'ALERT_TEXT.VISITOR_CHECKOUT_SUCCESS', 'ALERT_TEXT.CONFIRMATION',
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL', 'SETTINGS.SELECT_LANGUAGE']).subscribe(t => {
@@ -53,12 +55,21 @@ export class SecurityAppointmentListPage implements OnInit {
     this.getBranchAppointments(null, false, false);
   }
 
+  onScroll(event) {
+    if (event.detail.deltaY < 0) {
+        console.log('scrolling up...');
+        this.ngZone1.run(() => {
+          this.changeRef.detectChanges();
+        });
+    }
+}
+
   loadData(event) {
     var currentClass = this;
     setTimeout(() => {
       console.log('Done');
       event.target.complete();
-
+      this.changeRef.detectChanges();
       // App logic to determine if all data is loaded
       // and disable the infinite scroll
       if(!currentClass.isFetching){
@@ -183,7 +194,7 @@ export class SecurityAppointmentListPage implements OnInit {
                   return;
                 }
                 var message = "";
-                if(err && err.message.indexOf("Http failure response for") > -1){
+                if(err && err.message && err.message.indexOf("Http failure response for") > -1){
                   message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
                 } else if(err && JSON.parse(err) && JSON.parse(err).message){
                   message =JSON.parse(err).message;
@@ -229,56 +240,57 @@ export class SecurityAppointmentListPage implements OnInit {
  };
     this.apiProvider.requestSecurityApi(data, '/api/SecurityApp/getBranchAppointments', hideLoading ? false: true).then(
       (val: any) => {
-        this.isLoadingFinished = true;
-        const response = JSON.parse(val);
-        if (response.Table && response.Table.length > 0 && response.Table[0].Code === 10) {
-          if(refresher){
-            this.appointments = response.Table1;
-            if (response.Table2){
-              this.appointmentsTable2 = response.Table2;
-            }
-            if (response.Table3){
-              this.appointmentsTable3 = response.Table3;
-            }
-            refresher.target.complete();
-          } else {
-            this.appointments = response.Table1.concat(this.appointments);
-            if (response.Table2){
-              this.appointmentsTable2 = response.Table2.concat(this.appointmentsTable2);
-            }
-            if (response.Table3){
-              this.appointmentsTable3 = response.Table3.concat(this.appointmentsTable3);
+        this.ngZone1.run(() => {
+          this.isLoadingFinished = true;
+          const response = JSON.parse(val);
+          if (response.Table && response.Table.length > 0 && response.Table[0].Code === 10) {
+            if(refresher){
+              this.appointments = response.Table1;
+              if (response.Table2){
+                this.appointmentsTable2 = response.Table2;
+              }
+              if (response.Table3){
+                this.appointmentsTable3 = response.Table3;
+              }
+              refresher.target.complete();
+            } else {
+              this.appointments = this.appointments.concat(response.Table1);
+              if (response.Table2){
+                this.appointmentsTable2 = this.appointmentsTable2.concat(response.Table2);
+              }
+              if (response.Table3){
+                this.appointmentsTable3 = this.appointmentsTable3.concat(response.Table3);
+              }
             }
           }
-        }
+          this.appointments.forEach(element => {
+            const list =  this.appointmentsTable2.filter((item) =>{
+              return (item.visitorBookingSeqId ===  element.SEQ_ID);
+            });
+            element.no_of_time_utilized = 0;
+            if(list && list.length > 0) {
+              element.no_of_time_utilized = list[0].no_of_time_utilized;
+            }
 
-        this.appointments.forEach(element => {
-          const list =  this.appointmentsTable2.filter((item) =>{
-            return (item.visitorBookingSeqId ===  element.SEQ_ID);
+            const list1 =  this.appointmentsTable3.filter((item) =>{
+              return (item.visitorBookingSeqId ===  element.SEQ_ID);
+            });
+            element.att_check_in = 0;
+            element.att_check_out = 0;
+            element.att_check_in_time = '';
+            element.att_check_out_time = '';
+            if(list1 && list1.length > 0) {
+              element.att_check_in = list1[0].att_check_in;
+              element.att_check_out = list1[0].att_check_out;
+              element.att_check_in_time = list1[0].att_check_in_time;
+              element.att_check_out_time = list1[0].att_check_out_time;
+              element.att_id = list1[0].att_id;
+            }
           });
-          element.no_of_time_utilized = 0;
-          if(list && list.length > 0) {
-            element.no_of_time_utilized = list[0].no_of_time_utilized;
-          }
 
-          const list1 =  this.appointmentsTable3.filter((item) =>{
-            return (item.visitorBookingSeqId ===  element.SEQ_ID);
-          });
-          element.att_check_in = 0;
-          element.att_check_out = 0;
-          element.att_check_in_time = '';
-          element.att_check_out_time = '';
-          if(list1 && list1.length > 0) {
-            element.att_check_in = list1[0].att_check_in;
-            element.att_check_out = list1[0].att_check_out;
-            element.att_check_in_time = list1[0].att_check_in_time;
-            element.att_check_out_time = list1[0].att_check_out_time;
-            element.att_id = list1[0].att_id;
-          }
+          this.appointmentsCone = this.appointments;
+          this.isFetching = false;
         });
-
-        this.appointmentsCone = this.appointments;
-        this.isFetching = false;
       },
       (err) => {
         this.isLoadingFinished = true;
@@ -296,7 +308,7 @@ export class SecurityAppointmentListPage implements OnInit {
 
         }
 
-        if(err && err.message.indexOf("Http failure response for") > -1){
+        if(err && err.message && err.message.indexOf("Http failure response for") > -1){
           var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
           this.apiProvider.showAlert(message);
           return;

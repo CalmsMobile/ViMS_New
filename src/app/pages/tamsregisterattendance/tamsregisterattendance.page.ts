@@ -386,7 +386,7 @@ export class TamsregisterattendancePage implements OnInit {
 
           }
 
-          if(err && err.message.indexOf("Http failure response for") > -1){
+          if(err && err.message && err.message.indexOf("Http failure response for") > -1){
             var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
             this.apiProvider.showAlert(message);
             return;

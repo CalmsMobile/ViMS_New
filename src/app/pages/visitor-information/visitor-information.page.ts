@@ -187,7 +187,7 @@ export class VisitorInformationPage implements OnInit {
         }
 
         try {
-          if(err && err.message.indexOf("Http failure response for") > -1){
+          if(err && err.message && err.message.indexOf("Http failure response for") > -1){
             message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
             this.apiProvider.showAlert(message);
             return;
@@ -266,7 +266,7 @@ export class VisitorInformationPage implements OnInit {
             return;
         }
 
-        if(err && err.message.indexOf("Http failure response for") > -1){
+        if(err && err.message && err.message.indexOf("Http failure response for") > -1){
           message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
           this.apiProvider.showAlert(message);
           return;
@@ -352,7 +352,7 @@ export class VisitorInformationPage implements OnInit {
             return;
         }
 
-        if(err && err.message.indexOf("Http failure response for") > -1){
+        if(err && err.message && err.message.indexOf("Http failure response for") > -1){
           message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
           this.apiProvider.showAlert(message);
           return;
@@ -496,7 +496,7 @@ export class VisitorInformationPage implements OnInit {
                   return;
                 }
                 var message = "";
-                if(err && err.message.indexOf("Http failure response for") > -1){
+                if(err && err.message && err.message.indexOf("Http failure response for") > -1){
                   message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
                 } else if(err && JSON.parse(err) && JSON.parse(err).message){
                   message =JSON.parse(err).message;
@@ -591,7 +591,7 @@ export class VisitorInformationPage implements OnInit {
       var message = "";
       if (err.status) {
         message = 'Api Not Found';
-      } else if(err && err.message.indexOf("Http failure response for") > -1){
+      } else if(err && err.message && err.message.indexOf("Http failure response for") > -1){
         message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
       } else if(err && JSON.parse(err) && JSON.parse(err).message){
         message =JSON.parse(err).message;

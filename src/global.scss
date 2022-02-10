@@ -1413,11 +1413,10 @@ ion-toolbar {
   margin-left: 6px !important;
 }
 
-
-:root[mode=ios],
-:root[mode=md]{
-  --ion-font-family:  'GothamBook'!important;
-  font-family:  'GothamBook' !important;
+:root[mode="ios"],
+:root[mode="md"] {
+  --ion-font-family: "GothamBook" !important;
+  font-family: "GothamBook" !important;
 }
 
 @font-face {

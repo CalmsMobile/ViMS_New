@@ -38,6 +38,7 @@
             </div>
     </ion-col>
 </ion-row>
+<ion-list>
   <ion-card class="card_appointment" *ngFor="let item of appointmentsCone" no-padding no-border (click)="moveToDetailsPage(item)">
     <ion-item-sliding #slideDOM (ionDrag)="ondrag($event, slideDOM, item)">
       <ion-item lines="none" class="ion-no-padding">
@@ -133,6 +134,7 @@
     </ion-item-options>
 </ion-item-sliding>
   </ion-card>
+</ion-list>
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles"
       loadingText="{{ 'COMMON.LOADER_MSG.LOADING_MORE_DATA' | translate }}">
