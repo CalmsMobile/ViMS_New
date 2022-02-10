@@ -128,14 +128,11 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
 
-      document.body.classList.toggle('dark', false);
-      localStorage.setItem(AppSettings.LOCAL_STORAGE.SUBSCRIPE_DATA, '');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      try {
+        document.body.classList.toggle('light', true);
+      } catch (error) {
 
-      // Listen for changes to the prefers-color-scheme media query
-      prefersDark.addListener((e) => {
-        document.body.classList.toggle('dark', false);
-      });
+      }
 
       this.translate.get(['ALERT_TEXT.ON_BACK', 'ALERT_TEXT.USER_INACTIVE']).subscribe(t => {
         this.T_SVC = t;

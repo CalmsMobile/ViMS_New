@@ -122,7 +122,7 @@ export class MyVisitorsPage implements OnInit {
         }
 
         var message;
-        if(err && err.message.indexOf("Http failure response for") > -1){
+        if(err && err.message && err.message.indexOf("Http failure response for") > -1){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else if(err && JSON.parse(err) && JSON.parse(err).message){
           message =JSON.parse(err).message;

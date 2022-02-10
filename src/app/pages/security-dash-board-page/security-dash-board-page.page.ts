@@ -219,7 +219,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
           return;
         }
         var message = "";
-        if(err && err.message.indexOf("Http failure response for") > -1){
+        if(err && err.message && err.message.indexOf("Http failure response for") > -1){
           message = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
         } else if(err && JSON.parse(err) && JSON.parse(err).message){
           message =JSON.parse(err).message;
@@ -344,7 +344,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
 
                     }
 
-                    if(err && err.message.indexOf("Http failure response for") > -1){
+                    if(err && err.message && err.message.indexOf("Http failure response for") > -1){
                       var message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
                       this.apiProvider.showAlert(message);
                       return;
@@ -625,7 +625,7 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
         }
 
         try {
-          if(err && err.message.indexOf("Http failure response for") > -1){
+          if(err && err.message && err.message.indexOf("Http failure response for") > -1){
             message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
             this.apiProvider.showAlert(message);
             return;
@@ -817,6 +817,8 @@ export class SecurityDashBoardPagePage implements OnInit, AfterViewInit{
       const dMin = this.apiProvider.twoDecimals(parseInt('' +(difference/(60*1000)) % 60));
       const dSec = this.apiProvider.twoDecimals(parseInt('' +(difference/(1000)) % 60));
       return dDays +' Day(s), '+dHours+' Hour(s), '+dMin+' Min(s), '+dSec+' Sec(s)';
+    } else {
+      return '0 Day(s), 0 Hour(s), 0 Min(s), 0 Sec(s)';
     }
 
   }
