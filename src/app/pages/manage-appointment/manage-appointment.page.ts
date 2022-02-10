@@ -266,8 +266,8 @@ export class ManageAppointmentPage implements OnInit {
     for(var i = 0 ; i < this.appointments.length ; i++){
       var item = this.appointments[i];
       var event = {
-        "startTime": new Date(item.value[0].START_DATE),
-        "endTime": new Date(item.value[0].END_DATE),
+        "startTime": new Date(item.value[0].START_DATE.split('T')[0]),
+        "endTime": new Date(item.value[0].END_DATE.split('T')[0]),
         "value": item
       }
       this.eventSource[this.eventSource.length] = event;

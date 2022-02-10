@@ -26,7 +26,7 @@ export class CustomPipe implements PipeTransform {
             itemDate = current['START_DATE'];
           }
           if (itemDate){
-            itemDate = new DatePipe('en-US').transform(itemDate, 'yyyy-MM-dd');
+            itemDate = itemDate.split('T')[0];
           }
           var key = current[property] + '|' + itemDate;
           if(!previous[key]) {

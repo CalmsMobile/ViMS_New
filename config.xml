@@ -106,7 +106,7 @@
             <string>We use your camera for update profile picture</string>
         </config-file>
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-            <string>We use your location for full functionality of certain app features.</string>
+            <string>We use your location for register in allotted location.</string>
         </edit-config>
         <icon height="216" src="resources/ios/icon/icon-108@2x.png" width="216" />
         <splash height="2688" src="resources/ios/splash/Default-2688h~iphone.png" width="1242" />
