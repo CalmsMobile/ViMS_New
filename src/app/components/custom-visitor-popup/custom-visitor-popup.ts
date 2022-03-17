@@ -172,6 +172,7 @@ export class CustomVisitorPopupComponent implements OnInit{
               fileTransfer.download(url, targetPath).then((entry) => {
                 loading.dismiss();
                 this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(() => {
+                  loading.dismiss();
                 }).catch(async (error) => {
                   // Error!
                   loading.dismiss();
