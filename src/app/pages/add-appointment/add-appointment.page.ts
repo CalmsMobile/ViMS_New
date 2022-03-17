@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
-import { NavController, AlertController, ToastController, ModalController, ActionSheetController, IonItemSliding, IonContent } from '@ionic/angular';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { NavController, AlertController, ToastController, ModalController, ActionSheetController, IonItemSliding, IonContent, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AddAppointmentAlertPopupComponent } from 'src/app/components/add-appointment-alert/add-appointment-alert-popup';
 import { AddAppointmentModel } from 'src/app/model/addAppointmentModel';
@@ -68,6 +69,8 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
     private modalCtrl : ModalController,
     public apiProvider: RestProvider,
     private dateformat : DateFormatPipe,
+    public socialSharing: SocialSharing,
+    private loadingCtrl: LoadingController,
     private actionsheetCtrl: ActionSheetController,
     private translate:TranslateService) {
       this.translate.get([
@@ -1063,6 +1066,45 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
       this.navCtrl.pop();
     }
     console.log('goBack ');
+  }
+
+  async shareLink(){
+    let loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+    });
+    loading.present();
+   let hostObj: any = {
+    HOSTNAME: "Guest",
+    comp_name: "CALMS Technologies SDN BHD",
+    };
+    const hostData = localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+    const cmpnyData = localStorage.getItem(AppSettings.LOCAL_STORAGE.COMPANY_DETAILS);
+    if (hostData) {
+      hostObj.HOSTNAME = JSON.parse(hostData).HOSTNAME;
+      hostObj.comp_name = JSON.parse(cmpnyData).comp_name;;
+    }
+    const apiurl = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl;
+    let shareyext = "Hi Guest, \n";
+    shareyext = shareyext + "You can use the following link to submit for your appointment. {URL}. After submit, please wait for email instructions. \n";
+    shareyext = shareyext + "Thanks, \n";
+    shareyext = shareyext + hostObj.HOSTNAME +", \n";
+    shareyext = shareyext + hostObj.comp_name + ", \n";
+    shareyext = shareyext.replace("{URL}", apiurl + AppSettings.VisitorRegistration);
+    console.log("share text:" + shareyext);
+    this.socialSharing.share(shareyext, 'Share appointment link', "" , "").then(() => {
+      loading.dismiss();
+    }).catch(async (error) => {
+      // Error!
+      loading.dismiss();
+      console.log(""+error);
+      let toast = await this.toastCtrl.create({
+        message: 'Error',
+        duration: 3000,
+        color: 'primary',
+        position: 'bottom',
+      });
+      toast.present();
+    });
   }
 
   async checkFacilityAvailability(){

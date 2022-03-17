@@ -165,7 +165,7 @@ export const AppSettings = Object.freeze({
         "enb_version_choose": true,
         "enb_language_choose": true,
     },
-
+    VisitorRegistration: "/common/VisitorRegistration.aspx",
     LOGINTYPES : {
         "HOSTAPPT": "HOSTAPPT",
         "FACILITY": "FB",

@@ -4,6 +4,9 @@
     <ion-icon slot="start" class="commonHeaderMyBackArrow" (click)="goBack()" name="chevron-back"></ion-icon>
     <ion-title>{{edit? ('ADD_APPOIN.U_TITLE' | translate) : ('ADD_APPOIN.TITLE' | translate)}}</ion-title>
     <ion-buttons slot="end" *ngIf="showFacility">
+      <ion-button color="light" slot="icon-only" (click)="shareLink()">
+        <ion-icon slot="start" name="share-social-outline"></ion-icon>
+      <ion-ripple-effect></ion-ripple-effect></ion-button>
         <ion-button color="btnthm" slot="icon-only" (click)="checkFacilityAvailability()">
             <img app-logo-img class="animated fadeInDown delay-1s" style="display: block; margin: 0 auto;width: 30px;height: 30px;margin-right: 10px;" src="../../assets/images/room_available.png">
         <ion-ripple-effect></ion-ripple-effect></ion-button>
