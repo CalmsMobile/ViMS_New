@@ -86,10 +86,12 @@ export class SelectStaffPage implements OnInit {
 
     var data =  {
       "HOSTIC":this.selectedStaff,
-      "HOSTNAME": ''
+      "HOSTNAME": '',
+      "HostExt": ''
     }
     if (host) {
       data.HOSTNAME = host.HOSTNAME;
+      data.HostExt = host.HostExt;
     }
     this.events.publishDataCompany({
       action: 'user:created',

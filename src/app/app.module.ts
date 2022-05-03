@@ -67,6 +67,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { EventsServiceNotification } from './services/EventsServiceNotification';
 import { CustomReversePipe } from './pipes/custom/custom_reverse';
+import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
 
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent, ToolTipComponent,
@@ -144,6 +145,7 @@ import { CustomReversePipe } from './pipes/custom/custom_reverse';
     Contacts,
     AndroidPermissions,
     CommonUtil,
+    CallNumber,
     Base64],
   bootstrap: [AppComponent],
 })
