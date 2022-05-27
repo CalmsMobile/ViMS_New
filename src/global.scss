@@ -681,13 +681,24 @@ app-security-dash-board-page {
 .my-tooltip {
   // background: #93133e;
   --background: #ff2233;
+  .popover-content.sc-ion-popover-ios {
+    padding: 7px;
+    right: 14px;
+    width: 100px;
+    text-align: center;
+  }
 }
-.popover-content.sc-ion-popover-ios {
-  padding: 7px;
-  right: 14px;
-  width: 100px;
-  text-align: center;
+.my-tooltip1 {
+  // background: #93133e;
+  --background: #ff2233;
+  .popover-content.sc-ion-popover-ios {
+    padding: 7px;
+    right: 14px;
+    width: 200px;
+    text-align: center;
+  }
 }
+
 .pop-over-style .popover-content {
   --min-width: 50px !important;
 }

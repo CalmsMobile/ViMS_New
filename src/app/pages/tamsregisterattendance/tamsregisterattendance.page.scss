@@ -138,6 +138,15 @@ ion-toggle[aria-checked="true"] {
   vertical-align: middle;
   font-size: 10px;
 }
+
+.centerText{
+  height: 100%;
+   width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
 .divider {
   min-height: 1px;
   width: 100px;

@@ -94,6 +94,10 @@ export class QrProfilePage implements OnInit {
     this.goBack();
   }
 
+  openTooltip(event, message) {
+    this.apiProvider.presentPopover1(event, message);
+  }
+
   getUserProfile() {
     var params  = {
       "UserSeqId": "",

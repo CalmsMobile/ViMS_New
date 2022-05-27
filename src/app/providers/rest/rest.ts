@@ -214,6 +214,28 @@ deg2rad(deg) {
     });
   }
 
+  async presentPopover1(ev: any, message) {
+    const popover = await this.popoverController.create({
+      component: ToolTipComponent,
+      componentProps: {
+        data: {
+          title : message
+        }
+      },
+      cssClass: 'my-tooltip1',
+      event: ev,
+      animated: true,
+      backdropDismiss: true,
+      mode: 'ios',
+      translucent: true
+    });
+    await popover.present().then(() => {
+      setTimeout(() => {
+        popover.dismiss();
+      }, 2000);
+    });
+  }
+
   dismissLoading() {
     setTimeout(async () => {
       try {
