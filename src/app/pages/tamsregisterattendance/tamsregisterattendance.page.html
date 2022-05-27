@@ -7,68 +7,70 @@
 
 <ion-content>
 
-  <div class="ion-text-center">
+  <div class="centerText">
 
-    <!-- <div class="map-wrapper">
-      <div id="map_center">
-        <ion-icon style="font-size: 30px;" color="primary" name="location-outline"></ion-icon>
-      </div>
-      <div #map id="map"></div>
-    </div> -->
+    <div class="ion-text-center">
 
-    <ion-card class="locationCard">
-      <div style="display: inline-flex;" (click)="openMap()">
-        <ion-icon class="mapIcon" color="primary" name="location-outline"></ion-icon>
-        <ion-label class="locationMap">Click here to view your location</ion-label>
-      </div>
-      <ion-item-divider class="divider"></ion-item-divider>
-    </ion-card>
-
-    <div (click)="presentActionSheet()" *ngIf="tamsSettings && tamsSettings.EnableImage">
-      <ion-icon class="camera-icon" name="camera-outline"></ion-icon>
-      <img class="img" src="{{base64Image? ('data:image/jpeg;base64,' +base64Image): '../../../assets/images/user.png'}}"/>
-
-    </div>
-
-    <ion-card class="shiftTimeCard">
-      <div>
-        <ion-icon class="shit_icon1" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? '35px': '53px'}" name="stopwatch-outline"></ion-icon>
-        <ion-label style="vertical-align: middle;" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? '30px': '48px'}">{{currentTime ? (currentTime | date: 'hh:mm a'): ''}}</ion-label>
-      </div>
-    </ion-card>
-
-    <ion-card class="shiftCard" *ngIf="myTodaySchedule">
-        <div>
-          <ion-icon class="shit_icon" slot="start" name="layers-outline"></ion-icon>
-          <ion-label>SHIFT</ion-label>
+      <!-- <div class="map-wrapper">
+        <div id="map_center">
+          <ion-icon style="font-size: 30px;" color="primary" name="location-outline"></ion-icon>
         </div>
-        <ion-label style="font-size: 28px;
-        color: midnightblue;">{{myTodaySchedule.shiftName}}</ion-label>
+        <div #map id="map"></div>
+      </div> -->
 
-    </ion-card>
+      <ion-card class="locationCard">
+        <div style="display: inline-flex;" (click)="openMap()">
+          <ion-icon class="mapIcon" color="primary" name="location-outline"></ion-icon>
+          <ion-label class="locationMap">Click here to view your location</ion-label>
+        </div>
+        <ion-item-divider class="divider"></ion-item-divider>
+      </ion-card>
 
-    <ion-card class="shiftTimeCard" *ngIf="myTodaySchedule">
-      <div style="margin-bottom: 8px;">
-        <ion-icon class="shit_icon1" slot="start" name="hourglass-outline"></ion-icon>
-        <ion-label style="vertical-align: middle;">SHIFT TIME</ion-label>
+      <div (click)="presentActionSheet()" *ngIf="tamsSettings && tamsSettings.EnableImage">
+        <ion-icon class="camera-icon" name="camera-outline"></ion-icon>
+        <img class="img" src="{{base64Image? ('data:image/jpeg;base64,' +base64Image): '../../../assets/images/user.png'}}"/>
+
       </div>
-      <ion-label style="font-size: 16px;">{{(myTodaySchedule.fromTime? myTodaySchedule.fromTime: '--') + '&nbsp;&nbsp;-&nbsp;&nbsp;' + (myTodaySchedule.toTime?myTodaySchedule.toTime: '--')}}</ion-label>
+
+      <ion-card class="shiftTimeCard">
+        <div>
+          <ion-icon class="shit_icon1" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'35px': '60px': (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'53px': '96px'}" name="stopwatch-outline"></ion-icon>
+          <ion-label style="vertical-align: middle;" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'30px': '50px': (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'48px': '86px'}">{{currentTime ? (currentTime | date: 'hh:mm a'): ''}}</ion-label>
+        </div>
+      </ion-card>
+
+      <ion-card class="shiftCard" *ngIf="myTodaySchedule && TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1" >
+          <div>
+            <ion-icon class="shit_icon" slot="start" name="layers-outline"></ion-icon>
+            <ion-label>SHIFT</ion-label>
+          </div>
+          <ion-label style="font-size: 28px;
+          color: midnightblue;">{{myTodaySchedule.shiftName}}</ion-label>
+
+      </ion-card>
+
+      <ion-card class="shiftTimeCard" *ngIf="myTodaySchedule && TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1">
+        <div style="margin-bottom: 8px;">
+          <ion-icon class="shit_icon1" slot="start" name="hourglass-outline"></ion-icon>
+          <ion-label style="vertical-align: middle;">SHIFT TIME</ion-label>
+        </div>
+        <ion-label style="font-size: 16px;">{{(myTodaySchedule.fromTime? myTodaySchedule.fromTime: '--') + '&nbsp;&nbsp;-&nbsp;&nbsp;' + (myTodaySchedule.toTime?myTodaySchedule.toTime: '--')}}</ion-label>
+      </ion-card>
+
+
+      <ion-card class="shiftToggleCard">
+        <ion-toggle (ionChange)="toggleChange()" [(ngModel)]="toogleModel"  mode="ios" [checked]="CheckInFlag === 'out'?'false': 'true'"></ion-toggle>
+      </ion-card>
+
+    <ion-card class="shiftToggleCard" style="margin-top: 14px;">
+      <ion-button style="--background: linear-gradient(to right, var(--ion-color-btnthm) 0%, var(--ion-color-btnthm) 51%, var(--ion-color-btnthm) 100%)"  shape="round" mode="ios"  (click)="registerMyAttendance()">
+        <ion-label>Clock My Time</ion-label>
+      <ion-ripple-effect></ion-ripple-effect></ion-button>
     </ion-card>
 
-
-    <ion-card class="shiftToggleCard">
-      <ion-toggle (ionChange)="toggleChange()" [(ngModel)]="toogleModel"  mode="ios" [checked]="CheckInFlag === 'out'?'false': 'true'"></ion-toggle>
-     </ion-card>
-
-   <ion-card class="shiftToggleCard" style="margin-top: 14px;">
-    <ion-button style="--background: linear-gradient(to right, var(--ion-color-btnthm) 0%, var(--ion-color-btnthm) 51%, var(--ion-color-btnthm) 100%)"  shape="round" mode="ios"  (click)="registerMyAttendance()">
-      <ion-label>Clock My Time</ion-label>
-    <ion-ripple-effect></ion-ripple-effect></ion-button>
-   </ion-card>
-
-    <!-- <ion-button class="button-register" (click)="registerMyAttendance()" slot="end" expand="block" shape="round" color="primary">Register Attendance<ion-ripple-effect></ion-ripple-effect></ion-button> -->
+      <!-- <ion-button class="button-register" (click)="registerMyAttendance()" slot="end" expand="block" shape="round" color="primary">Register Attendance<ion-ripple-effect></ion-ripple-effect></ion-button> -->
+    </div>
   </div>
-
 
 
 </ion-content>

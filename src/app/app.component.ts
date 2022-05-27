@@ -504,11 +504,13 @@ export class AppComponent {
         const response = JSON.parse(val);
         if (response.Table && response.Table.length > 0 ) {
           if(response.Table[0].Code === 10 || response.Table[0].code === 10) {
-            localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS, JSON.stringify(response.Table1[0]));
+            const saveData = response.Table1[0];
+            saveData.modules = response.Table2[0];
+            localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS, JSON.stringify(saveData));
           }
         }
       },
-      async (err) => {
+      (err) => {
         if(err && err.message == "No Internet"){
           return;
         }

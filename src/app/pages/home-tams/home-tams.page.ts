@@ -33,6 +33,7 @@ export class HomeTAMSPage implements OnInit {
   showNotification = false;
   showQRAccess = false;
   isAdmin = false;
+  TAMS_MODULE;
   constructor(public navCtrl: NavController,
     private events : EventsService,
     private eventsNotification : EventsServiceNotification,
@@ -203,16 +204,21 @@ export class HomeTAMSPage implements OnInit {
           const response = JSON.parse(val);
           if (response.Table && response.Table.length > 0 ) {
             if(response.Table[0].Code === 10 || response.Table[0].code === 10) {
-              localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS, JSON.stringify(response.Table1[0]));
+              const saveData = response.Table1[0];
+              saveData.modules = response.Table2[0];
+              this.TAMS_MODULE = saveData.modules;
+              localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS, JSON.stringify(saveData));
             }
           }
         },
-        async (err) => {
+        (err) => {
           if(err && err.message == "No Internet"){
             return;
           }
         }
       );
+    } else {
+      this.TAMS_MODULE = JSON.parse(settings).modules;
     }
 
   }
@@ -311,8 +317,9 @@ export class HomeTAMSPage implements OnInit {
 
     const settings = localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
     var qrInfo = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
-    if (qrInfo){
+    const tamsSettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS);
 
+    if (qrInfo){
       if (settings && JSON.parse(settings)) {
           try {
               var hostSettings = JSON.parse(settings).Table1[0];
@@ -355,6 +362,10 @@ export class HomeTAMSPage implements OnInit {
       } else {
         this.showQRAccess = false;
       }
+    }
+
+    if (tamsSettings){
+      this.TAMS_MODULE = JSON.parse(tamsSettings).modules;
     }
 
     this.events.publishDataCompany({

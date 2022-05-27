@@ -28,6 +28,7 @@ export class TamsregisterattendancePage implements OnInit {
   CheckInFlag = 'in';
   toogleModel = true;
   myTodaySchedule;
+  TAMS_MODULE;
   tamsSettings: any = {};
   timeExpired = false;
   clockDateObj: any = {};
@@ -270,9 +271,13 @@ export class TamsregisterattendancePage implements OnInit {
   }
 
   ionViewDidEnter() {
+    const tamsSettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS);
+    if (tamsSettings){
+      this.TAMS_MODULE = JSON.parse(tamsSettings).modules;
+    }
     if (!this.myTodaySchedule) {
-      this.showAlertForLocation(" You dont have schedule for today. please contact your administrator");
-      return;
+      // this.showAlertForLocation(" You dont have schedule for today. please contact your administrator");
+       return;
     }
     this.apiProvider.presentLoadingWithText('Please wait fetching location...');
     localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_LATITUDE, '');

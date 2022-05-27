@@ -40,43 +40,43 @@
       </ion-card-header> -->
       <div *ngIf="userProfile">
 
-        <ion-item lines="none" class="itemClass">
+        <ion-item lines="none" (click)="openTooltip($event, 'Member Id : ' + (userProfile.MemberId ? userProfile.MemberId : '&nbsp;&nbsp;--'))" class="itemClass">
           <ion-icon name="card-outline"></ion-icon>
-          <ion-text>{{userProfile.MemberId}}</ion-text>
+          <ion-label style="text-align: left;">{{userProfile.MemberId}}</ion-label>
         </ion-item>
-        <ion-item lines="none" class="itemClass">
+        <ion-item lines="none" (click)="openTooltip($event, 'Email : ' + (userProfile.Email ? userProfile.Email : '&nbsp;&nbsp;--'))"  class="itemClass">
           <ion-icon name="mail-outline"></ion-icon>
-          <ion-text>{{userProfile.Email ? userProfile.Email : '&nbsp;&nbsp;--'}}</ion-text>
+          <ion-label style="text-align: left;">{{userProfile.Email ? userProfile.Email : '&nbsp;&nbsp;--'}}</ion-label>
         </ion-item>
-        <ion-item lines="none" class="itemClass">
+        <ion-item lines="none" (click)="openTooltip($event, 'Contact : ' + (userProfile.ContactNo ? userProfile.ContactNo : '&nbsp;&nbsp;--'))" class="itemClass">
           <ion-icon name="call-outline"></ion-icon>
-          <ion-text>{{userProfile.ContactNo ? userProfile.ContactNo : '&nbsp;&nbsp;--'}}</ion-text>
+          <ion-label style="text-align: left;">{{userProfile.ContactNo ? userProfile.ContactNo : '&nbsp;&nbsp;--'}}</ion-label>
         </ion-item>
-        <ion-item lines="none" class="itemClass" *ngIf="userProfile.MemberType !== 'Student'">
+        <ion-item (click)="openTooltip($event, 'Department : ' + (userProfile.Department ? userProfile.Department : '&nbsp;&nbsp;--'))" lines="none" class="itemClass" *ngIf="userProfile.MemberType !== 'Student'">
           <ion-icon name="albums-outline"></ion-icon>
-          <ion-text>{{'Department : ' + (userProfile.Department ? userProfile.Department : '&nbsp;&nbsp;--')}}</ion-text>
+          <ion-label style="text-align: left;">{{'Department : ' + (userProfile.Department ? userProfile.Department : '&nbsp;&nbsp;--')}}</ion-label>
         </ion-item>
-        <ion-item lines="none" class="itemClass" *ngIf="userProfile.MemberType !== 'Student'">
+        <ion-item lines="none" (click)="openTooltip($event, 'Position : ' + (userProfile.JobDesc ? userProfile.JobDesc : '&nbsp;&nbsp;--'))" class="itemClass" *ngIf="userProfile.MemberType !== 'Student'">
           <ion-icon name="bag-handle-outline"></ion-icon>
-          <ion-text>{{'Job Desc : ' + (userProfile.JobDesc ? userProfile.JobDesc : '&nbsp;&nbsp;--')}}</ion-text>
+          <ion-label style="text-align: left;">{{'Position : ' + (userProfile.JobDesc ? userProfile.JobDesc : '&nbsp;&nbsp;--')}}</ion-label>
         </ion-item>
 
-        <ion-item lines="none" class="itemClass" *ngIf="userProfile.MemberType === 'Student'">
+        <ion-item lines="none" (click)="openTooltip($event, 'Grade : ' + (userProfile.Grade ? userProfile.Grade : '&nbsp;&nbsp;--'))" class="itemClass" *ngIf="userProfile.MemberType === 'Student'">
           <ion-icon name="medal-outline"></ion-icon>
-          <ion-text>{{'Grade : ' + (userProfile.Grade ? userProfile.Grade : '&nbsp;&nbsp;--')}}</ion-text>
+          <ion-label style="text-align: left;">{{'Grade : ' + (userProfile.Grade ? userProfile.Grade : '&nbsp;&nbsp;--')}}</ion-label>
         </ion-item>
-        <ion-item lines="none" class="itemClass"  *ngIf="userProfile.MemberType === 'Student'">
+        <ion-item lines="none" (click)="openTooltip($event, 'Year : ' + (userProfile.Year ? userProfile.Year : '&nbsp;&nbsp;--'))" class="itemClass"  *ngIf="userProfile.MemberType === 'Student'">
           <ion-icon name="calendar-outline"></ion-icon>
-          <ion-text>{{'Year ' + (userProfile.Year ? userProfile.Year : '&nbsp;&nbsp;--')}}</ion-text>
+          <ion-label style="text-align: left;">{{'Year ' + (userProfile.Year ? userProfile.Year : '&nbsp;&nbsp;--')}}</ion-label>
         </ion-item>
-        <ion-item lines="none" class="itemClass"  *ngIf="userProfile.MemberType === 'Student'">
+        <ion-item lines="none" (click)="openTooltip($event, 'Class : ' + (userProfile.Class ? userProfile.Class : '&nbsp;&nbsp;--'))" class="itemClass"  *ngIf="userProfile.MemberType === 'Student'">
           <ion-icon name="school-outline"></ion-icon>
-          <ion-text>{{'Class : ' + (userProfile.Class ? userProfile.Class : '&nbsp;&nbsp;--')}}</ion-text>
+          <ion-label style="text-align: left;">{{'Class : ' + (userProfile.Class ? userProfile.Class : '&nbsp;&nbsp;--')}}</ion-label>
         </ion-item>
 
-        <ion-item lines="none" class="itemClass">
+        <ion-item lines="none" (click)="openTooltip($event, 'Member Type : ' + (userProfile.MemberType ? userProfile.MemberType : '&nbsp;&nbsp;--'))" class="itemClass">
           <ion-icon name="ribbon-outline"></ion-icon>
-          <ion-text>{{'Member Type : ' + (userProfile.MemberType ? userProfile.MemberType : '&nbsp;&nbsp;--')}}</ion-text>
+          <ion-label style="text-align: left;">{{'Member Type : ' + (userProfile.MemberType ? userProfile.MemberType : '&nbsp;&nbsp;--')}}</ion-label>
         </ion-item>
       </div>
 
