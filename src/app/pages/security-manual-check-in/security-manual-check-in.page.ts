@@ -13,6 +13,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { DateFormatPipe } from 'src/app/pipes/custom/DateFormat';
 import { ItemChecklistModalComponent } from 'src/app/components/item-checklist-modal/item-checklist-modal.component';
 import { EventsService } from 'src/app/services/EventsService';
+import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
 declare var cordova: any;
 @Component({
   selector: 'app-security-manual-check-in',
@@ -73,6 +74,7 @@ export class SecurityManualCheckInPage implements OnInit {
     private navCtrl: NavController,
     private camera: Camera,
     private cdr: ChangeDetectorRef,
+    private callNumber: CallNumber,
     private dateformat : DateFormatPipe,
     public events: EventsService,
     public toastCtrl: ToastController,
@@ -139,6 +141,15 @@ export class SecurityManualCheckInPage implements OnInit {
     } catch (error) {
 
     }
+  }
+
+  callToNumber() {
+    if (!this.appointmentInfo.HostExt){
+      return;
+    }
+    this.callNumber.callNumber(this.appointmentInfo.HostExt, true)
+  .then(res => console.log('Launched dialer!', res))
+  .catch(err => console.log('Error launching dialer', err));
   }
 
   intSDKTemperature() {
@@ -225,6 +236,8 @@ export class SecurityManualCheckInPage implements OnInit {
             const host = this.HOSTLIST.find(item => item.HOSTIC === this.appointmentInfo.Host_IC);
             if (host) {
               this.appointmentInfo.HOSTNAME = host.HOSTNAME;
+              this.appointmentInfo.HostExt = host.HostExt;
+
             }
 
           }
@@ -291,6 +304,7 @@ export class SecurityManualCheckInPage implements OnInit {
         var cData= JSON.parse(time);
         this.appointmentInfo.HOSTNAME = cData.HOSTNAME;
         this.appointmentInfo.Host_IC = cData.HOSTIC;
+        this.appointmentInfo.HostExt = cData.HostExt;
       }
 
     });

@@ -229,7 +229,7 @@
             <ion-col size="4">
               <ion-text>Host Name</ion-text>
             </ion-col>
-            <ion-col size="8" class="classCol">
+            <ion-col size="{{appointmentInfo.HOSTNAME ? '6': '8'}}" class="classCol">
               <!-- <ion-select mode="ios"
               (ionChange)="onSelectChange($event, 'Host')" [(ngModel)]="appointmentInfo.Host_IC"
               interface="action-sheet"
@@ -255,8 +255,16 @@
                       style="font-size:14px;margin-left: 5px;color: #000000 !important;margin-bottom: 0px !important">
                       {{appointmentInfo.HOSTNAME}} </ion-label>
                   </div>
-                  <ion-icon name="arrow-forward" slot="end"></ion-icon>
+                  <ion-icon name="arrow-forward" style="    padding: 0px;margin: 0px;" slot="end"></ion-icon>
                 </ion-item>
+           </ion-col>
+           <ion-col *ngIf="appointmentInfo.HOSTNAME" size="2" class="classCol" (click)="callToNumber()">
+            <ion-icon name="call" style="font-size: 22px;
+            background: var(--ion-color-primary);
+            border-radius: 20px;
+            padding: 7px;
+            color: white;
+            margin-left: 10px;" [ngStyle]="{'background': appointmentInfo.HostExt ? 'var(--ion-color-primary)': 'grey', color: appointmentInfo.HostExt ? 'white': 'white'}"></ion-icon>
            </ion-col>
           </ion-row>
           <ion-row *ngIf="appSettings.General.ShowPurpose">

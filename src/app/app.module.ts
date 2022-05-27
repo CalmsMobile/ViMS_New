@@ -67,6 +67,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { EventsServiceNotification } from './services/EventsServiceNotification';
 import { CustomReversePipe } from './pipes/custom/custom_reverse';
+import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
 export function getCulture() {
   return 'en-US';
 }
@@ -147,6 +148,7 @@ export function getCulture() {
     Contacts,
     AndroidPermissions,
     CommonUtil,
+    CallNumber,
     Base64],
   bootstrap: [AppComponent],
 })

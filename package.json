@@ -20,12 +20,15 @@
     "@angular/platform-browser": "~11.2.0",
     "@angular/platform-browser-dynamic": "~11.2.0",
     "@angular/router": "~11.2.0",
+    "@awesome-cordova-plugins/call-number": "^5.43.0",
+    "@awesome-cordova-plugins/core": "^5.43.0",
+    "@capacitor/core": "3.5.1",
     "@ionic-native/android-permissions": "^5.0.0",
     "@ionic-native/barcode-scanner": "^5.33.1",
     "@ionic-native/base64": "^5.0.0",
     "@ionic-native/camera": "^5.0.0",
     "@ionic-native/contacts": "^5.0.0",
-    "@ionic-native/core": "^5.31.1",
+    "@ionic-native/core": "^5.36.0",
     "@ionic-native/date-picker": "^5.0.0",
     "@ionic-native/device": "^5.0.0",
     "@ionic-native/fcm": "^5.36.0",
@@ -118,10 +121,12 @@
     "@angular/compiler": "~11.2.0",
     "@angular/compiler-cli": "~11.2.0",
     "@angular/language-service": "~11.2.0",
+    "@capacitor/cli": "3.5.1",
     "@ionic/angular-toolkit": "^3.1.1",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
+    "call-number": "^1.0.1",
     "codelyzer": "^6.0.0",
     "cordova-ios": "^5.1.1",
     "cordova.plugins.myKadReader": "file:plugins_src/MyKadReader",
@@ -194,7 +199,8 @@
         "ANDROID_GOOGLE_SERVICES_VERSION": "4.3.4",
         "ANDROID_GRADLE_TOOLS_VERSION": "4.1.0"
       },
-      "cordova.plugins.vcardtemp": {}
+      "cordova.plugins.vcardtemp": {},
+      "mx.ferreyra.callnumber": {}
     },
     "platforms": [
       "ios"
