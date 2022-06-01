@@ -220,7 +220,7 @@ export class AdminHomePage implements OnInit {
       var hostId = JSON.parse(hostData).HOSTIC? JSON.parse(hostData).HOSTIC:JSON.parse(hostData).HOST_ID;
 			var params = {
       "hostID":hostId,
-			"OffSet": ""+ this.appointments.length,
+			"OffSet": refresher ? 0 : this.appointments.length,
       "Rows":"20",
       "StatusType":"0"
     };

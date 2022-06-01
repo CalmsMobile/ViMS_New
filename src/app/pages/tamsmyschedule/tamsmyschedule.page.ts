@@ -116,10 +116,10 @@ export class TamsmyschedulePage implements OnInit {
       refresher.target.complete();
     }
 
-    this.startDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
-    if (this.startDate) {
-      this.filterTechnologiesByDate();
+    if(!this.startDate){
+      this.startDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
     }
+    this.filterTechnologiesByDate();
   }
 
   ondrag(event, slideDOM:IonItemSliding, item: any) {

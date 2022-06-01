@@ -417,12 +417,14 @@ export class TamsregisterattendancePage implements OnInit {
 
     const latitude = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_LATITUDE);
     if (!latitude) {
-      this.apiProvider.showAlert("Location not detected.")
+      this.apiProvider.showAlert("Location not detected.");
+      return;
     }
 
     const longitude = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_LONGITUDE);
     if (!longitude) {
-      this.apiProvider.showAlert("Location not detected.")
+      this.apiProvider.showAlert("Location not detected.");
+      return;
     }
     this.iab.create("https://maps.google.com/?q="+ latitude+","+longitude, '_blank', options);
     // if( (navigator.platform.indexOf("iPhone") != -1)

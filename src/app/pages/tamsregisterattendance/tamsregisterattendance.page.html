@@ -34,8 +34,8 @@
 
       <ion-card class="shiftTimeCard">
         <div>
-          <ion-icon class="shit_icon1" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'35px': '60px': (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'53px': '96px'}" name="stopwatch-outline"></ion-icon>
-          <ion-label style="vertical-align: middle;" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'30px': '50px': (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'48px': '86px'}">{{currentTime ? (currentTime | date: 'hh:mm a'): ''}}</ion-label>
+          <ion-icon class="shit_icon1" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'35px': '60px': (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'53px': '50px'}" name="stopwatch-outline"></ion-icon>
+          <ion-label style="vertical-align: middle;" [ngStyle]="{'color': timeExpired? '#f44336': '#009688', 'font-size': tamsSettings && tamsSettings.EnableImage? (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'30px': '50px': (TAMS_MODULE && TAMS_MODULE.showFlexiTime === 1)?'48px': '55px'}">{{currentTime ? (currentTime | date: 'hh:mm a'): ''}}</ion-label>
         </div>
       </ion-card>
 
