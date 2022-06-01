@@ -16,6 +16,7 @@
     <allow-navigation href="https://*/*" />
     <allow-navigation href="*" />
     <allow-navigation href="data:*" />
+    <preference name="loadUrlTimeoutValue" value="700000" />
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="19" />
     <preference name="BackupWebStorage" value="none" />
