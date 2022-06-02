@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -68,7 +68,9 @@ import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx
 import { EventsServiceNotification } from './services/EventsServiceNotification';
 import { CustomReversePipe } from './pipes/custom/custom_reverse';
 import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
-
+export function getCulture() {
+  return 'en-US';
+}
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent, ToolTipComponent,
     CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent, CountryComponentComponent,
@@ -104,6 +106,7 @@ import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
     ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: HAMMER_GESTURE_CONFIG, useClass: IonicGestureConfig},
+    { provide: LOCALE_ID, useFactory: getCulture},
     MenuService,
     BarcodeScanner,
     StatusBar,
