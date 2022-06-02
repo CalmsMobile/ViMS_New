@@ -276,7 +276,7 @@ export class TamsregisterattendancePage implements OnInit {
       this.TAMS_MODULE = JSON.parse(tamsSettings).modules;
     }
     if (!this.myTodaySchedule) {
-      // this.showAlertForLocation(" You dont have schedule for today. please contact your administrator");
+        this.showAlertForLocation(" You dont have schedule for today. please contact your administrator");
        return;
     }
     this.apiProvider.presentLoadingWithText('Please wait fetching location...');
