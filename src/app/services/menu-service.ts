@@ -99,11 +99,9 @@ export class MenuService implements IService {
                   subMenu.push({ "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" });
                 }
               }
-              menus = [
-                {
+              menus.push({
                   "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": subMenu
-                }
-              ];
+                });
             }
             if (showQP) {
               menus.push({

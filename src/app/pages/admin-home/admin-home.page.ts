@@ -582,7 +582,7 @@ export class AdminHomePage implements OnInit {
             };
             this.router.navigate(['admin-appointment-details'], navigationExtras);
           },
-          async (err) => {
+          (err) => {
             if(err && err.message == "No Internet"){
               return;
             }
@@ -593,20 +593,13 @@ export class AdminHomePage implements OnInit {
               message =JSON.parse(err).message;
             }
             if(message){
-              // message = " Unknown"
-              let alert = await this.alertCtrl.create({
-                header: 'Error !',
-                message: message,
-                cssClass: '',
-                buttons: ['Okay']
-              });
-                alert.present();
+              this.apiProvider.showAlert(message);
             }
           }
         );
 
 			},
-			async (err) => {
+			(err) => {
         if(err && err.message == "No Internet"){
           return;
         }
@@ -617,14 +610,7 @@ export class AdminHomePage implements OnInit {
           message =JSON.parse(err).message;
         }
         if(message){
-          // message = " Unknown"
-          let alert = await this.alertCtrl.create({
-            header: 'Error !',
-            message: message,
-            cssClass: '',
-            buttons: ['Okay']
-          });
-            alert.present();
+          this.apiProvider.showAlert(message);
         }
 			}
 		);
