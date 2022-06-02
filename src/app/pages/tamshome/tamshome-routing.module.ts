@@ -45,6 +45,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'settings-view-page',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../../pages/settings-view-page/settings-view-page.module').then( m => m.SettingsViewPagePageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tamshome/tamsmyschedule',
         pathMatch: 'full'

@@ -320,7 +320,8 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
                 var visitorCats = this.VM.visitors[i];
                 // for(let visitors in visitorCats){
                   // var visitor1 = visitorCats[visitors];
-                  if(visitorCats.VISITOR_IC == visitor.VISITOR_IC){
+                  if((visitorCats.VISITOR_NAME && visitorCats.VISITOR_NAME == visitor.VISITOR_NAME) && ((visitorCats.VISITOR_IC && visitorCats.VISITOR_IC == visitor.VISITOR_IC) ||
+                    visitorCats.EMAIL && visitorCats.EMAIL == visitor.EMAIL)){
                     //alert("Changed");
                     visitorCats.VISITOR_IC =visitor.VISITOR_IC;
                     visitorCats.VISITOR_NAME=visitor.VISITOR_NAME;

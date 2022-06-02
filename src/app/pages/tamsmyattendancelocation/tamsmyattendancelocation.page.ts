@@ -53,11 +53,13 @@ export class TamsmyattendancelocationPage implements OnInit {
       zoom: 'no'
     }
     if (!item.Latitude) {
-      this.apiProvider.showAlert("Location not detected.")
+      this.apiProvider.showAlert("Location not detected.");
+      return;
     }
 
     if (!item.Longitude) {
-      this.apiProvider.showAlert("Location not detected.")
+      this.apiProvider.showAlert("Location not detected.");
+      return;
     }
     this.iab.create("https://maps.google.com/?q="+ item.Latitude+","+item.Longitude, '_blank', options);
     // if( (navigator.platform.indexOf("iPhone") != -1)

@@ -119,11 +119,13 @@ export class TamsmyattendancelogsPage implements OnInit {
       zoom: 'no'
     }
     if (!item.latitute) {
-      this.apiProvider.showAlert("Location not detected.")
+      this.apiProvider.showAlert("Location not detected.");
+      return;
     }
 
     if (!item.longitute) {
-      this.apiProvider.showAlert("Location not detected.")
+      this.apiProvider.showAlert("Location not detected.");
+      return;
     }
     this.iab.create("https://maps.google.com/?q="+item.latitute+","+item.longitute, '_blank', options);
     // if( (navigator.platform.indexOf("iPhone") != -1)

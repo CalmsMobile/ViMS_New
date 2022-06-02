@@ -765,10 +765,10 @@ export class AdminAppointmentDetailsPage implements OnInit {
   }
 
   getShowRejectButton(appointment) {
-    appointment = appointment.approaver;
+    // appointment = appointment.approaver;
     let result = true;
-    if (appointment && appointment.FirstLvlApproval !== null && appointment.SecondLvlApproval !== null && appointment.ApprovedOn1 !== null
-      && appointment.ApprovedOn2 === null && appointment.Approvar2Reject === false) {
+    if (appointment && appointment.approaver && appointment.approaver.FirstLvlApproval !== null && appointment.approaver.SecondLvlApproval !== null && appointment.approaver.ApprovedOn1 !== null
+      && appointment.approaver.ApprovedOn2 === null && appointment.approaver.Approvar2Reject === false) {
       result = false;
     }
     return result;
@@ -978,9 +978,14 @@ export class AdminAppointmentDetailsPage implements OnInit {
         this.appointment[0].Room_Name = result.Table1[0].Room_Name;
         this.appointment[0].START_TIME = result.Table1[0].START_TIME;
         this.appointment[0].END_TIME = result.Table1[0].END_TIME;
+        this.appointment[0].approaver.FirstLvlApproval = result.Table1[0].FirstLvlApproval;
+        this.appointment[0].approaver.SecondLvlApproval = result.Table1[0].SecondLvlApproval;
+        this.appointment[0].approaver.ApprovedOn1 = result.Table1[0].ApprovedOn1;
+        this.appointment[0].approaver.ApprovedOn2 = result.Table1[0].ApprovedOn2;
+        this.appointment[0].approaver.Approvar2Reject = result.Table1[0].Approvar2Reject;
       }
       },
-    async (err) => {
+    (err) => {
 
       if(err && err.message == "No Internet"){
         return;
@@ -992,14 +997,7 @@ export class AdminAppointmentDetailsPage implements OnInit {
         message =JSON.parse(err).message;
       }
       if(message){
-        // message = " Unknown"
-        let alert = this.alertCtrl.create({
-          header: 'Error !',
-          message: message,
-          cssClass:'',
-          buttons: ['Okay']
-          });
-          (await alert).present();
+        this.apiProvider.showAlert(message);
       }
     }
   );

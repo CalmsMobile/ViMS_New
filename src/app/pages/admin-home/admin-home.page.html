@@ -76,7 +76,7 @@
                       </div>
                     </div>
                   </ion-col>
-                  <ion-col size="6" style="padding-bottom: 0px;" (click)="viewBooking(list)">
+                  <ion-col size="8" style="padding-bottom: 0px;" (click)="viewBooking(list)">
                     <div class="div-apt-center">
                       <ion-icon slot="start" color="primary" name="person-outline" class="apt-text-icons"></ion-icon>
                       <ion-label class="apt-center-title">{{list.VISITOR_NAME}}</ion-label>
@@ -98,18 +98,14 @@
                     </div>
                   </ion-col>
 
-                  <ion-col size="2" class="colIcons">
-                    <!-- <div class="">
-                      <ion-checkbox slot="end" style="margin:0 auto;margin-right: 5px" [(ngModel)]="list.value[0].isChecked" (ionChange)="checkSelectAll()"></ion-checkbox>
-                    </div> -->
-
-                    <div>
+                  <!-- <ion-col size="2" class="colIcons">
+                      <div>
                       <ion-icon color="success" class="iconiconClass" style="border: 3px solid #009688;" name="thumbs-up-outline"
                       (click)="showChangeAppointmentStatusAlert('Approved', list)"></ion-icon>
                       <ion-icon color="primary" class="iconiconClass" style="    border: 3px solid #e91e63;" name="thumbs-down-outline"
                       (click)="showChangeAppointmentStatusAlert('Cancelled', list)" *ngIf="getShowRejectButton(list)"></ion-icon>
                     </div>
-                  </ion-col>
+                  </ion-col> -->
                 </ion-row>
               </ion-item>
           </ion-card>

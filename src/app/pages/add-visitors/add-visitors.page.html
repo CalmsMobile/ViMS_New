@@ -63,7 +63,7 @@
             <ion-label style="font-size: 16px;" position="stacked">{{'ADD_VISITORS.LAB_USER_NAME' | translate}} <span
                 style="color: #cf3c4f;">*</span></ion-label>
             <ion-input required formControlName="username" placeholder="Enter Name" style="font-size: 16px;" type="text"
-              [(ngModel)]="visitorInfoModal.visitor_name"></ion-input>
+              [(ngModel)]="visitorInfoModal.visitor_name" [disabled]="disableName"></ion-input>
           </ion-item>
 
           <ion-item lines="none" class="ion-no-padding" no-padding transparent

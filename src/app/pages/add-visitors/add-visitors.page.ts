@@ -39,6 +39,7 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
   imageType = "&RefType=VP&Refresh="+ new Date().getTime();
   changeMaster = false;
   fromAppointmentPage  = false;
+  disableName = false;
   disableIc = false;
   visitorInfoModal = new VisitorInfoModal();
   public error: string;
@@ -97,6 +98,9 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
             if(this.visitor.visitor_id && !this.visitor.VISITOR_IC){
               this.visitor.visitor_ic = this.visitor.visitor_id;
             }
+            if(this.visitor.VISITOR_NAME){
+              this.disableName = true;
+            }
             if(!this.visitor.visitor_id && this.visitor.visitor_ic){
               this.visitor.visitor_id = this.visitor.VISITOR_IC;
             }
@@ -124,6 +128,19 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
                 if (element.code === this.visitorInfoModal.visitor_country) {
                   this.visitorInfoModal.visitor_country_name = element.name;
                   return;
+                }
+              });
+            }
+
+            const masterDetails = localStorage.getItem(AppSettings.LOCAL_STORAGE.MASTER_DETAILS);
+            if (masterDetails && this.visitorInfoModal.visitor_comp_id){
+              const comapnyList = JSON.parse(masterDetails).Table7;
+              comapnyList.forEach(element => {
+                if (element.visitor_comp_code === this.visitorInfoModal.visitor_comp_id || element.visitor_comp_name === this.visitorInfoModal.visitor_comp_id)
+                {
+                  this.visitorInfoModal.visitor_comp_id = element.visitor_comp_code;
+                  this.visitorInfoModal.visitor_comp = element.visitor_comp_code;
+                  this.visitorInfoModal.visitor_comp_name = element.visitor_comp_name;
                 }
               });
             }
@@ -645,7 +662,7 @@ ionViewDidEnter() {
       "AuDeviceUID":'WEB'
     }
     this.apiProvider.requestApi(params1, '/api/vims/CheckBlackList', true, 'WEB', '').then(
-      async (val) => {
+      (val) => {
         var result = JSON.parse(val.toString());
         if(result["Table"] != undefined && result["Table"].length > 0){
           let visitorInfo = result["Table"][0];
@@ -660,7 +677,7 @@ ionViewDidEnter() {
         }
 
       },
-      async (err) => {
+      (err) => {
         if(err && err.message == "No Internet"){
           return;
         }

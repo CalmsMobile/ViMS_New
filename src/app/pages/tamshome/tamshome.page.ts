@@ -19,33 +19,22 @@ import { ThemeSwitcherService } from 'src/app/services/ThemeSwitcherService';
 })
 export class TAMSHomePage implements OnInit {
 
-  @ViewChild("myTabs") myTabs: IonTabs;
-  tab1Root: any = 'tamsmyschedule';
+  @ViewChild("myTabsNew") myTabs: IonTabs;
+  tab1Root: any = '';
   tab2Root: any = 'tamsmyattendance';
   tab3Root: any = 'tamsregisterattendance';
   tab4Root: any = 'tamsmyattendancelocation';
   tab5Root: any = 'tamsmyattendancelogs';
   showTit = true;
   hostObj:any = {};
-  cntrls = [
-    // {"bg":"#E53935","title":"Home","icon":"siva-icon-home-3", "component": "home-view"},
-    {"bg":"#512DA8","title":"Home", "root":"tab1Root" ,"icon":"siva-icon-calendar-3", "component":"tamsmyschedule"},
-    // {"bg":"#512DA8","title":"Create Appointment", "root":"tab2Root" ,"icon":"siva-icon-calendar-plus-o", "component":"add-appointment"},
-    {"bg":"#6A1B9A","title":"Appointment History","root":"tab3Root" ,"icon":"siva-icon-calendar-3", "component":"tamsmyattendance"},
-    // {"bg":"#455A64","title":"Manage Appointments","icon":"siva-icon-list-nested", "component":"ManageAppointmentView"},
-    // {"bg":"#C2185B","title":"Manage Visitors","icon":"siva-icon-user-add-outline", "component":"ManageVisitors"},
-    // {"bg":"#388E3C","title":"Notification","root":"tab4Root" ,"icon":"siva-icon-bell-2", "component":"notifications"},
-    // {"bg":"#AD1457","title":"Chat","icon":"siva-icon-chat-3", "component": "home-view"},
-    // {"bg":"#424242","title":"Profile","icon":"siva-icon-user-outline", "component": "home-view"},
-    {"bg":"#8E24AA","title":"Settings","root":"tab5Root" ,"icon":"siva-icon-sliders", "component":"tamsmyattendancelocation"},
-    {"bg":"#8E24AA","title":"Admin","root":"tab6Root" ,"icon":"siva-icon-sliders", "component":"tamsmyattendancelogs"}
-  ];
+
   lastNotification:any = '';
   notificationCount = 0;
   currentPage = "tamshome";
   appType = '';
   showFab = true;
   QRObj : any = {};
+  TAMS_MODULE;
   isNotificationClicked = false;
   constructor(public navCtrl: NavController,
     private localNotifications: LocalNotifications,
@@ -62,6 +51,7 @@ export class TAMSHomePage implements OnInit {
     public events: EventsService,
     private eventsNotification: EventsServiceNotification,
     public apiProvider: RestProvider) {
+      // this.myTabs = this.navCtrl.parent;
     }
 
   ngOnInit() {
@@ -176,6 +166,7 @@ export class TAMSHomePage implements OnInit {
               const saveData = response.Table1[0];
               saveData.modules = response.Table2[0];
               localStorage.setItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS, JSON.stringify(saveData));
+              this.resetTabs();
             }
           }
         },
@@ -185,7 +176,69 @@ export class TAMSHomePage implements OnInit {
           }
         }
       );
+    } else {
+      // tab1Root: any = 'tamsmyschedule';
+      // tab2Root: any = 'tamsmyattendance';
+      // tab3Root: any = 'tamsregisterattendance';
+      // tab4Root: any = 'tamsmyattendancelocation';
+      // tab5Root: any = 'tamsmyattendancelogs';
+      this.TAMS_MODULE = JSON.parse(settings).modules;
+      this.resetTabs();
     }
+
+  }
+
+  getSelectedIndex(){
+    console.log(this.selectedPos);
+    return this.selectedPos;
+  }
+
+  setSelectedTab(pos){
+    this.selectedPos = pos;
+  }
+
+  selectedPos = 0;
+
+  resetTabs(){
+
+    var cClass = this;
+    if (this.TAMS_MODULE && this.TAMS_MODULE.MySchedule === 1){
+      this.tab1Root = 'tamsmyschedule';
+    } else if (this.TAMS_MODULE && this.TAMS_MODULE.MyAttendance === 1){
+      this.tab1Root = 'tamsmyattendance';
+      this.setSelectedTab(0);
+    } else if (this.TAMS_MODULE && this.TAMS_MODULE.RegisterAttendance === 1){
+      this.tab1Root = 'tamsregisterattendance';
+      this.setSelectedTab(1);
+    } else if (this.TAMS_MODULE && this.TAMS_MODULE.GeoLocation === 1){
+      this.tab1Root = 'tamsmyattendancelocation';
+      this.setSelectedTab(0);
+    } else if (this.TAMS_MODULE && this.TAMS_MODULE.AttendanceLog === 1){
+      this.tab1Root = 'tamsmyattendancelogs';
+      this.setSelectedTab(0);
+    } else {
+      this.tab1Root = 'settings-view-page';
+      this.setSelectedTab(0);
+    }
+
+    var cClass = this;
+    this._zone.run(function() {
+      // cClass.myTabs._tabs[cClass.myIndex].btn.onClick();
+      setTimeout(() => {
+        if (cClass.selectedPos === 0){
+          cClass.myTabs.select(cClass.tab1Root);
+        } else {
+          if (cClass.TAMS_MODULE && cClass.TAMS_MODULE.GeoLocation === 1){
+            cClass.myTabs.select("tamsmyattendancelocation");
+          } else if (cClass.TAMS_MODULE && cClass.TAMS_MODULE.AttendanceLog === 1){
+            cClass.myTabs.select("tamsmyattendancelogs");
+          }
+
+        }
+
+      }, 1000);
+    });
+
 
   }
 
@@ -305,6 +358,10 @@ export class TAMSHomePage implements OnInit {
   }
 
   ionViewDidEnter() {
+    const tamsSettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS);
+    if (tamsSettings){
+      this.TAMS_MODULE = JSON.parse(tamsSettings).modules;
+    }
     console.log('ionViewDidEnter UpcomingAppointmentPage');
     this.events.publishDataCompany({
       action: 'user:created',
@@ -342,7 +399,7 @@ export class TAMSHomePage implements OnInit {
           var cClass = this;
           this._zone.run(function() {
             // cClass.myTabs._tabs[cClass.myIndex].btn.onClick();
-            cClass.myTabs.select(page.component);
+            // cClass.myTabs.select(page.component);
           });
         } else if (data1.action === 'page') {
           const data = data1.title;

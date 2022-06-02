@@ -30,15 +30,29 @@ export class MenuService implements IService {
           }
           menus = [];
           if (QRObj.MAppId === AppSettings.LOGINTYPES.TAMS) {
+            const tamsSettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS);
+            const subMenu = [];
+            if (tamsSettings){
+              const TAMS_MODULE = JSON.parse(tamsSettings).modules;
+              if (TAMS_MODULE.MySchedule === 1){
+                subMenu.push({ "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" });
+              }
+              if (TAMS_MODULE.MyAttendance === 1){
+                subMenu.push({ "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" });
+              }
+              if (TAMS_MODULE.RegisterAttendance === 1){
+                subMenu.push({ "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" });
+              }
+              if (TAMS_MODULE.GeoLocation === 1){
+                subMenu.push({ "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" });
+              }
+              if (TAMS_MODULE.AttendanceLog === 1){
+                subMenu.push({ "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" });
+              }
+            }
             menus = [
               {
-                "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": [
-                    { "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" },
-                    { "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" },
-                    { "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" },
-                    { "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" },
-                    { "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" },
-                ]
+                "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": subMenu
               }
             ];
           } else {
@@ -65,15 +79,29 @@ export class MenuService implements IService {
             }
 
             if (QRObj.MAppId.indexOf(AppSettings.LOGINTYPES.TAMS) > -1) {
+              const tamsSettings = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_SETTINGS);
+              const subMenu = [];
+              if (tamsSettings){
+                const TAMS_MODULE = JSON.parse(tamsSettings).modules;
+                if (TAMS_MODULE.MySchedule === 1){
+                  subMenu.push({ "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" });
+                }
+                if (TAMS_MODULE.MyAttendance === 1){
+                  subMenu.push({ "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" });
+                }
+                if (TAMS_MODULE.RegisterAttendance === 1){
+                  subMenu.push({ "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" });
+                }
+                if (TAMS_MODULE.GeoLocation === 1){
+                  subMenu.push({ "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" });
+                }
+                if (TAMS_MODULE.AttendanceLog === 1){
+                  subMenu.push({ "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" });
+                }
+              }
               menus.push({
-                "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": [
-                    { "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" },
-                    { "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" },
-                    { "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" },
-                    { "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" },
-                    { "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" },
-                ]
-              });
+                  "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": subMenu
+                });
             }
             if (showQP) {
               menus.push({
