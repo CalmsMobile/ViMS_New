@@ -18,11 +18,16 @@ export class TamsmyattendancePage implements OnInit {
   myAttendanceList = [];
   myAttendanceListClone = [];
   AppTheme = 'var(--ion-color-primary) !important';
+  startDateMain = '';
   startDate = '';
   isFetching = false;
   T_SVC:any;
   loadingFinished = false;
   showMenu = false;
+  pickerOptions = {
+    mode: 'md',
+    backdropDismiss:true
+  };
   @ViewChild(CalendarComponent) myCal: CalendarComponent;
   constructor(private router: Router,
     private apiProvider: RestProvider,
@@ -49,7 +54,12 @@ export class TamsmyattendancePage implements OnInit {
   doRefresh(refresher) {
     this.myAttendanceList = [];
     this.isFetching = false;
-    this.getMyAttendances(refresher);
+    this.startDateMain = "";
+    this.startDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+    setTimeout(() => {
+      this.startDateMain = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+      this.getMyAttendances(refresher);
+    }, 1000);
   }
 
   showCalender(picker) {
@@ -145,7 +155,10 @@ export class TamsmyattendancePage implements OnInit {
           }
         });
 
-        this.startDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+        if (!this.startDate){
+          this.startDateMain = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+          this.startDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+        }
         if (this.startDate && response.Table1.length > 0) {
           this.filterTechnologiesByDate();
         }

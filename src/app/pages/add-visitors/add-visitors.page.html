@@ -90,7 +90,7 @@
             <ion-input required editable='false' formControlName="email"
               placeholder="{{'ADD_VISITORS.LAB_PH_EMAIL' | translate}}" style="font-size: 16px;" type="email"
               pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
-              [(ngModel)]="visitorInfoModal.visitor_email"></ion-input>
+              [(ngModel)]="visitorInfoModal.visitor_email" [disabled]="disableEmail"></ion-input>
           </ion-item>
 
           <ion-item lines="none" class="ion-no-padding" no-padding transparent

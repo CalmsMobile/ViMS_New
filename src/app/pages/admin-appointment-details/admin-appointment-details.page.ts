@@ -764,14 +764,8 @@ export class AdminAppointmentDetailsPage implements OnInit {
     (await alert).present();
   }
 
-  getShowRejectButton(appointment) {
-    // appointment = appointment.approaver;
-    let result = true;
-    if (appointment && appointment.approaver && appointment.approaver.FirstLvlApproval !== null && appointment.approaver.SecondLvlApproval !== null && appointment.approaver.ApprovedOn1 !== null
-      && appointment.approaver.ApprovedOn2 === null && appointment.approaver.Approvar2Reject === false) {
-      result = false;
-    }
-    return result;
+  showControls(visitors){
+    return visitors.Approval_Status === 'Pending' && ((visitors.FirstLvlApproval === 10 && !visitors.ApprovedBy1) || (visitors.FirstLvlApproval === 20 && visitors.ApprovedBy1 && visitors.SecondLvlApproval === 10 && !visitors.ApprovedBy2));
   }
 
   ChangeAppointmentStatus(type, appointment_group_id){

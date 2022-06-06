@@ -19,8 +19,14 @@ export class TamsmyattendancelogsPage implements OnInit {
   T_SVC:any;
   isFetching = false;
   loadingFinished = false;
+  startDateMain = '';
   startDate = '';
   showMenu = false;
+
+  pickerOptions = {
+    mode: 'md',
+    backdropDismiss:true
+  };
   constructor(private router: Router,
     private apiProvider: RestProvider,
     private iab: InAppBrowser,
@@ -36,12 +42,13 @@ export class TamsmyattendancelogsPage implements OnInit {
       }
     }
     this.startDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+    this.startDateMain = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
     this.translate.get([
       'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL']).subscribe(t => {
         this.T_SVC = t;
     });
     this.isFetching = false;
-    this.getMyAttendanceLogs(null);
+    this.getMyAttendanceLogs(null, true);
   }
 
   goBack() {
@@ -50,10 +57,15 @@ export class TamsmyattendancelogsPage implements OnInit {
   }
 
   doRefresh(refresher) {
-    this.myAttendanceLogsList = [];
-    this.myAttendanceLogsListClone = [];
-    this.isFetching = false;
-    this.getMyAttendanceLogs(refresher);
+    // this.myAttendanceLogsList = [];
+    // this.myAttendanceLogsListClone = [];
+    this.startDateMain = "";
+    setTimeout(() => {
+      this.startDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+      this.startDateMain = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+      this.isFetching = false;
+      this.getMyAttendanceLogs(refresher, true);
+    }, 1000);
   }
 
   loadData(event) {
@@ -67,7 +79,7 @@ export class TamsmyattendancelogsPage implements OnInit {
       if(!currentClass.isFetching){
         currentClass.isFetching = true;
         // setTimeout(()=>{
-          currentClass.getMyAttendanceLogs(null);
+          currentClass.getMyAttendanceLogs(null, false);
       //  },1000)
       }
       // }
@@ -84,12 +96,19 @@ export class TamsmyattendancelogsPage implements OnInit {
     picker.open();
   }
 
+  isChangeEventCalled = false;
+
   changeCalendar($event){
-    this.startDate = this.dateformat.transform($event.detail.value + "", "yyyy-MM-dd");
-    console.log("OpenCalender:Start:"+ this.startDate);
-    if (this.startDate) {
-      this.filterTechnologiesByDate();
+    if (this.loadingFinished && !this.isChangeEventCalled){
+      this.isChangeEventCalled = true;
+      this.startDate = this.dateformat.transform($event.detail.value + "", "yyyy-MM-dd");
+      console.log("OpenCalender:Start:"+ this.startDate);
+      if (this.startDate) {
+        this.filterTechnologiesByDate();
+      }
+      this.isChangeEventCalled = false;
     }
+
   }
 
   filterTechnologiesByDate() {
@@ -137,7 +156,7 @@ export class TamsmyattendancelogsPage implements OnInit {
     //   }
   }
 
-  getMyAttendanceLogs(refresher){
+  getMyAttendanceLogs(refresher, init){
     var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
     if (!hostData || !JSON.parse(hostData) || !JSON.parse(hostData).HOSTIC) {
       return;
@@ -147,12 +166,11 @@ export class TamsmyattendancelogsPage implements OnInit {
     var data = {
       "MAppId": "TAMS",
       "HostIc": hostId,
-      "START": this.myAttendanceLogsList.length === 0? 0: this.myAttendanceLogsList.length + 1,
+      "START": refresher || this.myAttendanceLogsList.length === 0? 0: this.myAttendanceLogsList.length + 1,
       "LIMIT": 500,
     };
-    this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendanceLogs', this.isFetching? false: true, false, '').then(
+    this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendanceLogs', init? true: false, false, '').then(
       (val: any) => {
-        this.loadingFinished = true;
         const response = JSON.parse(val);
         if (response.Table && response.Table.length > 0 && (response.Table[0].Code === 10 || response.Table[0].code === 10)) {
           if (this.isFetching) {
@@ -169,8 +187,11 @@ export class TamsmyattendancelogsPage implements OnInit {
           this.filterTechnologiesByDate();
         }
         this.isFetching = false;
+        setTimeout(() => {
+          this.loadingFinished = true;
+        }, 100);
       },
-      async (err) => {
+      (err) => {
         this.loadingFinished = true;
         this.isFetching = false;
         if(refresher){

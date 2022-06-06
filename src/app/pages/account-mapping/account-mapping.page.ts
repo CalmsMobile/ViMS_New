@@ -231,7 +231,7 @@ export class AccountMappingPage {
           //FAcility Displaya
           // var qrCodeString = 'IOL01+vlOtVFFbQk0tZRHV8G1p5ecpVI4nTHpoor7FqlJESbxyAyv98zjFQ0+2sBWgcuaJBA0lq5P1EBValHVBPVunS687Q8/7Hf06B4WmsOWXsylRj+rCMMx0EgAXhUReWw865+hTAeDCEKjxB1Ow==';
           //HOST 2008
-          // var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohEEiqE+KBmYE4KM17rI8XpCV76Eh4YoGtZ3rccRZlsR6+XsUF/ir9buGRVNult1XtIk7VCAtxB+50hiHMiqymK6JhPs30Pq+/pb37JNvEioYfpGmEIoLAUb/zpMbRGO4I=';
+          var qrCodeString = 'o2jqjNdPaANkr4TAQK4QUSBqsZN2qkX+cxWg9WfQ5ohEEiqE+KBmYE4KM17rI8XpCV76Eh4YoGtZ3rccRZlsR6+XsUF/ir9buGRVNult1XtIk7VCAtxB+50hiHMiqymK6JhPs30Pq+/pb37JNvEioYfpGmEIoLAUb/zpMbRGO4I=';
           //ACK
           // var qrCodeString = 'qYNb75lXZms19Ri+u9GuOKEOnI+Bw2rOjRNRz3F3gK5yStsC7HV5d0FoZmKl97l5D/TzMTQCqKnahYPuTqZ6TrHijxnIJnXGCrbD93loR9n/96rUnC+77Vl8D/VZ3XTIwc3axSyZQ7DQC4g4NiQGJlH8pY7wGwxGkeDBwIRR7GA=';
 

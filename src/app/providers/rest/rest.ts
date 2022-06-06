@@ -236,15 +236,15 @@ deg2rad(deg) {
     });
   }
 
-  dismissLoading() {
-    setTimeout(async () => {
+  async dismissLoading() {
+    // setTimeout(() => {
       try {
         this.isLoading = false;
-        return await this.loadingCtrl.dismiss().then(() => console.log('dismissed'));
+        await this.loadingCtrl.dismiss();
       } catch (error) {
 
       }
-    }, 100);
+    // }, 100);
   }
 
   validateUser(data, url){
@@ -3396,20 +3396,21 @@ deg2rad(deg) {
       this.presentLoading();
     }
     var url = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl + API;
-    console.log("API: "+ url);
     var params = JSON.stringify(data);
-    console.log("params: "+ params);
     return new Promise((resolve, reject) => {
       if (this.checkConnection()) {
+        if (loading) {
           this.dismissLoading();
-          return;
+        }
+        return;
       }
       this.http.post(url, params, {
         headers: new HttpHeaders().set('Content-Type', 'application/json')
       }).subscribe(response => {
-        console.log(API+ " Result: "+ JSON.stringify(response));
         var output = JSON.parse(response[0].Data);
-        this.dismissLoading();
+        if (loading) {
+          this.dismissLoading();
+        }
         if(this.validateUser(output, url)){
           return;
         }
@@ -3431,7 +3432,9 @@ deg2rad(deg) {
         }
 
       }, (err) => {
-        this.dismissLoading();
+        if (loading) {
+          this.dismissLoading();
+        }
         reject(err);
 
       });

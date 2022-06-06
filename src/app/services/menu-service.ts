@@ -34,19 +34,27 @@ export class MenuService implements IService {
             const subMenu = [];
             if (tamsSettings){
               const TAMS_MODULE = JSON.parse(tamsSettings).modules;
-              if (TAMS_MODULE.MySchedule === 1){
+              if (TAMS_MODULE){
+                if (TAMS_MODULE.MySchedule === 1){
+                  subMenu.push({ "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" });
+                }
+                if (TAMS_MODULE.MyAttendance === 1){
+                  subMenu.push({ "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" });
+                }
+                if (TAMS_MODULE.RegisterAttendance === 1){
+                  subMenu.push({ "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" });
+                }
+                if (TAMS_MODULE.GeoLocation === 1){
+                  subMenu.push({ "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" });
+                }
+                if (TAMS_MODULE.AttendanceLog === 1){
+                  subMenu.push({ "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" });
+                }
+              } else {
                 subMenu.push({ "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" });
-              }
-              if (TAMS_MODULE.MyAttendance === 1){
                 subMenu.push({ "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" });
-              }
-              if (TAMS_MODULE.RegisterAttendance === 1){
                 subMenu.push({ "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" });
-              }
-              if (TAMS_MODULE.GeoLocation === 1){
                 subMenu.push({ "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" });
-              }
-              if (TAMS_MODULE.AttendanceLog === 1){
                 subMenu.push({ "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" });
               }
             }
@@ -83,21 +91,30 @@ export class MenuService implements IService {
               const subMenu = [];
               if (tamsSettings){
                 const TAMS_MODULE = JSON.parse(tamsSettings).modules;
-                if (TAMS_MODULE.MySchedule === 1){
+                if (TAMS_MODULE){
+                  if (TAMS_MODULE.MySchedule === 1){
+                    subMenu.push({ "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" });
+                  }
+                  if (TAMS_MODULE.MyAttendance === 1){
+                    subMenu.push({ "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" });
+                  }
+                  if (TAMS_MODULE.RegisterAttendance === 1){
+                    subMenu.push({ "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" });
+                  }
+                  if (TAMS_MODULE.GeoLocation === 1){
+                    subMenu.push({ "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" });
+                  }
+                  if (TAMS_MODULE.AttendanceLog === 1){
+                    subMenu.push({ "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" });
+                  }
+                } else {
                   subMenu.push({ "title": "My Schedule", "icon": "create-outline", "component": "tamsmyschedule" });
-                }
-                if (TAMS_MODULE.MyAttendance === 1){
                   subMenu.push({ "title": "My Attendance", "icon": "calendar-number-outline", "component": "tamsmyattendance" });
-                }
-                if (TAMS_MODULE.RegisterAttendance === 1){
                   subMenu.push({ "title": "Register Attendance", "icon": "add-circle-outline", "component": "tamsregisterattendance" });
-                }
-                if (TAMS_MODULE.GeoLocation === 1){
                   subMenu.push({ "title": "Geo Location", "icon": "location-outline", "component": "tamsmyattendancelocation" });
-                }
-                if (TAMS_MODULE.AttendanceLog === 1){
                   subMenu.push({ "title": "Attendance Logs", "icon": "document-text-outline", "component": "tamsmyattendancelogs" });
                 }
+
               }
               menus.push({
                   "title": "Attendance", "icon": "calendar-number-outline", "component": "", "subMenu": subMenu

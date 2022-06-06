@@ -534,8 +534,8 @@ export class AdminHomePage implements OnInit {
 			(val) => {
 				var aList = JSON.parse(val.toString());
         this.apiProvider.requestApi(params, '/api/vims/GetApprovalVisitorsByGroupId', false, '', '').then(
-          (val) => {
-            var aList1 = JSON.parse(val.toString()).Table1;
+          (response) => {
+            var aList1 = JSON.parse(response.toString()).Table1;
             for (let pos = 0; pos < aList1.length; pos++) {
               const element = aList1[pos];
               element.SEQ_ID= aList[pos].SEQ_ID;
@@ -570,6 +570,18 @@ export class AdminHomePage implements OnInit {
               element.bookedby_id= aList[pos].bookedby_id;
               element.cid= aList[pos].cid;
               element.approaver = list[0];
+
+              var aListRes = JSON.parse(val.toString());
+              const item = aListRes.find(item => item.VisitorBookingSeqId === element.VisitorBookingSeqId);
+              if(item && item.FirstLvlApproval) {
+                element.FirstLvlApproval = item.FirstLvlApproval;
+                element.ApprovedBy1 = item.ApprovedBy1;
+                element.SecondLvlApproval = item.SecondLvlApproval;
+                element.ApprovedBy2 = item.ApprovedBy2;
+                element.Approvar2Reject = item.Approvar2Reject;
+              }
+
+
             }
             const navigationExtras: NavigationExtras = {
               state: {

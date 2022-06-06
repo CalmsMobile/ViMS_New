@@ -11,9 +11,9 @@
       color: var(--ion-color-primary);
       padding: 5px;
       border-radius: 12px;">{{startDate | date : 'dd MMM yyyy'}}</ion-label>
-      <ion-button slot="icon-only" color="btnthm" (click)="showCalender(picker)" style="font-size: larger;">
-        <ion-datetime #picker style=" margin-left: 5px;
-            font-size: 14px;display: none;" displayFormat="YYYY-MM-DD"  max="2121-12-12" placeholder="Select Date" (ionChange)="changeCalendar($event)"></ion-datetime>
+      <ion-button *ngIf="startDateMain" slot="icon-only" color="btnthm" (click)="showCalender(picker)" style="font-size: larger;">
+        <ion-datetime [pickerOptions]="pickerOptions" #picker style="display: none;" pickerFormat="YYYY-MM-DD" displayFormat="YYYY-MM-DD"
+            [(ngModel)]="startDateMain"  (ionChange)="changeCalendar($event)"></ion-datetime>
         <ion-icon name="calendar-outline" style="position:relative;" style="color: #FFF;">
         </ion-icon>
       <ion-ripple-effect></ion-ripple-effect></ion-button>

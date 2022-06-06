@@ -17,10 +17,15 @@ export class TamsmyschedulePage implements OnInit {
   myScheduleListCone = [];
   loadingFinished = false;
   showAlert = false;
+  startDateMain = '';
   startDate = '';
   selectedTab = 'tab1';
   searchText = '';
   showMenu = false;
+  pickerOptions = {
+    mode: 'md',
+    backdropDismiss:true
+  };
   constructor(private router: Router,
     private dateformat : DateFormatPipe,
     private translate:TranslateService) {
@@ -96,9 +101,12 @@ export class TamsmyschedulePage implements OnInit {
   }
 
   doRefresh(refresher) {
-    this.myScheduleList = [];
-    this.myScheduleListCone = [];
-    this.getMySchedules(refresher);
+    // this.myScheduleList = [];
+    // this.myScheduleListCone = [];
+    this.startDateMain = "";
+    setTimeout(() => {
+      this.getMySchedules(refresher);
+    }, 1000);
   }
 
   moveToDetailsPage(item){
@@ -107,17 +115,19 @@ export class TamsmyschedulePage implements OnInit {
 
   getMySchedules(refresher) {
     this.loadingFinished = false;
+    if(refresher){
+      refresher.target.complete();
+    }
     const scheduleList = localStorage.getItem(AppSettings.LOCAL_STORAGE.TAMS_SCHEDULE);
     if (scheduleList) {
       this.myScheduleList = JSON.parse(scheduleList);
     }
 
-    if(refresher){
-      refresher.target.complete();
-    }
 
-    if(!this.startDate){
+
+    if(!this.startDate || refresher){
       this.startDate = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
+      this.startDateMain = this.dateformat.transform(new Date() + "", "yyyy-MM-dd");
     }
     this.filterTechnologiesByDate();
   }
@@ -167,7 +177,7 @@ export class TamsmyschedulePage implements OnInit {
   }
 
   filterTechnologiesByDate() {
-    this.myScheduleListCone = [];
+    const myScheduleListtoShow = [];
     const sortList = this.myScheduleList.sort((a, b) => {
       return <any>new Date(b.scheduleDate) - <any>new Date(a.scheduleDate);
     });
@@ -175,13 +185,14 @@ export class TamsmyschedulePage implements OnInit {
     sortList.forEach(element => {
       const startDate = this.dateformat.transform(element.scheduleDate, "yyyy-MM-dd");
       if (new Date(startDate).getTime() >= new Date(this.startDate).getTime()) {
-        this.myScheduleListCone.push(element);
+        myScheduleListtoShow.push(element);
       }
     });
+    this.loadingFinished = true;
+    this.myScheduleListCone = myScheduleListtoShow;
     if (this.content) {
       this.content.scrollToTop(400);
     }
-    this.loadingFinished = true;
 
   }
 

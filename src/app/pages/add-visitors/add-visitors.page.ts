@@ -41,6 +41,7 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
   fromAppointmentPage  = false;
   disableName = false;
   disableIc = false;
+  disableEmail = false;
   visitorInfoModal = new VisitorInfoModal();
   public error: string;
   visitorProfile:FormGroup;
@@ -108,6 +109,11 @@ export class AddVisitorsPage implements OnInit, OnDestroy {
             if(this.visitor.VISITOR_IC){
               this.disableIc = true;
             }
+            this.visitorInfoModal.visitor_email = this.visitor.EMAIL;
+            if(this.visitor.EMAIL){
+              this.disableEmail = true;
+            }
+
             this.visitorInfoModal.visitor_ctg_name = this.visitor.VisitorCategory;
             this.visitorInfoModal.visitor_ctg_id = this.visitor.VisitorCategory_ID;
             this.visitorInfoModal.visitor_comp_id = this.visitor.VISITOR_COMPANY_ID;
