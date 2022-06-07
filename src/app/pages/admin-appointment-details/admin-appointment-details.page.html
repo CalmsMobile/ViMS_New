@@ -36,7 +36,7 @@
             <ion-icon color="success" class="iconiconClass" name="thumbs-up-outline" style="border: 3px solid #009688;"
             (click)="showChangeAppointmentStatusAlert('Approved', '', visitors.VisitorBookingSeqId)"></ion-icon>
             <ion-icon color="primary" class="iconiconClass" name="thumbs-down-outline" style="    border: 3px solid #e91e63;"
-            *ngIf="visitors.FirstLvlApproval && visitors.ApprovedBy1 && visitors.SecondLvlApproval === 10  && !visitors.ApprovedBy2 && visitors.Approvar2Reject"
+            *ngIf="(visitors.FirstLvlApproval === 10 && !visitors.ApprovedBy1) || (visitors.SecondLvlApproval === 10  && !visitors.ApprovedBy2 && visitors.Approvar2Reject)"
             (click)="showChangeAppointmentStatusAlert('Cancelled', '', visitors.VisitorBookingSeqId)"></ion-icon>
           </div>
 
