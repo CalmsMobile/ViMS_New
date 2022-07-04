@@ -101,11 +101,11 @@ export class TamsmyattendancePage implements OnInit {
     var hostId = JSON.parse(hostData).HOSTIC;
     var data = {
       "MAppId": "TAMS",
-      "HostIc": hostId,
+      "HostIc": "119632",
       "START": this.myAttendanceList.length === 0? 0: this.myAttendanceList.length + 1,
       "LIMIT": 5000,
     };
-    this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendance', this.isFetching? false: true, false, '').then(
+    this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendance', this.isFetching? false: true, true, '').then(
       (val: any) => {
         this.loadingFinished = true;
         const response = JSON.parse(val);
