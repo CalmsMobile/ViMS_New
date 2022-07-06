@@ -101,7 +101,7 @@ export class TamsmyattendancePage implements OnInit {
     var hostId = JSON.parse(hostData).HOSTIC;
     var data = {
       "MAppId": "TAMS",
-      "HostIc": "119632",
+      "HostIc": hostId,
       "START": this.myAttendanceList.length === 0? 0: this.myAttendanceList.length + 1,
       "LIMIT": 5000,
     };

@@ -508,7 +508,7 @@ export class SecurityManualCheckInPage implements OnInit {
       // destinationType: this.camera.DestinationType.FILE_URI,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
-      allowEdit: true,
+      allowEdit: false,
       targetWidth: 400,
       targetHeight: 400
     };

@@ -53,6 +53,7 @@
     "@ionic-native/streaming-media": "^5.0.0",
     "@ionic-native/wheel-selector": "^5.0.0",
     "@ionic/angular": "^5.5.2",
+    "@ionic/cordova-builders": "^6.1.0",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "@types/chartjs": "0.0.31",
