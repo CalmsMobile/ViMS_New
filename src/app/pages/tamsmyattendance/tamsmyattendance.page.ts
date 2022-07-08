@@ -101,10 +101,11 @@ export class TamsmyattendancePage implements OnInit {
     var hostId = JSON.parse(hostData).HOSTIC;
     var data = {
       "MAppId": "TAMS",
-      "HostIc": hostId,
+      "HostIc": "119632",
       "START": this.myAttendanceList.length === 0? 0: this.myAttendanceList.length + 1,
       "LIMIT": 5000,
     };
+    console.log(JSON.stringify(data));
     this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendance', this.isFetching? false: true, true, '').then(
       (val: any) => {
         this.loadingFinished = true;
@@ -129,11 +130,24 @@ export class TamsmyattendancePage implements OnInit {
           // }
           const schduleDate = this.dateformat.transform(item.ScheduleDate, "yyyy-MM-dd");
           if (item.actualClockinTime && item.fromTime) {
-            const fromTime = this.dateformat.transform(item.fromTime+ '', "yyyy-MM-dd HH:mm");
+            let fromTime;
+            try{
+              fromTime = this.dateformat.transform(item.fromTime+ '', "yyyy-MM-dd HH:mm");
+            }catch(e){
+              item.fromTime = item.fromTime.replace(" ", "T");
+              fromTime = this.dateformat.transform(item.fromTime+ '', "yyyy-MM-dd HH:mm");
+            }
+            
             if (item.actualClockinTime.indexOf('T') > -1){
               item.actualClockinTime = schduleDate + ' ' +item.actualClockinTime.split('T')[1];
             }
-            const outTime = this.dateformat.transform(item.actualClockinTime, "yyyy-MM-dd HH:mm");
+            let outTime;
+            try {
+              outTime = this.dateformat.transform(item.actualClockinTime, "yyyy-MM-dd HH:mm");
+            } catch (error) {
+              item.actualClockinTime = item.actualClockinTime.replace(" ", "T");
+              outTime = this.dateformat.transform(item.actualClockinTime, "yyyy-MM-dd HH:mm");
+            }
             if (new Date(fromTime) < new Date(outTime)) {
               item.InTimeExpired = true;
             } else {
@@ -142,11 +156,24 @@ export class TamsmyattendancePage implements OnInit {
           }
 
           if (item.actualClockoutTime && item.toTime) {
-            const toTime = this.dateformat.transform(item.toTime+ '', "yyyy-MM-dd HH:mm");
+            let toTime;
+            try {
+              toTime = this.dateformat.transform(item.toTime+ '', "yyyy-MM-dd HH:mm");
+            } catch (error) {
+              item.toTime = item.toTime.replace(" ", "T");
+              toTime = this.dateformat.transform(item.toTime+ '', "yyyy-MM-dd HH:mm");
+            }
             if (item.actualClockoutTime.indexOf('T') > -1){
               item.actualClockoutTime = schduleDate + ' ' + item.actualClockoutTime.split('T')[1];
             }
-            const outTime = this.dateformat.transform(item.actualClockoutTime, "yyyy-MM-dd HH:mm");
+            let outTime;
+            try {
+              outTime = this.dateformat.transform(item.actualClockoutTime, "yyyy-MM-dd HH:mm");
+            } catch (error) {
+              item.actualClockoutTime = item.actualClockoutTime.replace(" ", "T");
+              outTime = this.dateformat.transform(item.actualClockoutTime, "yyyy-MM-dd HH:mm");
+              
+            }
             if (new Date(toTime) > new Date(outTime)) {
               item.outTimeExpired = true;
             } else {
@@ -163,7 +190,7 @@ export class TamsmyattendancePage implements OnInit {
           this.filterTechnologiesByDate();
         }
       },
-      async (err) => {
+      (err) => {
         this.loadingFinished = true;
         this.isFetching = false;
         if(err && err.message == "No Internet"){
@@ -195,7 +222,13 @@ export class TamsmyattendancePage implements OnInit {
    });
    sortList.reverse();
    sortList.forEach(element => {
-     const startDate = this.dateformat.transform(element.fromTime, "yyyy-MM-dd");
+    let startDate;
+    try {
+      startDate = this.dateformat.transform(element.fromTime, "yyyy-MM-dd");
+    } catch (error) {
+      element.fromTime = element.fromTime.replace(" ", "T");
+      startDate = this.dateformat.transform(element.fromTime+ '', "yyyy-MM-dd");
+    }
      if (new Date(startDate).getTime() >= new Date(this.startDate).getTime()) {
       this.myAttendanceListClone.push(element);
      }
