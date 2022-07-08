@@ -524,6 +524,7 @@ export class SecurityManualCheckInPage implements OnInit {
       }
 
     }, (err) => {
+      console.log(err);
     });
   }
 

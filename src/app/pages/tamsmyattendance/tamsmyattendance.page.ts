@@ -105,7 +105,7 @@ export class TamsmyattendancePage implements OnInit {
       "START": this.myAttendanceList.length === 0? 0: this.myAttendanceList.length + 1,
       "LIMIT": 5000,
     };
-    this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendance', this.isFetching? false: true, false, '').then(
+    this.apiProvider.requestApi(data, '/api/TAMS/getMyAttendance', this.isFetching? false: true, true, '').then(
       (val: any) => {
         this.loadingFinished = true;
         const response = JSON.parse(val);
