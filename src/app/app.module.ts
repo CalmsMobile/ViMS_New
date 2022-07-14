@@ -75,7 +75,7 @@ export function getCulture() {
   declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent, ToolTipComponent,
     CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent, CountryComponentComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent, ViewImageComponent],
-  entryComponents: [],
+  entryComponents: [QuestionDocPopupComponent],
   exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent, QuestionDocPopupComponent,HostAccessComponent,
     ToolTipComponent,ViewImageComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent, CountryComponentComponent],
