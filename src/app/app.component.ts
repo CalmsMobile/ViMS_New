@@ -431,8 +431,8 @@ export class AppComponent {
    *
    */
   getLocationCoordinates(showOnce) {
+    this.getCurrentLocation(true);
     if (!this.isEnabledAlready) {
-      this.getCurrentLocation(true);
       const watchId = this.geolocation.watchPosition({ enableHighAccuracy: true,timeout:30000 });
       watchId.subscribe((data: any) => {
 
