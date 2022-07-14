@@ -109,6 +109,10 @@
   --ion-color-tint: var(--ion-color-btnthm-tint);
 }
 
+.ios{
+  --ion-safe-area-bottom: 0px !important;
+}
+
 // roboto, and noto sans fonts
 $font-path: "../assets/fonts";
 

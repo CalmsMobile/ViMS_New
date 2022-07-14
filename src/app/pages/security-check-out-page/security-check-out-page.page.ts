@@ -360,6 +360,44 @@ export class SecurityCheckOutPagePage implements OnInit {
             element.visitor_email = element.visitor_email;
             element.PLATE_NUM = element.att_car_no ? element.att_car_no: element.PLATE_NUM;
 
+            let currentDate;
+            if (element.att_check_out_date && element.att_check_out_time) {
+              if (element.att_check_out_date.indexOf('T') > -1){
+                element.att_check_out_date = element.att_check_out_date.split('T')[0];
+
+              } else if (element.att_check_out_date.indexOf(' ') > -1){
+                element.att_check_out_date = element.att_check_out_date.split(' ')[0];
+              }
+              element.att_check_out_date = element.att_check_out_date.replace('-', '/');
+              element.att_check_out_date = element.att_check_out_date.replace('-', '/');
+              element.att_check_out_time = element.att_check_out_date + ' ' + (element.att_check_out_time.indexOf('T') > -1 ? element.att_check_out_time.split('T')[1]: element.att_check_out_time.split(' ')[1]);
+            }
+
+            if (element.att_check_in_date && element.att_check_in_time) {
+              if (element.att_check_in_date.indexOf('T') > -1){
+                element.att_check_in_date = element.att_check_in_date.split('T')[0];
+
+              } else if (element.att_check_in_date.indexOf(' ') > -1){
+                element.att_check_in_date = element.att_check_in_date.split(' ')[0];
+              }
+              element.att_check_in_date = element.att_check_in_date.replace('-', '/');
+              element.att_check_in_date = element.att_check_in_date.replace('-', '/');
+              element.att_check_in_time = element.att_check_in_date + ' ' + (element.att_check_in_time.indexOf('T') > -1 ? element.att_check_in_time.split('T')[1]: element.att_check_in_time.split(' ')[1]);
+            }
+
+            if (element.att_check_out_time) {
+              try {
+                element.att_check_out_time = element.att_check_out_time.replace('-', '/');
+                element.att_check_out_time = element.att_check_out_time.replace('-', '/');
+                currentDate =  this.dateformat.transform(element.att_check_out_time, 'yyyy/MM/dd HH:mm:ss');
+              } catch (error) {
+                element.att_check_out_time = element.att_check_out_time.replace('/', '-');
+                element.att_check_out_time = element.att_check_out_time.replace('/', '-');
+                currentDate =  this.dateformat.transform(element.att_check_out_time, 'yyyy-MM-dd HH:mm:ss');
+              }
+            } else {
+              currentDate =  this.dateformat.transform(new Date() + '', 'yyyy-MM-dd HH:mm:ss');
+            }
             if (element.WorkPermitExpiry) {
               let expireTime;
               try {
@@ -371,33 +409,7 @@ export class SecurityCheckOutPagePage implements OnInit {
                 element.WorkPermitExpiry = element.WorkPermitExpiry.replace('/', '-');
                 expireTime =  this.dateformat.transform(element.WorkPermitExpiry, 'yyyy-MM-dd HH:mm:ss');
               }
-              let currentDate;
 
-              if (element.att_check_out_date && element.att_check_out_time) {
-                if (element.att_check_out_date.indexOf('T') > -1){
-                  element.att_check_out_date = element.att_check_out_date.split('T')[0];
-
-                } else if (element.att_check_out_date.indexOf(' ') > -1){
-                  element.att_check_out_date = element.att_check_out_date.split(' ')[0];
-                }
-                element.att_check_out_date = element.att_check_out_date.replace('-', '/');
-                element.att_check_out_date = element.att_check_out_date.replace('-', '/');
-                element.att_check_out_time = element.att_check_out_date + ' ' + (element.att_check_out_time.indexOf('T') > -1 ? element.att_check_out_time.split('T')[1]: element.att_check_out_time.split(' ')[1]);
-              }
-
-              if (element.att_check_out_time) {
-                try {
-                  element.att_check_out_time = element.att_check_out_time.replace('-', '/');
-                  element.att_check_out_time = element.att_check_out_time.replace('-', '/');
-                  currentDate =  this.dateformat.transform(element.att_check_out_time, 'yyyy/MM/dd HH:mm:ss');
-                } catch (error) {
-                  element.att_check_out_time = element.att_check_out_time.replace('/', '-');
-                  element.att_check_out_time = element.att_check_out_time.replace('/', '-');
-                  currentDate =  this.dateformat.transform(element.att_check_out_time, 'yyyy-MM-dd HH:mm:ss');
-                }
-              } else {
-                currentDate =  this.dateformat.transform(new Date() + '', 'yyyy-MM-dd HH:mm:ss');
-              }
               element.isExpired = (new Date(currentDate).getTime() > new Date(expireTime).getTime());
 
               if (element.isExpired) {
