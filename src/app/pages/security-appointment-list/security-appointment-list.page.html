@@ -101,7 +101,7 @@
           </ion-col>
 
           <ion-col size="2" class="colIcons">
-            <img src="{{item.SEQ_ID ? visitorImagePath + item.SEQ_ID + imageURLType: '../../../assets/images/user.png'}}" class="visitorImage" style="width: 60px;
+            <img src="{{item.att_check_in == 1 ? (visitorImagePath + item.vseqid+ imageURLTypeCHECKIN): item.SEQ_ID ? (visitorImagePath + item.SEQ_ID + imageURLType): '../../../assets/images/user.png'}}" class="visitorImage" style="width: 60px;
                 height: 60px;
                 max-width: 60px;
                 border-radius: 50%;">

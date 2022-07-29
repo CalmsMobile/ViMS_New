@@ -164,7 +164,7 @@ export class ManageAppointmentPage implements OnInit {
       "StaffSeqId": hostId,
       "ParentPortalRegKey": AppSettings.API_DATABASE_NAME,
 			"OffSet": "0",
-			"Rows":"2000"
+			"Rows":"20000"
 		};
       // this.VM.host_search_id = "adam";
       var showLoading = false;
@@ -195,7 +195,11 @@ export class ManageAppointmentPage implements OnInit {
             }
             this.aList.push(item);
           }
-          this.appointments = this.groupBy.transform(this.aList, 'appointment_group_id');
+          const facilities = this.groupBy.transform(this.aList, 'appointment_group_id');
+          for(var i = 0 ; i < facilities.length ; i++){
+            var item1 = facilities[i];
+            this.appointments.push(item1)
+          }
           this.loadEvents();
 				},
 				(err) => {
@@ -226,7 +230,7 @@ export class ManageAppointmentPage implements OnInit {
 			var params = {"hostID":hostId,
 			"lastSyncDate":"",
 			"OffSet": ""+ 0,
-			"Rows":"2000"
+			"Rows":"20000"
 		};
 			// this.VM.host_search_id = "adam";
 			this.apiProvider.syncAppointment(params, false, showLoading).then(

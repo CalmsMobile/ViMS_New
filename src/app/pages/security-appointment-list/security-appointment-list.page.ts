@@ -27,6 +27,7 @@ export class SecurityAppointmentListPage implements OnInit {
   appSettings: any = {};
   visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLTypeCHECKIN = '&RefType=VP&Refresh='+ new Date().getTime();
   constructor(private router: Router,
     public apiProvider: RestProvider,
     private commonUtil: CommonUtil,
@@ -159,14 +160,60 @@ export class SecurityAppointmentListPage implements OnInit {
           handler: (result) => {
             console.log('Ok clicked');
             if ((item.att_check_in === 0 && item.att_check_out === 0) || (item.att_check_in === 1 && item.att_check_out === 1)) {
-              const navigationExtras: NavigationExtras = {
-                state: {
-                  passData: {
-                    PreAppointment : item
+
+              var hexData = item.HexCode;//"C4B9F365";
+              var params1 = {"hexcode":""+ hexData};
+              this.apiProvider.VimsAppGetAppointmentByHexCode(params1, true).then(
+                (val) => {
+                  var visitorDetail = val+"";
+                  var vOb1 = JSON.parse(visitorDetail);
+                  if(vOb1 && vOb1.Table1 && vOb1.Table1.length > 0) {
+                    var vOb = vOb1.Table1[0];
+                    item.visitorImage = vOb.VISITOR_IMG;
+                    const navigationExtras: NavigationExtras = {
+                      state: {
+                        passData: {
+                          PreAppointment : item
+                        }
+                      }
+                    };
+                    this.router.navigate(['security-manual-check-in'], navigationExtras);
                   }
+                },
+                (err) => {
+                  console.log("error : "+JSON.stringify(err));
+                  if(err && err.message == "No Internet"){
+                    return;
+                  }
+
+                  if(err.Table1 && err.Table1.length == 0){
+                    var message  = this.T_SVC['ALERT_TEXT.INVALID_QR'];
+                    this.apiProvider.showAlert(message);
+                      return;
+                  }
+
+                  try {
+                    if(err && err.message && err.message.indexOf("Http failure response for") > -1){
+                      message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+                      this.apiProvider.showAlert(message);
+                      return;
+                    }
+                    if (err.message){
+                      this.apiProvider.showAlert(err.message);
+                      return;
+                    }
+                  } catch (error) {
+
+                  }
+                  message = this.T_SVC['ACC_MAPPING.INVALID_QR'];
+
+                  if(err && JSON.parse(err) && JSON.parse(err).Table && JSON.parse(err).Table[0].description){
+                    message = JSON.parse(err).Table[0].description;
+                  }
+                  message  = this.T_SVC['COMMON.MSG.ERR_SERVER_CONCTN_DETAIL'];
+                  this.apiProvider.showAlert(message);
                 }
-              };
-              this.router.navigate(['security-manual-check-in'], navigationExtras);
+              );
               return;
             }
             let CheckOutCounter = 'Security';
@@ -265,7 +312,7 @@ export class SecurityAppointmentListPage implements OnInit {
           }
           this.appointments.forEach(element => {
             const list =  this.appointmentsTable2.filter((item) =>{
-              return (item.visitorBookingSeqId ===  element.SEQ_ID);
+              return (item.att_hex_no ===  element.HexCode);
             });
             element.no_of_time_utilized = 0;
             if(list && list.length > 0) {
@@ -273,7 +320,7 @@ export class SecurityAppointmentListPage implements OnInit {
             }
 
             const list1 =  this.appointmentsTable3.filter((item) =>{
-              return (item.visitorBookingSeqId ===  element.SEQ_ID);
+              return (item.att_hex_no ===  element.HexCode);
             });
             element.att_check_in = 0;
             element.att_check_out = 0;

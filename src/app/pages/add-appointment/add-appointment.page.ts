@@ -168,6 +168,8 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
               VISITOR_COMPANY_NAME: item.VISITOR_COMPANY,
               VISITOR_GENDER: item.VISITOR_GENDER,
               PLATE_NUM: item.PLATE_NUM,
+              Address: item.Address,
+              Country: item.Country,
               TELEPHONE_NO: item.TELEPHONE_NO,
               EMAIL: item.EMAIL,
               VISITOR_NAME: item.VISITOR_NAME ? item.VISITOR_NAME : "",
@@ -377,6 +379,8 @@ export class AddAppointmentPage implements OnInit, OnDestroy {
               let appointment = this.VM.visitors.find(item => item.VisitorBookingSeqId === element.SEQ_ID);
               if (appointment) {
                 appointment.IsAckVerified = element.IsAckVerified;
+                appointment.Address = element.Address;
+                appointment.Country = element.Country;
               }
 
             });

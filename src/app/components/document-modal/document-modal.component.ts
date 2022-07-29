@@ -71,6 +71,11 @@ export class DocumentModalComponent  {
     this.camera.getPicture(options).then((imageData) => {
       cClass.attachmentList[position] = imageData;
     }, (err) => {
+
+      if (err === 'cordova_not_available'){
+        cClass.attachmentList[position] = AppSettings.SAMPLE_PHOTO;
+      }
+
     });
   }
 

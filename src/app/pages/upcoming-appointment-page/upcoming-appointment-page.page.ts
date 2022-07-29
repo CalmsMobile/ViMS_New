@@ -301,7 +301,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
 
           }
 				},
-				async (err) => {
+				(err) => {
           this.loadingFinished = true;
           if(refresher ){
             refresher.target.complete();
@@ -318,13 +318,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
         }
         if(message){
           // message = " Unknown"
-          let alert = await this.alertCtrl.create({
-            header: 'Error !',
-            message: message,
-            cssClass: '',
-            buttons: ['Okay']
-          });
-            alert.present();
+          this.apiProvider.showAlert(message);
         }
 				}
 			);
@@ -355,7 +349,17 @@ export class UpcomingAppointmentPagePage implements OnInit {
 		// this.VM.host_search_id = "adam";
 		this.apiProvider.GetAppointmentByGroupId(params).then(
 			(val) => {
-				var aList = JSON.parse(val.toString());
+				const aList = JSON.parse(val.toString());
+        if(aList){
+          aList.forEach(element => {
+            const itemNew = list.find(item => item.HexCode === element.HexCode);
+            if(itemNew){
+              element.Address = itemNew.Address,
+              element.Country = itemNew.Country
+            }
+
+          });
+        }
         const navigationExtras: NavigationExtras = {
           state: {
             passData: {

@@ -186,7 +186,6 @@ deg2rad(deg) {
       cssClass: 'imageViewModal'
     });
     presentModel.onWillDismiss().then((data) => {
-      this.GetQuickPassVisitorList(null, true);
     });
     return await presentModel.present();
 

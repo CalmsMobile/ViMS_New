@@ -23,11 +23,11 @@
 
       <img *ngIf="visitorSEQID && !visitor_RemoveImg && !data.profile && !data.contact" class="ion-text-center circle-pic" margin-top (click)= "presentActionSheet()" onError="this.src='../../assets/images/user.png';" [src]="data.logo + visitorSEQID + imageType">
 
-      <img *ngIf="!visitor_RemoveImg && data.profile" class="ion-text-center circle-pic" margin-top (click)= "presentActionSheet()" onError="this.src='../../assets/images/user.png';" [src]="base64Image" />
+      <img *ngIf="!visitor_RemoveImg && data.profile" class="ion-text-center circle-pic" margin-top (click)="presentActionSheet()" onError="this.src='../../assets/images/user.png';" [src]="base64Image" />
 
-      <img *ngIf="!visitor_RemoveImg && data.contact" class="ion-text-center circle-pic" margin-top (click)= "presentActionSheet()" onError="this.src='../../assets/images/user.png';" [src]="data.contact">
+      <img *ngIf="!visitor_RemoveImg && data.contact" class="ion-text-center circle-pic" margin-top (click)="presentActionSheet()" onError="this.src='../../assets/images/user.png';" [src]="data.contact">
 
-      <img *ngIf="visitor_RemoveImg" class="ion-text-center circle-pic" margin-top (click)= "presentActionSheet()" src="../../assets/images/user.png"/>
+      <img *ngIf="visitor_RemoveImg" class="ion-text-center circle-pic" margin-top (click)="presentActionSheet()" src="../../assets/images/user.png"/>
 
 </div>
 <ion-grid padding>

@@ -73,12 +73,28 @@ export class CustomVisitorPopupComponent implements OnInit{
       this.translate.get(['ALERT_TEXT.QRSHARE_SUCCESS']).subscribe(t => {
         this.T_SVC = t;
       });
-      this.getDynamicQRCode();
+      if (this.visitor && this.visitor.Approval_Status === 'Approved'){
+        this.getDynamicQRCode();
+      }
+
       console.log(this.qrCodePath);
   }
   ngOnInit(): void {
 
     console.log('Host access');
+  }
+
+  getCountryName() {
+    let country_name = "";
+    if (this.visitor.Country) {
+      CommonUtil.countryList.forEach(element => {
+        if (element.code === this.visitor.Country || element.name === this.visitor.Country) {
+          country_name = element.name;
+        }
+        return;
+      });
+    }
+    return country_name;
   }
 
   getDynamicQRCode() {

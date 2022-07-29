@@ -161,7 +161,7 @@
           </ion-col>
 
           <ion-col size="2" class="colIcons">
-            <img src="{{item.visitorBookingSeqId ? ( visitorImagePath + item.visitorBookingSeqId + imageURLType) : (item.att_visitor_id ? visitorImagePath + item.att_visitor_id + imageURLType : '../../../assets/images/user.png')}}" class="visitorImage" style="width: 60px;
+            <img src="{{item.vseqid ? (visitorImagePath + item.vseqid + imageURLType) : item.visitorBookingSeqId ? (visitorImagePath + item.visitorBookingSeqId + imageURLType) : '../../../assets/images/user.png'}}" class="visitorImage" style="width: 60px;
                 height: 60px;
                 max-width: 60px;
                 border-radius: 50%;"/>

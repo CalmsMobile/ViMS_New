@@ -281,16 +281,16 @@ export class SecurityCheckInPagePage implements OnInit {
          console.log("val : "+JSON.stringify(val));
          var visitorDetail = val+"";
          var vOb1 = JSON.parse(visitorDetail);
-                var vOb;
-                var message = this.T_SVC['ALERT_TEXT.APPOINTMENT_NOT_FOUND'];
-                 if(vOb1){
-                   if(vOb1.Table1 && vOb1.Table1.length > 0){
-                     vOb = vOb1.Table1[0];
-                    //  if(vOb1.Table2 && vOb1.Table2.length > 0 && vOb1.Table2[0].CheckinStatus == 10){
-                    //    message = this.T_SVC['ALERT_TEXT.QR_USED'];
-                    //    vOb = null;
-                    //  }
-                   }
+            var vOb;
+            var message = this.T_SVC['ALERT_TEXT.APPOINTMENT_NOT_FOUND'];
+              if(vOb1){
+                if(vOb1.Table1 && vOb1.Table1.length > 0){
+                  vOb = vOb1.Table1[0];
+                //  if(vOb1.Table2 && vOb1.Table2.length > 0 && vOb1.Table2[0].CheckinStatus == 10){
+                //    message = this.T_SVC['ALERT_TEXT.QR_USED'];
+                //    vOb = null;
+                //  }
+                }
             var startDate = vOb.START_DATE.split("T")[0];
             var fDate = this.dateformat.transform(startDate+"", "yyyy-MM-dd");
             var fTime = new Date(fDate).getTime();

@@ -27,6 +27,7 @@ export class VisitorInformationPage implements OnInit {
   appSettings:any = {};
   visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLTypeCHECKIN= '&RefType=VP&Refresh='+ new Date().getTime();
   validQRCode = false;
   QuestionnaireEnabled = false;
   MaterialDeclareEnabled = false;
@@ -61,9 +62,8 @@ export class VisitorInformationPage implements OnInit {
     if (!this.fromAppointment && (!this.appointmentInfo.visitorBookingSeqId || this.appointmentInfo.visitorBookingSeqId === 0)) {
       this.getAddVisitorSettings();
       this.getAdditionalDocs();
-      return;
-    }
-    if (!this.appointmentInfo.HexCode) {
+      // return;
+    } else if (!this.appointmentInfo.HexCode) {
       this.getAdditionalDocs();
       return;
     }
@@ -93,7 +93,11 @@ export class VisitorInformationPage implements OnInit {
             this.validQRCode = false;
           }
           const att_check_in_time = this.appointmentInfo.att_check_in_time;
-          const att_check_out_time = this.appointmentInfo.att_check_out_time;
+          let att_check_out_time = this.appointmentInfo.att_check_out_time;
+          if (!att_check_out_time){
+            att_check_out_time = vOb.att_check_out_time;
+            this.appointmentInfo.att_check_out_time = att_check_out_time;
+          }
           if (att_check_in_time && !att_check_out_time) {
             this.validQRCode = true;
           }
@@ -122,8 +126,10 @@ export class VisitorInformationPage implements OnInit {
           const VisitorCompany = this.appointmentInfo.VisitorCompany;
           const purpose = this.appointmentInfo.att_reason;
           const MEETING_LOCATION = this.appointmentInfo.MEETING_LOCATION;
+          const vseqid = this.appointmentInfo.vseqid;
 
           this.appointmentInfo = vOb;
+          this.appointmentInfo.vseqid = vseqid;
           if (purpose){
             this.appointmentInfo.REASON = purpose;
           }
@@ -163,6 +169,7 @@ export class VisitorInformationPage implements OnInit {
           this.appointmentInfo.PLATE_NUM = PLATE_NUM? PLATE_NUM: this.appointmentInfo.PLATE_NUM;
           this.appointmentInfo.Remarks = att_remark?att_remark: this.appointmentInfo.Remarks;
           this.appointmentInfo.Hexcode = hexData;
+          this.appointmentInfo.visitorImage = vOb.VISITOR_IMG;
           this.fromAppointmentWalkin = true;
           if (this.appointmentInfo.SettingDetail) {
             this.QuestionnaireEnabled = JSON.parse(this.appointmentInfo.SettingDetail).QuestionnaireEnabled;
@@ -193,7 +200,10 @@ export class VisitorInformationPage implements OnInit {
             return;
           }
           if (err.message){
-            this.apiProvider.showAlert(err.message);
+            if(err.message.indexOf("This QR code is not authorised to check-in at this branch") === -1){
+              this.apiProvider.showAlert(err.message);
+            }
+
             return;
           }
         } catch (error) {

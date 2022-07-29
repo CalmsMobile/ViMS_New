@@ -36,7 +36,14 @@
           <ion-col size="12" *ngIf="(!settings || settings.CountryEnabled)">
             <ion-label text-wrap style="display: inline-flex;align-items: center;">
               <ion-icon name="locate-outline" slot="start" color="primary"></ion-icon>
-              {{visitor.Country?visitor.Country: '&nbsp;&nbsp;--'}}
+              {{visitor.Country? getCountryName(): '&nbsp;&nbsp;--'}}
+            </ion-label>
+          </ion-col>
+
+          <ion-col size="12" *ngIf="(!settings || settings.AddressEnabled)">
+            <ion-label text-wrap style="display: inline-flex;align-items: center;">
+              <ion-icon name="home-outline" slot="start" color="primary"></ion-icon>
+              {{visitor.Address ? visitor.Address :'&nbsp;&nbsp;--'}}
             </ion-label>
           </ion-col>
 
@@ -72,7 +79,6 @@
               {{(visitor.VISITOR_GENDER === 0 || visitor.VISITOR_GENDER === '0') ? 'Female': (visitor.VISITOR_GENDER === 1 || visitor.VISITOR_GENDER === '1') ? 'Male': 'Other' }}
             </ion-label>
           </ion-col>
-
         </ion-row>
       </ion-col>
       <ion-col size="4">

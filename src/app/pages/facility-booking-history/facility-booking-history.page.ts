@@ -67,7 +67,13 @@ export class FacilityBookingHistoryPage implements OnInit {
 	}
 
   goBack() {
-    this.navCtrl.pop();
+
+    if (this.isFacilityApp){
+      this.navCtrl.pop();
+    } else {
+      this.router.navigateByUrl('home-tams');
+    }
+
     console.log('goBack ');
   }
 

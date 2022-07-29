@@ -28,7 +28,7 @@ export class SecurityCheckOutPagePage implements OnInit {
   title = "Visitor Check-Out";
   appSettings: any = {};
   visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
-  imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLType = '&RefType=VP&Refresh='+ new Date().getTime();
   options :BarcodeScannerOptions;
   constructor(public navCtrl: NavController,
     private translate: TranslateService,
@@ -426,6 +426,9 @@ export class SecurityCheckOutPagePage implements OnInit {
             this.appointments = aList.Table2;
 						refresher.target.complete();
 					}else {
+            if(this.SearchString){
+              this.appointments = [];
+            }
             if (aList.Table2) {
               this.appointments = this.appointments.concat(aList.Table2);
             } else {

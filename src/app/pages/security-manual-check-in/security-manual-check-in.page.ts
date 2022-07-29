@@ -257,6 +257,11 @@ export class SecurityManualCheckInPage implements OnInit {
           }
 
           console.log('passData : ' + JSON.stringify(this.appointmentInfo));
+
+          if(this.appointmentInfo.VISITOR_IMG){
+            this.appointmentInfo.visitorImage = this.appointmentInfo.VISITOR_IMG;
+          }
+
           if (this.appointmentInfo.VISITOR_COMPANY) {
             this.appointmentInfo.visitor_comp_code = this.commonUtil.getCompany(this.appointmentInfo.VISITOR_COMPANY, true);
             this.appointmentInfo.VISITOR_COMPANY =  this.commonUtil.getCompany(this.appointmentInfo.visitor_comp_code, false);
@@ -369,6 +374,7 @@ export class SecurityManualCheckInPage implements OnInit {
   }
 
   goBack() {
+    this.appointmentInfo = {};
     this.router.navigateByUrl('security-dash-board-page');
     console.log('goBack ');
    }
@@ -525,6 +531,14 @@ export class SecurityManualCheckInPage implements OnInit {
 
     }, (err) => {
       console.log(err);
+      if (err === 'cordova_not_available'){
+        if (this.imageType === 'PROFILE_IMAGE') {
+          this.visitor_RemoveImg = false;
+          this.appointmentInfo.visitorImage = AppSettings.SAMPLE_PHOTO;
+        } else {
+          this.appointmentInfo.visitorIDImage = AppSettings.SAMPLE_PHOTO;
+        }
+      }
     });
   }
 

@@ -68,19 +68,21 @@ import { FCM } from 'plugins/cordova-plugin-fcm-with-dependecy-updated/ionic/ngx
 import { EventsServiceNotification } from './services/EventsServiceNotification';
 import { CustomReversePipe } from './pipes/custom/custom_reverse';
 import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
+import { DocumentModalComponent } from './components/document-modal/document-modal.component';
+import { ItemChecklistModalComponent } from './components/item-checklist-modal/item-checklist-modal.component';
 export function getCulture() {
   return 'en-US';
 }
 @NgModule({
   declarations: [AppComponent, AddAppointmentAlertPopupComponent, HostAccessComponent, ToolTipComponent,
-    CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent, CountryComponentComponent,
+    CustomVisitorPopupComponent, UtilPopupWizardComponent, QuestionDocPopupComponent, CountryComponentComponent, DocumentModalComponent,ItemChecklistModalComponent,
     IntroPageWizardComponent, QuickPassVisitorPopupComponent, ViewImageComponent],
   entryComponents: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent, QuestionDocPopupComponent,HostAccessComponent,
     ToolTipComponent,ViewImageComponent,
-    IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent, CountryComponentComponent],
+    IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent, CountryComponentComponent, DocumentModalComponent, ItemChecklistModalComponent],
   exports: [AddAppointmentAlertPopupComponent,CustomVisitorPopupComponent, QuestionDocPopupComponent,HostAccessComponent,
     ToolTipComponent,ViewImageComponent,
-    IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent, CountryComponentComponent],
+    IntroPageWizardComponent, QuickPassVisitorPopupComponent, UtilPopupWizardComponent, CountryComponentComponent, DocumentModalComponent, ItemChecklistModalComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [ BrowserModule,
     HttpClientModule,

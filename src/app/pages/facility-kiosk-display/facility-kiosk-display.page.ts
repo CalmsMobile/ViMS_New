@@ -43,6 +43,7 @@ export class FacilityKioskDisplayPage implements OnInit {
   T_SVC:any;
   isNetworkError = false;
   showStopButton = false;
+  API_URL = "";
   constructor(
     public navCtrl: NavController,
 
@@ -67,6 +68,11 @@ export class FacilityKioskDisplayPage implements OnInit {
       if(properties != undefined && properties  != ""){
         this.K_PROPERTIES = JSON.parse(properties);
       }
+      const qrData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO);
+      if(qrData){
+        this.API_URL = JSON.parse(qrData).ApiUrl;
+      }
+
       this.resetGetSettingsTimer();
       var currentClasss = this;
       setInterval(()=>{
@@ -115,8 +121,8 @@ export class FacilityKioskDisplayPage implements OnInit {
         }
         this.K_PROPERTIES = property;
         localStorage.setItem(AppSettings.LOCAL_STORAGE.FASILITY_DISPLAY_KIOSK_SETUP, JSON.stringify(this.K_PROPERTIES));
-        this.APP_DEFAULT_LOGO = (this.K_PROPERTIES['common']['LogoImg'] != "") ? this.K_PROPERTIES['common']['LogoImg']  : this.APP_DEFAULT_LOGO;
-        this.APP_DEFAULT_BG = (this.K_PROPERTIES['common']['BGImg'] != "") ? this.K_PROPERTIES['common']['BGImg']  : this.APP_DEFAULT_BG;;
+        this.APP_DEFAULT_LOGO = (this.K_PROPERTIES['common']['LogoImg'] != "") ? this.API_URL + "/FS/" + this.K_PROPERTIES['common']['LogoImg']  : this.APP_DEFAULT_LOGO;
+        this.APP_DEFAULT_BG = (this.K_PROPERTIES['common']['BGImg'] != "") ? this.API_URL + "/FS/" +this.K_PROPERTIES['common']['BGImg']  : this.APP_DEFAULT_BG;;
         this.updateThemeScreen();
       }
 

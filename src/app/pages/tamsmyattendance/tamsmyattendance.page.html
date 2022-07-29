@@ -50,12 +50,12 @@
               display: inline-flex;">
               <ion-icon style="font-size: 16px;
               align-self: center;" color="light" name="calendar-outline"></ion-icon>
-                <ion-label color="light" style="font-size: 10px;
+                <ion-label color="light" style="font-size: 9px;
                 align-self: center;">Start Time</ion-label>
 
               </div>
               <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
-              text-align: center;font-size: 10px;">{{item.fromTime? (item.fromTime | date : 'dd MMM hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
+              text-align: center;font-size: 9px;">{{item.fromTime? (item.fromTime | date : 'dd MMM hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
             </div>
           </ion-item>
           <ion-item lines="none" [ngStyle]="{'border': '1px solid ' + AppTheme}" style="--padding-start: 2px; background: white;
@@ -67,12 +67,12 @@
               display: inline-flex;">
               <ion-icon style="font-size: 16px;
               align-self: center;" color="dark" name="arrow-forward-outline"></ion-icon>
-                <ion-label color="dark" style="font-size: 12px;
+                <ion-label color="dark" style="font-size: 9px;
                 align-self: center;">Clock In</ion-label>
 
               </div>
               <ion-label color="dark" style="font-weight: 600;    width: -webkit-fill-available;
-              text-align: center;font-size: 13px;" [ngStyle]="{'color': item.InTimeExpired? 'red':'green'}">{{item.actualClockinTime? (item.actualClockinTime | date : 'hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
+              text-align: center;font-size: 9px;" [ngStyle]="{'color': item.InTimeExpired? 'red':'green'}">{{item.actualClockinTime? (item.actualClockinTime | date : 'hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
             </div>
           </ion-item>
           </ion-row>
@@ -108,12 +108,12 @@
                 display: inline-flex;">
                 <ion-icon style="font-size: 16px;
                 align-self: center;" color="light" name="calendar-outline"></ion-icon>
-                  <ion-label color="light" style="font-size: 10px;
+                  <ion-label color="light" style="font-size: 9px;
                   align-self: center;">End Time</ion-label>
 
                 </div>
                 <ion-label color="light" style="font-weight: 600;    width: -webkit-fill-available;
-                text-align: center;font-size: 10px;">{{item.toTime? (item.toTime | date : 'dd MMM hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
+                text-align: center;font-size: 9px;">{{item.toTime? (item.toTime | date : 'dd MMM hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
               </div>
             </ion-item>
             <ion-item lines="none" [ngStyle]="{'border': '1px solid ' + AppTheme}" style="--padding-start: 2px; background: white;
@@ -125,12 +125,12 @@
                 display: inline-flex;">
                 <ion-icon style="font-size: 16px;
                 align-self: center;" color="dark" name="arrow-back-outline"></ion-icon>
-                  <ion-label color="dark" style="font-size: 12px;
+                  <ion-label color="dark" style="font-size: 9px;
                   align-self: center;">Clock Out</ion-label>
 
                 </div>
                 <ion-label color="dark" [ngStyle]="{'color': item.outTimeExpired? 'red':'green'}" style="font-weight: 600;    width: -webkit-fill-available;
-                text-align: center;font-size: 13px;">{{item.actualClockoutTime? (item.actualClockoutTime | date : 'hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
+                text-align: center;font-size: 12px;">{{item.actualClockoutTime? (item.actualClockoutTime | date : 'hh:mm a'): '&nbsp;&nbsp;--'}}</ion-label>
               </div>
             </ion-item>
             </ion-row>

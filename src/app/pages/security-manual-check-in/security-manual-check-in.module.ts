@@ -19,7 +19,7 @@ import { DocumentModalComponent } from 'src/app/components/document-modal/docume
     SecurityManualCheckInPageRoutingModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  declarations: [SecurityManualCheckInPage, DocumentModalComponent,ItemChecklistModalComponent],
-  entryComponents:[DocumentModalComponent,ItemChecklistModalComponent]
+  declarations: [SecurityManualCheckInPage],
+  entryComponents:[]
 })
 export class SecurityManualCheckInPageModule {}
