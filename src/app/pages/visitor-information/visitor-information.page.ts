@@ -59,14 +59,16 @@ export class VisitorInformationPage implements OnInit {
       this.appointmentInfo.HexCode = this.appointmentInfo.Hexcode;
     }
 
-    if (!this.fromAppointment && (!this.appointmentInfo.visitorBookingSeqId || this.appointmentInfo.visitorBookingSeqId === 0)) {
+    if (this.fromAppointment || this.appointmentInfo.visitorBookingSeqId) {
       this.getAddVisitorSettings();
-      this.getAdditionalDocs();
       // return;
-    } else if (!this.appointmentInfo.HexCode) {
-      this.getAdditionalDocs();
+    }
+    this.getAdditionalDocs();
+    if (!this.appointmentInfo.HexCode) {
       return;
     }
+
+
     var hexData = this.appointmentInfo.HexCode;//"C4B9F365";
     var params = {"hexcode":""+ hexData};
     this.apiProvider.VimsAppGetAppointmentByHexCode(params, false).then(
@@ -127,8 +129,15 @@ export class VisitorInformationPage implements OnInit {
           const purpose = this.appointmentInfo.att_reason;
           const MEETING_LOCATION = this.appointmentInfo.MEETING_LOCATION;
           const vseqid = this.appointmentInfo.vseqid;
+          const visitorIDImage = this.appointmentInfo.visitorIDImage;
+          const visitor_photo = this.appointmentInfo.visitor_photo;
+          const additionalDocList = this.appointmentInfo.additionalDocList;
 
           this.appointmentInfo = vOb;
+          this.appointmentInfo.visitor_photo = visitor_photo;
+          this.appointmentInfo.visitorIDImage = visitorIDImage;
+          this.appointmentInfo.additionalDocList = additionalDocList;
+
           this.appointmentInfo.vseqid = vseqid;
           if (purpose){
             this.appointmentInfo.REASON = purpose;

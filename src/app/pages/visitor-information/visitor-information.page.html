@@ -47,7 +47,7 @@
           </ion-col>
           <ion-col size="3" style="display: flex;justify-content: center;align-items: center;">
             <img src="{{appointmentInfo.visitor_photo? ('data:image/jpeg;base64,' + appointmentInfo.visitor_photo) :  (appointmentInfo.att_check_in_time && appointmentInfo.vseqid) ? (visitorImagePath + appointmentInfo.vseqid+ imageURLTypeCHECKIN): appointmentInfo.SEQ_ID ? (visitorImagePath + appointmentInfo.SEQ_ID + imageURLType): '../../../assets/images/user.png'}}"
-            (click)="viewImage(appointmentInfo.visitor_photo? ('data:image/jpeg;base64,' + appointmentInfo.visitor_photo) : appointmentInfo.SEQ_ID ? visitorImagePath + appointmentInfo.SEQ_ID + imageURLType: '../../../assets/images/user.png')"
+            (click)="viewImage(appointmentInfo.visitor_photo? ('data:image/jpeg;base64,' + appointmentInfo.visitor_photo) :  (appointmentInfo.att_check_in_time && appointmentInfo.vseqid) ? (visitorImagePath + appointmentInfo.vseqid+ imageURLTypeCHECKIN): appointmentInfo.SEQ_ID ? (visitorImagePath + appointmentInfo.SEQ_ID + imageURLType): '../../../assets/images/user.png')"
             style="width: 60px;height: 60px; display: flex;justify-content: center; border-radius: 50%;object-fit: cover;">
           </ion-col>
         </ion-row>
@@ -223,7 +223,7 @@
         </ion-grid>
       </div>
     </div>
-    <div class="section" *ngIf="fromAppointment && appSettings.addVisitor.ApptDeclarationEnabled && (QuestionnaireEnabled || AttachmentUploadEnabled || MaterialDeclareEnabled)" >
+    <div class="section" *ngIf="appSettings.addVisitor.ApptDeclarationEnabled && (QuestionnaireEnabled || AttachmentUploadEnabled || MaterialDeclareEnabled)" >
       <div class="additional">
         <ion-item>
           <ion-label>{{appSettings.addVisitor.ApptDeclarationLabel}}</ion-label>

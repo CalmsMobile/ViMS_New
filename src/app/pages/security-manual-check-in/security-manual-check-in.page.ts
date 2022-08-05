@@ -43,6 +43,7 @@ export class SecurityManualCheckInPage implements OnInit {
   preAppointmentInfo: any = {};
   visitorImagePath = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=';
   imageURLType = '&RefType=VPB&Refresh='+ new Date().getTime();
+  imageURLTypeCHECKIN= '&RefType=VP&Refresh='+ new Date().getTime();
   PURPOSELIST = [];
   MEETINGLIST = [];
   HOSTLIST = [];
