@@ -38,6 +38,7 @@ export class SecurityManualCheckInPage implements OnInit {
   disableFloor = false;
   disableMEETING_LOCATION = false;
   visitor_RemoveImg = true;
+  isImageChanged = false;
   appSettings: any = {};
   appointmentInfo: any = {};
   preAppointmentInfo: any = {};
@@ -525,6 +526,7 @@ export class SecurityManualCheckInPage implements OnInit {
 
       if (this.imageType === 'PROFILE_IMAGE') {
         this.visitor_RemoveImg = false;
+        this.isImageChanged = true;
         this.appointmentInfo.visitorImage = imageData;
       } else {
         this.appointmentInfo.visitorIDImage = imageData;
@@ -535,6 +537,7 @@ export class SecurityManualCheckInPage implements OnInit {
       if (err === 'cordova_not_available'){
         if (this.imageType === 'PROFILE_IMAGE') {
           this.visitor_RemoveImg = false;
+          this.isImageChanged = true;
           this.appointmentInfo.visitorImage = AppSettings.SAMPLE_PHOTO;
         } else {
           this.appointmentInfo.visitorIDImage = AppSettings.SAMPLE_PHOTO;

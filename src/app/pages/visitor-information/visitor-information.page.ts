@@ -58,7 +58,11 @@ export class VisitorInformationPage implements OnInit {
     if (!this.appointmentInfo.HexCode) {
       this.appointmentInfo.HexCode = this.appointmentInfo.Hexcode;
     }
-
+    if (this.appointmentInfo.att_check_in === 1 && this.appointmentInfo.att_check_out === 1) {
+      this.validQRCode = false;
+    } else {
+      this.validQRCode = true;
+    }
     if (this.fromAppointment || this.appointmentInfo.visitorBookingSeqId) {
       this.getAddVisitorSettings();
       // return;
@@ -339,11 +343,6 @@ export class VisitorInformationPage implements OnInit {
   }
 
   getAddVisitorSettings() {
-    if (this.appointmentInfo.att_check_in === 1 && this.appointmentInfo.att_check_out === 1) {
-      this.validQRCode = false;
-    } else {
-      this.validQRCode = true;
-    }
     const ctgId = this.commonUtil.getCategory(this.appointmentInfo.VisitorCategory? this.appointmentInfo.VisitorCategory: this.appointmentInfo.att_visitor_ctg_id, true);
     var params = {"RefVisitorCateg": ctgId};
     this.apiProvider.requestSecurityApi(params, '/api/kiosk/getAddVisitorSettings', false).then(
