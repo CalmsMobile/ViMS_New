@@ -131,7 +131,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
 
   checkIsToday(fromDate, toDate, dateCondition){
     if(fromDate && toDate){
-      let fromdateObject = new Date(fromDate.split("T")[0]).getTime();
+      // let fromdateObject = new Date(fromDate.split("T")[0]).getTime();
       let todateObject = new Date(toDate.split("T")[0]).getTime();
       let cDatee = new Date();
 
@@ -145,7 +145,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
           date = "0"+ cDatee.getDate();
         }
         let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
-        if(todayObject == fromdateObject){
+        if(todayObject == todateObject){
           return true;
         }else{
           return false;
@@ -161,7 +161,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
           date = "0"+ cDatee.getDate();
         }
         let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
-        if(todayObject == fromdateObject){
+        if(todayObject == todateObject){
           return true;
         }else{
           return false;
@@ -177,7 +177,7 @@ export class UpcomingAppointmentPagePage implements OnInit {
           date = "0"+ cDatee.getDate();
         }
         let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
-        if(todayObject <= fromdateObject){
+        if(todayObject <= todateObject){
           return true;
         }else{
           return false;
@@ -293,9 +293,11 @@ export class UpcomingAppointmentPagePage implements OnInit {
             var cObj = this.appointments[items];
             if(this.checkIsToday(cObj.START_DATE, cObj.END_DATE, "Today")){
               this.todayAppointments.push(cObj);
-            }else if(this.checkIsToday(cObj.START_DATE, cObj.END_DATE, "Tomorrow")){
+            }
+            if(this.checkIsToday(cObj.START_DATE, cObj.END_DATE, "Tomorrow")){
               this.tomorrowAppointments.push(cObj);
-            }else if(this.checkIsToday(cObj.START_DATE, cObj.END_DATE, "Future")){
+            }
+            if(this.checkIsToday(cObj.START_DATE, cObj.END_DATE, "Future")){
               this.futureAppointments.push(cObj);
             }
 
