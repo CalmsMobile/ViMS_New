@@ -25,6 +25,21 @@ export class CommonUtil{
       return decryptedValue;
   }
 
+  encryptData(value){
+    var key = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
+    var iv = CryptoJS.enc.Utf8.parse('qweqweqweqweqweq');
+
+    var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(value), key,
+    {
+        keySize: 128,
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+    });
+    var qrCodeString = "" + encrypted;
+    return qrCodeString;
+  }
+
   getRoomName(code, isReturnID) {
     let result = code;
     if (code === undefined || code === null || code === '') {

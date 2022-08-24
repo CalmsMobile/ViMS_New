@@ -32,7 +32,6 @@
               padding-top: 2px;" (click)="openVisitorDetails(visitors)">{{visitors.EMAIL}}</ion-label>
           </div>
           <div slot="end" style="margin: 0px;" *ngIf="showControls(visitors)">
-            <!-- <ion-icon color="secondary" class="iconiconClass" name="share-outline" (click) = "shareQR(visitors)" ></ion-icon> -->
             <ion-icon color="success" class="iconiconClass" name="thumbs-up-outline" style="border: 3px solid #009688;"
             (click)="showChangeAppointmentStatusAlert('Approved', '', visitors.VisitorBookingSeqId)"></ion-icon>
             <ion-icon color="primary" class="iconiconClass" name="thumbs-down-outline" style="    border: 3px solid #e91e63;"
@@ -305,41 +304,43 @@ class="ion-padding pending-info" *ngIf="facilityBooking && facilityBooking.lengt
 
 <div *ngIf="appointment.showQuestion || appointment.showDocument && appointment.showDelaration">
   <div *ngFor="let visitors of appointment" style="    padding-top: 18px;">
-    <ion-label style="
-    width: 100%;
-    background: lightgray;
-    display: block;
-    padding: 8px;
-    border-radius: 10px;
-    text-align: start;" *ngIf="appointment.length > 1">{{visitors.VISITOR_NAME}}</ion-label>
-    <ion-card no-margin mode="ios" style="margin-top: 15px !important;
-    padding: 10px;
-    padding-left: 0px;" (click)="openCustomDialog('question', visitors)" *ngIf="appointment.showQuestion">
-      <ion-item lines="none">
-        <ion-icon color="primary" slot="start" name="document-text-outline"></ion-icon>
-        <ion-label>Questionaries</ion-label>
-        <ion-icon name="chevron-forward-outline"></ion-icon>
-      </ion-item>
-    </ion-card>
+    <div *ngIf="showControls(visitors)">
+      <ion-label style="
+      width: 100%;
+      background: lightgray;
+      display: block;
+      padding: 8px;
+      border-radius: 10px;
+      text-align: start;" *ngIf="appointment.length > 1">{{visitors.VISITOR_NAME}}</ion-label>
+      <ion-card no-margin mode="ios" style="margin-top: 15px !important;
+      padding: 10px;
+      padding-left: 0px;" (click)="openCustomDialog('question', visitors)" *ngIf="appointment.showQuestion">
+        <ion-item lines="none">
+          <ion-icon color="primary" slot="start" name="document-text-outline"></ion-icon>
+          <ion-label>Questionaries</ion-label>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-item>
+      </ion-card>
 
 
-    <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
-    padding-left: 0px;" (click)="openCustomDialog('doc', visitors)" *ngIf="appointment.showDocument">
-      <ion-item lines="none">
-        <ion-icon color="primary" slot="start" name="document-attach-outline"></ion-icon>
-        <ion-label>Verification Documents</ion-label>
-        <ion-icon name="chevron-forward-outline"></ion-icon>
-      </ion-item>
-    </ion-card>
+      <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+      padding-left: 0px;" (click)="openCustomDialog('doc', visitors)" *ngIf="appointment.showDocument">
+        <ion-item lines="none">
+          <ion-icon color="primary" slot="start" name="document-attach-outline"></ion-icon>
+          <ion-label>Verification Documents</ion-label>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-item>
+      </ion-card>
 
-    <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
-    padding-left: 0px;" (click)="openCustomDialog('declaration', visitors)" *ngIf="appointment.showDelaration">
-      <ion-item lines="none">
-        <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
-        <ion-label>Item Checklist</ion-label>
-        <ion-icon name="chevron-forward-outline"></ion-icon>
-      </ion-item>
-    </ion-card>
+      <ion-card no-margin mode="ios" style="padding: 10px;margin-top: 15px !important;
+      padding-left: 0px;" (click)="openCustomDialog('declaration', visitors)" *ngIf="appointment.showDelaration">
+        <ion-item lines="none">
+          <ion-icon color="primary" slot="start" name="checkmark-circle-outline"></ion-icon>
+          <ion-label>Item Checklist</ion-label>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-item>
+      </ion-card>
+    </div>
   </div>
 </div>
 

@@ -176,7 +176,7 @@ export class AppointmentDetailsPage implements OnInit {
     private androidPermissions: AndroidPermissions,
     private transfer: FileTransfer,
     private file: File,
-    commonUtil: CommonUtil,
+    private commonUtil: CommonUtil,
     private dateformat : DateFormatPipe,
     private socialSharing: SocialSharing,
     private translate : TranslateService,
@@ -318,68 +318,91 @@ export class AppointmentDetailsPage implements OnInit {
     }else{
       title = this.appointment[0].appointment_group_id;
     }
-    if(!appointment.HexCode){
-      appointment.HexCode = "";
-    }
-    var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
-    var hostName = "";
-    if(hostData){
-      hostName = JSON.parse(hostData).HOSTNAME;
-    }
-    var qrJsonString1 = appointment.HexCode;
-    var qrCodeString = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=' + qrJsonString1 + '&RefType=QR&Refresh='+ new Date().getTime();
-    const fileTransfer: FileTransferObject = this.transfer.create();
-    // const fileURI = this.file.dataDirectory + encrypted + '.jpg';
-    const url = qrCodeString;
-    // var filename = url.split("/").pop();
-    var path = this.file.externalRootDirectory;
-    if(!path){
-      path = (this.file.externalDataDirectory || this.file.dataDirectory);
-    }
-    var targetPath = path + '/Pictures/' + "shareQRCode.jpg";
 
-    console.log("url: "+ url);
+    var IsDynamicQR = false;
 
-    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
-      result =>{
-        console.log('Has permission?',result.hasPermission)
-        if(result.hasPermission){
-          this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(
-            result =>{
-              this.apiProvider.presentLoading();
+    var settings = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.APPLICATION_HOST_SETTINGS);
+    if(settings && JSON.parse(settings)){
+      const objSetting = JSON.parse(settings);
+      IsDynamicQR = objSetting.Table1[0].IsDynamicQR;
+    }
 
-              console.log('Has permission?',result.hasPermission);
-              fileTransfer.download(url, targetPath).then((entry) => {
-                this.apiProvider.dismissLoading();
-                console.log('download complete: ' + entry.toURL());
-                var data = "Hi, I have shared the QR code for our appointment. Please use the QR code for your registration when you visit me."+
-                "\n"+" Thanks,"+"\n"+"["+hostName+"]";
-                this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(() => {
-                }).catch((error) => {
-                  // Error!
+    if (IsDynamicQR) {
+      var seqId = this.commonUtil.encryptData(appointment.VisitorBookingSeqId);
+      var dynamicurl = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl +
+      "/Common/DynamicQRGenerator.aspx?q=" + seqId;
+      var data =   "Hi there, i have shared the appointment link for you to generate the access QR code for you to access the building on appointment day. "+ dynamicurl;
+      this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(() => {
+      }).catch((error) => {
+        console.log(""+error);
+        this.apiProvider.showToast('Error');
+      });
+    } else {
+      if(!appointment.HexCode){
+        appointment.HexCode = "";
+      }
+      var hostData = window.localStorage.getItem(AppSettings.LOCAL_STORAGE.HOST_DETAILS);
+      var hostName = "";
+      if(hostData){
+        hostName = JSON.parse(hostData).HOSTNAME;
+      }
+      var qrJsonString1 = appointment.HexCode;
+      var qrCodeString = JSON.parse(window.localStorage.getItem(AppSettings.LOCAL_STORAGE.QRCODE_INFO)).ApiUrl+'/Handler/ImageHandler.ashx?RefSlno=' + qrJsonString1 + '&RefType=QR&Refresh='+ new Date().getTime();
+      const fileTransfer: FileTransferObject = this.transfer.create();
+      // const fileURI = this.file.dataDirectory + encrypted + '.jpg';
+      const url = qrCodeString;
+      // var filename = url.split("/").pop();
+      var path = this.file.externalRootDirectory;
+      if(!path){
+        path = (this.file.externalDataDirectory || this.file.dataDirectory);
+      }
+      var targetPath = path + '/Pictures/' + "shareQRCode.jpg";
+
+      console.log("url: "+ url);
+
+      this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
+        result =>{
+          console.log('Has permission?',result.hasPermission)
+          if(result.hasPermission){
+            this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(
+              result =>{
+                this.apiProvider.presentLoading();
+
+                console.log('Has permission?',result.hasPermission);
+                fileTransfer.download(url, targetPath).then((entry) => {
                   this.apiProvider.dismissLoading();
-                  console.log(""+error);
-                  this.apiProvider.showToast('Error');
+                  console.log('download complete: ' + entry.toURL());
+                  var data = "Hi, I have shared the QR code for our appointment. Please use the QR code for your registration when you visit me."+
+                  "\n"+" Thanks,"+"\n"+"["+hostName+"]";
+                  this.socialSharing.share(data, 'Your appointment QR code', targetPath , "").then(() => {
+                  }).catch((error) => {
+                    // Error!
+                    this.apiProvider.dismissLoading();
+                    console.log(""+error);
+                    this.apiProvider.showToast('Error');
+                  });
+                }, (error) => {
+                  // handle error
+                  this.apiProvider.dismissLoading();
+                  this.apiProvider.showToast('Download Error');
+                  console.log("Download Error: "+ error);
                 });
-              }, (error) => {
-                // handle error
-                this.apiProvider.dismissLoading();
-                this.apiProvider.showToast('Download Error');
-                console.log("Download Error: "+ error);
-              });
-            } ,
-            err => {
-              this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE);
-            }
-          );
-        }else{
+              } ,
+              err => {
+                this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE);
+              }
+            );
+          }else{
+            this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE);
+          }
+        } ,
+        err => {
           this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE);
         }
-      } ,
-      err => {
-        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE);
-      }
-    );
+      );
+    }
+
+
 
   }
 

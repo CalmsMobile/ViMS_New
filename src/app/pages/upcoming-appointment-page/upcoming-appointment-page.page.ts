@@ -136,47 +136,24 @@ export class UpcomingAppointmentPagePage implements OnInit {
       let cDatee = new Date();
 
       if(dateCondition == "Today"){
-        var month = ""+ (cDatee.getMonth()+1);
-        if(cDatee.getMonth()+1 < 10){
-          month = "0"+ (cDatee.getMonth()+1);
-        }
-        var date = ""+ cDatee.getDate();
-        if(cDatee.getDate() < 10){
-          date = "0"+ cDatee.getDate();
-        }
-        let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
-        if(todayObject == todateObject){
+
+        let todayObject = new Date(this.datePipe.transform(cDatee+ "", "yyyy-MM-dd")).getTime();
+        if(todayObject <= todateObject){
           return true;
         }else{
           return false;
         }
       }else if(dateCondition == "Tomorrow"){
         cDatee.setDate(cDatee.getDate() + 1);
-        month = ""+ (cDatee.getMonth()+1);
-        if(cDatee.getMonth()+1 < 10){
-          month = "0"+ (cDatee.getMonth()+1);
-        }
-        date = ""+ cDatee.getDate();
-        if(cDatee.getDate() < 10){
-          date = "0"+ cDatee.getDate();
-        }
-        let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
-        if(todayObject == todateObject){
+        let todayObject = new Date(this.datePipe.transform(cDatee+ "", "yyyy-MM-dd")).getTime();
+        if(todayObject <= todateObject){
           return true;
         }else{
           return false;
         }
       }else if(dateCondition == "Future"){
         cDatee.setDate(cDatee.getDate() + 2);
-        month = ""+ (cDatee.getMonth()+1);
-        if(cDatee.getMonth()+1 < 10){
-          month = "0"+ (cDatee.getMonth()+1);
-        }
-        date = ""+ cDatee.getDate();
-        if(cDatee.getDate() < 10){
-          date = "0"+ cDatee.getDate();
-        }
-        let todayObject = new Date(cDatee.getFullYear()+"-"+month+"-"+ date).getTime();
+        let todayObject = new Date(this.datePipe.transform(cDatee+ "", "yyyy-MM-dd")).getTime();
         if(todayObject <= todateObject){
           return true;
         }else{

@@ -220,7 +220,7 @@ export class AccountMappingPage {
             mode: CryptoJS.mode.CBC,
             padding: CryptoJS.pad.Pkcs7
         });
-          var qrCodeString = "" + encrypted;
+        var qrCodeString = "" + encrypted;
           // 1001 HOST APP
           // var qrCodeString = '1Bdg9IWu49KLrfhL8hU6JTrN5T1wNAxcG5PDX5+GSbJLyFhtNAv5dUmM7ENCDLZqr62+gsaLApnqklQuzaaM7euPYA8I+EIqzWIXANJcdMcSIPqUXmSAdJmB/6k4ku4GrImiaNECHBKoJEQQhSLUD9N7GJ4EZeAnFB0xXHPiqGM0YOrZGshBmzXJ1GOEp4Vo';
           //HOSTWF 1001
