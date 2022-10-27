@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController, ToastController, MenuController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -28,7 +28,7 @@ export class activeEvent{
 })
 export class FacilityKioskDisplayPage implements OnInit {
 
-  APP_DEFAULT_LOGO:string = "../../assets/images/icon.png";
+  APP_DEFAULT_LOGO:string = "url(../../assets/images/icon.png)";
   APP_DEFAULT_BG:string = "../../assets/images/background/app_bg.png";
   ACTIVE_BLOCK_CURRENT_DATA:activeEvent = new activeEvent();
   UPCOMING_DATA_LIST:Array<activeEvent> = [];
@@ -44,15 +44,18 @@ export class FacilityKioskDisplayPage implements OnInit {
   isNetworkError = false;
   showStopButton = false;
   API_URL = "";
+  cClass = this;
   constructor(
     public navCtrl: NavController,
 
      private datePipe:DatePipe,
      private toastCtrl:ToastController,
      private router: Router,
+     private ngZone: NgZone,
      private menuCtrl: MenuController,
      private alertCtrl:AlertController,
      private apiProvider : RestProvider,
+     private changeRef: ChangeDetectorRef,
      private translate : TranslateService) {
       this.translate.get([
         'COMMON.MSG.ERR_SERVER_CONCTN_DETAIL',
@@ -121,8 +124,6 @@ export class FacilityKioskDisplayPage implements OnInit {
         }
         this.K_PROPERTIES = property;
         localStorage.setItem(AppSettings.LOCAL_STORAGE.FASILITY_DISPLAY_KIOSK_SETUP, JSON.stringify(this.K_PROPERTIES));
-        this.APP_DEFAULT_LOGO = (this.K_PROPERTIES['common']['LogoImg'] != "") ? this.API_URL + "/FS/" + this.K_PROPERTIES['common']['LogoImg']  : this.APP_DEFAULT_LOGO;
-        this.APP_DEFAULT_BG = (this.K_PROPERTIES['common']['BGImg'] != "") ? this.API_URL + "/FS/" +this.K_PROPERTIES['common']['BGImg']  : this.APP_DEFAULT_BG;;
         this.updateThemeScreen();
       }
 
@@ -166,6 +167,13 @@ export class FacilityKioskDisplayPage implements OnInit {
   }
   resetGetBookingSlotTimer(){
     var currentClass = this;
+    const saveData = localStorage.getItem(AppSettings.LOCAL_STORAGE.FASILITY_DISPLAY_KIOSK_SETUP);
+    if (saveData){
+      this.K_PROPERTIES = JSON.parse(saveData);
+    }
+
+    this.updateThemeScreen();
+
     let slot_update_time_interval = this.K_PROPERTIES['common']['sync']['setupAutoSynServrTimIntr'] || 1;
     clearInterval(this.GET_BOOKING_SLOT_TIMER);
     this.getFacilityBookingSlats();
@@ -176,9 +184,18 @@ export class FacilityKioskDisplayPage implements OnInit {
     }
   }
   updateThemeScreen(){
+    this.changeRef.detectChanges();
+    const cClass = this.cClass;
+    this.ngZone.run(() => {
+      cClass.APP_DEFAULT_LOGO = ((cClass.K_PROPERTIES['common']['LogoImg'] != "") ? ('url(\'' + cClass.API_URL + "/FS/" + cClass.K_PROPERTIES['common']['LogoImg'] + '\')')  : cClass.APP_DEFAULT_LOGO);
+      cClass.APP_DEFAULT_BG = (cClass.K_PROPERTIES['common']['BGImg'] != "") ? cClass.API_URL + "/FS/" +cClass.K_PROPERTIES['common']['BGImg']  : cClass.APP_DEFAULT_BG;
+    });
     let _css = `
     [custom-header]{
       background: linear-gradient(to top left, ` +this.K_PROPERTIES['screen_ui']['header']['header_bg_grad1'] +`, ` + this.K_PROPERTIES['screen_ui']['header']['header_bg_grad2']+`) !important;
+    }
+    [logo]{
+      background: ` +this.APP_DEFAULT_LOGO + `;
     }
     [custom-footer]{
       background: linear-gradient(to top left, ` +this.K_PROPERTIES['screen_ui']['footer']['footer_bg_grad1'] +`, ` + this.K_PROPERTIES['screen_ui']['footer']['footer_bg_grad2']+`) !important;
@@ -209,6 +226,8 @@ export class FacilityKioskDisplayPage implements OnInit {
 
     `;
     document.getElementById("MY_RUNTIME_CSS").innerHTML = _css;
+
+
   }
   toggleSideMenuGear(){
     if(this.CURRENT_SIDEMENU_GEAR === "close")

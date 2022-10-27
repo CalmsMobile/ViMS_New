@@ -5,7 +5,7 @@
 K_PROPERTIES['screen_ui']['header']['header_txt_size'] : ''"
  [attr.text-footer]="K_PROPERTIES['screen_ui']['footer']['footer_txt_size']">
   <div custom-header *ngIf="K_PROPERTIES['screen_ui']['header']['show_header']">
-    <div *ngIf="K_PROPERTIES['screen_ui']['header']['show_logo']" logo [style.backgroundImage]="'url('+ APP_DEFAULT_LOGO +')'"></div>
+    <div *ngIf="K_PROPERTIES['screen_ui']['header']['show_logo'] && APP_DEFAULT_LOGO" logo></div>
     <span *ngIf="K_PROPERTIES['screen_ui']['header']['show_title']"
     [style.color]="K_PROPERTIES['screen_ui']['header']['title_txt_color']">
     {{K_PROPERTIES['screen_ui']['header']['header_txt']}}</span>
